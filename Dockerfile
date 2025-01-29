@@ -1,12 +1,17 @@
 
 FROM node:18-alpine AS deps
 RUN apk add --no-cache libc6-compat
+RUN apk add --no-cache git
 WORKDIR /workspace
 
 COPY package.json package-lock.json ./
-RUN  npm install --omit=dev --ignore-scripts
+RUN  npm install --ignore-scripts
 
 FROM node:18-alpine AS builder
+ARG ENV
+
+ENV ENV=${ENV}
+
 WORKDIR /workspace
 COPY --from=deps /workspace/node_modules ./node_modules
 COPY . .
@@ -25,10 +30,12 @@ RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
 COPY --from=builder --chown=nextjs:nodejs /workspace/.next ./.next
+COPY --from=builder /workspace/next.config.ts ./
+COPY --from=builder /workspace/public ./public
 COPY --from=builder /workspace/node_modules ./node_modules
 COPY --from=builder /workspace/package.json ./package.json
 
-USER nextjs
+USER node
 
 EXPOSE 3000
 

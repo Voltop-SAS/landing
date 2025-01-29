@@ -1,7 +1,7 @@
 # Katapult clean architecture scaffolding
 
 ## Requirements
-- node 18.16.0
+- node 18.18.0
 - docker
 - docker compose
 ## Getting Started

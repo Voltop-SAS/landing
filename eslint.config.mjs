@@ -1,11 +1,8 @@
-// eslint.config.js
 import hexagonalArchitecture from 'eslint-plugin-hexagonal-architecture';
 
 export default [
   {
-    ignores: [
-      // Agrega patrones para ignorar archivos aquí si es necesario
-    ],
+    files: ['src/**/*.{ts}'],
     plugins: {
       'hexagonal-architecture': hexagonalArchitecture,
     },
@@ -15,12 +12,6 @@ export default [
         sourceType: 'module',
       },
     },
-    rules: {
-      'hexagonal-architecture/enforce': 'error',
-    },
-  },
-  {
-    files: ['src/**/*.ts'],
     rules: {
       'hexagonal-architecture/enforce': 'error',
     },

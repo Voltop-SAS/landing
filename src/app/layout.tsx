@@ -1,13 +1,9 @@
 import './globals.css'
-import { Inter } from 'next/font/google'
 import { getLocale, getTranslations } from 'next-intl/server'
-import type { Metadata, ResolvingMetadata } from 'next'
+import NavBar from '~/ui/common/nav-bar'
+import Footer from '~/ui/common/footer'
 
-const inter = Inter({ subsets: ['latin'] })
-
-export async function generateMetadata(
-  parent: ResolvingMetadata
-): Promise<Metadata> {
+export async function generateMetadata() {
   const tMetaData = await getTranslations('common.metadata')
 
   return {
@@ -24,7 +20,11 @@ export default async function RootLayout({
   const locale = await getLocale()
   return (
     <html lang={locale}>
-      <body className={inter.className}>{children}</body>
+      <body>
+        <NavBar />
+        {children}
+        <Footer />
+      </body>
     </html>
   )
 }
