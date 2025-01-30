@@ -4,7 +4,7 @@ RUN apk add --no-cache libc6-compat
 RUN apk add --no-cache git
 WORKDIR /workspace
 
-COPY package.json package-lock.json ./
+COPY package.json ./
 RUN  npm install --ignore-scripts
 
 FROM node:18-alpine AS builder
