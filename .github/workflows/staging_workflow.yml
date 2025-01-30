@@ -6,8 +6,7 @@ on:
       - staging
 
 env:
-  ECR_REPOSITORY_NAME: voltop-landing
-  ECR_REPOSITORY: ${{ secrets.VOLTOP_STG_ECR_ID }}/landing
+  ECR_REPOSITORY: ${{ secrets.VOLTOP_STG_ECR_ID }}/voltop-landing
 
 jobs:
   build:
@@ -46,8 +45,8 @@ jobs:
           # API_URL: ${{ steps.doppler.outputs.API_URL }}
         run: |
           docker build --rm \
-            --tag $ECR_REPOSITORY:prd-${GITHUB_SHA::7} .
-          docker push $ECR_REPOSITORY:prd-${GITHUB_SHA::7}
+            --tag $ECR_REPOSITORY:stg-${GITHUB_SHA::7} .
+          docker push $ECR_REPOSITORY:stg-${GITHUB_SHA::7}
 
   deploy:
     name: Setup image to k8s repository
@@ -57,7 +56,7 @@ jobs:
     env:
       GITHUB_TOKEN: ${{ secrets.VOLTOP_GITHUB_PAT }}
       K8S_REPOSITORY_MANIFEST: voltop-k8s-manifest
-      K8S_ENVIRONMENT: prd
+      K8S_ENVIRONMENT: stg
       REPOSITORY_DIR: infra
 
     steps:
