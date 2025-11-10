@@ -18,17 +18,6 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v3
 
-      - name: Set Doppler Secret
-        env:
-          DOPPLER_TOKEN: ${{ secrets.VOLTOP_PRODUCTION_DOPPLER_TOKEN }}
-        run: |
-          echo "DOPPLER_TOKEN=$DOPPLER_TOKEN" >> $GITHUB_ENV
-
-      - uses: dopplerhq/secrets-fetch-action@v1.1.1
-        id: doppler
-        with:
-          doppler-token: ${{ env.DOPPLER_TOKEN }}
-
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
@@ -42,11 +31,9 @@ jobs:
 
       - name: Build, tag, and push image to Amazon ECR
         env:
-          ENV: ${{ steps.doppler.outputs.ENV }}
-          API_URL: ${{ steps.doppler.outputs.API_URL }}
+          ENV: production
         run: |
           docker build --rm --build-arg ENV=$ENV \
-            --build-arg API_URL="$API_URL" \
             --tag $ECR_REPOSITORY:prd-${GITHUB_SHA::7} .
           docker push $ECR_REPOSITORY:prd-${GITHUB_SHA::7}
 
