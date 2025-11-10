@@ -7,7 +7,7 @@ on:
 
 env:
   ECR_REPOSITORY_NAME: voltop-landing
-  ECR_REPOSITORY: ${{ secrets.VOLTOP_PRD_ECR_ID }}/landing
+  ECR_REPOSITORY: ${{ secrets.VOLTOP_PRD_ECR_ID }}/voltop-landing
 
 jobs:
   build:
