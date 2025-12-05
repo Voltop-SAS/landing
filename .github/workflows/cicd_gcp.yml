@@ -3,14 +3,13 @@ name: CI/CD to GKE
 on:
   push:
     branches: [ production, staging ]
-  pull_request:
-    branches: [ staging, production ]
 
 env:
   REPOSITORY_NAME_STG: repo-stg-landing-api-grinest
   REPOSITORY_NAME_PRD: repo-prd-landing-api-grinest
   GAR_LOCATION: us-central1
   GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  PROJECT_NAME: landing
 
 jobs:
   build:
@@ -40,14 +39,13 @@ jobs:
       # ===== BUILD STAGING =====
       - name: Build & Push to Artifact Registry (STG)
         if: |
-          github.ref == 'refs/heads/staging' ||
-          github.event.pull_request.base.ref == 'staging'
+          github.ref == 'refs/heads/staging'
         env:
           TAG: stg-${{ github.sha }}
           ENV: ${{ secrets.ENV_STG }}
           POSTGRES_DB_URL: ${{ secrets.POSTGRES_DB_URL_STG }}
         run: |
-          IMAGE="${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{ env.REPOSITORY_NAME_STG }}/voltop-landing"
+          IMAGE="${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{ env.REPOSITORY_NAME_STG }}/${{ env.PROJECT_NAME }}"
           SHORT="${TAG:0:11}"
           docker build \
             --build-arg ENV="$ENV" \
@@ -58,14 +56,13 @@ jobs:
       # ===== BUILD PRODUCTION =====
       - name: Build & Push to Artifact Registry (PRD)
         if: |
-          github.ref == 'refs/heads/production' ||
-          github.event.pull_request.base.ref == 'production'
+          github.ref == 'refs/heads/production'
         env:
           TAG: prd-${{ github.sha }}
           ENV: ${{ secrets.ENV_PRD }}
           POSTGRES_DB_URL: ${{ secrets.POSTGRES_DB_URL_PRD }}
         run: |
-          IMAGE="${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{ env.REPOSITORY_NAME_PRD }}/voltop-landing"
+          IMAGE="${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{ env.REPOSITORY_NAME_PRD }}/${{ env.PROJECT_NAME }}"
           SHORT="${TAG:0:11}"
           docker build \
             --build-arg ENV="$ENV" \
@@ -80,9 +77,8 @@ jobs:
 
     env:
       GITHUB_TOKEN: ${{ secrets.VOLTOP_GITHUB_PAT }}
-      REPO: ${{ secrets.VOLTOP_GITHUB_ACCOUNT }}/k8s-manifest
-      REPO_DIR: voltop-landing
-
+      REPO: Grinest/k8s-manifest
+      REPO_DIR: k8s-manifest
     steps:
       - name: Checkout Manifests Repo
         uses: actions/checkout@v4
@@ -94,29 +90,27 @@ jobs:
       - name: Install Kustomize
         uses: imranismail/setup-kustomize@v1
         with:
-          kustomize-version: '3.8.7'
+          kustomize-version: "5.8.0"
 
       # ===== UPDATE STAGING =====
       - name: Update Image STG
         if: |
-          github.ref == 'refs/heads/staging' ||
-          github.event.pull_request.base.ref == 'staging'
+          github.ref == 'refs/heads/staging'
         run: |
-          IMAGE="${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{ env.REPOSITORY_NAME_STG }}/voltop-landing"
+          IMAGE="${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{ env.REPOSITORY_NAME_STG }}/${{ env.PROJECT_NAME }}"
           TAG="stg-${GITHUB_SHA:0:7}"
-          cd "${{ env.REPO_DIR }}/${{ env.REPO_DIR }}/overlays/stg"
-          kustomize edit set image "${IMAGE}=${IMAGE}:${TAG}"
+          cd "${{ env.REPO_DIR }}/${{ env.PROJECT_NAME }}/overlays/stg"
+          kustomize edit set image "${{ env.PROJECT_NAME }}=${IMAGE}:${TAG}"
 
       # ===== UPDATE PRD =====
       - name: Update Image PRD
         if: |
-          github.ref == 'refs/heads/production' ||
-          github.event.pull_request.base.ref == 'production'
+          github.ref == 'refs/heads/production'
         run: |
-          IMAGE="${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{ env.REPOSITORY_NAME_PRD }}/voltop-landing"
+          IMAGE="${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{ env.REPOSITORY_NAME_PRD }}/${{ env.PROJECT_NAME }}"
           TAG="prd-${GITHUB_SHA:0:7}"
-          cd "${{ env.REPO_DIR }}/${{ env.REPO_DIR }}/overlays/prd"
-          kustomize edit set image "${IMAGE}=${IMAGE}:${TAG}"
+          cd "${{ env.REPO_DIR }}/${{ env.PROJECT_NAME }}/overlays/prd"
+          kustomize edit set image "${{ env.PROJECT_NAME }}=${IMAGE}:${TAG}"
 
       - name: Commit & Push
         run: |
