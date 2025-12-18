@@ -77,7 +77,7 @@ jobs:
 
     env:
       GITHUB_TOKEN: ${{ secrets.VOLTOP_GITHUB_PAT }}
-      REPO: Volto-SAS/k8s-manifest
+      REPO: Voltop-SAS/k8s-manifest
       REPO_DIR: k8s-manifest
     steps:
       - name: Checkout Manifests Repo
