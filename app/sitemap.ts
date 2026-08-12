@@ -16,6 +16,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: routes.nosotros, priority: 0.7 },
     ...getCities().map((c) => ({ path: routes.city(c.slug), priority: 0.8 })),
     ...getStations().map((s) => ({ path: routes.station(s.slug), priority: 0.6 })),
+    /* La política de privacidad se añadirá cuando tenga texto definitivo:
+       hasta entonces está marcada como no indexable. */
   ];
 
   return paths.flatMap(({ path, priority }) =>

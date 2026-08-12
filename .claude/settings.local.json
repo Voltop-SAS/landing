@@ -24,7 +24,8 @@
       "Bash(node /tmp/voltop-visual.mjs)",
       "Bash(npx eslint *)",
       "Bash(echo \"--- lint exit: $? ---\")",
-      "Bash(git -c user.name=Voltop -c user.email=dev@voltop.co commit -q -m 'Ajustes de composición, corrección del signature moment y registro de ejecución *)"
+      "Bash(git -c user.name=Voltop -c user.email=dev@voltop.co commit -q -m 'Ajustes de composición, corrección del signature moment y registro de ejecución *)",
+      "Bash(git -c user.name=Voltop -c user.email=dev@voltop.co commit -q -m 'Política de datos, imagen Open Graph y transición entre páginas *)"
     ]
   }
 }

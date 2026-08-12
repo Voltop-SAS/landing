@@ -1,7 +1,9 @@
 "use client";
 
 import { useId, useRef, useState } from "react";
+import Link from "next/link";
 import { t, type Locale } from "@/lib/i18n/config";
+import { href, routes } from "@/lib/i18n/routes";
 import { leadForm } from "@/content/copy/common";
 import { Button } from "@/components/ui/Button";
 import { track } from "@/lib/analytics";
@@ -192,7 +194,13 @@ export function LeadForm({ lang, segmentKey, segmentLabel }: { lang: Locale; seg
               />
             </span>
             <label htmlFor={fieldId("consent")} className="py-3 text-body-s text-ink-2">
-              {t(leadForm.fields.consent.label, lang)}
+              {t(leadForm.fields.consent.label, lang)}{" "}
+              <Link
+                href={href(lang, routes.privacy)}
+                className="text-ink underline underline-offset-4 transition-colors hover:text-brand"
+              >
+                {t(leadForm.fields.consent.policyLink, lang)}
+              </Link>
             </label>
           </div>
           {errors.consent && (

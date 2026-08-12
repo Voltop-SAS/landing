@@ -58,11 +58,19 @@ export function Footer({ lang }: { lang: Locale }) {
           </nav>
         </div>
 
-        <div className="mt-12 flex flex-col gap-2 border-t border-line pt-8 text-caption text-ink-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-12 flex flex-col gap-3 border-t border-line pt-8 text-caption text-ink-3 sm:flex-row sm:items-center sm:justify-between">
           <p>
             © {year} {brand.name}. {t(footer.rights, lang)}
           </p>
-          <p className="font-mono">{t(footer.legalNotice, lang)}</p>
+          <div className="flex flex-wrap items-center gap-x-6">
+            <Link
+              href={href(lang, routes.privacy)}
+              className="inline-flex min-h-11 items-center transition-colors hover:text-ink"
+            >
+              {t(footer.privacy, lang)}
+            </Link>
+            <p className="font-mono">{t(footer.legalNotice, lang)}</p>
+          </div>
         </div>
       </Container>
     </footer>

@@ -15,6 +15,7 @@ export const routes = {
   red: "/red",
   empresas: "/empresas",
   nosotros: "/nosotros",
+  privacy: "/legal/privacidad",
   city: (slug: string) => `/red/${slug}`,
   station: (slug: string) => `/red/estacion/${slug}`,
 } as const;

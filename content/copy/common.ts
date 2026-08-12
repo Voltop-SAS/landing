@@ -227,6 +227,7 @@ export const footer = {
    * Enlaces sin destino real NO se publican (§15). App, ayuda, legal y redes
    * sociales se añadirán aquí cuando existan las URLs correspondientes.
    */
+  privacy: { es: "Tratamiento de datos", en: "Data processing" } satisfies Localized,
   legalNotice: {
     es: "Prototipo · contenido provisional",
     en: "Prototype · provisional content",
