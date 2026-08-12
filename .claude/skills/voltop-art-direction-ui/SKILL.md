@@ -3,65 +3,70 @@ name: voltop-art-direction-ui
 description: Dirección de arte digital y UI para Voltop, con Visual QA y prevención activa de patrones genéricos de diseño generado por IA. Úsala al definir la dirección visual, componer pantallas o revisar cualquier UI. Cada decisión visual debe tener intención.
 ---
 
-# Voltop — Art Direction & UI (incluye Visual QA + anti-genérico)
+# Voltop — Art Direction & UI
 
-## Responsabilidad
-Construir un lenguaje visual PROPIO de Voltop —premium, tecnológico, de infraestructura energética— y garantizar que cada composición tenga intención. Actúa además como Visual QA: bloquea todo lo que se vea genérico o "generado automáticamente".
+**Principios y definición de "premium": `docs/MASTER-PROJECT-DEFINITION.md` §12–13.** Aquí solo lo operativo.
 
-## Principio rector
-La energía como material: flujo, carga, conexión, precisión, movilidad traducidos a retícula, tipografía, color, luz y textura. Respetar la identidad esencial de Voltop; no copiar sitios de referencia.
+## Dirección
 
-## Complejidad detrás · Simplicidad delante · Riqueza en la experiencia (filosofía Apple)
-"Menos, pero mejor" NO es minimalismo vacío. Buscamos: simplicidad de uso + **riqueza de experiencia** + impacto visual. Referencia Apple: simple de entender, NO simple en ejecución (art direction, composición, tipografía, foto/video, storytelling, motion, profundidad, ritmo, detalle).
-- **Premium ≠ vacío.** Evitar "mucho espacio blanco + headline gigante + botón" como si fuera premium por sí solo. Cada pantalla debe tener contenido y carácter suficientes para explicar, generar confianza, demostrar infraestructura y contar la historia — sin sentirse pesada.
-- **Signature moments (wow):** pocos momentos memorables (hero excepcional, foto/video de gran calidad, visualización de la red, scroll storytelling, transiciones, motion tipográfico, composición editorial, gráficos propios de Voltop) + experiencia general impecable. NO todo se mueve. Cada momento refuerza la marca o ayuda a entender algo.
-- La riqueza se logra con profundidad y detalle intencional, no con más elementos sueltos.
+**"Infraestructura que cobra vida"** — Infraestructura **70%** (el mundo real: fotografía y video propios, base editorial-ingenieril, tratamiento técnico de los datos) + Corriente **30%** (energía y flujo expresados **sobre** el material real).
 
-## Ritmo visual (jerarquía de intensidad por página)
-No todo puede ser un signature moment. Cada página tiene una **jerarquía deliberada de intensidad**:
-`impacto → respiración → información → interacción → respiración → impacto/conversión`.
-- Los momentos wow se **reservan** para los puntos narrativos más importantes y **contrastan** con secciones más silenciosas, editoriales y funcionales.
-- Si todas las secciones compiten visualmente, el diseño falla: se pierde jerarquía y el wow deja de serlo.
-- Las secciones "silenciosas" (respiración, editoriales, funcionales) son parte del diseño, no relleno: dan contraste y dejan respirar la información.
-- Evaluar no solo la calidad de cada sección, sino el **ritmo de la página completa** (secuencia de intensidad de arriba a abajo).
+Dark-first, alto contraste, sin modo claro.
 
-## Prohibiciones (patrones genéricos de IA / SaaS a evitar)
-Cada uno de estos requiere justificación explícita para usarse; por defecto NO se usan:
-- Layouts SaaS genéricos y composiciones predecibles (hero centrado + 3 cards + logos + CTA).
+## Reglas con número
+
+| Regla | Umbral |
+|---|---|
+| Acciones primarias con gradiente | **1 por vista** |
+| Secciones consecutivas con la misma estructura | **0** |
+| Placeholders de métrica visibles | **≤2 por página** |
+| Medida de línea de texto corrido | **45–75 caracteres** |
+| Valores visuales literales fuera de tokens | **0** |
+
+**El gradiente es señal, no textura.** Prohibido en puntos decorativos, bullets, comillas, bordes y elementos repetidos por sección.
+
+**El ritmo se construye variando estructura, no añadiendo efectos:** ancho de contenedor, número de columnas, sangrado, densidad tipográfica, relación texto/imagen, color de fondo. Combinar `width` × `space` de las primitivas (`components/ui/layout.tsx`) para que dos secciones vecinas nunca coincidan.
+
+## Prohibiciones — requieren justificación explícita documentada
+
+- Layouts SaaS predecibles (hero centrado + 3 cards + logos + CTA).
 - Exceso de cards; "todo es una card".
-- Pills y chips decorativos sin función.
-- Border-radius por defecto en todo; radios sin criterio.
+- Pills y chips decorativos **sin función**.
+- Border-radius por defecto en todo.
 - Glows y sombras difusas gratuitas.
-- Gradientes gratuitos / de relleno.
-- Iconografía genérica de librería usada como decoración.
-- Simetrías y grids perfectamente predecibles sin tensión ni jerarquía real.
-- Placeholders que gritan "plantilla".
+- Gradientes de relleno.
+- Iconografía genérica de librería como decoración.
+- **Constelaciones de nodos conectados / grafos abstractos de fondo.**
+- Simetrías predecibles sin tensión — incluido el split a dos columnas repetido con la imagen alternando de lado.
+- Placeholders anónimos que solo comunican ausencia.
+- Animaciones ambientales en bucle.
 
-## Reglas
-- Toda decisión visual (espacio, escala, color, tipo, imagen, movimiento) responde a una intención: jerarquía, significado de marca o tarea del usuario.
-- Composición con tensión y jerarquía deliberada; el espacio en blanco es una decisión.
-- Fotografía/render con dirección de arte propia (no stock genérico).
-- Coherencia con el Design System (tokens), sin "excepciones sueltas".
+## Fotografía y video
 
-## Visual QA (revisión visual) — doble pregunta obligatoria
-Siempre evaluar en ambas direcciones, no solo restar:
-- **Restar:** ¿podemos quitar, combinar o hacer contextual algo? ¿Cada elemento justifica su existencia?
-- **Sumar/enriquecer:** ¿hay suficiente riqueza, carácter y diferenciación para que esto se sienta como Voltop —premium, tecnológico— y no vacío ni genérico?
-Además:
-- ¿Esto podría ser cualquier startup? Si sí, no está listo.
-- ¿La jerarquía guía el ojo hacia el objetivo de la página?
-- ¿La pantalla comunica lo suficiente (explicar, confiar, convertir) sin sentirse pesada?
-- Contraste, alineación óptica, ritmo tipográfico y densidad revisados.
+El material audiovisual es **material narrativo**, no galería ni reproductor. Por asset debe definirse: función narrativa · ubicación · versión desktop y móvil · autoplay o interacción · loop o completo · poster · recorte · compresión · lazy-load · fallback · impacto en performance · permisos de las personas que aparecen.
 
-## Checklist (Definition of Done)
-- [ ] Ninguna prohibición presente sin justificación explícita documentada.
-- [ ] Cada bloque tiene intención (jerarquía / marca / tarea).
-- [ ] Doble pregunta superada: nada sobra Y hay riqueza/carácter suficiente (no vacío).
-- [ ] Contenido suficiente para explicar/confiar/convertir sin sentirse pesado.
-- [ ] Si es un signature moment: refuerza marca o comprensión, no decorativo.
-- [ ] Ritmo de la página revisado: intensidad deliberada, secciones no compiten, wow contrasta con secciones silenciosas.
-- [ ] No parece plantilla ni SaaS genérico ("test del anonimato" superado).
-- [ ] Uso de tokens del Design System; sin valores sueltos.
-- [ ] Dirección de imagen/render coherente y propia.
-- [ ] Jerarquía visual conduce a la acción objetivo.
-- [ ] Revisión de contraste, alineación, ritmo y densidad hecha.
+Todo asset se registra en `content/data/media.ts`, nunca como ruta suelta en un componente. Un hueco de media debe declarar **qué falta y qué función cumple**, para poder evaluar la composición sin el material definitivo.
+
+Si un asset no sirve técnicamente para un uso, se propone la versión a producir. No se toman decisiones irreversibles sobre el formato original.
+
+## Visual QA — la doble pregunta, obligatoria
+
+1. **Restar:** ¿podemos quitar, combinar o hacer contextual algo? ¿Cada elemento justifica su existencia?
+2. **Sumar:** ¿hay suficiente riqueza, carácter y diferenciación para que esto se sienta como Voltop y no vacío ni genérico?
+
+Falla por sobrecargado **o** por vacío. Además:
+- **Test del anonimato:** si al cambiar logo y color esto podría ser cualquier startup, no está listo.
+- ¿La jerarquía conduce el ojo al objetivo de la página?
+- ¿El vacío es una decisión compositiva o un resultado del padding uniforme?
+
+## Definition of Done
+
+- [ ] Ninguna prohibición presente sin justificación documentada.
+- [ ] Cada bloque tiene intención declarada (jerarquía / marca / tarea).
+- [ ] Doble pregunta superada en ambas direcciones.
+- [ ] Ritmo de la página completa revisado; ninguna estructura repetida en secciones vecinas.
+- [ ] Un solo gradiente primario por vista.
+- [ ] Test del anonimato superado.
+- [ ] Todo valor visual desde tokens.
+- [ ] Media registrada en `content/data/media.ts` con función narrativa declarada.
+- [ ] Contraste, alineación óptica, ritmo tipográfico y densidad revisados.
