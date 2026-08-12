@@ -11,7 +11,16 @@
       "Read(//private/tmp/**)",
       "Bash(node /tmp/shot.mjs)",
       "Bash(node /Users/siendo_kam/voltop-web-redesign/shot.mjs)",
-      "Bash(node /tmp/voltop-interact.mjs)"
+      "Bash(node /tmp/voltop-interact.mjs)",
+      "Bash(npm run *)",
+      "Bash(node -e ' *)",
+      "Bash(lsof -ti:3100)",
+      "Bash(python3 -)",
+      "Bash(node /tmp/voltop-audit.mjs)",
+      "Bash(pkill -f \"next start\")",
+      "Bash(npx next *)",
+      "Bash(git add *)",
+      "Bash(git -c user.name=Voltop -c user.email=dev@voltop.co commit -q -m 'Transformación estructural: i18n por ruta, capa de contenido, tokens y composición *)"
     ]
   }
 }
