@@ -101,7 +101,7 @@ export function StationFinder({ lang, stations, cities }: Props) {
       </div>
 
       {/* Filtros — controles reales, no decoración */}
-      <div className="flex flex-col gap-6 border-b border-line py-6 lg:flex-row lg:items-end lg:gap-10">
+      <div className="grid gap-6 border-b border-line py-6 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8">
         <FilterGroup label={t(red.filters.city, lang)}>
           <Chip active={!city} onClick={() => { setCity(""); onFilter("ciudad", "todas"); }}>
             {t(red.filters.all, lang)}

@@ -26,7 +26,13 @@ import { cn } from "@/lib/cn";
 export function Header({ lang }: { lang: Locale }) {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
-  const [open, setOpen] = useState(false);
+  /**
+   * El menú se abre "para una ruta". Al navegar cambia `pathname` y el menú se
+   * cierra por derivación, sin efecto ni renders en cascada.
+   */
+  const [openedFor, setOpenedFor] = useState<string | null>(null);
+  const open = openedFor === pathname;
+  const setOpen = (next: boolean) => setOpenedFor(next ? pathname : null);
   const panelRef = useRef<HTMLDivElement>(null);
   const toggleRef = useRef<HTMLButtonElement>(null);
 
@@ -48,9 +54,6 @@ export function Header({ lang }: { lang: Locale }) {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  /* Cierra el menú al cambiar de ruta */
-  useEffect(() => setOpen(false), [pathname]);
-
   /* Bloqueo de scroll, Escape y foco atrapado mientras el menú está abierto */
   useEffect(() => {
     if (!open) return;
@@ -62,7 +65,7 @@ export function Header({ lang }: { lang: Locale }) {
 
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
-        setOpen(false);
+        setOpenedFor(null);
         toggleRef.current?.focus();
         return;
       }
@@ -144,7 +147,7 @@ export function Header({ lang }: { lang: Locale }) {
             aria-label={open ? t(a11y.closeMenu, lang) : t(a11y.openMenu, lang)}
             aria-expanded={open}
             aria-controls="menu-movil"
-            onClick={() => setOpen((v) => !v)}
+            onClick={() => setOpen(!open)}
           >
             <span aria-hidden="true" className="relative block h-3 w-4">
               <span className={cn("absolute left-0 top-0 h-0.5 w-4 bg-current transition-transform", open && "translate-y-[5px] rotate-45")} />

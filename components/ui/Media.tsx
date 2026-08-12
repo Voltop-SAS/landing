@@ -74,7 +74,7 @@ export function Media({
     );
   }
 
-  return <MediaPending asset={asset} lang={lang} className={cn(shape, className)} />;
+  return <MediaPending asset={asset} lang={lang} fill={fill} className={cn(shape, className)} />;
 }
 
 /**
@@ -86,17 +86,23 @@ export function MediaPending({
   asset,
   lang,
   className,
+  fill = false,
 }: {
   asset: MediaAsset;
   lang: Locale;
   className?: string;
+  /** En composiciones a sangre el contenido se centra y despeja el header. */
+  fill?: boolean;
 }) {
   return (
     <div
       role="img"
       aria-label={`${t(a11y.placeholderMedia, lang)}. ${t(asset.alt, lang)}`}
       className={cn(
-        "relative flex flex-col justify-between overflow-hidden bg-surface-1 p-5",
+        "relative flex overflow-hidden bg-surface-1",
+        /* En composiciones a sangre el rótulo se ancla arriba: el contenido
+           narrativo vive abajo y no deben solaparse. */
+        fill ? "items-start justify-center p-8 pt-28" : "items-end p-5",
         className
       )}
     >
@@ -109,13 +115,17 @@ export function MediaPending({
             "repeating-linear-gradient(135deg, var(--color-ink-3) 0 1px, transparent 1px 18px)",
         }}
       />
-      <span className="relative inline-flex w-fit items-center gap-2 border border-line-strong px-2 py-1 font-mono text-[0.6875rem] uppercase tracking-wider text-ink-3">
-        {asset.kind === "video" ? "Video" : "Foto"}
-        {asset.duration ? ` · ${asset.duration}` : ""}
-      </span>
-      <span className="relative mt-6 max-w-prose font-mono text-caption text-ink-3">
-        {t(asset.alt, lang)}
-      </span>
+
+      {/* Declara QUÉ falta y QUÉ función cumple, para poder evaluar la
+          composición sin el material definitivo. */}
+      <div className={cn("relative flex max-w-md flex-col gap-3", fill && "items-center text-center")}>
+        <span className="inline-flex w-fit items-center border border-line-strong px-2 py-1 font-mono text-[0.6875rem] uppercase tracking-wider text-ink-3">
+          {asset.kind === "video" ? "Video" : "Foto"}
+          {asset.duration ? ` · ${asset.duration}` : ""}
+          {" · pendiente"}
+        </span>
+        <span className="font-mono text-caption text-ink-3">{t(asset.alt, lang)}</span>
+      </div>
     </div>
   );
 }

@@ -186,7 +186,9 @@ export function LeadForm({ lang, segmentKey, segmentLabel }: { lang: Locale; seg
                 type="checkbox"
                 aria-describedby={errors.consent ? errorId("consent") : undefined}
                 aria-invalid={errors.consent ? true : undefined}
-                className="size-5 accent-[var(--color-brand)]"
+                /* El pseudo-elemento amplía el área de activación a 44px sin
+                   agrandar la casilla visualmente (§23). */
+                className="relative size-5 accent-[var(--color-brand)] before:absolute before:-inset-3 before:content-['']"
               />
             </span>
             <label htmlFor={fieldId("consent")} className="py-3 text-body-s text-ink-2">

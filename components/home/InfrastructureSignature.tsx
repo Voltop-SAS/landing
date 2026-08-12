@@ -27,15 +27,16 @@ export function InfrastructureSignature({ lang }: { lang: Locale }) {
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
 
   const still: number[] = [1, 1];
-  /* El material se revela: arranca recortado y se abre a sangre completa.
-     Los hooks se llaman siempre, sin condicionales (reglas de hooks). */
+  /* El MATERIAL se revela con scroll-scrub: arranca recortado y se abre a
+     sangre completa. Los hooks se llaman siempre, sin condicionales. */
   const insetPct = useTransform(scrollYProgress, [0, 0.45], reduce ? [0, 0] : [12, 0]);
   const clipPath = useTransform(insetPct, (v) => `inset(${v}% ${v}% ${v}% ${v}%)`);
   const scale = useTransform(scrollYProgress, [0, 0.45], reduce ? still : [1.08, 1]);
-  /* El texto entra después de que el material se ha abierto. */
-  const textOpacity = useTransform(scrollYProgress, [0.3, 0.5], reduce ? still : [0, 1]);
-  const textY = useTransform(scrollYProgress, [0.3, 0.5], reduce ? [0, 0] : [28, 0]);
-  const scrimOpacity = useTransform(scrollYProgress, [0.25, 0.55], reduce ? [0.75, 0.75] : [0.15, 0.8]);
+  const scrimOpacity = useTransform(scrollYProgress, [0.2, 0.5], reduce ? [0.75, 0.75] : [0.2, 0.8]);
+
+  /* El TEXTO no se scrubbea: aparece una vez y se queda. Una opacidad ligada
+     al progreso puede volver a 0 al salir del rango y dejar el contenido
+     invisible — un signature moment no puede depender de eso. */
 
   return (
     <section ref={ref} id="infraestructura" className="relative h-[240vh]">
@@ -51,7 +52,10 @@ export function InfrastructureSignature({ lang }: { lang: Locale }) {
         />
 
         <motion.div
-          style={{ opacity: textOpacity, y: textY }}
+          initial={{ opacity: 0, y: 28 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-25% 0px -25% 0px" }}
+          transition={{ duration: reduce ? 0 : 0.7, ease: [0.22, 1, 0.36, 1] }}
           className="absolute inset-x-0 bottom-0"
         >
           <Container className="pb-(--spacing-section-tight)">

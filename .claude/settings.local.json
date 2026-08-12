@@ -20,7 +20,11 @@
       "Bash(pkill -f \"next start\")",
       "Bash(npx next *)",
       "Bash(git add *)",
-      "Bash(git -c user.name=Voltop -c user.email=dev@voltop.co commit -q -m 'Transformación estructural: i18n por ruta, capa de contenido, tokens y composición *)"
+      "Bash(git -c user.name=Voltop -c user.email=dev@voltop.co commit -q -m 'Transformación estructural: i18n por ruta, capa de contenido, tokens y composición *)",
+      "Bash(node /tmp/voltop-visual.mjs)",
+      "Bash(npx eslint *)",
+      "Bash(echo \"--- lint exit: $? ---\")",
+      "Bash(git -c user.name=Voltop -c user.email=dev@voltop.co commit -q -m 'Ajustes de composición, corrección del signature moment y registro de ejecución *)"
     ]
   }
 }

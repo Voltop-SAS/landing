@@ -52,7 +52,7 @@ export default async function RedPage({ params }: Props) {
   return (
     <>
       <Section space="none" className="pb-6 pt-32 md:pt-40">
-        <Container width="wide">
+        <Container>
           <Eyebrow>{t(red.hero.eyebrow, lang)}</Eyebrow>
           <div className="mt-4 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
             <h1 className="font-display text-display-xl font-semibold text-ink">{t(red.hero.title, lang)}</h1>
@@ -62,7 +62,7 @@ export default async function RedPage({ params }: Props) {
       </Section>
 
       <Section space="none" className="pb-(--spacing-section)">
-        <Container width="wide">
+        <Container>
           <StationFinder lang={lang} stations={stations} cities={cities} />
           <p className="mt-6 font-mono text-mono text-ink-3">{t(states.pendingRealtime, lang)}</p>
         </Container>
@@ -70,7 +70,7 @@ export default async function RedPage({ params }: Props) {
 
       {/* Cobertura por ciudad — entrada a las rutas locales */}
       <Section id="ciudades" space="tight" className="border-t border-line" ariaLabelledby="ciudades-title">
-        <Container width="wide">
+        <Container>
           <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
             <h2 id="ciudades-title" className="font-display text-display-l font-semibold text-ink">
               {t(red.cities.title, lang)}
