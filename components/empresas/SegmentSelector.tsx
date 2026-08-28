@@ -5,6 +5,7 @@ import { t, type Locale } from "@/lib/i18n/config";
 import { empresas } from "@/content/copy/empresas";
 import type { BusinessSegment } from "@/content/data/company";
 import { track } from "@/lib/analytics";
+import { SectionHeading } from "@/components/ui/layout";
 import { cn } from "@/lib/cn";
 
 /**
@@ -60,11 +61,20 @@ export function SegmentSelector({
 
   return (
     <div>
+      {/* ── TAB, NO CHIP ───────────────────────────────────────────────────
+          Antes esto y los filtros de /red eran visualmente IDÉNTICOS —pastilla,
+          borde de marca, relleno tenue— para dos semánticas opuestas: filtrar
+          una lista frente a cambiar de vista. Y nada indicaba que hubiera un
+          panel debajo que cambia.
+
+          Ahora el tab es una lengüeta: se apoya en la misma línea que separa el
+          panel y el activo la interrumpe con una barra de marca. La conexión
+          entre el control y su contenido es visual, no solo declarada en ARIA. */}
       <div
         role="tablist"
         aria-label={t(empresas.selector.title, lang)}
         onKeyDown={onKeyDown}
-        className="flex flex-wrap gap-2"
+        className="-mb-px flex flex-wrap border-b border-line"
       >
         {segments.map((s, i) => {
           const isActive = s.key === activeKey;
@@ -82,13 +92,18 @@ export function SegmentSelector({
               tabIndex={i === focusIndex ? 0 : -1}
               onClick={() => select(i)}
               className={cn(
-                "inline-flex min-h-11 items-center rounded-(--radius-pill) border px-5 text-body-s transition-colors",
-                isActive
-                  ? "border-brand/60 bg-brand/12 text-ink"
-                  : "border-line text-ink-2 hover:border-line-strong hover:text-ink"
+                "relative inline-flex min-h-12 items-center px-5 text-body-s transition-colors",
+                isActive ? "text-ink" : "text-ink-2 hover:text-ink"
               )}
             >
               {t(s.label, lang)}
+              <span
+                aria-hidden="true"
+                className={cn(
+                  "absolute inset-x-0 bottom-0 h-0.5 transition-opacity",
+                  isActive ? "brand-gradient opacity-100" : "opacity-0"
+                )}
+              />
             </button>
           );
         })}
@@ -100,22 +115,28 @@ export function SegmentSelector({
           role="tabpanel"
           aria-labelledby={`tab-${active.key}`}
           tabIndex={0}
-          className="mt-10 border-t border-line pt-10"
+          className="border-t border-line pt-10"
         >
-          <h3 className="max-w-[22ch] font-display text-display-m font-semibold text-ink">
+          <SectionHeading as="h3" size="m" measure="max-w-[22ch]">
             {t(active.headline, lang)}
-          </h3>
+          </SectionHeading>
           <p className="mt-5 measure text-body-l text-ink-2">{t(active.proposition, lang)}</p>
 
-          <h4 className="mt-10 font-mono text-mono uppercase tracking-wider text-ink-3">
+          <SectionHeading as="h3" size="s" className="mt-12">
             {t(empresas.selector.benefitsTitle, lang)}
-          </h4>
-          <ul className="mt-5 grid gap-x-10 gap-y-4 sm:grid-cols-2">
+          </SectionHeading>
+          {/* "Qué incluye" es una lista de INCLUSIÓN, no una secuencia: el
+              número prometía un orden inexistente. La marca de verificación dice
+              lo que la lista significa de verdad. */}
+          <ul className="mt-6 grid gap-x-10 gap-y-4 sm:grid-cols-2">
             {active.benefits.map((b, i) => (
               <li key={i} className="flex gap-3 border-t border-line pt-4 text-body-s text-ink-2">
-                <span aria-hidden="true" className="font-mono text-mono text-ink-3">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
+                <svg
+                  width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"
+                  className="mt-1 shrink-0 text-brand"
+                >
+                  <path d="m5 13 4 4L19 7" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
                 {t(b, lang)}
               </li>
             ))}

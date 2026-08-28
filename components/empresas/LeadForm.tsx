@@ -1,11 +1,12 @@
 "use client";
 
-import { useId, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import Link from "next/link";
 import { t, type Locale } from "@/lib/i18n/config";
 import { href, routes } from "@/lib/i18n/routes";
 import { leadForm } from "@/content/copy/common";
 import { Button } from "@/components/ui/Button";
+import { PendingTag } from "@/components/ui/data";
 import { track } from "@/lib/analytics";
 import { cn } from "@/lib/cn";
 
@@ -18,7 +19,11 @@ import { cn } from "@/lib/cn";
  *   Sin él, el formulario no puede publicarse.
  * - Validación con errores accionables asociados por `aria-describedby`.
  * - Resumen de errores anunciado y foco gestionado al primer campo inválido.
- * - Estado de éxito anunciado con `role="status"`.
+ * - Estado de éxito anunciado con `role="status"` Y CON EL FOCO MOVIDO: al
+ *   sustituir el formulario, quien navega con teclado se quedaba en un botón
+ *   que ya no existía.
+ * - Obligatoriedad declarada en el DOM (`required` + `aria-required`), no solo
+ *   con un asterisco decorativo, y con leyenda que explica qué significa.
  * - `autocomplete` en todos los campos.
  * - Instrumentación completa del plan de medición.
  *
@@ -28,6 +33,16 @@ import { cn } from "@/lib/cn";
 
 type Status = "idle" | "loading" | "success";
 type Errors = Partial<Record<"name" | "email" | "company" | "consent", string>>;
+
+/**
+ * INTERRUPTOR DE HONESTIDAD. `false` mientras no exista destino de envío.
+ *
+ * Mientras esté en `false`, el formulario NO afirma haber enviado nada: el
+ * estado de confirmación explica que la integración está pendiente. Al conectar
+ * el CRM se pone en `true` y el copy real de `leadForm.success` —ya escrito y
+ * traducido— entra sin tocar nada más.
+ */
+const CRM_ENABLED = false;
 
 async function submitLead(payload: Record<string, FormDataEntryValue>): Promise<void> {
   // PUNTO DE INTEGRACIÓN CRM. Nombres de campo estables: name, email,
@@ -42,7 +57,14 @@ export function LeadForm({ lang, segmentKey, segmentLabel }: { lang: Locale; seg
   const [errors, setErrors] = useState<Errors>({});
   const [started, setStarted] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
+  const confirmationRef = useRef<HTMLDivElement>(null);
   const uid = useId();
+
+  /* Al sustituir el formulario por la confirmación, el foco viajaba a la nada.
+     Se mueve al panel para que el teclado y el lector de pantalla lleguen. */
+  useEffect(() => {
+    if (status === "success") confirmationRef.current?.focus();
+  }, [status]);
 
   const fieldId = (name: string) => `${uid}-${name}`;
   const errorId = (name: string) => `${uid}-${name}-error`;
@@ -87,15 +109,28 @@ export function LeadForm({ lang, segmentKey, segmentLabel }: { lang: Locale; seg
   };
 
   if (status === "success") {
+    const confirmation = CRM_ENABLED ? leadForm.success : leadForm.successPending;
+
     return (
-      <div role="status" className="border border-line bg-surface-1 p-8 md:p-10">
-        <div className="grid size-11 place-items-center rounded-(--radius-pill) brand-gradient text-on-brand">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <path d="m5 13 4 4L19 7" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-        </div>
-        <h3 className="mt-6 font-display text-display-m font-semibold text-ink">{t(leadForm.success.title, lang)}</h3>
-        <p className="mt-3 measure text-body text-ink-2">{t(leadForm.success.body, lang)}</p>
+      <div
+        ref={confirmationRef}
+        tabIndex={-1}
+        role="status"
+        className="border border-line bg-surface-1 p-8 md:p-10"
+      >
+        {CRM_ENABLED ? (
+          <div className="grid size-11 place-items-center rounded-(--radius-pill) brand-gradient text-on-brand">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="m5 13 4 4L19 7" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </div>
+        ) : (
+          /* Sin destino real no se pinta la marca de verificación: el gradiente
+             y el check comunican "hecho", y no está hecho. */
+          <PendingTag>{t(leadForm.successPending.tag, lang)}</PendingTag>
+        )}
+        <h3 className="mt-6 font-display text-display-m font-semibold text-ink">{t(confirmation.title, lang)}</h3>
+        <p className="mt-3 measure text-body text-ink-2">{t(confirmation.body, lang)}</p>
       </div>
     );
   }
@@ -117,6 +152,14 @@ export function LeadForm({ lang, segmentKey, segmentLabel }: { lang: Locale; seg
         </p>
       </div>
       <p className="mt-3 measure text-body-s text-ink-2">{t(leadForm.intro, lang)}</p>
+
+      {/* Aviso de demo ANTES de pedir el dato. Estaba en mono de 12px debajo
+          del botón, donde nadie lo lee antes de escribir su correo. */}
+      {!CRM_ENABLED && (
+        <p className="mt-6 border-l-2 border-warn/70 bg-warn/8 px-4 py-3 text-body-s text-ink-2">
+          {t(leadForm.demoNotice, lang)}
+        </p>
+      )}
 
       {hasErrors && (
         <p role="alert" className="mt-6 border-l-2 border-warn bg-warn/10 px-4 py-3 text-body-s text-ink">
@@ -173,7 +216,7 @@ export function LeadForm({ lang, segmentKey, segmentLabel }: { lang: Locale; seg
             name="message"
             rows={4}
             placeholder={t(leadForm.fields.message.placeholder, lang)}
-            className="mt-2 w-full resize-none rounded-(--radius-structural) border border-line bg-canvas px-4 py-3 text-body text-ink outline-none transition-colors placeholder:text-ink-3 focus:border-brand"
+            className="mt-2 w-full resize-none rounded-(--radius-structural) border border-line-control bg-canvas px-4 py-3 text-body text-ink outline-none transition-colors placeholder:text-ink-3 focus:border-brand"
           />
         </div>
 
@@ -186,6 +229,8 @@ export function LeadForm({ lang, segmentKey, segmentLabel }: { lang: Locale; seg
                 id={fieldId("consent")}
                 name="consent"
                 type="checkbox"
+                required
+                aria-required="true"
                 aria-describedby={errors.consent ? errorId("consent") : undefined}
                 aria-invalid={errors.consent ? true : undefined}
                 /* El pseudo-elemento amplía el área de activación a 44px sin
@@ -213,11 +258,12 @@ export function LeadForm({ lang, segmentKey, segmentLabel }: { lang: Locale; seg
         <input type="hidden" name="segment" value={segmentKey} />
       </div>
 
-      <div className="mt-8">
+      <p className="mt-6 text-caption text-ink-3">{t(leadForm.requiredLegend, lang)}</p>
+
+      <div className="mt-6">
         <Button type="submit" variant="primary" size="l" arrow loading={status === "loading"} className="w-full sm:w-auto">
           {status === "loading" ? t(leadForm.submitting, lang) : t(leadForm.submit, lang)}
         </Button>
-        <p className="mt-4 font-mono text-mono text-ink-3">{t(leadForm.demoNotice, lang)}</p>
       </div>
     </form>
   );
@@ -254,7 +300,14 @@ function Field({
       <label htmlFor={id} className="flex items-baseline justify-between gap-3 text-body-s text-ink-2">
         <span>
           {label}
-          {required && <span className="ml-1 text-brand">*</span>}
+          {/* El asterisco es refuerzo VISUAL. La obligatoriedad la comunica el
+              atributo del input, así que aquí se oculta a la asistencia para no
+              leer "asterisco" en cada campo. */}
+          {required && (
+            <span aria-hidden="true" className="ml-1 text-brand">
+              *
+            </span>
+          )}
         </span>
         {optionalLabel && <span className="font-mono text-mono text-ink-3">{optionalLabel}</span>}
       </label>
@@ -262,12 +315,18 @@ function Field({
         id={id}
         name={name}
         type={type}
+        /* `required` faltaba en el DOM: el asterisco era el único indicio y
+           ningún lector de pantalla anunciaba el campo como obligatorio
+           (WCAG 3.3.2). El formulario valida en JS con `noValidate`, así que
+           esto es semántica, no una segunda validación. */
+        required={required}
+        aria-required={required || undefined}
         autoComplete={autoComplete}
         aria-describedby={describedBy}
         aria-invalid={error ? true : undefined}
         className={cn(
           "mt-2 min-h-12 w-full rounded-(--radius-structural) border bg-canvas px-4 py-3 text-body text-ink outline-none transition-colors",
-          error ? "border-warn" : "border-line focus:border-brand"
+          error ? "border-warn" : "border-line-control focus:border-brand"
         )}
       />
       {hint && !error && (

@@ -6,7 +6,7 @@ import { red } from "@/content/copy/red";
 import { actions } from "@/content/copy/common";
 import { media } from "@/content/data/media";
 import { getCitiesWithStations } from "@/lib/data";
-import { Container, Eyebrow } from "@/components/ui/layout";
+import { Section, Container, Eyebrow } from "@/components/ui/layout";
 import { Media } from "@/components/ui/Media";
 import { Button } from "@/components/ui/Button";
 
@@ -26,7 +26,7 @@ export function Hero({ lang }: { lang: Locale }) {
   const coverage = getCitiesWithStations();
 
   return (
-    <section className="relative flex min-h-[88dvh] flex-col justify-end overflow-hidden">
+    <Section register="impacto" space="none" className="flex min-h-[88dvh] flex-col justify-end overflow-hidden">
       {/* Material real de fondo */}
       <div className="absolute inset-0">
         <Media asset={media.infraestructuraAmplia} lang={lang} fill priority sizes="100vw" className="h-full" />
@@ -40,7 +40,7 @@ export function Hero({ lang }: { lang: Locale }) {
       {/* Acento de corriente: una sola línea, en el borde. Señal, no textura. */}
       <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-px brand-gradient opacity-70" />
 
-      <Container className="relative z-10 pb-(--spacing-section-tight) pt-32">
+      <Container className="relative z-(--z-raised) pb-(--spacing-section-tight) pt-32">
         <Eyebrow tone="brand">{t(home.hero.eyebrow, lang)}</Eyebrow>
 
         <h1 className="mt-6 max-w-[15ch] font-display text-display-2xl font-semibold text-ink">
@@ -55,11 +55,21 @@ export function Hero({ lang }: { lang: Locale }) {
           </Button>
         </div>
 
+        {/* Señal de scroll. `home.hero.scrollHint` estaba escrito y sin usar, y
+            el hero mide 88dvh con un beat de 170vh justo debajo: sin una pista,
+            no hay nada que indique que la página continúa. */}
+        <p aria-hidden="true" className="mt-12 flex items-center gap-2 font-mono text-mono uppercase tracking-wider text-ink-3">
+          {t(home.hero.scrollHint, lang)}
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" className="animate-bounce motion-reduce:animate-none">
+            <path d="M12 5v14M6 13l6 6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </p>
+
         {/* Cobertura real desde la colección de ciudades: contenido útil que
             ancla la composición y abre una segunda entrada al journey B2C.
             No es decoración ni una cifra inventada. */}
         {coverage.length > 0 && (
-          <nav aria-label={t(red.cities.title, lang)} className="mt-14 border-t border-line-strong pt-6">
+          <nav aria-label={t(red.cities.title, lang)} className="mt-8 border-t border-line-strong pt-6">
             <ul className="flex flex-wrap items-center gap-x-8 gap-y-2">
               <li className="font-mono text-mono uppercase tracking-wider text-ink-3">
                 {t(red.cities.title, lang)}
@@ -78,6 +88,6 @@ export function Hero({ lang }: { lang: Locale }) {
           </nav>
         )}
       </Container>
-    </section>
+    </Section>
   );
 }

@@ -1,0 +1,53 @@
+{
+  "version": 1,
+  "skills": {
+    "accessibility-auditor": {
+      "source": "richhemsley3/claude-design-skills",
+      "sourceType": "github",
+      "skillPath": "skills/accessibility-auditor/SKILL.md",
+      "computedHash": "0b703391dec0540a562197b53f27dc633a727ed903bb7c22bbbf8c510ff137e0"
+    },
+    "animate": {
+      "source": "emilkowalski/skills",
+      "sourceType": "github",
+      "skillPath": "skills/animate/SKILL.md",
+      "computedHash": "609e30351bf518b21a8cfe87cd1111554855527075d6563605bafe61963252f7"
+    },
+    "content-copy-designer": {
+      "source": "richhemsley3/claude-design-skills",
+      "sourceType": "github",
+      "skillPath": "skills/content-copy-designer/SKILL.md",
+      "computedHash": "be68ae2717ff0b79ab9cd914cf64f2fd54baf6b18df02a175d8cde7624cd273a"
+    },
+    "design-critique": {
+      "source": "richhemsley3/claude-design-skills",
+      "sourceType": "github",
+      "skillPath": "skills/design-critique/SKILL.md",
+      "computedHash": "2fa3e382abcc81f5c953d180738cc52ecab4bf602c8910789beeacaeef37b712"
+    },
+    "design-taste-frontend": {
+      "source": "leonxlnx/taste-skill",
+      "sourceType": "github",
+      "skillPath": "skills/taste-skill/SKILL.md",
+      "computedHash": "6d838b246d0e35d0b53f4f23f98ba7a1dd561937e64f7d0c7553b0928e376c3e"
+    },
+    "emil-design-eng": {
+      "source": "emilkowalski/skills",
+      "sourceType": "github",
+      "skillPath": "skills/emil-design-eng/SKILL.md",
+      "computedHash": "41b0a4dc1a27164fe297845a6c6850a39e9242c42c9be999967fcee9df2c5974"
+    },
+    "impeccable": {
+      "source": "pbakaus/impeccable",
+      "sourceType": "github",
+      "skillPath": ".agents/skills/impeccable/SKILL.md",
+      "computedHash": "0a96effa94a79b4047085058c6bfb0172d442e279cf09c646f6f9f96a14e991f"
+    },
+    "information-architect": {
+      "source": "richhemsley3/claude-design-skills",
+      "sourceType": "github",
+      "skillPath": "skills/information-architect/SKILL.md",
+      "computedHash": "c0fe27768ff4a5c5c6b27cb388ea477e7bf45688f23037ddf7a857723c92f293"
+    }
+  }
+}

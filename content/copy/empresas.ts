@@ -94,5 +94,45 @@ export const empresas = {
   contact: {
     eyebrow: { es: "Hablemos", en: "Let's talk" } satisfies Localized,
     title: { es: "Cuéntanos tu caso", en: "Tell us your case" } satisfies Localized,
+    /**
+     * QUÉ PASA DESPUÉS. La columna izquierda del bloque de contacto tenía un
+     * antetítulo, un titular y ~600px de vacío al lado de un formulario alto.
+     * Ese es exactamente el espacio donde va lo que reduce la fricción del lead.
+     *
+     * Deliberadamente SIN compromiso de plazo: mientras no exista integración de
+     * CRM, prometer un tiempo de respuesta es la misma falta que el estado de
+     * éxito que se corrigió en el Bloque 7.
+     */
+    nextTitle: { es: "Qué pasa después", en: "What happens next" } satisfies Localized,
+    next: [
+      {
+        step: "01",
+        title: { es: "Revisamos tu caso", en: "We review your case" } satisfies Localized,
+        body: {
+          es: "Un especialista lee lo que nos cuentas y mira si tu sitio encaja con lo que sabemos operar bien.",
+          en: "A specialist reads what you send and checks whether your site fits what we know how to run well.",
+        } satisfies Localized,
+      },
+      {
+        step: "02",
+        title: { es: "Hablamos del sitio", en: "We talk about the site" } satisfies Localized,
+        body: {
+          es: "Una conversación corta para entender el parqueadero, la capacidad eléctrica y quién va a cargar.",
+          en: "A short conversation to understand the parking, the electrical capacity and who will charge.",
+        } satisfies Localized,
+      },
+      {
+        step: "03",
+        title: { es: "Recibes una propuesta", en: "You get a proposal" } satisfies Localized,
+        body: {
+          es: "Con potencia, número de puntos y modelo comercial concretos para tu caso. Sin compromiso.",
+          en: "With specific power, number of points and commercial model for your case. No commitment.",
+        } satisfies Localized,
+      },
+    ],
+    privacyNote: {
+      es: "Usamos tus datos solo para responder a esta solicitud.",
+      en: "We use your data only to respond to this request.",
+    } satisfies Localized,
   },
 };

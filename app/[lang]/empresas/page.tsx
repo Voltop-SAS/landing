@@ -5,9 +5,8 @@ import { routes, absoluteUrl } from "@/lib/i18n/routes";
 import { empresas } from "@/content/copy/empresas";
 import { media } from "@/content/data/media";
 import { getBusinessSegments, getFeaturedCase } from "@/lib/data";
-import { Section, Container, Eyebrow } from "@/components/ui/layout";
+import { Section, Container, Eyebrow, SectionHeading, ProcessList } from "@/components/ui/layout";
 import { Media } from "@/components/ui/Media";
-import { Reveal } from "@/components/ui/Reveal";
 import { BusinessFlow } from "@/components/empresas/BusinessFlow";
 
 type Props = { params: Promise<{ lang: string }> };
@@ -55,7 +54,7 @@ export default async function EmpresasPage({ params }: Props) {
         </Container>
 
         <Container width="wide" className="mt-16">
-          <Media asset={media.espacioComercial} lang={lang} sizes="(min-width: 1600px) 1600px, 100vw" className="aspect-[21/9]" />
+          <Media asset={media.espacioComercial} lang={lang} sizes="(min-width: 1600px) 1600px, 100vw" aspect="21/9" />
         </Container>
       </Section>
 
@@ -64,25 +63,22 @@ export default async function EmpresasPage({ params }: Props) {
         <Container>
           <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
             <div>
-              <Eyebrow>{t(empresas.capabilities.eyebrow, lang)}</Eyebrow>
-              <h2 id="capacidades-title" className="mt-4 font-display text-display-l font-semibold text-ink">
+              <SectionHeading id="capacidades-title" kicker={t(empresas.capabilities.eyebrow, lang)}>
                 {t(empresas.capabilities.title, lang)}
-              </h2>
+              </SectionHeading>
             </div>
             <p className="measure-narrow text-body text-ink-2">{t(empresas.capabilities.lead, lang)}</p>
           </div>
 
-          <ol className="mt-14 grid gap-x-10 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
-            {empresas.capabilities.steps.map((s, i) => (
-              <Reveal as="li" key={s.step} delay={i * 0.06}>
-                <div className="border-t border-line pt-6">
-                  <span className="font-mono text-mono text-brand">{s.step}</span>
-                  <h3 className="mt-4 font-display text-display-s font-semibold text-ink">{t(s.title, lang)}</h3>
-                  <p className="mt-2 text-body-s text-ink-2">{t(s.body, lang)}</p>
-                </div>
-              </Reveal>
-            ))}
-          </ol>
+          {/* SÍ es una secuencia: evaluar precede a instalar. */}
+          <ProcessList
+            className="mt-12 sm:grid-cols-2 lg:grid-cols-4"
+            items={empresas.capabilities.steps.map((s) => ({
+              step: s.step,
+              title: t(s.title, lang),
+              body: t(s.body, lang),
+            }))}
+          />
         </Container>
       </Section>
 

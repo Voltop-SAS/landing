@@ -21,7 +21,7 @@ export function LangSwitch({ lang }: { lang: Locale }) {
 
   return (
     <div
-      className="flex items-center rounded-(--radius-pill) border border-line p-0.5"
+      className="flex items-center rounded-(--radius-pill) border border-line-control p-0.5"
       role="group"
       aria-label={t(a11y.languageSelector, lang)}
     >

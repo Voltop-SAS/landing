@@ -43,15 +43,10 @@ export const actions = {
   businessSolutions: { es: "Soluciones para empresas", en: "Business solutions" } satisfies Localized,
   talkToTeam: { es: "Hablar con el equipo", en: "Talk to the team" } satisfies Localized,
   seeStation: { es: "Ver esta estación", en: "See this station" } satisfies Localized,
-  seeAllStations: { es: "Ver todas las estaciones", en: "See all stations" } satisfies Localized,
   getDirections: { es: "Cómo llegar", en: "Get directions" } satisfies Localized,
-  openInApp: { es: "Abrir en la app", en: "Open in the app" } satisfies Localized,
-  downloadApp: { es: "Descargar la app", en: "Download the app" } satisfies Localized,
   knowVoltop: { es: "Conoce a Voltop", en: "About Voltop" } satisfies Localized,
-  seeImpact: { es: "Ver nuestro impacto", en: "See our impact" } satisfies Localized,
   backToNetwork: { es: "Volver a la red", en: "Back to the network" } satisfies Localized,
   hostStation: { es: "Lleva Voltop a tu espacio", en: "Bring Voltop to your space" } satisfies Localized,
-  playVideo: { es: "Reproducir video", en: "Play video" } satisfies Localized,
 };
 
 /** Estados de estación — un único origen para toda la UI. */
@@ -62,8 +57,6 @@ export const stationStatus = {
 };
 
 export const units = {
-  kw: { es: "kW", en: "kW" } satisfies Localized,
-  points: { es: "puntos de carga", en: "charging points" } satisfies Localized,
   pointsShort: { es: "puntos", en: "points" } satisfies Localized,
   stations: { es: "estaciones", en: "stations" } satisfies Localized,
   station: { es: "estación", en: "station" } satisfies Localized,
@@ -123,11 +116,21 @@ export const leadForm = {
   submit: { es: "Enviar solicitud", en: "Send request" } satisfies Localized,
   submitting: { es: "Enviando…", en: "Sending…" } satisfies Localized,
 
+  /** El asterisco por sí solo no comunica nada: necesita leyenda (WCAG 3.3.2). */
+  requiredLegend: {
+    es: "Los campos marcados con * son obligatorios.",
+    en: "Fields marked with * are required.",
+  } satisfies Localized,
+
   errorSummary: {
     es: "Revisa los campos marcados para poder enviar tu solicitud.",
     en: "Please review the highlighted fields to send your request.",
   } satisfies Localized,
 
+  /**
+   * Estado de éxito REAL. Se usa solo cuando existe destino de envío.
+   * Ver `CRM_ENABLED` en components/empresas/LeadForm.tsx.
+   */
   success: {
     title: { es: "Solicitud enviada", en: "Request sent" } satisfies Localized,
     body: {
@@ -136,9 +139,29 @@ export const leadForm = {
     } satisfies Localized,
   },
 
+  /**
+   * Estado de éxito MIENTRAS NO HAY CRM (decisión abierta O3).
+   *
+   * El copy de `success` prometía revisión y respuesta en uno o dos días
+   * hábiles sobre un envío que no existe: `submitLead` descarta el payload.
+   * Un titular es un contrato (§19) y este era el punto donde romperlo tenía
+   * consecuencia comercial directa. Mientras el destino no exista, se dice lo
+   * que de verdad pasó. No se ofrece un canal alternativo porque no hay
+   * correo ni teléfono confirmados en el dataset: no se inventan datos (§33).
+   */
+  successPending: {
+    tag: { es: "Sin enviar", en: "Not sent" } satisfies Localized,
+    title: { es: "Este formulario aún no envía", en: "This form doesn't send yet" } satisfies Localized,
+    body: {
+      es: "La integración con el CRM está pendiente de definir: tu solicitud no se ha enviado y no se ha guardado ningún dato. Cuando la integración esté lista, este mismo formulario llegará al equipo comercial.",
+      en: "The CRM integration is yet to be defined: your request has not been sent and no data has been stored. Once the integration is live, this same form will reach the sales team.",
+    } satisfies Localized,
+  },
+
+  /** Aviso ANTES de pedir los datos, no en letra pequeña después del botón. */
   demoNotice: {
-    es: "Formulario de demostración · la integración con CRM está pendiente de definir",
-    en: "Demo form · CRM integration is yet to be defined",
+    es: "Formulario de demostración: todavía no envía solicitudes. La integración con el CRM está pendiente de definir.",
+    en: "Demo form: it doesn't send requests yet. The CRM integration is yet to be defined.",
   } satisfies Localized,
 };
 
@@ -162,11 +185,8 @@ export const states = {
       en: "The link may have changed, or the station may no longer be published.",
     } satisfies Localized,
     action: { es: "Ir a la red", en: "Go to the network" } satisfies Localized,
+    home: { es: "Ir al inicio", en: "Go to homepage" } satisfies Localized,
   },
-  pendingData: {
-    es: "Dato pendiente de confirmación",
-    en: "Data pending confirmation",
-  } satisfies Localized,
   pendingRealtime: {
     es: "La disponibilidad en tiempo real llegará con la integración de datos de operación.",
     en: "Real-time availability will arrive with the operations data integration.",
@@ -186,10 +206,28 @@ export const a11y = {
   languageSelector: { es: "Seleccionar idioma", en: "Select language" } satisfies Localized,
   goHome: { es: "Voltop · Ir al inicio", en: "Voltop · Go to homepage" } satisfies Localized,
   breadcrumb: { es: "Ruta de navegación", en: "Breadcrumb" } satisfies Localized,
+  /** Se anuncia en todo enlace con `target="_blank"` (WCAG 3.2.5). */
+  opensInNewTab: { es: "Se abre en una pestaña nueva", en: "Opens in a new tab" } satisfies Localized,
   placeholderMedia: {
     es: "Contenido provisional: material pendiente de entrega",
     en: "Provisional content: material pending delivery",
   } satisfies Localized,
+};
+
+/* ---------------------------------------------------------------- */
+/* Rótulo del hueco de media                                         */
+/* ---------------------------------------------------------------- */
+
+/**
+ * Estas tres cadenas estaban escritas EN LÍNEA dentro de `Media.tsx`, así que
+ * la versión inglesa del sitio mostraba "FOTO · PENDIENTE". Es exactamente el
+ * fallo que la capa de copy existe para impedir (§36.15: todo el copy fuera
+ * del JSX), y era visible en producción.
+ */
+export const mediaPlaceholder = {
+  photo: { es: "Foto", en: "Photo" } satisfies Localized,
+  video: { es: "Video", en: "Video" } satisfies Localized,
+  pending: { es: "pendiente", en: "pending" } satisfies Localized,
 };
 
 /* ---------------------------------------------------------------- */

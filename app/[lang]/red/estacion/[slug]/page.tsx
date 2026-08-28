@@ -6,10 +6,11 @@ import { href, routes, absoluteUrl, SITE_URL } from "@/lib/i18n/routes";
 import { red, station as stationCopy } from "@/content/copy/red";
 import { actions, a11y, units } from "@/content/copy/common";
 import { getStations, getStation, getCity, getStationsByCity } from "@/lib/data";
-import { Section, Container, Eyebrow } from "@/components/ui/layout";
+import { Section, Container, Eyebrow, SectionHeading } from "@/components/ui/layout";
 import { StatusBadge, SpecList, PendingTag } from "@/components/ui/data";
 import { MediaPending } from "@/components/ui/Media";
 import { Button } from "@/components/ui/Button";
+import { DirectionsButton } from "@/components/red/DirectionsButton";
 import { media } from "@/content/data/media";
 
 type Props = { params: Promise<{ lang: string; slug: string }> };
@@ -20,6 +21,22 @@ type Props = { params: Promise<{ lang: string; slug: string }> };
  * Generada íntegramente desde datos: añadir una estación al dataset crea la
  * página, su metadata y sus datos estructurados. Cero trabajo manual (§30).
  */
+/**
+ * PARAMS CERRADOS. `notFound()` lanzado desde una página no resuelve ningún
+ * boundary en Next 16 con este árbol de rutas: sirve un documento de error con
+ * el body VACÍO y el 404 con marca solo aparece tras hidratar, así que un
+ * crawler ve una página en blanco.
+ *
+ * Con `dynamicParams = false` el rechazo lo hace el ROUTER: un slug que no está
+ * en `generateStaticParams` devuelve 404 antes de renderizar nada, y ese 404 sí
+ * usa `app/not-found.tsx`. Es además lo correcto para rutas generadas desde
+ * datos: un slug inexistente no debe renderizarse bajo demanda.
+ *
+ * No cuesta flexibilidad: el sitio ya es estático por completo y cualquier
+ * cambio en el dataset exige un build.
+ */
+export const dynamicParams = false;
+
 export function generateStaticParams() {
   return locales.flatMap((lang) => getStations().map((s) => ({ lang, slug: s.slug })));
 }
@@ -62,10 +79,10 @@ export default async function StationPage({ params }: Props) {
     : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${s.name}, ${t(s.address, lang)}`)}`;
 
   const specs = [
-    { label: t(stationCopy.specs.power, lang), value: `${s.powerKw} kW` },
-    { label: t(stationCopy.specs.points, lang), value: `${s.points}` },
-    { label: t(stationCopy.specs.connectors, lang), value: s.connectors.join(" · ") },
-    { label: t(stationCopy.specs.hours, lang), value: t(s.hours, lang) },
+    { label: t(stationCopy.specs.power, lang), value: `${s.powerKw} kW`, tone: "number" as const },
+    { label: t(stationCopy.specs.points, lang), value: `${s.points}`, tone: "number" as const },
+    { label: t(stationCopy.specs.connectors, lang), value: s.connectors.join(" · "), tone: "text" as const },
+    { label: t(stationCopy.specs.hours, lang), value: t(s.hours, lang), tone: "text" as const },
   ];
 
   /* Datos estructurados: cada estación es un activo de búsqueda local (§29). */
@@ -124,9 +141,13 @@ export default async function StationPage({ params }: Props) {
         </Container>
       </Section>
 
-      {/* Media propia de la estación. El dataset aún no trae archivos (§32). */}
+      {/* Media propia de la estación. El dataset aún no trae archivos (§32).
+          Va en `content`, no en `wide`: sobresalía 100px a la izquierda del
+          titular. El sangrado se reserva a media que lo justifique. */}
       <Section space="none" className="pb-(--spacing-section-tight)">
-        <Container width="wide">
+        <Container>
+          {/* `MediaPending` no impone forma propia, así que aquí el recorte sí
+              va por `className`: no hay clase nativa con la que competir. */}
           <MediaPending
             asset={{ ...media.detalleCarga, alt: { es: `Fotografía de la estación ${s.name}`, en: `Photo of the ${s.name} station` } }}
             lang={lang}
@@ -139,27 +160,33 @@ export default async function StationPage({ params }: Props) {
         <Container>
           <div className="grid gap-14 lg:grid-cols-[1.7fr_1fr]">
             <div>
-              <h2 className="font-mono text-mono uppercase tracking-wider text-ink-3">
-                {t(stationCopy.specs.title, lang)}
-              </h2>
-              <SpecList items={specs} className="mt-5 md:grid-cols-4" />
+              <SectionHeading size="m">{t(stationCopy.specs.title, lang)}</SectionHeading>
+              {/* 2×2, no 4×1. Cuatro columnas dentro de la columna de contenido
+                  dejaban 128px útiles por celda: el horario envolvía en tres
+                  líneas a CUALQUIER ancho, incluido 1440. */}
+              <SpecList items={specs} className="mt-6" />
 
-              <div className="mt-8 flex flex-wrap items-center gap-4">
-                <p className="font-mono text-mono text-ink-3">{t(stationCopy.specs.pricing, lang)}:</p>
-                {s.pricing ? (
-                  <p className="font-display text-display-s text-ink">
-                    {s.pricing.perKwh} {s.pricing.currency}/kWh
+              <div className="mt-8">
+                <div className="flex flex-wrap items-center gap-4">
+                  <p className="font-mono text-mono uppercase tracking-wider text-ink-3">
+                    {t(stationCopy.specs.pricing, lang)}
                   </p>
-                ) : (
-                  <PendingTag>{t(stationCopy.pendingPricing, lang)}</PendingTag>
+                  {s.pricing ? (
+                    <p className="font-display text-display-s text-ink">
+                      {s.pricing.perKwh} {s.pricing.currency}/kWh
+                    </p>
+                  ) : (
+                    <PendingTag>{t(stationCopy.pendingPricingTag, lang)}</PendingTag>
+                  )}
+                </div>
+                {!s.pricing && (
+                  <p className="mt-2 text-caption text-ink-3">{t(stationCopy.pendingPricing, lang)}</p>
                 )}
               </div>
 
               {s.services.length > 0 && (
-                <div className="mt-12">
-                  <h2 className="font-mono text-mono uppercase tracking-wider text-ink-3">
-                    {t(stationCopy.services, lang)}
-                  </h2>
+                <div className="mt-14">
+                  <SectionHeading size="s">{t(stationCopy.services, lang)}</SectionHeading>
                   <ul className="mt-5 flex flex-wrap gap-2">
                     {s.services.map((sv, i) => (
                       <li
@@ -175,14 +202,13 @@ export default async function StationPage({ params }: Props) {
             </div>
 
             <aside>
-              <h2 className="font-mono text-mono uppercase tracking-wider text-ink-3">
-                {t(stationCopy.location, lang)}
-              </h2>
+              <SectionHeading size="s">{t(stationCopy.location, lang)}</SectionHeading>
               <p className="mt-5 text-body-s text-ink-2">{t(s.address, lang)}</p>
               <div className="mt-6 flex flex-col gap-3">
-                <Button variant="primary" arrow href={directions} external className="w-full">
-                  {t(actions.getDirections, lang)}
-                </Button>
+                {/* `lang` no es decorativo: habilita el aviso de "se abre en
+                    una pestaña nueva". Y `estacion_como_llegar` es la conversión
+                    final del journey B2C y no se estaba midiendo (§31). */}
+                <DirectionsButton lang={lang} href={directions} slug={s.slug} />
               </div>
               {!s.geo && (
                 <p className="mt-4 text-caption text-ink-3">{t(stationCopy.pendingGeo, lang)}</p>
@@ -195,8 +221,8 @@ export default async function StationPage({ params }: Props) {
       {nearby.length > 0 && (
         <Section space="tight" className="border-t border-line">
           <Container>
-            <h2 className="font-mono text-mono uppercase tracking-wider text-ink-3">{t(stationCopy.nearby, lang)}</h2>
-            <ul className="mt-6">
+            <SectionHeading size="m">{t(stationCopy.nearby, lang)}</SectionHeading>
+            <ul className="mt-8">
               {nearby.map((n) => (
                 <li key={n.slug}>
                   <Link

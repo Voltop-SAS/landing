@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { isLocale, t, type Locale } from "@/lib/i18n/config";
 import { routes, absoluteUrl } from "@/lib/i18n/routes";
 import { legal } from "@/content/copy/legal";
-import { Section, Container, Eyebrow } from "@/components/ui/layout";
+import { Section, Container, Eyebrow, SectionHeading } from "@/components/ui/layout";
 import { PendingTag } from "@/components/ui/data";
 
 type Props = { params: Promise<{ lang: string }> };
@@ -52,19 +52,25 @@ export default async function PrivacyPage({ params }: Props) {
             <PendingTag>{t(p.pendingTag, lang)}</PendingTag>
             <p className="mt-4 text-body-l text-ink-2">{t(p.pendingBody, lang)}</p>
 
-            <h2 className="mt-10 font-mono text-mono uppercase tracking-wider text-ink-3">
+            <SectionHeading size="s" className="mt-12">
               {t(p.requiredContentsTitle, lang)}
-            </h2>
-            <ul className="mt-5 space-y-3">
+            </SectionHeading>
+            {/* Aquí el número SÍ significa algo: es un índice de contenidos
+                que el área legal va a ir cubriendo uno por uno. `<ol>`, no
+                `<ul>` con números pintados a mano. */}
+            <ol className="mt-6 space-y-0">
               {p.requiredContents.map((item, i) => (
-                <li key={i} className="flex gap-3 border-t border-line pt-3 text-body-s text-ink-2">
-                  <span aria-hidden="true" className="font-mono text-mono text-ink-3">
+                <li
+                  key={i}
+                  className="flex gap-4 border-t border-line py-3 text-body-s text-ink-2"
+                >
+                  <span aria-hidden="true" className="shrink-0 font-mono text-mono text-ink-3">
                     {String(i + 1).padStart(2, "0")}
                   </span>
                   {t(item, lang)}
                 </li>
               ))}
-            </ul>
+            </ol>
           </div>
         ) : (
           <div className="mt-12 space-y-12">

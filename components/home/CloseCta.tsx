@@ -2,7 +2,7 @@ import { t, type Locale } from "@/lib/i18n/config";
 import { href, routes } from "@/lib/i18n/routes";
 import { home } from "@/content/copy/home";
 import { actions } from "@/content/copy/common";
-import { Container } from "@/components/ui/layout";
+import { Section, Container, SectionHeading } from "@/components/ui/layout";
 import { Button } from "@/components/ui/Button";
 
 /**
@@ -16,15 +16,15 @@ import { Button } from "@/components/ui/Button";
  */
 export function CloseCta({ lang }: { lang: Locale }) {
   return (
-    <section className="grain relative overflow-hidden border-t border-line py-(--spacing-section)">
+    <Section register="impacto" space="base" className="overflow-hidden border-t border-line">
       <div
         aria-hidden="true"
         className="pointer-events-none absolute -bottom-1/2 left-1/2 size-[42rem] -translate-x-1/2 rounded-full opacity-20 blur-[140px]"
         style={{ background: "radial-gradient(circle, var(--color-brand), transparent 70%)" }}
       />
 
-      <Container className="relative z-10">
-        <h2 className="font-display text-display-l font-semibold text-ink">{t(home.close.title, lang)}</h2>
+      <Container className="relative z-(--z-raised)">
+        <SectionHeading>{t(home.close.title, lang)}</SectionHeading>
 
         <div className="mt-12 grid gap-10 md:grid-cols-[1.15fr_1fr] md:gap-0">
           <div className="md:pr-14">
@@ -52,6 +52,6 @@ export function CloseCta({ lang }: { lang: Locale }) {
           </div>
         </div>
       </Container>
-    </section>
+    </Section>
   );
 }

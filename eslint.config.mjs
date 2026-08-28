@@ -12,6 +12,9 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Skills instaladas: código de terceros. `npx eslint .` devolvía 147
+    // warnings suyos y enterraba los del proyecto.
+    ".claude/**",
   ]),
 ]);
 

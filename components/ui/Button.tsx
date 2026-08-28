@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { a11y } from "@/content/copy/common";
+import { t, type Locale } from "@/lib/i18n/config";
 import { cn } from "@/lib/cn";
 
 /**
@@ -30,7 +32,14 @@ type Common = {
 
 type AsLink = Common & {
   href: string;
+  /**
+   * Abre en pestaña nueva Y LO ANUNCIA. Antes solo hacía lo primero: "Cómo
+   * llegar" —el CTA principal de la ficha de estación— saltaba a Google Maps
+   * sin icono, sin texto y sin aviso a lectores de pantalla (WCAG 3.2.5).
+   * Requiere `lang` para poder decirlo en el idioma de la página.
+   */
   external?: boolean;
+  lang?: Locale;
   /** Solo para instrumentación del plan de medición. */
   onClick?: () => void;
   type?: never;
@@ -59,28 +68,53 @@ const sizes: Record<Size, string> = {
   s: "min-h-11 px-5 text-body-s",
 };
 
+/**
+ * `secondary` y `ghost` usan `line-control`: en un botón sin relleno, el borde
+ * ES lo que lo hace reconocible como control, así que WCAG 1.4.11 pide ≥3:1.
+ * `line` daba 1.25:1 y `line-strong` 1.68:1.
+ */
 const variants: Record<Variant, string> = {
   primary: "brand-gradient text-on-brand font-semibold hover:brightness-105 hover:energy-glow",
-  secondary: "bg-surface-2 text-ink border border-line-strong hover:bg-surface-3",
-  ghost: "text-ink border border-line hover:border-line-strong hover:bg-surface-1",
+  secondary: "bg-surface-2 text-ink border border-line-control hover:bg-surface-3",
+  ghost: "text-ink border border-line-control hover:border-line-strong hover:bg-surface-1",
   link: "text-ink-2 hover:text-ink px-0 min-h-11",
 };
 
-function Inner({ children, arrow, loading }: { children: React.ReactNode; arrow?: boolean; loading?: boolean }) {
+function Inner({
+  children,
+  arrow,
+  loading,
+  external,
+}: {
+  children: React.ReactNode;
+  arrow?: boolean;
+  loading?: boolean;
+  external?: boolean;
+}) {
   return (
     <>
       <span className={cn("inline-flex items-center gap-2", loading && "opacity-0")}>
         {children}
         {arrow && (
+          /* La flecha de salida sustituye a la de dirección cuando el destino
+             está fuera del sitio: es la señal visual del aviso que el `sr-only`
+             da a la asistencia. Una sola flecha, contextual (§12). */
           <svg
             width="16"
             height="16"
             viewBox="0 0 24 24"
             fill="none"
             aria-hidden="true"
-            className="shrink-0 transition-transform duration-(--duration-fast) ease-out group-hover:translate-x-0.5"
+            className={cn(
+              "shrink-0 transition-transform duration-(--duration-fast) ease-out",
+              external ? "group-hover:-translate-y-0.5 group-hover:translate-x-0.5" : "group-hover:translate-x-0.5"
+            )}
           >
-            <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            {external ? (
+              <path d="M7 17 17 7M9 7h8v8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            ) : (
+              <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            )}
           </svg>
         )}
       </span>
@@ -113,11 +147,14 @@ export function Button(props: AsLink | AsButton) {
   );
 
   if ("href" in rest && rest.href) {
-    const { href, external, ...anchorRest } = rest as AsLink;
+    const { href, external, lang, ...anchorRest } = rest as AsLink;
     if (external) {
       return (
         <a href={href} className={classes} rel="noopener noreferrer" target="_blank" {...anchorRest}>
-          <Inner arrow={arrow}>{children}</Inner>
+          <Inner arrow={arrow} external>
+            {children}
+            {lang && <span className="sr-only"> ({t(a11y.opensInNewTab, lang)})</span>}
+          </Inner>
         </a>
       );
     }

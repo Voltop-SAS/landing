@@ -1,6 +1,7 @@
 "use client";
 
 import { motion, useReducedMotion } from "motion/react";
+import { duration, ease } from "@/lib/motion";
 
 /**
  * TRANSICIÓN ENTRE PÁGINAS.
@@ -10,17 +11,23 @@ import { motion, useReducedMotion } from "motion/react";
  * documento), la continuidad entre páginas es posible: una entrada breve y
  * sobria que evita el corte seco.
  *
- * Deliberadamente mínima — solo `opacity` y `transform`, y anulada con
+ * Deliberadamente mínima — solo `transform`, y anulada con
  * `prefers-reduced-motion` (§21). No es un efecto: es continuidad espacial.
+ *
+ * SIN `opacity` A PROPÓSITO. Motion serializa el estado inicial como estilo en
+ * línea, así que un `initial={{ opacity: 0 }}` aquí significaba servir la
+ * PÁGINA COMPLETA invisible: si el JS fallaba no había sitio, y el elemento
+ * LCP (el titular del hero) arrancaba a opacidad 0 y castigaba la métrica.
+ * Animar solo el desplazamiento conserva la continuidad sin ese riesgo.
  */
 export default function Template({ children }: { children: React.ReactNode }) {
   const reduce = useReducedMotion();
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: reduce ? 0 : 8 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: reduce ? 0 : 0.32, ease: [0.22, 1, 0.36, 1] }}
+      initial={{ y: reduce ? 0 : 8 }}
+      animate={{ y: 0 }}
+      transition={{ duration: reduce ? 0 : duration.base, ease: ease.standard }}
     >
       {children}
     </motion.div>

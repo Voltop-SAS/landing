@@ -6,9 +6,10 @@ import { href, routes, absoluteUrl } from "@/lib/i18n/routes";
 import { red, city as cityCopy } from "@/content/copy/red";
 import { units, a11y } from "@/content/copy/common";
 import { getCities, getCity, getStationsByCity } from "@/lib/data";
-import { Section, Container, Eyebrow } from "@/components/ui/layout";
+import { Section, Container, Eyebrow, SectionHeading } from "@/components/ui/layout";
 import { StatusBadge } from "@/components/ui/data";
 import { Reveal } from "@/components/ui/Reveal";
+import { TrackView } from "@/components/analytics/TrackView";
 
 type Props = { params: Promise<{ lang: string; ciudad: string }> };
 
@@ -19,6 +20,22 @@ type Props = { params: Promise<{ lang: string; ciudad: string }> };
  * el canal de adquisición B2C más barato del proyecto (§29).
  * Añadir una ciudad al dataset genera esta ruta automáticamente.
  */
+/**
+ * PARAMS CERRADOS. `notFound()` lanzado desde una página no resuelve ningún
+ * boundary en Next 16 con este árbol de rutas: sirve un documento de error con
+ * el body VACÍO y el 404 con marca solo aparece tras hidratar, así que un
+ * crawler ve una página en blanco.
+ *
+ * Con `dynamicParams = false` el rechazo lo hace el ROUTER: un slug que no está
+ * en `generateStaticParams` devuelve 404 antes de renderizar nada, y ese 404 sí
+ * usa `app/not-found.tsx`. Es además lo correcto para rutas generadas desde
+ * datos: un slug inexistente no debe renderizarse bajo demanda.
+ *
+ * No cuesta flexibilidad: el sitio ya es estático por completo y cualquier
+ * cambio en el dataset exige un build.
+ */
+export const dynamicParams = false;
+
 export function generateStaticParams() {
   return locales.flatMap((lang) => getCities().map((c) => ({ lang, ciudad: c.slug })));
 }
@@ -70,6 +87,9 @@ export default async function CityPage({ params }: Props) {
             </ol>
           </nav>
 
+          {/* `ciudad_vista` estaba en el plan de medición sin emitirse (§31).
+              Umbral 0 porque el evento es "vio la página", no "leyó el bloque". */}
+          <TrackView event="ciudad_vista" props={{ ciudad: city.slug }} threshold={0} />
           <Eyebrow className="mt-8">{t(cityCopy.eyebrow, lang)}</Eyebrow>
           <h1 className="mt-4 font-display text-display-xl font-semibold text-ink">
             {t(cityCopy.titlePrefix, lang)} {city.name}
@@ -80,16 +100,16 @@ export default async function CityPage({ params }: Props) {
 
       <Section space="base" ariaLabelledby="estaciones-ciudad">
         <Container>
-          <h2 id="estaciones-ciudad" className="font-mono text-mono uppercase tracking-wider text-ink-3">
+          <SectionHeading id="estaciones-ciudad" size="m">
             {t(cityCopy.stationsHere, lang)}
-          </h2>
+          </SectionHeading>
 
-          <ul className="mt-6">
+          <ul className="mt-8">
             {stations.map((s, i) => (
               <Reveal as="li" key={s.slug} delay={i * 0.05} y={12}>
                 <Link
                   href={href(lang, routes.station(s.slug))}
-                  className="group grid gap-x-6 gap-y-2 border-b border-line py-6 transition-colors hover:bg-surface-1 md:grid-cols-[1.6fr_1fr_1fr_auto] md:items-center"
+                  className="group grid gap-x-6 gap-y-2 border-b border-line py-6 transition-colors hover:bg-surface-1 lg:grid-cols-[1.6fr_1fr_1fr_auto] lg:items-center"
                 >
                   <div>
                     <h3 className="font-display text-display-s font-semibold text-ink transition-colors group-hover:text-brand">
@@ -112,13 +132,13 @@ export default async function CityPage({ params }: Props) {
       {others.length > 0 && (
         <Section space="tight" className="border-t border-line">
           <Container>
-            <h2 className="font-mono text-mono uppercase tracking-wider text-ink-3">{t(cityCopy.otherCities, lang)}</h2>
-            <ul className="mt-5 flex flex-wrap gap-3">
+            <SectionHeading size="s">{t(cityCopy.otherCities, lang)}</SectionHeading>
+            <ul className="mt-6 flex flex-wrap gap-3">
               {others.map((c) => (
                 <li key={c.slug}>
                   <Link
                     href={href(lang, routes.city(c.slug))}
-                    className="inline-flex min-h-11 items-center rounded-(--radius-pill) border border-line px-5 text-body-s text-ink-2 transition-colors hover:border-line-strong hover:text-ink"
+                    className="inline-flex min-h-11 items-center rounded-(--radius-pill) border border-line-control px-5 text-body-s text-ink-2 transition-colors hover:border-line-strong hover:text-ink"
                   >
                     {c.name}
                   </Link>

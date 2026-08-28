@@ -2,7 +2,7 @@ import Image from "next/image";
 import { cn } from "@/lib/cn";
 import { t, type Locale } from "@/lib/i18n/config";
 import type { MediaAsset } from "@/content/data/media";
-import { a11y } from "@/content/copy/common";
+import { a11y, mediaPlaceholder } from "@/content/copy/common";
 
 /**
  * MEDIA · punto único de render para fotografía y video narrativo.
@@ -30,6 +30,7 @@ export function Media({
   sizes = "100vw",
   priority = false,
   fill = false,
+  aspect,
 }: {
   asset: MediaAsset;
   lang: Locale;
@@ -38,8 +39,18 @@ export function Media({
   priority?: boolean;
   /** `true` cuando el contenedor padre define la altura (full-bleed, sticky). */
   fill?: boolean;
+  /**
+   * Recorte de la composición cuando difiere del nativo del asset.
+   *
+   * Antes esto se hacía pasando `className="aspect-[21/9]"`, que NO sustituía
+   * la clase nativa sino que la acompañaba: `/empresas` servía
+   * `aspect-[4/3] aspect-[21/9]` en el mismo elemento y cuál ganaba dependía
+   * del orden de emisión del CSS, no de la intención. Con una prop, el recorte
+   * es una decisión declarada y solo hay una clase.
+   */
+  aspect?: MediaAsset["aspect"];
 }) {
-  const shape = fill ? "" : aspects[asset.aspect];
+  const shape = fill ? "" : aspects[aspect ?? asset.aspect];
 
   if (asset.src) {
     if (asset.kind === "photo") {
@@ -81,6 +92,19 @@ export function Media({
  * Hueco declarado. Comunica QUÉ asset falta y QUÉ función cumple, para que la
  * revisión de diseño pueda evaluar la composición sin el material definitivo.
  * Cumple contraste AA como cualquier otro texto (§33).
+ *
+ * DOS COLOCACIONES, no una:
+ *
+ * - Sin `fill` (el hueco ocupa su propio bloque) el rótulo va abajo a la
+ *   izquierda con su descripción completa: nada más compite por ese espacio.
+ *
+ * - Con `fill` (el hueco es el FONDO de una composición) el rótulo se reduce a
+ *   la insignia y se ancla a una esquina. Antes iba centrado arriba con la
+ *   descripción en dos líneas y, a 390px, se pintaba literalmente encima del
+ *   eyebrow y del titular del hero — texto sobre texto en la primera pantalla
+ *   del sitio, que es justo lo que §22 prohíbe ("los gráficos de fondo nunca se
+ *   superponen al contenido"). En móvil desaparece del todo: el hueco ya se
+ *   anuncia por `aria-label` y la descripción vive en el registro de media.
  */
 export function MediaPending({
   asset,
@@ -91,18 +115,22 @@ export function MediaPending({
   asset: MediaAsset;
   lang: Locale;
   className?: string;
-  /** En composiciones a sangre el contenido se centra y despeja el header. */
+  /** `true` cuando el hueco es el fondo de una composición con contenido encima. */
   fill?: boolean;
 }) {
+  const kind = asset.kind === "video" ? mediaPlaceholder.video : mediaPlaceholder.photo;
+  const badge = `${t(kind, lang)}${asset.duration ? ` · ${asset.duration}` : ""} · ${t(
+    mediaPlaceholder.pending,
+    lang
+  )}`;
+
   return (
     <div
       role="img"
       aria-label={`${t(a11y.placeholderMedia, lang)}. ${t(asset.alt, lang)}`}
       className={cn(
         "relative flex overflow-hidden bg-surface-1",
-        /* En composiciones a sangre el rótulo se ancla arriba: el contenido
-           narrativo vive abajo y no deben solaparse. */
-        fill ? "items-start justify-center p-8 pt-28" : "items-end p-5",
+        fill ? "items-start justify-end p-4 md:p-6" : "items-end p-5",
         className
       )}
     >
@@ -116,16 +144,18 @@ export function MediaPending({
         }}
       />
 
-      {/* Declara QUÉ falta y QUÉ función cumple, para poder evaluar la
-          composición sin el material definitivo. */}
-      <div className={cn("relative flex max-w-md flex-col gap-3", fill && "items-center text-center")}>
-        <span className="inline-flex w-fit items-center border border-line-strong px-2 py-1 font-mono text-[0.6875rem] uppercase tracking-wider text-ink-3">
-          {asset.kind === "video" ? "Video" : "Foto"}
-          {asset.duration ? ` · ${asset.duration}` : ""}
-          {" · pendiente"}
+      {fill ? (
+        <span className="relative hidden w-fit items-center border border-line-strong px-2 py-1 font-mono text-[0.6875rem] uppercase tracking-wider text-ink-3 sm:inline-flex">
+          {badge}
         </span>
-        <span className="font-mono text-caption text-ink-3">{t(asset.alt, lang)}</span>
-      </div>
+      ) : (
+        <div className="relative flex max-w-md flex-col gap-3">
+          <span className="inline-flex w-fit items-center border border-line-strong px-2 py-1 font-mono text-[0.6875rem] uppercase tracking-wider text-ink-3">
+            {badge}
+          </span>
+          <span className="font-mono text-caption text-ink-3">{t(asset.alt, lang)}</span>
+        </div>
+      )}
     </div>
   );
 }

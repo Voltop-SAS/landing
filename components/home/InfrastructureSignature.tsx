@@ -2,12 +2,13 @@
 
 import { useRef } from "react";
 import { motion, useScroll, useTransform, useReducedMotion } from "motion/react";
+import { duration, ease } from "@/lib/motion";
 import { t, type Locale } from "@/lib/i18n/config";
 import { href, routes } from "@/lib/i18n/routes";
 import { home } from "@/content/copy/home";
 import { actions } from "@/content/copy/common";
 import { media } from "@/content/data/media";
-import { Container, Eyebrow } from "@/components/ui/layout";
+import { Section, Container, Eyebrow } from "@/components/ui/layout";
 import { Media } from "@/components/ui/Media";
 import { Button } from "@/components/ui/Button";
 
@@ -15,32 +16,68 @@ import { Button } from "@/components/ui/Button";
  * BEAT 2 · SIGNATURE MOMENT — Intensidad: MUY ALTA · Registro: Impacto
  * ESTRUCTURA: contenedor alto con panel STICKY y scroll-scrub real.
  *
- * Antes era un `scale` de 1.12→1: un parallax modesto que no cumplía la
- * revelación prometida. Ahora el panel se fija, el material se revela por
- * recorte y el texto entra por fases mientras se avanza (§ auditoría R3).
+ * ── QUÉ ESTABA MAL, MEDIDO ────────────────────────────────────────────────
+ * La sección medía 240vh —2160px a 1440×900— y la revelación completa era un
+ * recorte del 12% que terminaba al 45% del recorrido, es decir a los 567px.
+ * Después venían ~700px de scroll con la pantalla ABSOLUTAMENTE INMÓVIL. En una
+ * Home de 9 viewports, el 26% del scroll lo consumía un beat que se queda
+ * quieto más tiempo del que se mueve. Y el comentario prometía que "el texto
+ * entra por fases": no lo hacía, era un único `Reveal`.
  *
- * Con `prefers-reduced-motion` todo queda en su estado final legible.
+ * ── QUÉ SE HIZO ───────────────────────────────────────────────────────────
+ * - 240vh → 170vh. El recorrido se ajusta a lo que dura la revelación.
+ * - El recorte pasa de 12% a 28% y termina al 70%, no al 45%: se percibe como
+ *   apertura y ocupa casi todo el trayecto pegado.
+ * - El texto entra en dos fases: antetítulo y titular primero, cuerpo y
+ *   acciones después.
+ * - Con `prefers-reduced-motion` la sección COLAPSA a altura normal. Antes
+ *   dejaba 2160px de scroll muerto sin equivalente: quien pide menos movimiento
+ *   recibía el coste del efecto sin el efecto.
+ *
+ * ── POR QUÉ LAS FASES SON TEMPORALES Y NO DE SCROLL ───────────────────────
+ * Se intentó ligar la opacidad del texto a `scrollYProgress` para que las fases
+ * ocurrieran a lo largo del recorrido. Es lo que el comentario original de este
+ * archivo ya advertía y hay que dejarlo escrito: una opacidad ligada al
+ * progreso VUELVE A 0 al retroceder, así que el texto desaparecería al subir, y
+ * quien llegue por `#infraestructura` sin desplazarse vería una pantalla vacía.
+ *
+ * Las fases se resuelven con un desfase temporal sobre un `whileInView` de una
+ * sola vez: una vez visible, el texto no vuelve a ocultarse (§21). El scroll
+ * largo ya no necesita relleno — se acortó a lo que dura la revelación.
  */
 export function InfrastructureSignature({ lang }: { lang: Locale }) {
   const reduce = useReducedMotion();
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
 
-  const still: number[] = [1, 1];
   /* El MATERIAL se revela con scroll-scrub: arranca recortado y se abre a
      sangre completa. Los hooks se llaman siempre, sin condicionales. */
-  const insetPct = useTransform(scrollYProgress, [0, 0.45], reduce ? [0, 0] : [12, 0]);
+  const insetPct = useTransform(scrollYProgress, [0, 0.7], reduce ? [0, 0] : [28, 0]);
   const clipPath = useTransform(insetPct, (v) => `inset(${v}% ${v}% ${v}% ${v}%)`);
-  const scale = useTransform(scrollYProgress, [0, 0.45], reduce ? still : [1.08, 1]);
-  const scrimOpacity = useTransform(scrollYProgress, [0.2, 0.5], reduce ? [0.75, 0.75] : [0.2, 0.8]);
+  const scale = useTransform(scrollYProgress, [0, 0.7], reduce ? [1, 1] : [1.12, 1]);
+  const scrimOpacity = useTransform(scrollYProgress, [0.15, 0.6], reduce ? [0.8, 0.8] : [0.15, 0.85]);
 
-  /* El TEXTO no se scrubbea: aparece una vez y se queda. Una opacidad ligada
-     al progreso puede volver a 0 al salir del rango y dejar el contenido
-     invisible — un signature moment no puede depender de eso. */
+  /** Fase de entrada del texto. `once: true` — visible es para siempre. */
+  const phase = (delay: number) => ({
+    "data-reveal": "",
+    initial: { opacity: 0, y: 32 },
+    whileInView: { opacity: 1, y: 0 },
+    viewport: { once: true, margin: "-20% 0px -20% 0px" },
+    transition: { duration: reduce ? 0 : duration.reveal, ease: ease.standard, delay: reduce ? 0 : delay },
+  });
 
   return (
-    <section ref={ref} id="infraestructura" className="relative h-[240vh]">
-      <div className="sticky top-0 h-dvh overflow-hidden">
+    <Section
+      ref={ref}
+      id="infraestructura"
+      register="impacto"
+      space="none"
+      /* `motion-reduce:h-auto` colapsa el recorrido cuando no hay movimiento que
+         justificarlo. El panel deja de estar pegado y la sección mide lo que
+         mide su contenido. */
+      className="h-[170vh] motion-reduce:h-auto"
+    >
+      <div className="sticky top-0 flex h-dvh flex-col justify-end overflow-hidden motion-reduce:static motion-reduce:h-auto">
         <motion.div style={{ scale, clipPath }} className="absolute inset-0">
           <Media asset={media.estacionMedellin} lang={lang} fill sizes="100vw" className="h-full" />
         </motion.div>
@@ -51,18 +88,15 @@ export function InfrastructureSignature({ lang }: { lang: Locale }) {
           className="absolute inset-0 bg-gradient-to-t from-canvas via-canvas/50 to-transparent"
         />
 
-        <motion.div
-          initial={{ opacity: 0, y: 28 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-25% 0px -25% 0px" }}
-          transition={{ duration: reduce ? 0 : 0.7, ease: [0.22, 1, 0.36, 1] }}
-          className="absolute inset-x-0 bottom-0"
-        >
-          <Container className="pb-(--spacing-section-tight)">
+        <Container className="relative z-(--z-raised) py-(--spacing-section-tight)">
+          <motion.div {...phase(0)}>
             <Eyebrow tone="brand">{t(home.infrastructure.eyebrow, lang)}</Eyebrow>
             <h2 className="mt-5 max-w-[18ch] font-display text-display-xl font-semibold text-ink">
               {t(home.infrastructure.title, lang)}
             </h2>
+          </motion.div>
+
+          <motion.div {...phase(0.18)}>
             <p className="mt-6 measure text-body-l text-ink-2">{t(home.infrastructure.lead, lang)}</p>
             <div className="mt-9 flex flex-wrap items-center gap-x-6 gap-y-3">
               <Button variant="ghost" arrow href={href(lang, routes.station("san-fernando-plaza"))}>
@@ -72,9 +106,9 @@ export function InfrastructureSignature({ lang }: { lang: Locale }) {
                 {t(home.infrastructure.caption, lang)}
               </span>
             </div>
-          </Container>
-        </motion.div>
+          </motion.div>
+        </Container>
       </div>
-    </section>
+    </Section>
   );
 }

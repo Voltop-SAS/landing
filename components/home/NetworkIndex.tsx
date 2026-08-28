@@ -4,7 +4,7 @@ import { href, routes } from "@/lib/i18n/routes";
 import { home } from "@/content/copy/home";
 import { actions } from "@/content/copy/common";
 import { getStations, getCity } from "@/lib/data";
-import { Section, Container, Eyebrow } from "@/components/ui/layout";
+import { Section, Container, SectionHeading } from "@/components/ui/layout";
 import { StatusBadge } from "@/components/ui/data";
 import { Button } from "@/components/ui/Button";
 import { Reveal } from "@/components/ui/Reveal";
@@ -25,14 +25,16 @@ export function NetworkIndex({ lang }: { lang: Locale }) {
 
   return (
     <Section id="red" space="tight" ariaLabelledby="red-title">
-      <Container width="wide">
+      {/* `content`, no `wide`. Era el peor descuadre del sitio: una tabla de
+          DATOS en el contenedor de sangrado, con el borde izquierdo 100px a la
+          izquierda del header y del resto de la página. `wide` se reserva a
+          media (ver `Container`). De paso, las columnas dejan de repartirse en
+          1500px y la información se lee junta en lugar de dispersa. */}
+      <Container>
         <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
-          <div>
-            <Eyebrow>{t(home.network.eyebrow, lang)}</Eyebrow>
-            <h2 id="red-title" className="mt-4 font-display text-display-l font-semibold text-ink">
-              {t(home.network.title, lang)}
-            </h2>
-          </div>
+          <SectionHeading id="red-title" kicker={t(home.network.eyebrow, lang)}>
+            {t(home.network.title, lang)}
+          </SectionHeading>
           <p className="measure-narrow text-body text-ink-2">{t(home.network.lead, lang)}</p>
         </div>
 

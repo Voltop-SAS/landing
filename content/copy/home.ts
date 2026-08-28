@@ -81,10 +81,6 @@ export const home = {
   proof: {
     eyebrow: { es: "Caso real", en: "Real case" } satisfies Localized,
     title: { es: "Universidad EAN", en: "EAN University" } satisfies Localized,
-    lead: {
-      es: "Una comunidad universitaria que necesitaba carga confiable en campus, sin operar la infraestructura.",
-      en: "A university community that needed reliable on-campus charging, without operating the infrastructure.",
-    } satisfies Localized,
   },
 
   /* BEAT 6 · VISIÓN — columna estrecha editorial. Intensidad: Media-alta */

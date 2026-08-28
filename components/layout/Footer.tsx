@@ -40,7 +40,11 @@ export function Footer({ lang }: { lang: Locale }) {
           <nav className="contents" aria-label={t(a11y.footerNav, lang)}>
             {footer.columns.map((col) => (
               <div key={col.title.es}>
-                <h2 className="font-mono text-mono uppercase tracking-wider text-ink-3">{t(col.title, lang)}</h2>
+                {/* Etiqueta, no encabezado. Como `<h2>` de 12px entraba en el
+                    outline del documento al mismo nivel que los `h2` de
+                    contenido y los enanizaba. La navegación del pie ya se
+                    anuncia por el `aria-label` del `<nav>`. */}
+                <p className="font-mono text-mono uppercase tracking-wider text-ink-3">{t(col.title, lang)}</p>
                 <ul className="mt-4 space-y-1">
                   {col.links.map((link) => (
                     <li key={link.label.es}>

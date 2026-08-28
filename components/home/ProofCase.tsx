@@ -4,9 +4,10 @@ import { home } from "@/content/copy/home";
 import { actions } from "@/content/copy/common";
 import { media } from "@/content/data/media";
 import { getFeaturedCase } from "@/lib/data";
-import { Container, Eyebrow } from "@/components/ui/layout";
+import { Section, Container, Eyebrow } from "@/components/ui/layout";
 import { Media } from "@/components/ui/Media";
 import { Button } from "@/components/ui/Button";
+import { TrackView } from "@/components/analytics/TrackView";
 
 /**
  * BEAT 5 · CASO REAL — Intensidad: Alta · Registro: Impacto
@@ -22,7 +23,7 @@ export function ProofCase({ lang }: { lang: Locale }) {
   if (!featured) return null;
 
   return (
-    <section id="caso" aria-labelledby="caso-title" className="relative isolate overflow-hidden">
+    <Section id="caso" register="impacto" space="none" ariaLabelledby="caso-title" className="isolate overflow-hidden">
       <div className="absolute inset-0">
         <Media asset={media.aperturaEan} lang={lang} fill sizes="100vw" className="h-full" />
       </div>
@@ -32,7 +33,7 @@ export function ProofCase({ lang }: { lang: Locale }) {
         className="absolute inset-0 bg-gradient-to-b from-canvas via-transparent to-canvas"
       />
 
-      <Container className="relative z-10 py-(--spacing-section-loose)">
+      <Container className="relative z-(--z-raised) py-(--spacing-section-loose)">
         <div className="flex flex-col gap-4 md:flex-row md:items-baseline md:gap-8">
           <Eyebrow tone="brand">{t(home.proof.eyebrow, lang)}</Eyebrow>
           <h2 id="caso-title" className="font-display text-display-s font-semibold text-ink">
@@ -40,9 +41,11 @@ export function ProofCase({ lang }: { lang: Locale }) {
           </h2>
         </div>
 
-        <blockquote className="mt-12 max-w-[22ch] font-display text-display-xl font-medium text-balance text-ink md:max-w-[20ch]">
-          {t(featured.quote, lang)}
-        </blockquote>
+        <TrackView event="caso_visto" props={{ caso: featured.slug }}>
+          <blockquote className="mt-12 max-w-[22ch] font-display text-display-xl font-medium text-balance text-ink md:max-w-[20ch]">
+            {t(featured.quote, lang)}
+          </blockquote>
+        </TrackView>
 
         <footer className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-4 border-t border-line-strong pt-8">
           <p className="text-body-s">
@@ -56,6 +59,6 @@ export function ProofCase({ lang }: { lang: Locale }) {
           )}
         </footer>
       </Container>
-    </section>
+    </Section>
   );
 }

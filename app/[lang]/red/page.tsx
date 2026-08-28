@@ -6,7 +6,7 @@ import { href, routes, absoluteUrl } from "@/lib/i18n/routes";
 import { red } from "@/content/copy/red";
 import { actions, states, units } from "@/content/copy/common";
 import { getStations, getCities, getCitiesWithStations } from "@/lib/data";
-import { Section, Container, Eyebrow } from "@/components/ui/layout";
+import { Section, Container, Eyebrow, SectionHeading, ProcessList } from "@/components/ui/layout";
 import { Button } from "@/components/ui/Button";
 import { Reveal } from "@/components/ui/Reveal";
 import { StationFinder } from "@/components/red/StationFinder";
@@ -51,12 +51,18 @@ export default async function RedPage({ params }: Props) {
 
   return (
     <>
-      <Section space="none" className="pb-6 pt-32 md:pt-40">
+      {/* Apertura FUNCIONAL: en una superficie de producto el marco editorial
+          paga alquiler. `pt-24` en móvil deja 32px de aire bajo el header de
+          64px en lugar de 64px, y el lead se alinea a la baseline del titular
+          en desktop en vez de flotar a la derecha creando un hueco en L. */}
+      <Section space="none" className="pb-5 pt-24 md:pb-6 md:pt-32">
         <Container>
           <Eyebrow>{t(red.hero.eyebrow, lang)}</Eyebrow>
-          <div className="mt-4 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+          <div className="mt-3 flex flex-col gap-3 md:mt-4 md:flex-row md:items-baseline md:justify-between md:gap-8">
             <h1 className="font-display text-display-xl font-semibold text-ink">{t(red.hero.title, lang)}</h1>
-            <p className="measure-narrow text-body text-ink-2">{t(red.hero.lead, lang)}</p>
+            <p className="measure-narrow text-body text-ink-2 md:shrink-0 md:pt-2">
+              {t(red.hero.lead, lang)}
+            </p>
           </div>
         </Container>
       </Section>
@@ -72,9 +78,7 @@ export default async function RedPage({ params }: Props) {
       <Section id="ciudades" space="tight" className="border-t border-line" ariaLabelledby="ciudades-title">
         <Container>
           <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-            <h2 id="ciudades-title" className="font-display text-display-l font-semibold text-ink">
-              {t(red.cities.title, lang)}
-            </h2>
+            <SectionHeading id="ciudades-title">{t(red.cities.title, lang)}</SectionHeading>
             <p className="measure-narrow text-body text-ink-2">{t(red.cities.lead, lang)}</p>
           </div>
 
@@ -102,22 +106,19 @@ export default async function RedPage({ params }: Props) {
       {/* Cómo cargar — información, respiración */}
       <Section id="como-cargar" space="loose" ariaLabelledby="como-title">
         <Container>
-          <Eyebrow>{t(red.howToCharge.eyebrow, lang)}</Eyebrow>
-          <h2 id="como-title" className="mt-4 max-w-[20ch] font-display text-display-l font-semibold text-ink">
+          <SectionHeading id="como-title" kicker={t(red.howToCharge.eyebrow, lang)} measure="max-w-[20ch]">
             {t(red.howToCharge.title, lang)}
-          </h2>
+          </SectionHeading>
 
-          <ol className="mt-14 grid gap-x-10 gap-y-12 md:grid-cols-3">
-            {red.howToCharge.steps.map((s, i) => (
-              <Reveal as="li" key={s.step} delay={i * 0.08}>
-                <div className="border-t border-line pt-6">
-                  <span className="font-mono text-mono text-brand">{s.step}</span>
-                  <h3 className="mt-4 font-display text-display-s font-semibold text-ink">{t(s.title, lang)}</h3>
-                  <p className="mt-2 text-body-s text-ink-2">{t(s.body, lang)}</p>
-                </div>
-              </Reveal>
-            ))}
-          </ol>
+          {/* SÍ es una secuencia: el número informa y es el ancla visual. */}
+          <ProcessList
+            className="mt-12 md:grid-cols-3"
+            items={red.howToCharge.steps.map((s) => ({
+              step: s.step,
+              title: t(s.title, lang),
+              body: t(s.body, lang),
+            }))}
+          />
         </Container>
       </Section>
 
@@ -126,7 +127,7 @@ export default async function RedPage({ params }: Props) {
         <Container>
           <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
             <div>
-              <h2 className="font-display text-display-s font-semibold text-ink">{t(red.hostHandoff.title, lang)}</h2>
+              <SectionHeading size="m">{t(red.hostHandoff.title, lang)}</SectionHeading>
               <p className="mt-2 measure text-body-s text-ink-2">{t(red.hostHandoff.body, lang)}</p>
             </div>
             <Button variant="ghost" arrow href={href(lang, routes.empresas)} className="shrink-0">

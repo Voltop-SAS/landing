@@ -21,6 +21,19 @@ import { cn } from "@/lib/cn";
  *   está en la herramienta. En /empresas muta a conversión comercial.
  * - Menú móvil a pantalla completa con cierre por Escape, foco atrapado,
  *   bloqueo de scroll y objetivos táctiles ≥44px (§23).
+ *
+ * EL PANEL MÓVIL VIVE FUERA DEL <header>, NO DENTRO. No es una preferencia de
+ * estilo: `backdrop-filter` (el `backdrop-blur` que el header aplica al hacer
+ * scroll o al abrirse) convierte al header en BLOQUE CONTENEDOR de sus
+ * descendientes `position: fixed`. Con el panel dentro, `top-16 bottom-0` se
+ * resolvía contra los 65px del header en lugar del viewport y el panel
+ * colapsaba a 1px de alto: el menú abría, bloqueaba el scroll y movía el foco
+ * a enlaces invisibles. Como hermano del header, `fixed` vuelve a medirse
+ * contra el viewport.
+ *
+ * El apilado se declara con los tokens `--z-header` / `--z-overlay` en lugar de
+ * `z-50` a mano en los dos sitios, que es lo que impedía razonar sobre el
+ * orden de pintado.
  */
 
 export function Header({ lang }: { lang: Locale }) {
@@ -91,79 +104,92 @@ export function Header({ lang }: { lang: Locale }) {
   const isActive = (target: string) => path === target || (target !== "/" && path.startsWith(target));
 
   return (
-    <header
-      className={cn(
-        "fixed inset-x-0 top-0 z-50 transition-colors duration-(--duration-base)",
-        scrolled || open ? "border-b border-line bg-canvas/85 backdrop-blur-xl" : "border-b border-transparent"
-      )}
-    >
-      <div className="mx-auto flex h-16 w-full max-w-(--container-content) items-center justify-between px-(--spacing-gutter) md:h-20">
-        <Link
-          href={href(lang, routes.home)}
-          className="flex items-center gap-2.5 py-2"
-          aria-label={t(a11y.goHome, lang)}
-        >
-          <Logo />
-          <span className="font-display text-display-s font-semibold tracking-tight">{brand.name}</span>
-        </Link>
-
-        <nav className="hidden items-center gap-9 md:flex" aria-label={t(a11y.mainNav, lang)}>
-          {nav.map((item) => (
-            <Link
-              key={item.href}
-              href={href(lang, item.href)}
-              aria-current={isActive(item.href) ? "page" : undefined}
-              className={cn(
-                "inline-flex min-h-11 items-center text-body-s transition-colors",
-                isActive(item.href) ? "text-ink" : "text-ink-2 hover:text-ink"
-              )}
-            >
-              {t(item.label, lang)}
-            </Link>
-          ))}
-        </nav>
-
-        <div className="flex items-center gap-2 md:gap-3">
-          <LangSwitch lang={lang} />
-
-          {cta && (
-            <div className="hidden md:block">
-              <Button
-                variant="primary"
-                size="s"
-                arrow
-                href={href(lang, cta.href)}
-                onClick={() => trackCta(context)}
-              >
-                {t(cta.label, lang)}
-              </Button>
-            </div>
-          )}
-
-          <button
-            ref={toggleRef}
-            type="button"
-            className="grid size-11 place-items-center rounded-(--radius-structural) border border-line text-ink md:hidden"
-            aria-label={open ? t(a11y.closeMenu, lang) : t(a11y.openMenu, lang)}
-            aria-expanded={open}
-            aria-controls="menu-movil"
-            onClick={() => setOpen(!open)}
+    <>
+      <header
+        className={cn(
+          "fixed inset-x-0 top-0 z-(--z-header) transition-colors duration-(--duration-base)",
+          scrolled || open ? "border-b border-line bg-canvas/85 backdrop-blur-xl" : "border-b border-transparent"
+        )}
+      >
+        <div className="mx-auto flex h-16 w-full max-w-(--container-content) items-center justify-between px-(--spacing-gutter) md:h-20">
+          <Link
+            href={href(lang, routes.home)}
+            className="flex items-center gap-2.5 py-2"
+            aria-label={t(a11y.goHome, lang)}
           >
-            <span aria-hidden="true" className="relative block h-3 w-4">
-              <span className={cn("absolute left-0 top-0 h-0.5 w-4 bg-current transition-transform", open && "translate-y-[5px] rotate-45")} />
-              <span className={cn("absolute left-0 top-[5px] h-0.5 w-4 bg-current transition-opacity", open && "opacity-0")} />
-              <span className={cn("absolute bottom-0 left-0 h-0.5 w-4 bg-current transition-transform", open && "-translate-y-[5px] -rotate-45")} />
-            </span>
-          </button>
-        </div>
-      </div>
+            <Logo />
+            <span className="font-display text-display-s font-semibold tracking-tight">{brand.name}</span>
+          </Link>
 
-      {/* Menú móvil — overlay a pantalla completa */}
+          <nav className="hidden items-center gap-9 md:flex" aria-label={t(a11y.mainNav, lang)}>
+            {nav.map((item) => (
+              <Link
+                key={item.href}
+                href={href(lang, item.href)}
+                aria-current={isActive(item.href) ? "page" : undefined}
+                className={cn(
+                  "inline-flex min-h-11 items-center text-body-s transition-colors",
+                  isActive(item.href) ? "text-ink" : "text-ink-2 hover:text-ink"
+                )}
+              >
+                {t(item.label, lang)}
+              </Link>
+            ))}
+          </nav>
+
+          <div className="flex items-center gap-2 md:gap-3">
+            {/* El selector de idioma sale del header móvil y baja al menú. Es un
+                control de baja frecuencia que ocupaba 88px del espacio más
+                valioso de la pantalla, y ese espacio lo necesita el CTA. */}
+            <div className="hidden md:block">
+              <LangSwitch lang={lang} />
+            </div>
+
+            {cta && (
+              /* Visible desde `xs` (480px). Por debajo no caben logo + CTA +
+                 hamburguesa sin apretar, así que ahí el CTA vive en el menú
+                 —que ahora funciona—. Primer uso real del token
+                 `--breakpoint-xs`, que estaba definido y sin usar. */
+              <div className="hidden xs:block">
+                <Button
+                  variant="secondary"
+                  size="s"
+                  arrow
+                  href={href(lang, cta.href)}
+                  onClick={() => trackCta(context)}
+                >
+                  {t(cta.label, lang)}
+                </Button>
+              </div>
+            )}
+
+            <button
+              ref={toggleRef}
+              type="button"
+              className="grid size-11 place-items-center rounded-(--radius-structural) border border-line-control text-ink md:hidden"
+              aria-label={open ? t(a11y.closeMenu, lang) : t(a11y.openMenu, lang)}
+              aria-expanded={open}
+              aria-controls="menu-movil"
+              onClick={() => setOpen(!open)}
+            >
+              <span aria-hidden="true" className="relative block h-3 w-4">
+                <span className={cn("absolute left-0 top-0 h-0.5 w-4 bg-current transition-transform", open && "translate-y-[5px] rotate-45")} />
+                <span className={cn("absolute left-0 top-[5px] h-0.5 w-4 bg-current transition-opacity", open && "opacity-0")} />
+                <span className={cn("absolute bottom-0 left-0 h-0.5 w-4 bg-current transition-transform", open && "-translate-y-[5px] -rotate-45")} />
+              </span>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {/* Menú móvil — overlay a pantalla completa, HERMANO del header (ver
+          cabecera del archivo: dentro del header, el backdrop-filter lo
+          colapsaba a 1px de alto). */}
       {open && (
         <div
           id="menu-movil"
           ref={panelRef}
-          className="fixed inset-x-0 bottom-0 top-16 z-50 flex flex-col overflow-y-auto border-t border-line bg-canvas md:hidden"
+          className="fixed inset-x-0 bottom-0 top-16 z-(--z-overlay) flex flex-col overflow-y-auto border-t border-line bg-canvas md:hidden"
         >
           <nav className="flex flex-col px-(--spacing-gutter) py-4" aria-label={t(a11y.mainNav, lang)}>
             {nav.map((item) => (
@@ -178,8 +204,11 @@ export function Header({ lang }: { lang: Locale }) {
             ))}
           </nav>
 
-          {cta && (
-            <div className="mt-auto px-(--spacing-gutter) pb-10 pt-6">
+          <div className="mt-auto flex flex-col gap-8 px-(--spacing-gutter) pb-10 pt-8">
+            {cta && (
+              /* Aquí SÍ es primario: dentro del menú no compite con ninguna
+                 acción de la página, así que es la única con gradiente en la
+                 vista (§12, disciplina del gradiente). */
               <Button
                 variant="primary"
                 size="l"
@@ -190,11 +219,14 @@ export function Header({ lang }: { lang: Locale }) {
               >
                 {t(cta.label, lang)}
               </Button>
+            )}
+            <div className="self-start">
+              <LangSwitch lang={lang} />
             </div>
-          )}
+          </div>
         </div>
       )}
-    </header>
+    </>
   );
 }
 

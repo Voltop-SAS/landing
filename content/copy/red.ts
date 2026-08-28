@@ -34,7 +34,8 @@ export const red = {
   },
 
   filters: {
-    title: { es: "Filtros", en: "Filters" } satisfies Localized,
+    /** Etiqueta del grupo. El chip de dentro dice qué hace; el grupo, de qué es. */
+    availabilityGroup: { es: "Disponibilidad", en: "Availability" } satisfies Localized,
     city: { es: "Ciudad", en: "City" } satisfies Localized,
     connector: { es: "Conector", en: "Connector" } satisfies Localized,
     power: { es: "Potencia mínima", en: "Minimum power" } satisfies Localized,
@@ -42,8 +43,41 @@ export const red = {
     all: { es: "Todas", en: "All" } satisfies Localized,
     allM: { es: "Todos", en: "All" } satisfies Localized,
     clear: { es: "Quitar filtros", en: "Clear filters" } satisfies Localized,
-    resultsOne: { es: "estación encontrada", en: "station found" } satisfies Localized,
-    resultsMany: { es: "estaciones encontradas", en: "stations found" } satisfies Localized,
+    resultsOne: { es: "estación", en: "station" } satisfies Localized,
+    resultsMany: { es: "estaciones", en: "stations" } satisfies Localized,
+    /** Botón que despliega los filtros en móvil. */
+    toggle: { es: "Filtros", en: "Filters" } satisfies Localized,
+    toggleHide: { es: "Ocultar filtros", en: "Hide filters" } satisfies Localized,
+    activeCount: { es: "activos", en: "active" } satisfies Localized,
+  },
+
+  /**
+   * ORDEN. Sustituye a la falta de "por distancia" con criterios que el dataset
+   * SÍ puede responder hoy. `distance` solo se ofrece si hay coordenadas.
+   */
+  sort: {
+    label: { es: "Ordenar por", en: "Sort by" } satisfies Localized,
+    relevance: { es: "Recomendadas", en: "Recommended" } satisfies Localized,
+    power: { es: "Más potencia", en: "Highest power" } satisfies Localized,
+    status: { es: "En operación primero", en: "Live first" } satisfies Localized,
+    city: { es: "Ciudad", en: "City" } satisfies Localized,
+    distance: { es: "Más cerca de mí", en: "Closest to me" } satisfies Localized,
+  },
+
+  /**
+   * CERCANÍA. Toda esta rama está condicionada a que el dataset traiga `geo`:
+   * si ninguna estación tiene coordenadas, no se ofrece nada — igual que
+   * `MetricRow` no pinta métricas sin validar (§33). No es código muerto: se
+   * enciende sola cuando lleguen las coordenadas.
+   */
+  nearby: {
+    action: { es: "Usar mi ubicación", en: "Use my location" } satisfies Localized,
+    locating: { es: "Buscando tu ubicación…", en: "Finding your location…" } satisfies Localized,
+    denied: {
+      es: "No pudimos acceder a tu ubicación. Puedes seguir buscando por nombre o ciudad.",
+      en: "We couldn't access your location. You can still search by name or city.",
+    } satisfies Localized,
+    unit: { es: "km", en: "km" } satisfies Localized,
   },
 
   cities: {
@@ -52,7 +86,6 @@ export const red = {
       es: "La red crece por corredores y ciudades. Explora dónde estamos hoy.",
       en: "The network grows by corridors and cities. Explore where we are today.",
     } satisfies Localized,
-    seeCity: { es: "Ver estaciones", en: "See stations" } satisfies Localized,
   },
 
   howToCharge: {
@@ -121,6 +154,12 @@ export const station = {
     es: "Coordenadas pendientes de confirmación: el enlace abre una búsqueda por dirección.",
     en: "Coordinates pending confirmation: the link opens a search by address.",
   } satisfies Localized,
+  /**
+   * Etiqueta CORTA. Antes esta cadena entera vivía dentro de un `PendingTag`:
+   * una frase con punto final, en mayúsculas y en mono, dentro de un recuadro
+   * de 11px. Un tag lleva una etiqueta; la frase va debajo como nota.
+   */
+  pendingPricingTag: { es: "Pendiente", en: "Pending" } satisfies Localized,
   pendingPricing: {
     es: "Tarifa pendiente de confirmación comercial.",
     en: "Pricing pending commercial confirmation.",

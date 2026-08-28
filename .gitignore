@@ -39,3 +39,16 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Skills instaladas desde el ecosistema (3.9 MB / 167 archivos de terceros).
+# Se restauran con `npx skills experimental_install` a partir de
+# skills-lock.json, que SÍ está versionado. Las skills propias del proyecto
+# (.claude/skills/voltop-*) son código fuente y siguen versionadas.
+/.claude/skills/impeccable/
+/.claude/skills/animate/
+/.claude/skills/emil-design-eng/
+/.claude/skills/design-taste-frontend/
+/.claude/skills/design-critique/
+/.claude/skills/information-architect/
+/.claude/skills/accessibility-auditor/
+/.claude/skills/content-copy-designer/

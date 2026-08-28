@@ -24,6 +24,8 @@ export function VisionQuote({ lang }: { lang: Locale }) {
 
   return (
     <Section id="vision" space="loose" ariaLabelledby="vision-title">
+      {/* Columna estrecha colgada del riel (antes flotaba centrada a 380px,
+          un tercer borde izquierdo distinto en la misma página). */}
       <Container width="narrow">
         <Reveal>
           <Eyebrow>{t(home.vision.eyebrow, lang)}</Eyebrow>

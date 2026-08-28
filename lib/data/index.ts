@@ -33,17 +33,8 @@ export function getStation(slug: string): Station | undefined {
   return stations.find((s) => s.slug === slug);
 }
 
-export function getFeaturedStations(limit?: number): Station[] {
-  const list = stations.filter((s) => s.featured);
-  return limit ? list.slice(0, limit) : list;
-}
-
 export function getStationsByCity(citySlug: string): Station[] {
   return stations.filter((s) => s.citySlug === citySlug);
-}
-
-export function getOperationalStations(): Station[] {
-  return stations.filter((s) => s.status === "operativa");
 }
 
 /** Filtros de /red. Toda comparación es tolerante a acentos y mayúsculas. */
@@ -71,6 +62,74 @@ export function filterStations(list: Station[], f: StationFilters, cityNameOf: (
     }
     return true;
   });
+}
+
+/* ---------------------------------- Orden -------------------------------- */
+
+/**
+ * Criterios de orden del buscador.
+ *
+ * `distance` existe pero SOLO se ofrece en la UI si alguna estación trae
+ * coordenadas (ver `hasCoordinates`). No es código muerto: es una rama activada
+ * por datos, el mismo patrón que `MetricRow` con las métricas sin validar (§33).
+ */
+export type StationSort = "relevance" | "power" | "status" | "city" | "distance";
+
+/** `relevance` = el orden curado del dataset. La curaduría es una decisión. */
+const statusRank: Record<Station["status"], number> = { operativa: 0, mantenimiento: 1, proxima: 2 };
+
+export function hasCoordinates(list: Station[]): boolean {
+  return list.some((s) => s.geo !== null);
+}
+
+/**
+ * Distancia en línea recta (haversine). No es distancia de ruta y no pretende
+ * serlo: sirve para ORDENAR, no para prometer un tiempo de viaje.
+ */
+export function distanceKm(a: { lat: number; lng: number }, b: { lat: number; lng: number }): number {
+  const R = 6371;
+  const dLat = ((b.lat - a.lat) * Math.PI) / 180;
+  const dLng = ((b.lng - a.lng) * Math.PI) / 180;
+  const lat1 = (a.lat * Math.PI) / 180;
+  const lat2 = (b.lat * Math.PI) / 180;
+  const h =
+    Math.sin(dLat / 2) ** 2 + Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLng / 2) ** 2;
+  return 2 * R * Math.asin(Math.sqrt(h));
+}
+
+export function sortStations(
+  list: Station[],
+  sort: StationSort,
+  ctx: { cityNameOf: (slug: string) => string; origin?: { lat: number; lng: number } | null }
+): Station[] {
+  const out = [...list];
+  switch (sort) {
+    case "power":
+      return out.sort((a, b) => b.powerKw - a.powerKw || a.name.localeCompare(b.name));
+    case "status":
+      return out.sort(
+        (a, b) => statusRank[a.status] - statusRank[b.status] || b.powerKw - a.powerKw
+      );
+    case "city":
+      return out.sort(
+        (a, b) =>
+          ctx.cityNameOf(a.citySlug).localeCompare(ctx.cityNameOf(b.citySlug)) ||
+          a.name.localeCompare(b.name)
+      );
+    case "distance": {
+      if (!ctx.origin) return out;
+      const o = ctx.origin;
+      /* Sin coordenadas no se puede comparar: esas estaciones van al final en
+         lugar de aparecer arbitrariamente cerca. */
+      return out.sort((a, b) => {
+        const da = a.geo ? distanceKm(o, a.geo) : Infinity;
+        const db = b.geo ? distanceKm(o, b.geo) : Infinity;
+        return da - db;
+      });
+    }
+    default:
+      return out;
+  }
 }
 
 /* -------------------------------- Ciudades ------------------------------- */
@@ -107,16 +166,8 @@ export function getMetrics(opts: { onlyValidated?: boolean; limit?: number } = {
   return list;
 }
 
-export function getFeaturedMetrics(limit = 2): Metric[] {
-  return metrics.filter((m) => m.featured).slice(0, limit);
-}
-
 export function getBusinessSegments() {
   return businessSegments;
-}
-
-export function getBusinessSegment(key: string) {
-  return businessSegments.find((s) => s.key === key);
 }
 
 export function getCases(): Case[] {
@@ -125,10 +176,6 @@ export function getCases(): Case[] {
 
 export function getFeaturedCase(): Case | undefined {
   return cases.find((c) => c.featured);
-}
-
-export function getCaseForSegment(segmentKey: string): Case | undefined {
-  return cases.find((c) => c.segment === segmentKey) ?? cases.find((c) => c.featured);
 }
 
 /** Vacío mientras no haya logos con permiso de uso: la UI omite la franja. */
