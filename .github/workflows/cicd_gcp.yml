@@ -46,15 +46,28 @@ jobs:
           } >> "$GITHUB_OUTPUT"
           echo "Ambiente: ${ENVIRONMENT} (ref ${GITHUB_REF})"
 
+      # ---- Secretos desde Doppler (clave JSON de la SA) ----
+      # El token elige el config de Doppler y con el la SA, asi que la variable
+      # se llama igual (`GCP_SA_KEY_LANDING`) en las configs `stg` y `prd`: el
+      # workflow no necesita ningun condicional por rama para leerla.
+      #
+      # La seleccion del token si va en una expresion sobre el ref, porque
+      # `secrets` no admite indexacion dinamica y por tanto no puede depender
+      # del output de `meta`.
+      - name: Fetch secrets from Doppler
+        id: doppler
+        uses: dopplerhq/secrets-fetch-action@v1.3.0
+        with:
+          doppler-token: ${{ github.ref == 'refs/heads/production' && secrets.CI_DOPPLER_TOKEN_PRD || secrets.CI_DOPPLER_TOKEN_STG }}
+
       # ---- AUTH GCP (clave JSON de Service Account, sin WIF) ----
       # Hay una SA por ambiente (`gh-actions-landing-stg` / `gh-actions-landing-prd`),
       # cada una con permiso de escritura UNICAMENTE sobre su repositorio de
-      # Artifact Registry. `secrets` no admite indexacion dinamica, asi que la
-      # seleccion va en una expresion sobre el ref y no sobre el output de `meta`.
+      # Artifact Registry.
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
         with:
-          credentials_json: ${{ github.ref == 'refs/heads/production' && secrets.GCP_SA_KEY_LANDING_PRD || secrets.GCP_SA_KEY_LANDING_STG }}
+          credentials_json: ${{ steps.doppler.outputs.GCP_SA_KEY_LANDING }}
 
       - name: Setup gcloud CLI
         uses: google-github-actions/setup-gcloud@v2
