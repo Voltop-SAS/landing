@@ -1,13 +1,13 @@
 
-FROM node:18-alpine AS deps
+FROM node:20-alpine AS deps
 RUN apk add --no-cache libc6-compat
 RUN apk add --no-cache git
 WORKDIR /workspace
 
-COPY package.json ./
-RUN  npm install --ignore-scripts
+COPY package.json package-lock.json ./
+RUN npm ci --ignore-scripts
 
-FROM node:18-alpine AS builder
+FROM node:20-alpine AS builder
 ARG ENV
 
 ENV ENV=${ENV}
@@ -20,7 +20,7 @@ ENV NEXT_TELEMETRY_DISABLED 1
 
 RUN npm run build
 
-FROM node:18-alpine AS runner
+FROM node:20-alpine AS runner
 WORKDIR /workspace
 
 ENV NODE_ENV production
@@ -35,7 +35,7 @@ COPY --from=builder /workspace/public ./public
 COPY --from=builder /workspace/node_modules ./node_modules
 COPY --from=builder /workspace/package.json ./package.json
 
-USER node
+USER nextjs
 
 EXPOSE 3000
 
