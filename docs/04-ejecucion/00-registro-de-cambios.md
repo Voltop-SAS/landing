@@ -749,3 +749,62 @@ Presupuesto del brief para el hero: ≤ 250 KB. **Se cumple con holgura en todos
 ### Evidencia
 
 `lint`, `tsc` y build limpios · 47 páginas · auditoría `ES 376/376 · EN 376/376 · PT 376/376` (el alt y el role del asset nuevo, en los tres idiomas) · `object-fit: cover` verificado en 320/390/768/1024/1440/1920 — **nunca deforma** · `srcSet` con 8 anchos (640→3840) · sin overflow en ninguna resolución · `/nosotros` conserva su hueco declarado, intacto.
+
+---
+
+## Bloque 16 · Auditoría del Hero con la fotografía real — 2026-09-01
+
+**Encargo:** dejar el Hero impecable en UI, UX, responsive y accesibilidad, sin rediseñarlo. Auditoría medida, no estimada.
+
+### Lo que encontró la auditoría
+
+Se midió el contraste de **los seis textos superpuestos** —antetítulo, titular, párrafo, indicador de scroll, etiqueta de cobertura y enlaces de ciudad— sobre los píxeles **realmente renderizados**, en **14 viewports** de 320 a 1920 px.
+
+| Elemento | Resultado con el velo anterior |
+|---|---|
+| **Antetítulo** | **FALLA en 9 de 14 viewports.** Mínimo **1.90:1** a 320–414 px, frente al 4.5:1 que exige AA para 12 px |
+| Párrafo | Falla en 320 (4.39) y 360 (4.46) |
+| Titular, scroll, cobertura, ciudades | Cumplen |
+
+El antetítulo es texto verde de marca a 12 px, y en móvil el recorte lo deja sobre el panel claro del cargador — el peor caso del hero. El velo anterior (`via-canvas/75`, un solo eje) se había calibrado contra fondo plano, tal como `docs/05-assets-todo` advertía que habría que revisar en cuanto entrara material real.
+
+### La corrección: el velo sigue a la forma del texto
+
+No es un ajuste de opacidad, es un cambio de **forma**, y por eso cambia con el breakpoint:
+
+| | Forma del texto | Velo | Resultado |
+|---|---|---|---|
+| **Escritorio** | Columna izquierda | Vertical + **lateral suave** | El lateral protege la columna y deja la mitad derecha del encuadre a la vista |
+| **Móvil** | Ancho completo | **Solo vertical** | Un lateral aquí oscurece el lado donde está el cargador —el sujeto— y aclara el derecho, donde también hay texto |
+
+Se probaron ambas formas en las dos direcciones. En móvil, con lateral **el equipo desaparecía de la foto**; sin él se lee.
+
+Las intensidades salen de **barridos medidos**, no de criterio: en escritorio el velo calibrado para móvil llevaba el antetítulo a 8.65:1 cuando basta con ~5, y apagaba la fotografía sin necesidad — que es el 70% de la dirección visual (§12). Márgenes finales sobre el umbral: **+12% en móvil, +17% en escritorio.** Se descartaron variantes con margen del 2%: cualquier reencuadre las rompería.
+
+Los valores se escriben con `color-mix` sobre `--color-canvas`, no como hex (§24).
+
+### Otra corrección
+
+**"Cobertura por ciudad" partía mal en móvil.** La etiqueta compartía fila con "Bogotá" y "Medellín" caía sola a una segunda línea, desalineada respecto a la primera ciudad. Ahora la etiqueta ocupa su propia línea por debajo de `sm` y las ciudades quedan alineadas entre sí.
+
+### Resultado de la auditoría final
+
+| Comprobación | Resultado |
+|---|---|
+| Contraste, 14 viewports × 6 elementos | **Cero fallos** |
+| Objetivo táctil del CTA | 223 × 52 px en los 16 viewports (mínimo 44) |
+| Recorte de contenido (el hero lleva `overflow-hidden`) | Ninguno, ni en pantallas bajas (320×568, 1024×600) |
+| Overflow horizontal | Ninguno |
+| Solape del header con el antetítulo | Ninguno |
+| Foco del CTA | Outline 2px sólido `--color-focus`, offset 2px |
+| `prefers-reduced-motion` | 0 elementos invisibles, 0 animándose |
+| LCP con 4G lenta y CPU ×4 | **1.25 s móvil · 1.61 s escritorio** (presupuesto < 2.5 s) |
+| Peso de la imagen | 29 KB móvil · 100 KB escritorio · 147 KB Retina (presupuesto ≤ 250 KB) |
+
+### Nota de método
+
+Una primera medición usó el píxel más claro de cada caja y sobreestimaba el problema; una segunda **reconstruía** el degradado en un canvas y lo subestimaba. La cifra buena sale de fotografiar el fondo compuesto real —ocultando solo el contenido— y evaluar por percentiles. Los dos métodos convergen al 4%, que es lo que da confianza en el número.
+
+### Lo que NO se tocó
+
+Estructura, textos, CTAs, tipografías, jerarquía, animaciones y el resto de secciones. Solo velo, un salto de línea responsive y el encuadre ya fijado en el bloque 15.

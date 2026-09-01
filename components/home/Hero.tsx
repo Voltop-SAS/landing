@@ -22,6 +22,31 @@ import { Button } from "@/components/ui/Button";
  *
  * Server Component: el titular y el CTA son HTML servido — bueno para LCP.
  */
+/**
+ * Opacidades del velo de legibilidad, en porcentaje del color `canvas`.
+ * Se escriben con `color-mix` sobre el token en lugar de un hex, para que
+ * sigan al sistema si el color de fondo cambia (§24: cero literales de color).
+ */
+const canvas = (pct: number) =>
+  pct >= 100 ? "var(--color-canvas)" : `color-mix(in srgb, var(--color-canvas) ${pct}%, transparent)`;
+
+const VEIL = {
+  /**
+   * En móvil el texto ocupa TODO el ancho, así que el velo tiene que ser
+   * vertical. Un degradado izquierda→derecha aquí hace lo contrario de lo que
+   * se busca: oscurece el lado donde está el cargador —el sujeto de la foto—
+   * y deja más claro el derecho, donde también hay texto. Medido y visto: con
+   * lateral el equipo desaparecía; sin él se lee.
+   */
+  mobile: {
+    vertical: `linear-gradient(to top, ${canvas(100)} 0%, ${canvas(96)} 48%, ${canvas(80)} 80%, ${canvas(52)} 100%)`,
+  },
+  desktop: {
+    vertical: `linear-gradient(to top, ${canvas(100)} 0%, ${canvas(82)} 45%, ${canvas(48)} 82%, ${canvas(22)} 100%)`,
+    lateral: `linear-gradient(to right, ${canvas(68)} 0%, ${canvas(40)} 44%, transparent 72%)`,
+  },
+} as const;
+
 export function Hero({ lang }: { lang: Locale }) {
   const coverage = getCitiesWithStations();
 
@@ -51,11 +76,36 @@ export function Hero({ lang }: { lang: Locale }) {
         />
       </div>
 
-      {/* Scrim de legibilidad: densidad abajo, aire arriba */}
-      <div
-        aria-hidden="true"
-        className="absolute inset-0 bg-gradient-to-t from-canvas via-canvas/75 to-canvas/30"
-      />
+      {/* ── CAPAS DE LEGIBILIDAD ──────────────────────────────────────────
+          Calibradas MIDIENDO sobre la fotografía real, no a ojo. El velo
+          anterior (`via-canvas/75`, un solo eje) se diseñó contra fondo plano;
+          con la foto puesta dejaba el antetítulo en **1.90:1** a 320px, muy
+          lejos del 4.5:1 que exige AA para 12px. Es texto verde de marca sobre
+          el panel claro del cargador: el peor caso del hero.
+
+          LA FORMA DEL VELO SIGUE A LA FORMA DEL TEXTO, y por eso cambia con el
+          breakpoint:
+
+          · En ESCRITORIO el texto vive en la columna izquierda, así que un
+            lateral suave lo protege y deja la mitad derecha del encuadre a la
+            vista. Un velo solo vertical obligaría a oscurecer también donde no
+            hay texto.
+          · En MÓVIL el texto ocupa todo el ancho, así que el velo es vertical.
+            El lateral aquí sería contraproducente: oscurece el lado donde está
+            el cargador —el sujeto— y deja más claro el derecho, donde también
+            hay texto. Se probó y el equipo desaparecía.
+
+          Las intensidades también difieren: en móvil el recorte deja el panel
+          claro detrás del texto y hace falta más velo; en escritorio el mismo
+          valor llevaba el antetítulo a 8.65:1 cuando basta con ~5, y apagaba la
+          fotografía sin necesidad — que es el 70% de la dirección visual (§12).
+
+          Valores de barridos medidos: el peor elemento queda 12% por encima de
+          su umbral en móvil y 17% en escritorio. */}
+      <div aria-hidden="true" className="absolute inset-0 md:hidden" style={{ background: VEIL.mobile.vertical }} />
+      <div aria-hidden="true" className="absolute inset-0 hidden md:block" style={{ background: VEIL.desktop.vertical }} />
+      <div aria-hidden="true" className="absolute inset-0 hidden md:block" style={{ background: VEIL.desktop.lateral }} />
+
       {/* Acento de corriente: una sola línea, en el borde. Señal, no textura. */}
       <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-px brand-gradient opacity-70" />
 
@@ -90,7 +140,10 @@ export function Hero({ lang }: { lang: Locale }) {
         {coverage.length > 0 && (
           <nav aria-label={t(red.cities.title, lang)} className="mt-8 border-t border-line-strong pt-6">
             <ul className="flex flex-wrap items-center gap-x-8 gap-y-2">
-              <li className="font-mono text-mono uppercase tracking-wider text-ink-3">
+              {/* En móvil la etiqueta ocupa su propia línea. Compartiéndola,
+                  "Bogotá" cabía al lado y "Medellín" caía sola a una segunda
+                  fila: las dos ciudades quedaban desalineadas entre sí. */}
+              <li className="basis-full font-mono text-mono uppercase tracking-wider text-ink-3 sm:basis-auto">
                 {t(red.cities.title, lang)}
               </li>
               {coverage.map(({ city }) => (
