@@ -12,6 +12,8 @@
 
 import { stations, type Station } from "@/content/data/stations";
 import { cities, type City } from "@/content/data/cities";
+import { type Post, type PostType } from "@/content/data/posts";
+import { fetchPosts } from "./posts-source";
 import {
   metrics,
   businessSegments,
@@ -191,4 +193,88 @@ export function getFounder() {
   return founder;
 }
 
-export type { Station, City, Metric, Case };
+/* -------------------------------- Novedades ------------------------------ */
+
+/**
+ * ── POR QUÉ ESTOS ACCESORES SON `async` Y LOS DEMÁS NO ────────────────────
+ * El registro es el piloto de CMS (ver `posts-source.ts`). Su origen va a ser
+ * remoto; el de estaciones y ciudades, por ahora no. Pasar SOLO el registro a
+ * asíncrono es la asimetría correcta: refleja lo que de verdad va a cambiar.
+ *
+ * Se hace AHORA y no el día de la migración porque es lo único que obligaría a
+ * tocar cada página que consume el registro. Hecho hoy, conectar el CMS es
+ * cambiar el cuerpo de una función.
+ */
+
+/**
+ * El registro, siempre en orden cronológico inverso y solo con lo publicado.
+ * Ninguna vista ordena por su cuenta: si el orden se decidiera en cada
+ * componente, dos superficies acabarían mostrando el mismo registro distinto.
+ */
+export async function getPosts(): Promise<Post[]> {
+  const all = await fetchPosts();
+  return all
+    .filter((p) => p.status === "publicado")
+    .sort((a, b) => b.date.localeCompare(a.date));
+}
+
+export async function getPost(slug: string): Promise<Post | undefined> {
+  return (await getPosts()).find((p) => p.slug === slug);
+}
+
+/**
+ * Entradas con página propia. Ver la cabecera de `content/data/posts.ts`:
+ * `body` vacío significa que la entrada vive solo en el índice, así que no
+ * genera ruta, no entra en el sitemap y no se enlaza desde ningún sitio.
+ *
+ * Es un PREDICADO PURO sobre una entrada ya cargada, así que sigue siendo
+ * síncrono: no consulta el origen y los componentes lo usan durante el render.
+ */
+export function hasPage(post: Post): boolean {
+  return post.body.length > 0;
+}
+
+export async function getPostsWithPage(): Promise<Post[]> {
+  return (await getPosts()).filter(hasPage);
+}
+
+/** Portada del registro: la marcada como destacada o, si no hay, la más reciente. */
+export async function getFeaturedPost(): Promise<Post | undefined> {
+  const list = await getPosts();
+  return list.find((p) => p.featured) ?? list[0];
+}
+
+export async function getLatestPosts(limit: number): Promise<Post[]> {
+  return (await getPosts()).slice(0, limit);
+}
+
+/**
+ * Re-superficie contextual. Es lo que hace que el registro no sea un cajón
+ * aparte: una apertura aparece sola en la ficha de su estación y en la página
+ * de su ciudad, sin que nadie la coloque a mano en tres sitios.
+ */
+export async function getPostsForStation(stationSlug: string): Promise<Post[]> {
+  return (await getPosts()).filter((p) => p.stationSlug === stationSlug);
+}
+
+export async function getPostsForCity(citySlug: string): Promise<Post[]> {
+  return (await getPosts()).filter((p) => p.citySlug === citySlug);
+}
+
+/**
+ * Tipos PRESENTES en el registro, en el orden en que aparecen.
+ * El filtro se construye desde los datos: un filtro que ofrece una opción sin
+ * resultados es un control decorativo, y §12 los prohíbe.
+ */
+export async function getPostTypes(): Promise<PostType[]> {
+  const seen: PostType[] = [];
+  for (const p of await getPosts()) if (!seen.includes(p.type)) seen.push(p.type);
+  return seen;
+}
+
+/** Fecha de la entrada más reciente. Alimenta `lastModified` del índice. */
+export async function getLatestPostDate(): Promise<string | undefined> {
+  return (await getPosts())[0]?.date;
+}
+
+export type { Station, City, Metric, Case, Post, PostType };

@@ -437,3 +437,252 @@ Siguen sin emitirse `app_store_click` y `media_reproducida`, y no pueden: no hay
 ### Evidencia
 
 `tsc --noEmit` sin errores · `npx eslint .` sin problemas (antes 147 warnings) · build correcto · huecos verticales remedidos en cuatro rutas · sección del signature moment medida con y sin `prefers-reduced-motion` · recorte del clip-path muestreado en cuatro puntos del recorrido · `ciudad_vista` e `impacto_visto` verificados en `dataLayer` · cero errores de consola en 10 rutas · cero overflow horizontal en **11 anchos × 10 rutas**.
+
+---
+
+## Bloque 9 · i18n preparado para un tercer idioma — 2026-08-31
+
+**Encargo:** el sitio debe estar en español, inglés y **portugués de Brasil**. Decisión estratégica del CEO, orientada a audiencia de inversión. Se suma un espacio de comunicación (novedades) que se ejecuta en un bloque posterior.
+
+**Por qué este bloque va primero y SIN añadir el idioma todavía:** la infraestructura de i18n enumeraba los idiomas a mano en nueve sitios distintos. Añadir `pt` antes de corregirlos habría producido fallos silenciosos —contenido servido en el idioma equivocado— mezclados con los fallos normales de una traducción nueva, sin forma de distinguir la causa. Este bloque se valida entero con ES/EN: si algo se rompe, no fue el idioma nuevo.
+
+### Idiomas escritos a mano → derivados de `locales`
+
+| Cambio | Razón |
+|---|---|
+| `lib/i18n/routes.ts`: nuevo `stripLocale()`, con el prefijo construido desde `locales` | La expresión `^\/(es\|en)` estaba duplicada en dos archivos y **las dos copias no eran iguales**: la de `Header.tsx` no llevaba el lookahead `(?=\/\|$)`, así que recortaba también el comienzo de cualquier ruta que empezara por "es" o "en" (`/estaciones` → `taciones`). Hoy ninguna ruta empieza así, pero el fallo estaba armado. |
+| `lib/i18n/routes.ts`: nuevo `alternatesFor(lang, path)` | El bloque `canonical` + `languages` estaba copiado **siete veces** —layout de idioma, home, red, ciudad, estación, empresas, privacidad— con `es` y `en` escritos a mano en cada copia. Ninguna se habría enterado de un idioma nuevo: el portugués habría quedado publicado y huérfano de `hreflang`, que es la señal con la que Google decide qué versión sirve a quién. |
+| `app/sitemap.ts`: la clave `hreflang` sale de `localeMeta`, no del segmento de URL | Coincidían en ES/EN, así que la diferencia era invisible. Con un idioma regional dejan de coincidir —URL `/pt`, buscador `pt-BR`— y el sitemap habría declarado sobre la misma URL un idioma distinto del que declara su HTML. Se añade además `x-default`, que el sitemap omitía y el HTML sí emitía. |
+| `localeMeta` separa `htmlLang` de `hreflang` | No siempre coinciden: el español se declara genérico (`es`) para alcanzar a todo hispanohablante, mientras el documento se marca `es-CO`. Sin la separación, `pt-BR` habría forzado a elegir mal en uno de los dos sitios. |
+
+### Ternarios de idioma → capa de copy
+
+Un ternario `lang === "es" ? … : …` no tiene tercera rama: con un idioma más sirve la rama inglesa **en silencio**. Quedaban tres, y los tres en superficies que se propagan solas.
+
+| Cambio | Razón |
+|---|---|
+| `opengraph-image.tsx` → `og.eyebrow` / `og.headline` en `content/copy/common.ts` | Es la imagen que se ve al compartir el enlace en WhatsApp, LinkedIn o Slack. Un idioma sin rama propia se anuncia en inglés justo donde el error se replica sin intervención. |
+| Descripción SEO de la ficha de estación → `stationMeta.description` en `content/copy/red.ts` | Afectaba a **todas** las estaciones del sitio a la vez. Se modela como par `Localized` de **funciones**, no de cadenas con huecos: cada idioma ordena la frase a su manera y la traducción no se reduce a rellenar espacios. |
+| Se corrige de paso `${city?.name}` sin guarda | Una estación sin ciudad resuelta imprimía literalmente `undefined` en la descripción que lee el buscador. |
+
+Con esto se cumple §36.15 (todo el copy fuera del JSX) en los últimos tres sitios donde no se cumplía.
+
+### Selector de idioma: control segmentado → desplegable
+
+**Por qué:** cada opción necesita 44px de alto y ancho mínimos (§23), así que el control segmentado crecía ~44px por idioma —de 88px a 132px— en la zona más disputada del header, que **ya había expulsado el selector del header móvil por falta de sitio**. Un patrón que se ensancha con cada idioma no es escalable. El desplegable ocupa lo mismo con dos idiomas que con seis, y libera el espacio que necesita la cuarta entrada de navegación del bloque siguiente.
+
+**Lo que se conserva:** siguen siendo enlaces, no botones de estado. El idioma vive en la URL, y por eso sobrevive a la navegación y todas las versiones son indexables. Un `<select>` con JavaScript habría roto ambas cosas.
+
+**Decisiones de detalle:**
+- Cada idioma se nombra **en su propio idioma** (Español · English · Português), con su atributo `lang`. Traducir "Português" a "Portugués" se lo muestra en un idioma que quien busca portugués puede no leer — es decir, precisamente a quien sirve el control.
+- Patrón *disclosure*, no `role="menu"`: el panel contiene enlaces y el Tab natural ya los recorre. Declarar un menú obligaría a navegación por flechas que aquí no aporta nada.
+- Cierre por Escape con retorno del foco, al pulsar fuera y al navegar. Se reutiliza el patrón `openedFor === pathname` del menú móvil: cierra por derivación, sin efecto de limpieza.
+- `placement="up"` en el menú móvil, donde el selector vive al fondo del panel y hacia abajo quedaría fuera de la pantalla.
+- Fondo **opaco** (`bg-canvas`): el header es translúcido con `backdrop-blur` y un panel translúcido encima deja el texto ilegible sobre el contenido de la página.
+- Panel `absolute`, no `fixed` — evita la trampa documentada en `Header.tsx`, donde `backdrop-filter` convierte al header en bloque contenedor de sus descendientes `fixed`.
+
+### Estado
+
+`locales` sigue siendo `["es", "en"]`. **Añadir portugués es ahora añadir una entrada a `locales` y otra a `localeMeta`**, que es lo que §30 prometía y todavía no era cierto.
+
+### Evidencia
+
+`npm run lint` limpio · `npm run build` correcto, **29 páginas estáticas, las mismas que antes** · `hreflang` recíproco + `x-default` verificados en el HTML servido de `/es/nosotros` y `/es/red/estacion/universidad-ean` · descripción SEO verificada en ambos idiomas sobre el HTML generado (`Estación de carga Voltop en Bogotá: 60 kW…` / `Voltop charging station in Bogotá: 60 kW…`) · `x-default` verificado en `sitemap.xml` · cero `languages: {` escritos a mano en `app/`.
+
+### Pendiente de este frente
+
+- `sitemap.ts` sigue emitiendo `lastModified: new Date()` en todas las URLs, así que declara que el sitio entero cambió hoy, en cada build. Se corrige en el bloque de novedades, que es donde por primera vez hay fechas reales por registro.
+
+---
+
+## Bloque 10 · Portugués de Brasil en borrador — 2026-08-31
+
+**Por qué en borrador y no publicado:** un idioma existe mucho antes de estar listo. Sin un estado intermedio, la única opción era tenerlo traducido al 100% antes del primer commit, o publicarlo a medias.
+
+| Cambio | Razón |
+|---|---|
+| `localeStatus` con `publicado` \| `borrador` | Un idioma en borrador es navegable por URL —hay que poder revisarlo— pero queda fuera del selector, fuera del sitemap, sin `hreflang` y con `noindex`. |
+| `Localized`: el idioma base pasa a ser el único obligatorio | Exigirlos todos impedía avanzar por partes y, sobre todo, no admite contenido que legítimamente no existe en todos los idiomas. Un comunicado sobre una alianza en Bogotá no siempre se traduce al portugués: un tipo que lo exige no consigue una traducción, consigue que alguien pegue el español dentro del campo portugués. Eso es una caída silenciosa igual, pero indetectable. |
+| Nuevo `lib/i18n/audit.ts` | Sustituye la garantía perdida por una **medida**: recorre todo el contenido en cada build, reporta cobertura por idioma y **rompe el build si un idioma PUBLICADO tiene huecos**, con la ruta exacta de cada uno. Sin dependencias nuevas y sin comando que haya que acordarse de lanzar (§38). |
+| La auditoría se invoca desde `app/sitemap.ts` | No es arbitrario: el sitemap es la pieza que DECLARA qué idiomas existen de cara al público. Verificar que un idioma está completo antes de anunciarlo es su propio trabajo. |
+| `defaultLocale` tipado como el literal `"es"` | Anotado como `Locale` (lo que estaba), TypeScript no podía demostrar que el respaldo de `t()` siempre existe, ni resolver `Exclude<Locale, typeof defaultLocale>`. Lo detectó el build, no una revisión. |
+| El selector lista borradores **solo en desarrollo**, rotulados | Sin eso habría que escribir la URL a mano para revisar el idioma, y lo que cuesta revisar no se revisa. Sin el rótulo, un idioma incompleto parecería terminado y sus huecos, erratas. |
+
+### Evidencia
+
+`lint` limpio · `tsc` limpio · build correcto, **41 páginas estáticas** (antes 29; +12 de `/pt`) · auditoría en la salida del build: `ES 329/329 (publicado) · EN 329/329 (publicado) · PT 0/329 (BORRADOR)` · `/pt` sirve `noindex, follow` y cae al español · `/es` conserva `index, follow` · los `hreflang` de `/es` anuncian **solo** `es`, `en` y `x-default` · `grep "voltop.co/pt" sitemap.xml` → **0 coincidencias**.
+
+**El volumen real de traducción es 329 textos**, no una estimación.
+
+---
+
+## Bloque 11 · Novedades — el registro de la red — 2026-08-31
+
+**Encargo:** un espacio para comunicar aperturas, eventos, alianzas y comunicados. §2 lo tenía explícitamente **fuera de alcance** ("blog/editorial") y §14 fijaba **tres puertas de navegación**. Ambas decisiones se reabren aquí, con su razón.
+
+### No es un blog: es un registro
+
+| Decisión | Razón |
+|---|---|
+| Bitácora cronológica, no revista | Un blog exige contenido que hay que inventar y sin cadencia se ve muerto: tres artículos con fecha vieja comunican que la compañía está parada, justo lo contrario del objetivo §4.1. Un registro se alimenta de lo que la operación ya produce —cada estación que abre es una entrada— y con entradas cada pocas semanas se ve vivo. |
+| **Sin rejilla de tarjetas** | §12 prohíbe el exceso de tarjetas y los layouts previsibles. Una rejilla con foto, titular y "Leer más" no pasa el test del anonimato. Voltop es infraestructura, y la forma nativa de comunicar infraestructura es la bitácora de lo construido: filas de índice con la fecha en mono, separadas por hairlines — el mismo lenguaje de "ficha técnica" que ya usan las specs de estación. |
+| `body` vacío = la entrada NO tiene página propia | Una apertura son dos líneas: obligar a hacer clic para leer un párrafo es fricción sin contrapartida, y multiplica páginas delgadas que compiten entre sí en búsqueda. Solo lo que tiene cuerpo genera ruta. De cuatro entradas de arranque, **una** tiene página. |
+| Cuerpo por **bloques tipados**, no Markdown | Es la forma exacta en que un CMS headless entrega texto enriquecido (Portable Text, rich text), así que migrar será conectar y no reescribir — y no cierra ninguno de los tres caminos de producción de §2. Markdown suelto habría metido formato dentro del dato. |
+| **Sin filtro por tipo** | Con el volumen actual filtraría a una o dos entradas por categoría, y un control que no reduce nada útil es decorativo (§12). Se gana su sitio a partir de ~15 entradas; hasta entonces el tipo se lee en cada fila. |
+
+### Cuarta puerta de navegación: `Red · Empresas · Novedades · Nosotros`
+
+§6 lista "Inversionista / prensa" y los manda a Nosotros, pero esos públicos no preguntan "quiénes son" —eso es estático— sino "qué han hecho últimamente". Son preguntas distintas y meter la segunda dentro de la primera esconde el activo que mejor responde a ambas. §14 ya admitió esta misma excepción con el nivel de ciudad cuando había razón real de contenido, intención y SEO.
+
+El desplegable de idioma del Bloque 9 liberó exactamente el espacio que necesitaba la entrada nueva.
+
+### Re-superficie contextual — lo que impide que sea un cajón aparte
+
+Cada entrada referencia estación y/o ciudad, así que **aparece sola donde el usuario la busca**: la apertura de la EAN se pinta en la ficha de esa estación y en la página de Bogotá sin que nadie la coloque a mano en tres sitios. Reutiliza el sistema de referencias que ya conectaba estación → ciudad. Sin entradas, el bloque no renderiza nada —ni titular vacío ni "próximamente"—, igual que la franja de partners.
+
+### Beat 6 de la Home
+
+La entrada del menú sirve a quien ya viene buscando, que es un público pequeño. El beat de la Home se lo pone delante a quien no venía buscando: tres hechos fechados y recientes responden la pregunta institucional sin un solo clic. **De los dos puntos de entrada, este hace el trabajo pesado.**
+
+La Home pasa de 7 a 8 beats. El nuevo es deliberadamente el más BAJO de la curva de intensidad —tres filas, sin resumen ni media— y funciona como respiro antes del cierre. Su estructura no coincide con la de ninguno de sus dos vecinos, y el índice denso del beat 3 no le es consecutivo.
+
+### Correcciones que salieron de la revisión visual
+
+| Hallazgo | Corrección |
+|---|---|
+| **"FECHA PROVISIONAL" repetida en cada fila** | Cuatro etiquetas ámbar eran lo más llamativo de la página después del titular y llevaban el ojo al dato menos importante: dejaba de ser advertencia y pasaba a ser textura. Ahora se declara **una vez** para todo el registro y **antes** de leer —el precedente es `demoNotice`, que avisa antes de pedir los datos, no en letra pequeña al final—. En la página de una entrada sí va por entrada: ahí hay una sola y califica lo que se lee. |
+| **Separador de año con un solo año** | Un rótulo "2026" que no separa nada. Ahora aparece solo si hay más de un año, activado por los datos, como el orden por distancia de `/red`. |
+| **Fecha con conectores** | `Intl` en español da "18 de jun de 2026", que en mono y mayúsculas se lee "18 DE JUN DE 2026": tres palabras de ruido alrededor del dato. Se eliminan los literales alfabéticos por categoría —no por lista de palabras, que habría que ampliar con cada idioma—. Resultado: `18 jun 2026` · `Jun 18, 2026` · `18 jun. 2026`. |
+| **`timeZone: "UTC"` obligatorio** | Sin él, `"2026-06-18"` se formatea como día 17 en cualquier huso al oeste de Greenwich, Colombia incluida: el registro cambiaría de fecha según dónde se renderice. |
+
+### La auditoría de idiomas mentía
+
+Al crear `copy/novedades` y `data/posts` **se olvidaron en la lista de módulos de `lib/i18n/audit.ts`**, y la auditoría siguió reportando "332/332 completo" sobre un contenido que ya no cubría. Una auditoría que miente es peor que no tenerla, porque autoriza a publicar.
+
+Se añadió `assertAllContentRegistered()`: contrasta la lista contra el disco y **rompe el build** si hay un archivo de contenido sin registrar. Al arreglarlo, el conteo real pasó de 332 a **374**: había 42 textos invisibles.
+
+### SEO y medición
+
+- JSON-LD `NewsArticle` por entrada. `image` se emite **solo si el archivo existe**: declarar una imagen no entregada sería prometerle al buscador algo que la página no sirve.
+- `sitemap.ts` reescrito. Antes **todas** las URLs declaraban `lastModified: new Date()`, así que en cada build el sitio entero afirmaba haber cambiado ese día — un sitemap que dice "todo cambió hoy" siempre acaba ignorado. Ahora cada entrada declara su fecha, el índice la de su entrada más reciente, y solo las páginas sin fecha propia usan la del build.
+- Eventos nuevos: `novedades_vista`, `novedad_vista` (slug, tipo) y **`idioma_cambiado`** (de, a). Este último no existía y con tres idiomas es el único dato que dirá si el portugués se usa.
+- `novedad_vista` es un evento de VISTA y no de clic: cuenta también a quien llega desde búsqueda o desde prensa, que es precisamente el público del registro.
+
+### Contenido de arranque
+
+Cuatro entradas fundamentadas en el dataset y en el registro de media (el video de la apertura de la EAN está confirmado como existente). **Las fechas no están verificadas** y se declaran como tales. No se inventaron citas ni cifras: el bloque `cita` existe en el modelo y no se usa, porque atribuir unas palabras a una persona real sin tenerlas sería la peor versión de inventar un dato.
+
+### Evidencia
+
+`lint` limpio · `tsc` limpio · build correcto, **47 páginas estáticas** (antes 41) · auditoría `ES 374/374 · EN 374/374 · PT 0/374 (BORRADOR)` · una sola entrada genera página, las otras tres viven en el índice · JSON-LD `NewsArticle` verificado en el HTML servido, **sin `image`** · `sitemap.xml` con `lastmod` real por entrada (`2026-06-18`) · re-superficie verificada en la ficha de la EAN y en `/es/red/bogota` · `shot.mjs` ampliado a `/novedades`, `/novedades/[slug]` y `/pt/novedades`.
+
+### Pendiente
+
+- **Fechas reales de las cuatro entradas de arranque** (bloqueado por el usuario).
+- **Traducción al portugués** de las novedades, junto con el resto en el bloque siguiente.
+- **CMS.** Publicar hoy exige editar código y desplegar. Para estaciones se aguanta; para novedades no, y la sección moriría por fricción y no por falta de contenido. Con **un solo editor** confirmado, un CMS ligero de un editor es suficiente: no hacen falta roles, permisos ni flujos de aprobación.
+
+---
+
+## Bloque 12 · Portugués de Brasil publicado — 2026-09-01
+
+**Qué se hizo:** traducir los **374 textos** del sitio a portugués de Brasil y pasar el idioma de `borrador` a `publicado`. `pt` entra al selector, al sitemap y a los `hreflang`, y sus 16 páginas pasan a `index, follow`.
+
+### Método
+
+La traducción **no se hizo reescribiendo archivos**. Se extrajeron los 374 valores `en:` por posición en el código (373 cadenas + 1 plantilla de función), se dedujeron **336 cadenas únicas**, y se insertaron las traducciones en su sitio exacto. Los comentarios, la sangría y el formato de los doce módulos de contenido quedan intactos: el diff es solo líneas añadidas.
+
+`Localized` mantiene el español como único idioma obligatorio; la garantía de que no falta nada la da la auditoría de build, no el tipo.
+
+### Decisiones de traducción
+
+| Decisión | Razón |
+|---|---|
+| Registro **você**, no *tu* | Es el estándar de Brasil. `pt-PT` habría exigido reescribir el tratamiento entero. |
+| Direcciones colombianas **sin traducir** | `Calle 79 #11-45, Bogotá` es un dato, no copy. Traducir "Calle" a "Rua" produciría una dirección que no existe. |
+| Nueve cadenas idénticas al inglés, verificadas una a una | `Status`, `Legal`, `km`, `Café`, `Wi-Fi` se escriben igual en portugués; las otras cuatro son las direcciones. Ninguna es un olvido. |
+| `hreflang` **`pt-BR`**, URL `/pt` | No hay versión europea con la que competir, y declarar el genérico `pt` describiría mal un texto escrito en brasileño. La separación `htmlLang`/`hreflang` del Bloque 9 es lo que permite tener las dos cosas. |
+
+### Corregido en la revisión visual
+
+**"Scroll" se había traducido como "Role"** (imperativo de *rolar*, correcto en aislamiento). Pero el indicador se pinta en mono y MAYÚSCULAS, así que la primera pantalla del sitio en portugués decía **"ROLE ↓"** — que se lee como la palabra inglesa *role* y parece un error de programación. Sustituido por **"Deslize"**, inequívoco en mayúsculas.
+
+Es un fallo que ninguna comprobación automática detecta: la cadena era correcta, el problema era cómo se renderiza. Solo aparece mirando la página.
+
+### QA ampliado a portugués
+
+`shot.mjs` incorpora **seis rutas `/pt`**, y no por completismo: el portugués es sistemáticamente más largo que el español —"Infraestrutura de carregamento" frente a "Infraestructura de carga"— así que es el idioma con más probabilidad de desbordar un titular, un botón o una celda. Si una composición se rompe por longitud de texto, se rompe ahí primero.
+
+### Evidencia
+
+`lint` limpio · `tsc` limpio · build correcto, **47 páginas estáticas** · auditoría `ES 374/374 · EN 374/374 · PT 374/374 (publicado)` · `/pt` sirve `index, follow` y `<div lang="pt-BR">` · `hreflang` recíproco `es` / `en` / `pt-BR` / `x-default` verificado en el HTML servido · **48 URLs `/pt` en el sitemap** · descripción SEO de estación en portugués verificada en el HTML generado · `inLanguage: "pt-BR"` en el JSON-LD de la entrada · selector verificado con los tres idiomas, cada uno en su propio idioma, `aria-expanded` correcto y `hreflang` por opción · **sin overflow en 11 anchos × 18 rutas**.
+
+### Hallazgo NO corregido (preexistente, fuera de este bloque)
+
+La insignia de media pendiente del hero (`FOTO · PENDENTE`) se ancla a 24px del borde superior en **los tres idiomas**, es decir dentro de la banda del header, junto al CTA. No lo introdujo este bloque —se comporta igual en `/es` y `/en`, medido— y desaparece cuando llegue el video real. Queda registrado para decidir si el anclaje del rótulo con `fill` debe bajar por debajo de la altura del header.
+
+---
+
+## Bloque 13 · Logo oficial — 2026-09-01
+
+**Entrega:** `public/Logo_voltop.svg`. Cierra la parte de logo de la decisión abierta O1 (§37); los hex y las tipografías siguen pendientes.
+
+| Instancia | Antes | Ahora |
+|---|---|---|
+| Header | Isotipo provisional + `<span>Voltop</span>` | El archivo oficial, 137×32 |
+| Footer | Ídem | El archivo oficial, 137×32 |
+| Imagen Open Graph | Cuadrado con gradiente dibujado a mano + la palabra en texto | El archivo oficial, embebido como data URI |
+
+### La consecuencia inevitable
+
+El archivo oficial es el **lockup completo**: trae símbolo *y* logotipo. El placeholder era solo el símbolo y la palabra la ponía un `<span>` al lado. Con el asset oficial ese `<span>` pasaba a duplicar la marca —"Voltop Voltop"—, así que se retiró de header y footer. No es un cambio de contenido: es la misma palabra, que ahora aporta el propio logo. Era la única forma de usar el archivo oficial.
+
+**El tamaño se conserva:** el símbolo ocupa 123.107 de los 124 de alto del archivo, así que a `h-8` mide 31.8px — exactamente lo que medía el placeholder (`size-8`).
+
+En la imagen Open Graph el logo se lee del disco y se incrusta: se genera en el build, cuando aún no hay servidor que sirva `public/`, y así la pieza no depende de que la red resuelva nada al compartir el enlace.
+
+### Corregido
+
+El logo **se estiraba entre ~770 y ~810px** de viewport: proporción 3.96 en lugar de 4.27. Causa: el reset de Tailwind aplica `max-width: 100%` a toda imagen, y con la altura fijada en `h-8` el ancho quedaba topado por un contenedor comprimido. Resuelto con `object-contain` dentro de `Logo.tsx`.
+
+### Hallazgo NO corregido (requiere tocar el header)
+
+En esa misma franja de ~40px el logo queda a **0px del menú** y se reduce un ~7% para caber. La causa es física: el lockup oficial mide 137px y lo que reemplazó medía ~104px. Ahí el header ya iba justo. **No se corrigió porque exige tocar el layout del header**, fuera del encargo. Se resuelve con una clase en el `<Link>`.
+
+### Evidencia
+
+`lint`, `tsc` y build limpios · cero rastros del isotipo provisional y del cuadrado del OG en todo el código · las 2 instancias del HTML servido apuntan a `/Logo_voltop.svg` · el nombre accesible del enlace se conserva en los tres idiomas · proporción verificada en 4.23–4.29 en la franja crítica · **sin overflow en 13 anchos × 14 rutas**, incluidos 780 y 800px · imagen Open Graph regenerada y revisada.
+
+---
+
+## Bloque 14 · Fase 5 — el registro, listo para CMS — 2026-09-01
+
+**Por qué:** §38 fija que el equipo propietario no es un equipo de desarrollo, y hoy publicar una novedad exige editar código, hacer commit y desplegar. Para estaciones se aguanta; para un registro semanal no, y la sección moriría por fricción operativa y no por falta de contenido.
+
+**El gate de §2 ya se cumplió:** la decisión de producción esperaba a que el copy saliera del código, y eso pasó en el bloque 7.
+
+### Lo que se hizo
+
+| Cambio | Razón |
+|---|---|
+| Nuevo `lib/data/posts-source.ts` con `fetchPosts()` | **Único punto que cambia al conectar un CMS.** Todo lo que hay por encima —orden, filtro de publicados, referencias a estación y ciudad, qué entradas tienen página— no depende del origen. |
+| Los accesores del registro pasan a `async` | Es lo ÚNICO que obligaría a tocar cada página que consume el registro. Hecho ahora, conectar el CMS es cambiar el cuerpo de una función; hecho el día de la migración, es un refactor bajo presión. |
+| `hasPage()` se queda síncrono | Es un predicado puro sobre una entrada ya cargada. No consulta el origen. |
+| Estaciones y ciudades **siguen síncronas** | Asimetría deliberada: refleja lo que de verdad va a cambiar. El registro es el piloto, no la migración entera. |
+| Nuevo `docs/06-cms/01-brief-cms.md` | El modelo de contenido exacto, los requisitos que deciden la elección y la comparativa de proveedores. Es el documento que se le pasa a quien se contrate. |
+
+### Recomendación de proveedor
+
+**Sanity.** Portable Text es literalmente el modelo de bloques ya construido, la edición es la mejor de las tres opciones para alguien no técnico, el plan gratuito cubre un editor y trae pipeline de imágenes. **Alternativa a coste cero: Keystatic** — el contenido se queda en el repositorio y no hay proveedor que pueda subir precios. Los precios **no se verificaron** y hay que confirmarlos antes de decidir.
+
+### Lo que NO se hizo, y por qué
+
+**El webhook de publicación.** Sin proveedor elegido y sin destino de despliegue decidido, sería un endpoint que nadie llama — un enlace sin destino real, que §15 prohíbe. Son horas de trabajo en cuanto esas dos decisiones estén cerradas.
+
+### Evidencia
+
+`lint` limpio · `tsc` limpio · build correcto · **47 páginas estáticas, las mismas que antes**: pasar la frontera a asíncrona no sacrificó nada de la generación estática · auditoría `ES 374/374 · EN 374/374 · PT 374/374`.
+
+### Aviso para el día de la migración
+
+Cuando el registro viva en el CMS, `content/data/posts.ts` desaparece del repositorio y con él **la auditoría de idiomas deja de cubrirlo**. Esa cobertura hay que reponerla en el CMS —campo obligatorio, aviso al editor o comprobación en el webhook—. Si no, vuelve exactamente el fallo que la auditoría existe para impedir: contenido publicado a medias en un idioma, en silencio.

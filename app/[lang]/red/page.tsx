@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { isLocale, t, type Locale } from "@/lib/i18n/config";
-import { href, routes, absoluteUrl } from "@/lib/i18n/routes";
+import { href, routes, alternatesFor } from "@/lib/i18n/routes";
 import { red } from "@/content/copy/red";
 import { actions, states, units } from "@/content/copy/common";
 import { getStations, getCities, getCitiesWithStations } from "@/lib/data";
@@ -19,14 +19,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: t(red.meta.title, lang),
     description: t(red.meta.description, lang),
-    alternates: {
-      canonical: absoluteUrl(lang, routes.red),
-      languages: {
-        es: absoluteUrl("es", routes.red),
-        en: absoluteUrl("en", routes.red),
-        "x-default": absoluteUrl("es", routes.red),
-      },
-    },
+    alternates: alternatesFor(lang, routes.red),
   };
 }
 

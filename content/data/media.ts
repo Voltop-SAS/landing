@@ -43,10 +43,12 @@ export const media = {
     alt: {
       es: "Nueva estación de carga Voltop en Medellín, vista general de la infraestructura",
       en: "New Voltop charging station in Medellín, wide view of the infrastructure",
+      pt: "Nova estação de carregamento Voltop em Medellín, vista geral da infraestrutura",
     },
     role: {
       es: "Signature moment. Demuestra que Voltop construye infraestructura real, no puntos de carga.",
       en: "Signature moment. Proves Voltop builds real infrastructure, not charging points.",
+      pt: "Signature moment. Prova que a Voltop constrói infraestrutura real, não pontos de carregamento.",
     },
     duration: "1:20",
     aspect: "21/9",
@@ -62,10 +64,12 @@ export const media = {
     alt: {
       es: "Apertura de la estación Voltop en la Universidad EAN, con directivos de la universidad y el CEO de Voltop",
       en: "Opening of the Voltop station at EAN University, with university leadership and Voltop's CEO",
+      pt: "Abertura da estação Voltop na Universidade EAN, com diretores da universidade e o CEO da Voltop",
     },
     role: {
       es: "Prueba humana e institucional. Sirve simultáneamente a confianza B2B y a marca.",
       en: "Human and institutional proof. Serves both B2B trust and brand.",
+      pt: "Prova humana e institucional. Serve à confiança B2B e à marca.",
     },
     duration: "2:05",
     aspect: "16/9",
@@ -81,10 +85,12 @@ export const media = {
     alt: {
       es: "Bruno Ocampo, fundador y CEO de Voltop, hablando desde una estación de carga",
       en: "Bruno Ocampo, founder and CEO of Voltop, speaking from a charging station",
+      pt: "Bruno Ocampo, fundador e CEO da Voltop, falando de uma estação de carregamento",
     },
     role: {
       es: "Propósito y liderazgo. Íntimo y breve, no corporativo.",
       en: "Purpose and leadership. Intimate and brief, not corporate.",
+      pt: "Propósito e liderança. Íntimo e breve, não corporativo.",
     },
     duration: "0:45",
     aspect: "16/9",
@@ -100,10 +106,12 @@ export const media = {
     alt: {
       es: "Estación de carga Voltop en operación, con vehículos conectados",
       en: "Voltop charging station in operation, with vehicles plugged in",
+      pt: "Estação de carregamento Voltop em operação, com veículos conectados",
     },
     role: {
       es: "Respiración y contraste. Escala física sin datos.",
       en: "Breathing room and contrast. Physical scale without data.",
+      pt: "Respiro e contraste. Escala física sem dados.",
     },
     aspect: "21/9",
     availability: "confirmado-no-entregado",
@@ -117,10 +125,12 @@ export const media = {
     alt: {
       es: "Puntos de carga Voltop integrados en el parqueadero de un espacio comercial",
       en: "Voltop charging points integrated into a commercial space's parking area",
+      pt: "Pontos de carregamento Voltop integrados ao estacionamento de um espaço comercial",
     },
     role: {
       es: "Evidencia B2B: la infraestructura dentro de un negocio real.",
       en: "B2B evidence: infrastructure inside a real business.",
+      pt: "Evidência B2B: infraestrutura dentro de um negócio real.",
     },
     aspect: "4/3",
     availability: "confirmado-no-entregado",
@@ -134,10 +144,12 @@ export const media = {
     alt: {
       es: "Detalle de un conector de carga Voltop acoplado a un vehículo eléctrico",
       en: "Close-up of a Voltop connector plugged into an electric vehicle",
+      pt: "Detalhe de um conector Voltop plugado em um veículo elétrico",
     },
     role: {
       es: "Textura y precisión: el detalle físico que hace tangible la tecnología.",
       en: "Texture and precision: the physical detail that makes the technology tangible.",
+      pt: "Textura e precisão: o detalhe físico que torna a tecnologia tangível.",
     },
     aspect: "3/2",
     availability: "confirmado-no-entregado",

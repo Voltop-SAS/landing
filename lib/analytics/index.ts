@@ -28,6 +28,11 @@ export type EventName =
   | "lead_form_error"
   | "lead_form_envio"
   | "lead_form_exito"
+  // Novedades
+  | "novedades_vista"
+  | "novedad_vista"
+  // Idioma
+  | "idioma_cambiado"
   // Marca
   | "caso_visto"
   | "impacto_visto"

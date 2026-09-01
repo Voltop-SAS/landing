@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { isLocale, t, type Locale } from "@/lib/i18n/config";
-import { routes, absoluteUrl, SITE_URL } from "@/lib/i18n/routes";
+import { routes, alternatesFor, SITE_URL } from "@/lib/i18n/routes";
 import { nosotros } from "@/content/copy/nosotros";
 import { brand } from "@/content/copy/common";
 import { media } from "@/content/data/media";
@@ -20,14 +20,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: t(nosotros.meta.title, lang),
     description: t(nosotros.meta.description, lang),
-    alternates: {
-      canonical: absoluteUrl(lang, routes.nosotros),
-      languages: {
-        es: absoluteUrl("es", routes.nosotros),
-        en: absoluteUrl("en", routes.nosotros),
-        "x-default": absoluteUrl("es", routes.nosotros),
-      },
-    },
+    alternates: alternatesFor(lang, routes.nosotros),
   };
 }
 

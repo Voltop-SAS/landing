@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { isLocale, t, type Locale } from "@/lib/i18n/config";
-import { routes, absoluteUrl } from "@/lib/i18n/routes";
+import { routes, alternatesFor } from "@/lib/i18n/routes";
 import { empresas } from "@/content/copy/empresas";
 import { media } from "@/content/data/media";
 import { getBusinessSegments, getFeaturedCase } from "@/lib/data";
@@ -17,14 +17,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: t(empresas.meta.title, lang),
     description: t(empresas.meta.description, lang),
-    alternates: {
-      canonical: absoluteUrl(lang, routes.empresas),
-      languages: {
-        es: absoluteUrl("es", routes.empresas),
-        en: absoluteUrl("en", routes.empresas),
-        "x-default": absoluteUrl("es", routes.empresas),
-      },
-    },
+    alternates: alternatesFor(lang, routes.empresas),
   };
 }
 

@@ -32,7 +32,6 @@ export function Footer({ lang }: { lang: Locale }) {
               aria-label={t(a11y.goHome, lang)}
             >
               <Logo />
-              <span className="font-display text-display-s font-semibold">{brand.name}</span>
             </Link>
             <p className="mt-4 max-w-xs text-body-s text-ink-3">{t(brand.tagline, lang)}</p>
           </div>

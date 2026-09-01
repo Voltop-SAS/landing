@@ -4,7 +4,10 @@
 > Está escrito para ser consumido por cualquier persona o sistema —diseño, UX, desarrollo, contenido, stakeholders u otro asistente de IA— **sin acceso a historial de conversaciones**.
 > Ante cualquier contradicción con otro documento de `/docs`, **prevalece este archivo**.
 >
-> Versión 1.0 · 2026-08-11 · Idioma de trabajo: español (producto bilingüe ES/EN)
+> Versión 1.1 · 2026-09-01 · Idioma de trabajo: español (producto trilingüe ES / EN / PT-BR)
+>
+> **Cambios de la 1.1** (detalle y evidencia en `docs/04-ejecucion/00-registro-de-cambios.md`, bloques 9–13):
+> portugués de Brasil como tercer idioma publicado · Novedades como quinto destino y cuarta puerta de navegación · logo oficial entregado e integrado.
 
 **Cómo leer este documento.** Los bloques están marcados como:
 `FACT` hecho verificable · `DECISION` decisión tomada y cerrada · `PRINCIPLE` regla de criterio · `OPEN` pregunta abierta · `SUPERSEDED` decisión anterior anulada.
@@ -30,7 +33,7 @@
 
 ## 2. QUÉ SE ESTÁ CONSTRUYENDO
 
-`FACT` El rediseño completo de la experiencia digital pública de Voltop: sitio web bilingüe ES/EN, construido como prototipo de alta fidelidad en Next.js, con calidad de producción.
+`FACT` El rediseño completo de la experiencia digital pública de Voltop: sitio web trilingüe **ES / EN / PT-BR**, construido como prototipo de alta fidelidad en Next.js, con calidad de producción.
 
 `DECISION` El prototipo se construye **como si fuera producción**, no como maqueta. Componentes tipados, contenido como datos, accesibilidad y SEO desde el inicio.
 
@@ -38,7 +41,9 @@
 
 `DECISION` **La decisión de producción no se toma hasta que el copy esté fuera del código** (ver §27). Evaluarla antes produce estimaciones de costo falsas.
 
-**Fuera de alcance en esta etapa:** la app móvil, el backoffice, el sistema de pagos, la API de disponibilidad en tiempo real, blog/editorial, página de precios.
+**Fuera de alcance en esta etapa:** la app móvil, el backoffice, el sistema de pagos, la API de disponibilidad en tiempo real, página de precios.
+
+`SUPERSEDED` **"blog/editorial" estaba fuera de alcance y entró** (bloque 11). No como blog: como **registro** de aperturas, alianzas, eventos y comunicados. La distinción está razonada en §14 y en la cabecera de `content/data/posts.ts`.
 
 ---
 
@@ -228,16 +233,27 @@ Premium **es**, en este proyecto:
 
 ## 14. ARQUITECTURA DE INFORMACIÓN
 
-`DECISION` **Cuatro destinos. Tres puertas de navegación + Home por el logo.**
+`DECISION` **Cinco destinos. Cuatro puertas de navegación + Home por el logo.**
 
 ```
 /                       HOME        — presenta Voltop y reparte a cada journey
 /red                    RED         — puerta B2C · herramienta de búsqueda de estaciones
-/red/[ciudad]           CIUDAD      — cobertura por ciudad (SEO local)          [NUEVO]
+/red/[ciudad]           CIUDAD      — cobertura por ciudad (SEO local)
 /red/estacion/[slug]    ESTACIÓN    — ficha completa, generada desde datos
 /empresas               EMPRESAS    — hub B2B · selector + evidencia + captura de lead
+/novedades              NOVEDADES   — registro de la red · aperturas, alianzas,
+                                      eventos y comunicados                     [NUEVO]
+/novedades/[slug]       ENTRADA     — solo si la entrada tiene cuerpo
 /nosotros               NOSOTROS    — marca, historia, escala, liderazgo, impacto
 ```
+
+`DECISION` **Se añade Novedades como cuarta puerta** (antes eran tres). Justificación: §6 lista "Inversionista / prensa" y los mandaba a Nosotros, pero esos públicos no preguntan *quiénes son* —eso es estático— sino *qué han hecho últimamente*. Son preguntas distintas, y meter la segunda dentro de la primera esconde el activo que mejor responde a ambas. Es la misma excepción que ya se admitió con el nivel ciudad: razón real de contenido, intención y SEO.
+
+`PRINCIPLE` **No es un blog, es un registro.** Un blog exige contenido que hay que inventar y sin cadencia se ve muerto —tres artículos con fecha vieja comunican que la compañía está parada, lo contrario del objetivo §4.1—. Un registro se alimenta de lo que la operación ya produce: cada estación que abre es una entrada.
+
+`DECISION` **Una entrada sin cuerpo no genera página.** Vive solo en el índice. Obligar a un clic para leer un párrafo es fricción sin contrapartida y multiplica páginas delgadas que compiten entre sí en búsqueda.
+
+`DECISION` **Cada entrada se re-superficie por referencia** en la ficha de su estación y en la página de su ciudad. Es lo que impide que el registro sea un cajón aparte.
 
 `DECISION` No existen páginas separadas para Flotas, Propietarios, Partners, App, Precios, Contacto, Casos ni Inversionistas. Viven dentro de un destino o en el footer.
 
@@ -256,6 +272,7 @@ Premium **es**, en este proyecto:
 | **Ciudad** | Cobertura local | Estaciones de la ciudad, contexto local, próximas aperturas | Contenido duplicado de /red |
 | **Estación** | Decidir ir a cargar | Specs, servicios, media propia, cómo llegar, disponibilidad | Contenido de marca |
 | **Empresas** | Generar lead segmentado | Propuesta por caso, capacidades, **evidencia antes del formulario**, formulario segmentado con consentimiento | Contenido B2C |
+| **Novedades** | Hacer visible el movimiento de la compañía | Registro cronológico, pulso (cuántas entradas y de cuándo la última), entradas con referencia a estación o ciudad | Opinión, contenido editorial de relleno, cifras sin validar |
 | **Nosotros** | Credibilidad | Historia, escala, infraestructura, liderazgo, impacto, partners | Conversión dura |
 
 ---
@@ -703,7 +720,9 @@ Resumen a 2026-08-11, antes de la transformación:
 
 ## 35. PENDIENTES
 
-**Bloqueados por entrega externa:** archivos de video y fotografía · logo SVG · hex confirmados · tipografías · métricas reales · logos de partners · enlaces de las tiendas · definición del CRM.
+**Bloqueados por entrega externa:** archivos de video y fotografía · hex confirmados · tipografías · métricas reales · logos de partners · enlaces de las tiendas · definición del CRM · **fechas reales de las entradas de arranque del registro**.
+
+**Entregado el 2026-09-01:** logo oficial (`public/Logo_voltop.svg`), integrado en header, footer e imagen Open Graph.
 
 **No bloqueados:** todo lo demás (ver Anexo A y el registro de ejecución).
 
@@ -711,7 +730,7 @@ Resumen a 2026-08-11, antes de la transformación:
 
 ## 36. DECISIONES CONFIRMADAS
 
-1. Arquitectura de 4 destinos: Home · Red · Empresas · Nosotros.
+1. Arquitectura de **5 destinos**: Home · Red · Empresas · **Novedades** · Nosotros. `SUPERSEDED` — eran 4 (bloque 11).
 2. Estación como página propia generada desde datos.
 3. **Nivel ciudad `/red/[ciudad]`.**
 4. Sin páginas separadas por perfil B2B.
@@ -724,7 +743,7 @@ Resumen a 2026-08-11, antes de la transformación:
 11. **Composiciones consecutivas no pueden repetir estructura.**
 12. **La energía se expresa como respuesta, no como ambiente.**
 13. **Sin constelaciones de nodos ni grafos abstractos de fondo.**
-14. **i18n por ruta estática con prefijo (`/es`, `/en`).**
+14. **i18n por ruta estática con prefijo (`/es`, `/en`, `/pt`).** El idioma base es el único obligatorio en el tipo; la cobertura la garantiza la auditoría de build, que **rompe el build si un idioma publicado tiene huecos** (`lib/i18n/audit.ts`). Cada idioma tiene estado `publicado` | `borrador`; un borrador es navegable pero no se indexa, no entra al sitemap ni al selector.
 15. **Todo el copy fuera del JSX.**
 16. **Toda navegación interna con `next/link`.**
 17. **Server Components por defecto.**
@@ -742,8 +761,8 @@ Resumen a 2026-08-11, antes de la transformación:
 
 | # | Pregunta | Impacto | Necesita |
 |---|---|---|---|
-| O1 | Hex exactos, tipografías y logo de marca | Alto — afecta toda la capa visual | Entrega del guideline |
-| O2 | ¿Segmentos de URL localizados en inglés? | Bajo | Criterio de marca |
+| O1 | Hex exactos y tipografías de marca | Alto — afecta toda la capa visual | Entrega del guideline. **El logo ya se entregó e integró** (bloque 13) |
+| O2 | ¿Segmentos de URL localizados por idioma? | Bajo | Criterio de marca. Con tres idiomas el coste sube: si se hace, se hace para los tres a la vez |
 | O3 | CRM objetivo | Medio — define el mapeo de campos | Decisión de negocio |
 | O4 | Plataforma de analytics | Medio | Decisión de negocio |
 | O5 | ¿Precio por estación público? | Medio — afecta el modelo y la ficha | Decisión comercial |

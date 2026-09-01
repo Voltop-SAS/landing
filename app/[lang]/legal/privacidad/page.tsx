@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { isLocale, t, type Locale } from "@/lib/i18n/config";
-import { routes, absoluteUrl } from "@/lib/i18n/routes";
+import { routes, alternatesFor } from "@/lib/i18n/routes";
 import { legal } from "@/content/copy/legal";
 import { Section, Container, Eyebrow, SectionHeading } from "@/components/ui/layout";
 import { PendingTag } from "@/components/ui/data";
@@ -16,10 +16,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: t(p.meta.title, lang),
     description: t(p.meta.description, lang),
-    alternates: {
-      canonical: absoluteUrl(lang, path),
-      languages: { es: absoluteUrl("es", path), en: absoluteUrl("en", path), "x-default": absoluteUrl("es", path) },
-    },
+    alternates: alternatesFor(lang, path),
     /* Sin texto legal definitivo, la página no debe indexarse. */
     robots: p.sections.length === 0 ? { index: false, follow: true } : undefined,
   };

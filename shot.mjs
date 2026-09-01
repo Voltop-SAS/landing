@@ -46,14 +46,15 @@ async function shot(name, path, w, h, anchor = null) {
   await page.close();
 }
 
-/* Los siete beats de la Home, por su ancla real. */
+/* Los beats de la Home, por su ancla real. */
 const HOME_BEATS = [
   ["1-hero", null],
   ["2-infraestructura", "#infraestructura"],
   ["3-red", "#red"],
   ["4-empresas", "#empresas"],
   ["5-caso", "#caso"],
-  ["6-vision", "#vision"],
+  ["6-novedades", "#novedades"],
+  ["7-vision", "#vision"],
 ];
 
 const ROUTES = [
@@ -64,9 +65,22 @@ const ROUTES = [
   ["empresas", "/es/empresas"],
   ["empresas-contacto", "/es/empresas#contacto"],
   ["nosotros", "/es/nosotros"],
+  ["novedades", "/es/novedades"],
+  ["novedad", "/es/novedades/apertura-universidad-ean"],
   ["privacidad", "/es/legal/privacidad"],
   ["404", "/es/ruta-inexistente"],
   ["home-en", "/en"],
+  /* El portugués se revisa aparte y no por completismo: es sistemáticamente
+     MÁS LARGO que el español —"Infraestrutura de carregamento" frente a
+     "Infraestructura de carga"— así que es el idioma con más probabilidad de
+     desbordar un titular, un botón o una celda. Si una composición se rompe
+     por longitud de texto, se rompe aquí primero. */
+  ["pt-home", "/pt"],
+  ["pt-red", "/pt/red"],
+  ["pt-empresas", "/pt/empresas"],
+  ["pt-nosotros", "/pt/nosotros"],
+  ["pt-novedades", "/pt/novedades"],
+  ["pt-estacion", "/pt/red/estacion/san-fernando-plaza"],
 ];
 
 /* §22 exige composición propia en cuatro contextos, así que se revisan los cuatro. */

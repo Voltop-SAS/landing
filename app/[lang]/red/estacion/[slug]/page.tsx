@@ -2,10 +2,12 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { locales, isLocale, t, type Locale } from "@/lib/i18n/config";
-import { href, routes, absoluteUrl, SITE_URL } from "@/lib/i18n/routes";
-import { red, station as stationCopy } from "@/content/copy/red";
+import { href, routes, absoluteUrl, alternatesFor, SITE_URL } from "@/lib/i18n/routes";
+import { red, station as stationCopy, stationMeta } from "@/content/copy/red";
 import { actions, a11y, units } from "@/content/copy/common";
-import { getStations, getStation, getCity, getStationsByCity } from "@/lib/data";
+import { getStations, getStation, getCity, getStationsByCity, getPostsForStation } from "@/lib/data";
+import { novedadesInline } from "@/content/copy/novedades";
+import { PostsInline } from "@/components/novedades/PostsInline";
 import { Section, Container, Eyebrow, SectionHeading } from "@/components/ui/layout";
 import { StatusBadge, SpecList, PendingTag } from "@/components/ui/data";
 import { MediaPending } from "@/components/ui/Media";
@@ -51,14 +53,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   return {
     title: `${s.name}${city ? ` · ${city.name}` : ""}`,
-    description:
-      lang === "es"
-        ? `Estación de carga Voltop en ${city?.name}: ${s.powerKw} kW, ${s.points} puntos y conectores ${s.connectors.join(", ")}.`
-        : `Voltop charging station in ${city?.name}: ${s.powerKw} kW, ${s.points} points and ${s.connectors.join(", ")} connectors.`,
-    alternates: {
-      canonical: absoluteUrl(lang, path),
-      languages: { es: absoluteUrl("es", path), en: absoluteUrl("en", path), "x-default": absoluteUrl("es", path) },
-    },
+    description: t(stationMeta.description, lang)({
+      /* Sin ciudad resuelta se omite el topónimo en lugar de imprimir
+         "undefined" en la descripción que ve el buscador. */
+      city: city?.name ?? "Colombia",
+      powerKw: s.powerKw,
+      points: s.points,
+      connectors: s.connectors.join(", "),
+    }),
+    alternates: alternatesFor(lang, path),
   };
 }
 
@@ -71,6 +74,9 @@ export default async function StationPage({ params }: Props) {
   if (!s) notFound();
   const city = getCity(s.citySlug);
   const nearby = getStationsByCity(s.citySlug).filter((n) => n.slug !== s.slug);
+  /* Re-superficie del registro: la apertura de ESTA estación aparece aquí sola,
+     por referencia. Sin entradas, `PostsInline` no renderiza nada. */
+  const news = await getPostsForStation(s.slug);
 
   /* Sin coordenadas confirmadas, "cómo llegar" abre una búsqueda por dirección.
      Es honesto y funciona; cuando lleguen las coordenadas, el enlace mejora solo. */
@@ -217,6 +223,12 @@ export default async function StationPage({ params }: Props) {
           </div>
         </Container>
       </Section>
+
+      {news.length > 0 && (
+        <div className="border-t border-line">
+          <PostsInline posts={news} lang={lang} title={novedadesInline.station.title} />
+        </div>
+      )}
 
       {nearby.length > 0 && (
         <Section space="tight" className="border-t border-line">

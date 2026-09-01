@@ -1,13 +1,17 @@
 /**
  * i18n · Rutas localizadas
  *
- * Los segmentos de URL se mantienen en español en ambos idiomas
+ * Los segmentos de URL se mantienen en español en todos los idiomas
  * (/en/red, no /en/network). Decisión abierta O2 del Master Project
  * Definition: localizarlos es deseable pero no bloqueante, y hacerlo
  * más tarde solo requiere cambiar este archivo.
+ *
+ * NADA EN ESTE ARCHIVO ENUMERA LOS IDIOMAS A MANO. Todo se deriva de
+ * `locales`, para que añadir un idioma no obligue a buscar por el proyecto
+ * dónde estaba escrito el conjunto anterior.
  */
 
-import type { Locale } from "./config";
+import { locales, publishedLocales, defaultLocale, localeMeta, type Locale } from "./config";
 
 /** Rutas canónicas del sitio, sin prefijo de idioma. */
 export const routes = {
@@ -15,7 +19,9 @@ export const routes = {
   red: "/red",
   empresas: "/empresas",
   nosotros: "/nosotros",
+  novedades: "/novedades",
   privacy: "/legal/privacidad",
+  post: (slug: string) => `/novedades/${slug}`,
   city: (slug: string) => `/red/${slug}`,
   station: (slug: string) => `/red/estacion/${slug}`,
 } as const;
@@ -26,12 +32,26 @@ export function href(lang: Locale, path: string): string {
 }
 
 /**
+ * Prefijo de idioma al inicio de una ruta, DERIVADO de `locales`.
+ *
+ * El `(?=\/|$)` no es cosmético: sin él, `^\/(es|en)` casa también con el
+ * comienzo de `/estaciones` y lo recorta a `taciones`. Hoy ninguna ruta del
+ * sitio empieza así, pero la expresión estaba escrita a mano en dos archivos
+ * distintos y una de las dos copias sí carecía del lookahead.
+ */
+const LOCALE_PREFIX = new RegExp(`^/(${locales.join("|")})(?=/|$)`);
+
+/** Quita el prefijo de idioma. Devuelve "" para la home. */
+export function stripLocale(pathname: string): string {
+  return pathname.replace(LOCALE_PREFIX, "");
+}
+
+/**
  * Cambia el idioma conservando la ruta actual.
  * `pathname` es la ruta completa incluyendo el prefijo de idioma.
  */
 export function switchLocalePath(pathname: string, next: Locale): string {
-  const rest = pathname.replace(/^\/(es|en)(?=\/|$)/, "");
-  return `/${next}${rest}`;
+  return `/${next}${stripLocale(pathname)}`;
 }
 
 /** Rutas absolutas para sitemap, canonical y hreflang. */
@@ -39,4 +59,30 @@ export const SITE_URL = "https://voltop.co";
 
 export function absoluteUrl(lang: Locale, path: string): string {
   return `${SITE_URL}${href(lang, path)}`;
+}
+
+/**
+ * Canonical + hreflang recíproco de UNA ruta, en TODOS los idiomas (§29).
+ *
+ * Antes cada página escribía `{ es: …, en: … }` a mano en su `generateMetadata`.
+ * Eran cuatro copias del mismo objeto y ninguna se enteraría de un idioma
+ * nuevo: el tercer idioma habría quedado publicado pero huérfano de hreflang,
+ * que es la señal con la que Google decide qué versión sirve a quién.
+ *
+ * `x-default` apunta al idioma por defecto: es la versión que se sirve a quien
+ * no encaja en ninguna de las declaradas.
+ */
+export function alternatesFor(lang: Locale, path: string) {
+  return {
+    canonical: absoluteUrl(lang, path),
+    /* Solo idiomas PUBLICADOS. Un `hreflang` es una invitación a indexar:
+       anunciar un idioma en borrador lo metería en resultados de búsqueda
+       precisamente mientras está a medias. */
+    languages: {
+      ...Object.fromEntries(
+        publishedLocales.map((l) => [localeMeta[l].hreflang, absoluteUrl(l, path)])
+      ),
+      "x-default": absoluteUrl(defaultLocale, path),
+    },
+  };
 }

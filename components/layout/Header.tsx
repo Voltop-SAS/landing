@@ -4,8 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { t, type Locale } from "@/lib/i18n/config";
-import { href, routes } from "@/lib/i18n/routes";
-import { nav, headerCta, a11y, brand } from "@/content/copy/common";
+import { href, routes, stripLocale } from "@/lib/i18n/routes";
+import { nav, headerCta, a11y } from "@/content/copy/common";
 import { Button } from "@/components/ui/Button";
 import { LangSwitch } from "@/components/layout/LangSwitch";
 import { Logo } from "@/components/layout/Logo";
@@ -50,14 +50,16 @@ export function Header({ lang }: { lang: Locale }) {
   const toggleRef = useRef<HTMLButtonElement>(null);
 
   /* Contexto de ruta → CTA contextual */
-  const path = pathname.replace(/^\/(es|en)/, "") || "/";
+  const path = stripLocale(pathname) || "/";
   const context = path.startsWith(routes.red)
     ? "red"
     : path.startsWith(routes.empresas)
       ? "empresas"
-      : path.startsWith(routes.nosotros)
-        ? "nosotros"
-        : "home";
+      : path.startsWith(routes.novedades)
+        ? "novedades"
+        : path.startsWith(routes.nosotros)
+          ? "nosotros"
+          : "home";
   const cta = headerCta[context];
 
   useEffect(() => {
@@ -118,7 +120,6 @@ export function Header({ lang }: { lang: Locale }) {
             aria-label={t(a11y.goHome, lang)}
           >
             <Logo />
-            <span className="font-display text-display-s font-semibold tracking-tight">{brand.name}</span>
           </Link>
 
           <nav className="hidden items-center gap-9 md:flex" aria-label={t(a11y.mainNav, lang)}>
@@ -221,7 +222,9 @@ export function Header({ lang }: { lang: Locale }) {
               </Button>
             )}
             <div className="self-start">
-              <LangSwitch lang={lang} />
+              {/* Abre hacia ARRIBA: en el menú móvil el selector está al fondo
+                  del panel y hacia abajo quedaría fuera de la pantalla. */}
+              <LangSwitch lang={lang} placement="up" />
             </div>
           </div>
         </div>

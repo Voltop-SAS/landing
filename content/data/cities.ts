@@ -29,6 +29,7 @@ export const cities: City[] = [
     intro: {
       es: "Carga en el norte, el centro financiero y los corredores de salida de la ciudad, en espacios donde ya ibas a estar.",
       en: "Charge in the north, the financial district and the city's main exit corridors — in places you were already going.",
+      pt: "Carregue na zona norte, no centro financeiro e nos principais corredores de saída da cidade — em lugares onde você já ia estar.",
     },
     featured: true,
   },
@@ -39,6 +40,7 @@ export const cities: City[] = [
     intro: {
       es: "Carga rápida en El Poblado y puntos estratégicos del Valle de Aburrá, integrada a espacios comerciales.",
       en: "Fast charging in El Poblado and strategic points across the Aburrá Valley, integrated into commercial spaces.",
+      pt: "Carregamento rápido em El Poblado e pontos estratégicos do Vale de Aburrá, integrados a espaços comerciais.",
     },
     featured: true,
   },

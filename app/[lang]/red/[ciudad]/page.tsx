@@ -2,10 +2,12 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { locales, isLocale, t, type Locale } from "@/lib/i18n/config";
-import { href, routes, absoluteUrl } from "@/lib/i18n/routes";
+import { href, routes, alternatesFor } from "@/lib/i18n/routes";
 import { red, city as cityCopy } from "@/content/copy/red";
 import { units, a11y } from "@/content/copy/common";
-import { getCities, getCity, getStationsByCity } from "@/lib/data";
+import { getCities, getCity, getStationsByCity, getPostsForCity } from "@/lib/data";
+import { novedadesInline } from "@/content/copy/novedades";
+import { PostsInline } from "@/components/novedades/PostsInline";
 import { Section, Container, Eyebrow, SectionHeading } from "@/components/ui/layout";
 import { StatusBadge } from "@/components/ui/data";
 import { Reveal } from "@/components/ui/Reveal";
@@ -50,10 +52,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: `${t(cityCopy.metaTitlePattern, lang)} ${city.name}`,
     description: t(city.intro, lang),
-    alternates: {
-      canonical: absoluteUrl(lang, path),
-      languages: { es: absoluteUrl("es", path), en: absoluteUrl("en", path), "x-default": absoluteUrl("es", path) },
-    },
+    alternates: alternatesFor(lang, path),
   };
 }
 
@@ -67,6 +66,7 @@ export default async function CityPage({ params }: Props) {
 
   const stations = getStationsByCity(city.slug);
   const others = getCities().filter((c) => c.slug !== city.slug);
+  const news = await getPostsForCity(city.slug);
 
   return (
     <>
@@ -128,6 +128,16 @@ export default async function CityPage({ params }: Props) {
           </ul>
         </Container>
       </Section>
+
+      {news.length > 0 && (
+        <div className="border-t border-line">
+          <PostsInline
+            posts={news}
+            lang={lang}
+            title={novedadesInline.city.title}
+          />
+        </div>
+      )}
 
       {others.length > 0 && (
         <Section space="tight" className="border-t border-line">

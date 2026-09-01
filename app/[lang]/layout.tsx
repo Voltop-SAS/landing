@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
-import { locales, isLocale, localeMeta, defaultLocale, t, type Locale } from "@/lib/i18n/config";
-import { absoluteUrl } from "@/lib/i18n/routes";
+import { locales, isLocale, isPublished, localeMeta, defaultLocale, t, type Locale } from "@/lib/i18n/config";
+import { absoluteUrl, alternatesFor, routes } from "@/lib/i18n/routes";
 import { a11y, brand } from "@/content/copy/common";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
@@ -60,21 +60,17 @@ export async function generateMetadata({
   return {
     title: { default: `${brand.name} — ${t(brand.tagline, lang)}`, template: `%s · ${brand.name}` },
     description: t(brand.tagline, lang),
-    alternates: {
-      canonical: absoluteUrl(lang, ""),
-      languages: {
-        es: absoluteUrl("es", ""),
-        en: absoluteUrl("en", ""),
-        "x-default": absoluteUrl("es", ""),
-      },
-    },
+    alternates: alternatesFor(lang, routes.home),
     openGraph: {
       type: "website",
       siteName: brand.name,
       locale: localeMeta[lang].htmlLang,
       url: absoluteUrl(lang, ""),
     },
-    robots: { index: true, follow: true },
+    /* Un idioma en BORRADOR es navegable —hay que poder revisarlo— pero no
+       entra al índice mientras esté incompleto. Se sigue permitiendo seguir
+       los enlaces: la versión publicada de cada página sí debe descubrirse. */
+    robots: { index: isPublished(lang), follow: true },
   };
 }
 
