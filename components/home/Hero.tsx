@@ -44,6 +44,25 @@ const VEIL = {
   desktop: {
     vertical: `linear-gradient(to top, ${canvas(100)} 0%, ${canvas(82)} 45%, ${canvas(48)} 82%, ${canvas(22)} 100%)`,
     lateral: `linear-gradient(to right, ${canvas(68)} 0%, ${canvas(40)} 44%, transparent 72%)`,
+    /**
+     * Banda superior, bajo el header.
+     *
+     * El header es transparente hasta que hay scroll —solo entonces gana
+     * `bg-canvas/85` y desenfoque—, así que sobre el hero su texto cae
+     * directamente sobre la foto. El velo vertical llega arriba al 22%, que
+     * no basta: medido, el 1% más claro detrás de "Nosotros" a 768px daba
+     * **1.75:1**. No es un fallo de bloque sino de MANCHAS —las luces azules
+     * y los tubos del techo quedan detrás de letras concretas—, y por eso se
+     * percibe como que la navegación "se pierde" aunque el promedio pase.
+     *
+     * Se calibra contra el percentil 99 y no contra la media: bajo un fondo
+     * tan irregular, el promedio esconde justo el punto donde el trazo de una
+     * letra desaparece.
+     *
+     * Solo en escritorio. En móvil el velo vertical ya llega al 52% arriba
+     * —por eso ahí sí cumplía— y sumarle esta banda lo oscurecería sin motivo.
+     */
+    superior: `linear-gradient(to bottom, ${canvas(72)} 0%, ${canvas(42)} 12%, transparent 22%)`,
   },
 } as const;
 
@@ -105,6 +124,7 @@ export function Hero({ lang }: { lang: Locale }) {
       <div aria-hidden="true" className="absolute inset-0 md:hidden" style={{ background: VEIL.mobile.vertical }} />
       <div aria-hidden="true" className="absolute inset-0 hidden md:block" style={{ background: VEIL.desktop.vertical }} />
       <div aria-hidden="true" className="absolute inset-0 hidden md:block" style={{ background: VEIL.desktop.lateral }} />
+      <div aria-hidden="true" className="absolute inset-0 hidden md:block" style={{ background: VEIL.desktop.superior }} />
 
       {/* Acento de corriente: una sola línea, en el borde. Señal, no textura. */}
       <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-px brand-gradient opacity-70" />

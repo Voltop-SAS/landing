@@ -808,3 +808,39 @@ Una primera medición usó el píxel más claro de cada caja y sobreestimaba el 
 ### Lo que NO se tocó
 
 Estructura, textos, CTAs, tipografías, jerarquía, animaciones y el resto de secciones. Solo velo, un salto de línea responsive y el encuadre ya fijado en el bloque 15.
+
+---
+
+## Bloque 17 · Contraste de la navegación sobre el hero — 2026-09-01
+
+**Origen:** observación del usuario — *"en la zona donde está el nav no hay suficiente contraste y se pierde un poco"*. Correcta, y era un **hueco de la auditoría del bloque 16**: se midieron los seis textos del hero, pero el header es otro componente y quedó fuera.
+
+### Por qué el promedio lo escondía
+
+El header es transparente hasta que hay scroll —solo entonces gana `bg-canvas/85` y desenfoque—, así que sobre el hero su texto cae directamente sobre la foto. Medido:
+
+| | p90 (promedio alto) | **p99 (el punto malo)** |
+|---|---|---|
+| `Nosotros` @768px | 5.63 — pasa | **1.75:1** |
+| `Novedades` @1024px | 6.42 — pasa | **2.68:1** |
+| Selector de idioma @1024px | 7.52 — pasa | **2.31:1** |
+
+No era un fallo de bloque sino de **manchas**: las luces azules y los tubos del techo quedan detrás de letras concretas. Por eso se percibe como que la navegación "se pierde" aunque el promedio cumpla.
+
+**Lección de método:** bajo un fondo irregular, el percentil 90 es demasiado indulgente. El criterio correcto es el p99, que es donde el trazo de una letra desaparece. El bloque 16 usó p90 y por eso dio el header por bueno sin medirlo.
+
+### Corrección
+
+Banda superior de velo bajo el header, **solo en escritorio**: en móvil el velo vertical ya llega al 52% arriba y por eso ahí sí cumplía (hamburguesa 6.21 en p99).
+
+Un detalle del proceso que casi cuesta un error: el barrido inicial tenía las paradas del degradado **desordenadas** (55% antes que 22%), así que el navegador las colapsaba y la variante elegida oscurecía mucho más de lo que aparentaba. Se detectó al implementar y se **volvió a medir sobre lo realmente renderizado** en vez de confiar en el barrido.
+
+### Resultado
+
+| | Antes | Después |
+|---|---|---|
+| Peor p99 del header | **1.75:1** | **4.68:1** |
+| Fallos en p90 | 1 (`Empresas` @1920) | **0** |
+| Fallos en p99 | varios | **0** |
+
+Verificado en 7 viewports sobre nav, selector de idioma, CTA del header y hamburguesa. El hero conserva sus cero fallos y ninguna incidencia estructural.
