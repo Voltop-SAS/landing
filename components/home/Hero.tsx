@@ -27,9 +27,28 @@ export function Hero({ lang }: { lang: Locale }) {
 
   return (
     <Section register="impacto" space="none" className="flex min-h-[88dvh] flex-col justify-end overflow-hidden">
-      {/* Material real de fondo */}
+      {/* Material real de fondo.
+          `object-position` en 30% horizontal: `object-cover` recorta por el eje
+          que sobra, y ese eje cambia con el dispositivo. En escritorio el hueco
+          es más ancho que la foto (1.82 frente a 1.50), así que conserva TODO
+          el ancho y recorta arriba y abajo — ahí el valor horizontal no
+          interviene y el vertical centrado deja las estaciones en cuadro. En
+          móvil el hueco es mucho más estrecho (0.52), así que conserva todo el
+          alto y recorta a los lados: centrado se quedaría con la pared del
+          fondo y perdería el cargador con la marca, que está a la izquierda.
+          Anclar al 24% lo deja como sujeto sin afectar a escritorio: se probó
+          contra 18% y 30% y es el que mantiene el equipo en cuadro sin perder
+          el muro oscuro que sostiene la legibilidad del titular. */}
       <div className="absolute inset-0">
-        <Media asset={media.infraestructuraAmplia} lang={lang} fill priority sizes="100vw" className="h-full" />
+        <Media
+          asset={media.heroInfraestructura}
+          lang={lang}
+          fill
+          priority
+          sizes="100vw"
+          position="object-[24%_50%]"
+          className="h-full"
+        />
       </div>
 
       {/* Scrim de legibilidad: densidad abajo, aire arriba */}

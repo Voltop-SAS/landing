@@ -686,3 +686,66 @@ En esa misma franja de ~40px el logo queda a **0px del menú** y se reduce un ~7
 ### Aviso para el día de la migración
 
 Cuando el registro viva en el CMS, `content/data/posts.ts` desaparece del repositorio y con él **la auditoría de idiomas deja de cubrirlo**. Esa cobertura hay que reponerla en el CMS —campo obligatorio, aviso al editor o comprobación en el webhook—. Si no, vuelve exactamente el fallo que la auditoría existe para impedir: contenido publicado a medias en un idioma, en silencio.
+
+---
+
+## Bloque 15 · Primera fotografía real — hero de la Home — 2026-09-01
+
+**Entrega:** `public/Hero_Banner.png`, 7008 × 4672 px. Proporción **3/2 exacta**, la que `docs/05-assets-todo` pedía precisamente para que aguante el recorte vertical del hero en móvil. Es el primer asset real del proyecto.
+
+### El bloqueo que hubo que resolver primero
+
+El archivo entregado pesa **50.331.395 bytes**. El optimizador de imágenes de Next rechaza cualquier origen por encima de **50.000.000** — `ERR_MAX_BODY_SIZE_EXCEEDED` — así que se pasaba por **331 KB** y **la imagen no se renderizaba en absoluto**. No es un límite configurable, y servirla sin optimizar habría significado mandar 50 MB al navegador justo en el elemento que mide el LCP.
+
+Se derivó `public/hero-banner.jpg` — 2560 × 1706, la anchura que el brief de assets fija para composiciones a sangre — conservando el 3/2. El original queda intacto.
+
+⚠️ **El original de 50 MB NO se ha commiteado.** Un binario de ese tamaño en el árbol de git es permanente y no se puede quitar después sin reescribir la historia. Debe archivarse fuera del repositorio.
+
+### Qué se cambió
+
+| Cambio | Razón |
+|---|---|
+| Nueva entrada `heroInfraestructura` en el registro de media | **No se rellenó `infraestructuraAmplia`**: se usa también en la franja 21/9 de `/nosotros`, así que habría cambiado dos superficies cuando el encargo era el hero y nada más. Es además la separación que ya recomendaba la decisión D1 del brief de assets. `infraestructuraAmplia` sigue con su hueco declarado. |
+| `Media` acepta `position` (opcional) | El componente fijaba `object-cover` sin control del anclaje. Prop aditiva: sin ella el comportamiento es el de siempre, centrado, que es el correcto para el resto del sitio. |
+| Hero con `object-[24%_50%]` | Ver abajo. |
+
+### Por qué el anclaje en 24% y no centrado
+
+`object-cover` recorta por el eje que sobra, y ese eje **cambia con el dispositivo**:
+
+| Contexto | Hueco | Qué recorta |
+|---|---|---|
+| Escritorio 1440×800 | 1.80 | Más ancho que la foto (1.50) → conserva todo el ancho, recorta arriba y abajo |
+| Tablet 768×901 | 0.85 | Recorta a los lados, moderado |
+| Móvil 390×829 | 0.47 | Mucho más estrecho → conserva todo el alto, recorta a los lados y **se queda con el 31% del ancho** |
+
+Por eso los dos valores no compiten: cada uno solo actúa donde su eje es el recortado. Centrado, en móvil el encuadre se quedaba con la pared de fondo y **perdía el cargador con la marca**, que está a la izquierda. Se probaron 18%, 24% y 30% sobre el navegador: 18% deja el equipo como sujeto pero apoya el titular sobre el panel claro; 30% conserva el muro oscuro pero el pilar de concreto domina la composición. **24% mantiene el equipo en cuadro sin perder el fondo oscuro que sostiene la legibilidad.**
+
+### Peso servido
+
+| Ancho | Peso | Formato |
+|---|---|---|
+| 640 (móvil) | **29,1 KB** | AVIF |
+| 1080 | 52,3 KB | AVIF |
+| 1920 (escritorio) | **99,8 KB** | AVIF |
+| 2048 | 108,2 KB | AVIF |
+
+Presupuesto del brief para el hero: ≤ 250 KB. **Se cumple con holgura en todos los anchos.**
+
+### Contraste sobre fotografía — la verificación que el brief exigía
+
+`docs/05-assets-todo` avisaba: *"las capas de legibilidad están calibradas contra `surface-1` plano, no contra fotografía. En cuanto entre la primera imagen hay que volver a medir el contraste de todo el texto sobre media."* Medido sobre los píxeles realmente renderizados, ocultando solo el contenido y fotografiando el fondo compuesto:
+
+| | Titular (umbral 3:1, texto grande) | Párrafo (umbral 4,5:1) |
+|---|---|---|
+| Escritorio | p90 6,31 · p99 4,22 · peor 3,47 → **cumple** | p90 5,55 · p99 4,90 · **peor 3,87** |
+| Tablet | p90 9,05 · p99 7,50 · peor 5,67 → **cumple** | p90 6,33 · p99 5,63 · peor 4,83 → **cumple** |
+| Móvil | p90 4,88 · p99 3,72 · peor 3,24 → **cumple** | p90 4,53 · **p99 3,81** · **peor 2,97** |
+
+**El titular cumple AA en los tres contextos.** El párrafo cumple en tablet, pero en escritorio y móvil **cae por debajo de 4,5:1 en zonas**: en móvil el 10% más claro del fondo bajo el texto da 3,81:1 y el peor punto 2,97:1.
+
+**No se corrigió.** La corrección es reforzar el degradado de legibilidad (`via-canvas/75` → un valor más opaco), y eso oscurece la fotografía: es una decisión de dirección de arte, no un ajuste técnico, y el encargo prohibía tocar el diseño. Queda documentado con cifras para decidirlo.
+
+### Evidencia
+
+`lint`, `tsc` y build limpios · 47 páginas · auditoría `ES 376/376 · EN 376/376 · PT 376/376` (el alt y el role del asset nuevo, en los tres idiomas) · `object-fit: cover` verificado en 320/390/768/1024/1440/1920 — **nunca deforma** · `srcSet` con 8 anchos (640→3840) · sin overflow en ninguna resolución · `/nosotros` conserva su hueco declarado, intacto.

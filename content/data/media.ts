@@ -154,6 +154,55 @@ export const media = {
     aspect: "3/2",
     availability: "confirmado-no-entregado",
   },
+
+  /**
+   * HERO DE LA HOME · primer asset real del proyecto (entregado 2026-09-01).
+   *
+   * ── POR QUÉ ES UNA ENTRADA NUEVA Y NO SE RELLENÓ `infraestructuraAmplia` ──
+   * `infraestructuraAmplia` se usa en DOS sitios con recortes incompatibles:
+   * el hero a sangre y la franja 21/9 de /nosotros. Rellenar su `src` habría
+   * cambiado las dos superficies a la vez, y el encargo era sustituir la
+   * imagen del hero y nada más. La separación es además la que ya recomendaba
+   * `docs/05-assets-todo` (decisión D1), por el mismo motivo: ninguna foto
+   * sobrevive bien a los dos recortes.
+   *
+   * `infraestructuraAmplia` sigue con `src: null` y su hueco declarado.
+   *
+   * ── EL ARCHIVO ───────────────────────────────────────────────────────────
+   * 7008 × 4672 px, proporción 3/2 exacta — la que pedía el brief de assets
+   * precisamente para que aguante el recorte vertical del hero en móvil.
+   *
+   * ── POR QUÉ NO SE APUNTA AL ARCHIVO ENTREGADO ───────────────────────────
+   * El original entregado, `Hero_Banner.png`, mide 7008 × 4672 y pesa
+   * 50.331.395 bytes. El optimizador de imágenes de Next rechaza cualquier
+   * origen por encima de **50.000.000 bytes** —`ERR_MAX_BODY_SIZE_EXCEEDED`—,
+   * así que se pasa por 331 KB y la imagen NO SE RENDERIZA. No es un límite
+   * configurable, y servirla sin optimizar significaría mandar 50 MB al
+   * navegador justo en el elemento que mide el LCP.
+   *
+   * `hero-banner.jpg` es el máster web derivado de ese original: 2560 × 1706,
+   * la anchura que `docs/05-assets-todo` fija para composiciones a sangre.
+   * Conserva el 3/2 exacto. El original queda intacto en `public/` y debería
+   * salir del repositorio: 50 MB de binario no pertenecen a un árbol de git.
+   */
+  heroInfraestructura: {
+    id: "hero-infraestructura",
+    kind: "photo",
+    src: "/hero-banner.jpg",
+    poster: null,
+    alt: {
+      es: "Estaciones de carga Voltop en operación en un parqueadero cubierto, con vehículos conectados",
+      en: "Voltop charging stations in service in a covered parking facility, with vehicles plugged in",
+      pt: "Estações de carregamento Voltop em operação em um estacionamento coberto, com veículos conectados",
+    },
+    role: {
+      es: "Fondo del beat 1. Infraestructura real, en operación y con la marca visible en el equipo: la prueba de que Voltop construye, no solo instala.",
+      en: "Beat 1 background. Real infrastructure, in service and with the brand visible on the hardware: proof that Voltop builds rather than merely installs.",
+      pt: "Fundo do beat 1. Infraestrutura real, em operação e com a marca visível no equipamento: a prova de que a Voltop constrói, não apenas instala.",
+    },
+    aspect: "3/2",
+    availability: "entregado",
+  },
 } satisfies Record<string, MediaAsset>;
 
 export type MediaKey = keyof typeof media;

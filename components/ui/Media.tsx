@@ -31,6 +31,7 @@ export function Media({
   priority = false,
   fill = false,
   aspect,
+  position,
 }: {
   asset: MediaAsset;
   lang: Locale;
@@ -49,6 +50,21 @@ export function Media({
    * es una decisión declarada y solo hay una clase.
    */
   aspect?: MediaAsset["aspect"];
+  /**
+   * Punto de anclaje del recorte (`object-position`).
+   *
+   * `object-cover` decide POR QUÉ EJE recorta según la forma del hueco, y en un
+   * hero a sangre esa forma cambia por completo entre dispositivos: en
+   * escritorio el hueco es más ancho que la foto, así que se conserva todo el
+   * ancho y se recorta arriba y abajo; en móvil es mucho más estrecho, así que
+   * se conserva todo el alto y se recorta a izquierda y derecha.
+   *
+   * Por eso los dos valores no compiten: cada uno solo actúa en el régimen
+   * donde su eje es el que se recorta. Sin esta prop el anclaje es el centro,
+   * que es lo correcto para el resto de composiciones del sitio y por eso
+   * sigue siendo el valor por defecto.
+   */
+  position?: string;
 }) {
   const shape = fill ? "" : aspects[aspect ?? asset.aspect];
 
@@ -62,7 +78,7 @@ export function Media({
             fill
             sizes={sizes}
             priority={priority}
-            className="object-cover"
+            className={cn("object-cover", position)}
           />
         </div>
       );
