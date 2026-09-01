@@ -844,3 +844,38 @@ Un detalle del proceso que casi cuesta un error: el barrido inicial tenía las p
 | Fallos en p99 | varios | **0** |
 
 Verificado en 7 viewports sobre nav, selector de idioma, CTA del header y hamburguesa. El hero conserva sus cero fallos y ninguna incidencia estructural.
+
+---
+
+## Bloque 18 · El header completo no cabía a 768px — 2026-09-01
+
+**Origen:** deuda declarada en el bloque 13 y arrastrada desde entonces. Con el logo oficial —137px frente a los ~104 del placeholder— el reparto del header se quedaba sin holgura entre ~768 y ~815px: **0px de separación entre el logo y el menú a 768px**, y el flex comprimía el enlace del logo hasta deformarlo.
+
+### Por qué no se arregla apretando
+
+Se midió el reparto real. Con el espaciado entre entradas reducido:
+
+| Separación entre entradas | Hueco logo→menú a 768px |
+|---|---|
+| 24px (`gap-6`) | 0px |
+| 20px (`gap-5`) | 4px |
+| 16px (`gap-4`) | 10px |
+
+Ni al mínimo se llega a una separación aceptable, y a 16px las cuatro entradas quedan apretadas entre sí: se cambia un problema por otro. **El header simplemente no cabe**: logo, cuatro entradas, selector de idioma y CTA suman más que la fila a 768px.
+
+### La corrección
+
+| Cambio | Razón |
+|---|---|
+| Nuevo token `--breakpoint-nav: 52rem` (832px) | Ancho **medido** al que el reparto respira. El header completo aparece ahí; entre 768 y 832 se usa el menú desplegable, que es el patrón correcto para tablet en vertical y que ya estaba construido, accesible y con el selector de idioma dentro. Mismo precedente que `--breakpoint-xs`, definido en su momento para un caso idéntico. |
+| `shrink-0` en el enlace del logo | El logo es un lockup de proporción fija. Dejarlo encoger lo deformaba. Que ceda el espacio otro elemento, no la marca. |
+| `gap-6` entre `nav` y `lg`, `gap-9` desde `lg` | Da holgura en la franja intermedia sin apretar las entradas donde sobra espacio. |
+| Se retira el `gap-2.5` del enlace del logo | Sobraba desde que el archivo oficial trae símbolo y logotipo en una sola pieza. |
+
+**Se descartó subir el header completo a `lg` (1024px):** habría quitado la navegación entre 832 y 1023, donde cabe perfectamente. La franja afectada pasa de 256px a 64px.
+
+### Verificación
+
+Barrido de **360 a 1440px**: logo sin deformar en ningún ancho (proporción 4.27 constante), separación ≥16px siempre que hay navegación visible, sin overflow, y exclusión correcta entre menú y navegación —nunca ambos, nunca ninguno—. **Selector de idioma accesible en los dos modos**, verificado a 768, 800, 831 (menú) y 832 (header).
+
+Las cuatro auditorías del Hero siguen limpias: contraste del hero, estructura, contraste del header y rendimiento (LCP 1.29s en escritorio con 4G lenta y CPU ×4).

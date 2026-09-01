@@ -116,13 +116,26 @@ export function Header({ lang }: { lang: Locale }) {
         <div className="mx-auto flex h-16 w-full max-w-(--container-content) items-center justify-between px-(--spacing-gutter) md:h-20">
           <Link
             href={href(lang, routes.home)}
-            className="flex items-center gap-2.5 py-2"
+            /* `shrink-0`: el logo es un lockup de proporción fija, y dejarlo
+               encoger lo deformaba o lo pegaba al menú. Que ceda el espacio
+               otro elemento, no la marca. El `gap` anterior sobraba desde que
+               el archivo oficial trae símbolo y logotipo en una sola pieza. */
+            className="flex shrink-0 items-center py-2"
             aria-label={t(a11y.goHome, lang)}
           >
             <Logo />
           </Link>
 
-          <nav className="hidden items-center gap-9 md:flex" aria-label={t(a11y.mainNav, lang)}>
+          <nav
+            /* `gap-6` entre `md` y `lg`, `gap-9` a partir de ahí. En la franja
+               de ~768–820px el reparto quedaba en unos 4px de holgura: logo,
+               cuatro entradas, selector e CTA no caben con 36px de separación,
+               y el flex comprimía el ENLACE DEL LOGO hasta pegarlo al menú.
+               Recuperar 36px de separación resuelve el aprieto sin tocar
+               tamaños de texto ni ocultar nada. */
+            className="hidden items-center gap-6 nav:flex lg:gap-9"
+            aria-label={t(a11y.mainNav, lang)}
+          >
             {nav.map((item) => (
               <Link
                 key={item.href}
@@ -142,7 +155,7 @@ export function Header({ lang }: { lang: Locale }) {
             {/* El selector de idioma sale del header móvil y baja al menú. Es un
                 control de baja frecuencia que ocupaba 88px del espacio más
                 valioso de la pantalla, y ese espacio lo necesita el CTA. */}
-            <div className="hidden md:block">
+            <div className="hidden nav:block">
               <LangSwitch lang={lang} />
             </div>
 
@@ -167,7 +180,7 @@ export function Header({ lang }: { lang: Locale }) {
             <button
               ref={toggleRef}
               type="button"
-              className="grid size-11 place-items-center rounded-(--radius-structural) border border-line-control text-ink md:hidden"
+              className="grid size-11 place-items-center rounded-(--radius-structural) border border-line-control text-ink nav:hidden"
               aria-label={open ? t(a11y.closeMenu, lang) : t(a11y.openMenu, lang)}
               aria-expanded={open}
               aria-controls="menu-movil"
@@ -190,7 +203,7 @@ export function Header({ lang }: { lang: Locale }) {
         <div
           id="menu-movil"
           ref={panelRef}
-          className="fixed inset-x-0 bottom-0 top-16 z-(--z-overlay) flex flex-col overflow-y-auto border-t border-line bg-canvas md:hidden"
+          className="fixed inset-x-0 bottom-0 top-16 z-(--z-overlay) flex flex-col overflow-y-auto border-t border-line bg-canvas nav:hidden"
         >
           <nav className="flex flex-col px-(--spacing-gutter) py-4" aria-label={t(a11y.mainNav, lang)}>
             {nav.map((item) => (

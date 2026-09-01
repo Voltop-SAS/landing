@@ -155,6 +155,20 @@
   --radius-pill: 999px;          /* acciones, energía */
 
   --breakpoint-xs: 480px;
+  /**
+   * Ancho al que el header completo cabe sin apretarse.
+   *
+   * A `md` (768px) no cabe: logo, cuatro entradas de navegación, selector de
+   * idioma y CTA suman más que la fila, y el reparto dejaba el logo pegado al
+   * menú —0px de separación—. Reducir el espaciado entre entradas no lo
+   * arregla: ni a 16px se llega a una separación aceptable, y las entradas
+   * quedan apretadas entre sí.
+   *
+   * 832px es el ancho medido al que el reparto respira. Entre 768 y 832 se
+   * usa el menú desplegable, que es el patrón correcto para tablet en
+   * vertical y que ya está construido y es accesible.
+   */
+  --breakpoint-nav: 52rem;
 
   /* ---------------------------------------------------------------
      MOTION
