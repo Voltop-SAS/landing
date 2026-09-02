@@ -326,8 +326,29 @@ export const footer = {
     },
   ],
   /**
-   * Enlaces sin destino real NO se publican (§15). App, ayuda, legal y redes
-   * sociales se añadirán aquí cuando existan las URLs correspondientes.
+   * REDES · perfiles reales, verificados uno a uno antes de publicarlos.
+   *
+   * §15 prohíbe publicar un enlace sin destino real, así que los tres se
+   * comprobaron con una petición: los tres responden 200.
+   *
+   * Se guardan las URLs CANÓNICAS, no las que entrega el botón de compartir
+   * de cada app:
+   * · Instagram llegaba con un parámetro de rastreo (`igsi`) que no aporta
+   *   nada y ata el enlace a una sesión concreta.
+   * · Facebook llegaba como `/share/18uWjiJFsV/`, un redirector. Resuelve al
+   *   perfil, pero un redirector puede caducar y añade un salto en cada clic.
+   *
+   * `name` es nombre propio: no se traduce.
+   */
+  social: [
+    { name: "Instagram", url: "https://www.instagram.com/voltop.co" },
+    { name: "Facebook", url: "https://www.facebook.com/people/Voltop/61592759125960/" },
+    { name: "LinkedIn", url: "https://www.linkedin.com/company/voltop-energy/" },
+  ],
+
+  /**
+   * Enlaces sin destino real NO se publican (§15). La app y los términos y
+   * condiciones se añadirán aquí cuando existan las URLs y el texto legal.
    */
   privacy: { es: "Tratamiento de datos", en: "Data processing", pt: "Tratamento de dados", } satisfies Localized,
   legalNotice: {

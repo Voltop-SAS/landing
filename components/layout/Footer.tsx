@@ -4,6 +4,7 @@ import { href, routes } from "@/lib/i18n/routes";
 import { footer, brand, a11y } from "@/content/copy/common";
 import { Container } from "@/components/ui/layout";
 import { Logo } from "@/components/layout/Logo";
+import { SocialLinks } from "@/components/layout/SocialLinks";
 
 /**
  * FOOTER · Server Component
@@ -34,6 +35,7 @@ export function Footer({ lang }: { lang: Locale }) {
               <Logo />
             </Link>
             <p className="mt-4 max-w-xs text-body-s text-ink-3">{t(brand.tagline, lang)}</p>
+            <SocialLinks lang={lang} />
           </div>
 
           <nav className="contents" aria-label={t(a11y.footerNav, lang)}>

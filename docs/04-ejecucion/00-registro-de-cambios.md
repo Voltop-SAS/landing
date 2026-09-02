@@ -1205,3 +1205,38 @@ La primera lectura interpretó el CTA del hero de la referencia como un **buscad
 ### Evidencia
 
 `lint`, `tsc` y build limpios · 47 páginas · `ES 380/380 · EN 380/380 · PT 380/380` · contraste del hero sin fallos en 14 viewports · estructura sin incidencias en 16 · header sin fallos en 7 · **sin overflow en 7 anchos × 5 rutas** · con `prefers-reduced-motion` la transición de la flecha queda en 1e-06s (anulada por la regla global).
+
+---
+
+## Bloque 27 · Fase 3 · Redes sociales en el footer — 2026-09-02
+
+**Entrega:** perfiles de Instagram, Facebook y LinkedIn.
+
+### Los enlaces se verificaron antes de publicarlos
+
+§15 prohíbe publicar un enlace sin destino real, así que los tres se comprobaron con una petición: **los tres responden 200**. Y se guardan las URLs **canónicas**, no las que entrega el botón de compartir:
+
+| Entregado | Publicado | Por qué |
+|---|---|---|
+| `instagram.com/voltop.co?igsi=…` | `instagram.com/voltop.co` | El parámetro es de rastreo y ata el enlace a una sesión |
+| `facebook.com/share/18uWjiJFsV/?mibextid=…` | `facebook.com/people/Voltop/61592759125960/` | Era un redirector: resuelve, pero puede caducar y añade un salto en cada clic |
+| `linkedin.com/company/voltop-energy/` | igual | Ya era canónica |
+
+### Accesibilidad
+
+El icono es `aria-hidden` y el nombre accesible lo da un `sr-only`, **no un `aria-label`**: así el texto que anuncia la asistencia y el que vería quien usa lupa son el mismo, sin dos fuentes de verdad que puedan divergir. Incluye el aviso de pestaña nueva (WCAG 3.2.5), como el resto de enlaces externos.
+
+Objetivo táctil **44×44 px** verificado en los tres, aunque el icono mida 18: el área se declara en el enlace, no en el trazo.
+
+### Un detalle de dibujo
+
+La marca oficial de Facebook es una forma pensada para RELLENO. Trazada tal cual daba un contorno de "f" que desentonaba junto a Instagram y LinkedIn, que son cuadrados redondeados con glifo dentro. Se redibujó con el mismo lenguaje: **tres cuadrados, mismo grosor de trazo**.
+
+### No se añadió
+
+- **Términos y condiciones**: no existe el texto legal. Igual que la política de privacidad, que sigue en `noindex` por lo mismo.
+- **Wordmark gigante de cierre**: se descartó. Es decoración sin función y el footer ya abre con el logo; §12 pide que cada elemento justifique su existencia. Queda disponible si se decide que aporta presencia de marca.
+
+### Evidencia
+
+`lint`, `tsc` y build limpios · `ES 380/380 · EN 380/380 · PT 380/380` · tres enlaces con `rel="noopener noreferrer"`, 44×44 px y nombre accesible verificado en el DOM.
