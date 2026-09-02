@@ -936,3 +936,56 @@ Las primeras lecturas daban 2.44–2.60 s, al borde del límite. Son la **primer
 ### Nota de método
 
 Esta sección costó cuatro intentos de medición fallidos antes de dar un número fiable: coordenadas de página frente a viewport en una sección `sticky`, un contenedor de texto mal seleccionado que dejaba parte del texto visible, y un selector de velo que no encontraba el elemento —lo que hacía que tres variantes del barrido dieran idéntico resultado porque **ninguna se aplicaba**—. El patrón que sí funciona con `sticky`: capturar el viewport completo y recortar en el análisis con coordenadas de viewport.
+
+---
+
+## Bloque 20 · El signature moment recupera su video — 2026-09-01
+
+**Entrega:** `C1972.mov` — 27 s, HEVC Main 10, 3840 × 2160, 13.6 Mbps, 46 MB. Cierra el último asset audiovisual pendiente del beat 2.
+
+### El bucle se construyó; no venía en el material
+
+El clip es un **travelling continuo** por una fila de cargadores: la cámara nunca vuelve sobre sus pasos. Eso hace que no exista ningún corte que cierre, y se comprobó midiendo en lugar de suponiendo.
+
+**Búsqueda del punto de corte.** Se extrajeron fotogramas a 6 fps y se evaluaron todas las ventanas de 10–12 s, comparando no un fotograma sino la secuencia de medio segundo alrededor de cada extremo —para que casaran imagen **y** movimiento.
+
+| | Coste (diferencia media sobre 255) |
+|---|---|
+| Mejor ventana (7.17 s → 19.17 s) | **23.8** |
+| Peor ventana | 36.7 |
+
+Un rango estrecho y todo alto: la firma de un plano que avanza sin volver. **Ninguna ventana cierra.**
+
+**Fundido cruzado, descartado.** Bajaba el salto de 34 a 12.6 y **se estancaba ahí** — un fundido disuelve entre dos imágenes distintas, no devuelve la cámara a su origen. El fotograma intermedio mostraba una doble exposición de un segundo: peor que el corte que pretendía evitar.
+
+**La solución: ida y vuelta.** 5.5 s del mejor tramo seguidos del mismo tramo invertido. Cierra **por construcción** —la cámara vuelve por donde vino— y da 11 s, dentro del rango de 8–14 s del brief.
+
+| | Resultado |
+|---|---|
+| Duración | 11.01 s |
+| Cierre del bucle | **6.4/255** (el umbral de "imperceptible" es 8) |
+| Formato | H.264 High, 1920 × 1080, sin audio, `faststart` |
+| Peso | **2.00 MB** — el presupuesto exacto |
+| Póster | 86 KB, fotograma 0 del bucle final |
+
+Codificado a crf 32: comparado a tamaño real contra crf 30 la diferencia es indistinguible, y es un fondo bajo un velo.
+
+### Un fallo de accesibilidad que solo aparece con video
+
+Con `prefers-reduced-motion: reduce` la sección colapsaba correctamente **pero el video seguía reproduciéndose**. Con el hueco del placeholder no se notaba —no había video— y salió al entrar el material real.
+
+No es menor: es un bucle infinito de movimiento junto al texto que se está leyendo. §21 lo prohíbe y WCAG 2.2.2 pide un mecanismo para detener el movimiento que arranca solo y dura más de cinco segundos.
+
+`Media` es Server Component y no puede leer una media query, así que la rama de video pasa a `components/ui/VideoMedia.tsx`, un cliente mínimo que respeta la preferencia. **La fotografía sigue renderizándose en el servidor.** Con la preferencia activa se muestra el póster —el fotograma 0 del propio bucle—: la misma imagen, quieta.
+
+Verificado: sin preferencia **reproduce**; con preferencia **pausado en t=0**.
+
+### Evidencia
+
+`lint`, `tsc` y build limpios · 47 páginas · auditoría `ES 378/378 · EN 378/378 · PT 378/378` · contraste sobre el **video en movimiento** sin fallos en 2 viewports × 2 posiciones de scroll × **5 momentos del bucle** —una foto no exige esto, un video sí, porque el fondo cambia con cada fotograma— · hero, estructura y header sin fallos.
+
+`estacion-medellin.mp4` (el recorte de 4 s entregado antes) y `C1972.mov` quedan fuera del repositorio.
+
+### Consecuencia
+
+`estacionInfraestructura` —la foto que ocupó el beat 2 mientras no había video— **queda registrada y sin uso**. Se conserva a propósito: el registro de media es un catálogo de lo que existe, y volver a ella es cambiar una línea.

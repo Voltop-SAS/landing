@@ -35,11 +35,42 @@ export type MediaAsset = {
 
 export const media = {
   /** SIGNATURE MOMENT — prueba de capacidad de construcción. */
+  /**
+   * SIGNATURE MOMENT · entregado el 2026-09-01.
+   *
+   * ── EL BUCLE SE CONSTRUYÓ, NO SE RECIBIÓ ─────────────────────────────────
+   * El original (`C1972.mov`, fuera del repositorio) son 27 s en HEVC Main 10
+   * a 3840×2160 y 13.6 Mbps. Es un TRAVELLING continuo por una fila de
+   * cargadores: la cámara nunca vuelve sobre sus pasos.
+   *
+   * Se buscó el punto de corte MIDIENDO, no a ojo: se extrajeron fotogramas a
+   * 6 fps y se evaluaron todas las ventanas de 10–12 s comparando no un
+   * fotograma sino la secuencia de medio segundo alrededor de cada extremo,
+   * para que casaran imagen Y movimiento. **Ninguna cierra**: el mejor coste
+   * fue 23.8 sobre 255 y el peor 36.7 — un rango estrecho y todo alto, que es
+   * la firma de un plano que avanza sin volver.
+   *
+   * También se probó el fundido cruzado de la cola sobre la cabeza. Bajaba el
+   * salto de 34 a 12.6 y **se estancaba ahí**: un fundido disuelve entre dos
+   * imágenes distintas, no devuelve la cámara a su origen. El resultado era
+   * una doble exposición de un segundo, peor que el corte.
+   *
+   * La solución para un travelling es IDA Y VUELTA: 5.5 s del mejor tramo
+   * —donde la fila de equipos se lee mejor— seguidos del mismo tramo
+   * invertido. Cierra por construcción, porque la cámara vuelve por donde
+   * vino, y da 11 s, dentro del rango de 8–14 s del brief.
+   *
+   * Codificado a crf 32: comparado a tamaño real contra crf 30, la diferencia
+   * es indistinguible, y es un fondo bajo un velo. Así entra en los 2 MB.
+   *
+   * El póster es el fotograma 0 del bucle final, no una foto aparte: es lo que
+   * se ve mientras carga y lo que queda fijo con `prefers-reduced-motion`.
+   */
   estacionMedellin: {
     id: "estacion-medellin",
     kind: "video",
-    src: null,
-    poster: null,
+    src: "/estacion-medellin-loop.mp4",
+    poster: "/estacion-medellin-poster.jpg",
     alt: {
       es: "Nueva estación de carga Voltop en Medellín, vista general de la infraestructura",
       en: "New Voltop charging station in Medellín, wide view of the infrastructure",
@@ -50,9 +81,10 @@ export const media = {
       en: "Signature moment. Proves Voltop builds real infrastructure, not charging points.",
       pt: "Signature moment. Prova que a Voltop constrói infraestrutura real, não pontos de carregamento.",
     },
-    duration: "1:20",
-    aspect: "21/9",
-    availability: "confirmado-no-entregado",
+    /** Duración del BUCLE servido, no del corte original. */
+    duration: "0:11",
+    aspect: "16/9",
+    availability: "entregado",
   },
 
   /** Prueba de partnership institucional y de personas. */

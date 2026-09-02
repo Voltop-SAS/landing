@@ -3,6 +3,7 @@ import { cn } from "@/lib/cn";
 import { t, type Locale } from "@/lib/i18n/config";
 import type { MediaAsset } from "@/content/data/media";
 import { a11y, mediaPlaceholder } from "@/content/copy/common";
+import { VideoMedia } from "@/components/ui/VideoMedia";
 
 /**
  * MEDIA · punto único de render para fotografía y video narrativo.
@@ -91,20 +92,16 @@ export function Media({
         </div>
       );
     }
+    /* El video vive en un componente de cliente porque tiene que leer
+       `prefers-reduced-motion`, que no es consultable desde el servidor.
+       La fotografía —la rama de arriba— sigue siendo servidor puro. */
     return (
       <div className={cn("relative overflow-hidden bg-surface-1", shape, className)}>
-        <video
-          className="absolute inset-0 h-full w-full object-cover"
-          poster={asset.poster ?? undefined}
-          preload="none"
-          muted
-          loop
-          playsInline
-          autoPlay
-          aria-label={t(asset.alt, lang)}
-        >
-          <source src={asset.src} type="video/mp4" />
-        </video>
+        <VideoMedia
+          asset={asset}
+          lang={lang}
+          className={cn("absolute inset-0 h-full w-full object-cover", position)}
+        />
       </div>
     );
   }

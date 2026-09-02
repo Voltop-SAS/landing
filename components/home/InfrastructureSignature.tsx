@@ -93,7 +93,7 @@ export function InfrastructureSignature({ lang }: { lang: Locale }) {
       <div className="sticky top-0 flex h-dvh flex-col justify-end overflow-hidden motion-reduce:static motion-reduce:h-auto">
         <motion.div style={{ scale, clipPath }} className="absolute inset-0">
           <Media
-            asset={media.estacionInfraestructura}
+            asset={media.estacionMedellin}
             lang={lang}
             fill
             sizes="100vw"
