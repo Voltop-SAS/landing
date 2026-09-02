@@ -941,51 +941,51 @@ Esta sección costó cuatro intentos de medición fallidos antes de dar un núme
 
 ## Bloque 20 · El signature moment recupera su video — 2026-09-01
 
-**Entrega:** `C1972.mov` — 27 s, HEVC Main 10, 3840 × 2160, 13.6 Mbps, 46 MB. Cierra el último asset audiovisual pendiente del beat 2.
+**Entrega:** `C1972.mov` — 27 s, HEVC Main 10, 3840 × 2160, 13.6 Mbps, 46 MB.
 
-### El bucle se construyó; no venía en el material
+### El material no admite bucle, y se comprobó midiendo
 
-El clip es un **travelling continuo** por una fila de cargadores: la cámara nunca vuelve sobre sus pasos. Eso hace que no exista ningún corte que cierre, y se comprobó midiendo en lugar de suponiendo.
+Es un **travelling continuo**: la cámara se mueve entre 3.5 y 14.4 por segundo y **no se detiene en ningún momento** del clip. De ahí se sigue todo lo demás.
 
-**Búsqueda del punto de corte.** Se extrajeron fotogramas a 6 fps y se evaluaron todas las ventanas de 10–12 s, comparando no un fotograma sino la secuencia de medio segundo alrededor de cada extremo —para que casaran imagen **y** movimiento.
+| Intento | Resultado | Por qué |
+|---|---|---|
+| Buscar la ventana que cierre | **Ninguna.** Mejor coste 23.8/255, peor 36.7 | Se evaluaron todas las de 10–12 s comparando la secuencia de medio segundo alrededor de cada extremo, para que casara imagen **y** movimiento. Rango estrecho y todo alto: la firma de un plano que avanza sin volver |
+| Fundido cruzado de cola sobre cabeza | **Descartado.** Se estanca en 12.6 | Un fundido disuelve entre dos imágenes distintas, no devuelve la cámara a su origen. Producía una doble exposición de un segundo |
+| Ida y vuelta | **Descartado.** Cierra numéricamente (6.4) pero **se ve mal** | El desenfoque de movimiento va al revés y el ojo lo lee como rebobinado. Lo detectó el usuario mirándolo; la métrica decía que estaba bien |
 
-| | Coste (diferencia media sobre 255) |
-|---|---|
-| Mejor ventana (7.17 s → 19.17 s) | **23.8** |
-| Peor ventana | 36.7 |
+**Lección:** el cierre del bucle se puede medir, pero que el movimiento se sienta natural no. Esa parte hay que verla.
 
-Un rango estrecho y todo alto: la firma de un plano que avanza sin volver. **Ninguna ventana cierra.**
+### La solución
 
-**Fundido cruzado, descartado.** Bajaba el salto de 34 a 12.6 y **se estancaba ahí** — un fundido disuelve entre dos imágenes distintas, no devuelve la cámara a su origen. El fotograma intermedio mostraba una doble exposición de un segundo: peor que el corte que pretendía evitar.
+Bucle **recto** —termina y vuelve a empezar— con entrada y salida al color del fondo (`--color-canvas`). Los dos extremos llegan al mismo tono, así que no hay salto, y bajo el velo oscuro de la sección se lee como un respiro del plano y no como un efecto.
 
-**La solución: ida y vuelta.** 5.5 s del mejor tramo seguidos del mismo tramo invertido. Cierra **por construcción** —la cámara vuelve por donde vino— y da 11 s, dentro del rango de 8–14 s del brief.
-
-| | Resultado |
+| | |
 |---|---|
 | Duración | 11.01 s |
-| Cierre del bucle | **6.4/255** (el umbral de "imperceptible" es 8) |
+| Cierre | **3.7/255** (umbral de imperceptible: 8) |
+| Fundido | 0.5 s — cierra tan bien como 0.8 s (2.2) pero interrumpe la mitad de tiempo |
 | Formato | H.264 High, 1920 × 1080, sin audio, `faststart` |
-| Peso | **2.00 MB** — el presupuesto exacto |
-| Póster | 86 KB, fotograma 0 del bucle final |
-
-Codificado a crf 32: comparado a tamaño real contra crf 30 la diferencia es indistinguible, y es un fondo bajo un velo.
+| Peso | **1.82 MB** |
+| Póster | 90 KB, **del centro del bucle** — con la entrada fundida, el fotograma 0 es casi negro |
 
 ### Un fallo de accesibilidad que solo aparece con video
 
-Con `prefers-reduced-motion: reduce` la sección colapsaba correctamente **pero el video seguía reproduciéndose**. Con el hueco del placeholder no se notaba —no había video— y salió al entrar el material real.
+Con `prefers-reduced-motion: reduce` la sección colapsaba correctamente **pero el video seguía reproduciéndose**. Con el hueco del placeholder no se notaba, porque no había video.
 
-No es menor: es un bucle infinito de movimiento junto al texto que se está leyendo. §21 lo prohíbe y WCAG 2.2.2 pide un mecanismo para detener el movimiento que arranca solo y dura más de cinco segundos.
+Es un bucle infinito de movimiento junto al texto que se está leyendo: §21 lo prohíbe y WCAG 2.2.2 pide poder detener lo que arranca solo y dura más de cinco segundos. `Media` es Server Component y no puede leer una media query, así que la rama de video pasa a `components/ui/VideoMedia.tsx`, un cliente mínimo. **La fotografía sigue en el servidor.**
 
-`Media` es Server Component y no puede leer una media query, así que la rama de video pasa a `components/ui/VideoMedia.tsx`, un cliente mínimo que respeta la preferencia. **La fotografía sigue renderizándose en el servidor.** Con la preferencia activa se muestra el póster —el fotograma 0 del propio bucle—: la misma imagen, quieta.
-
-Verificado: sin preferencia **reproduce**; con preferencia **pausado en t=0**.
+Verificado: sin preferencia reproduce; con preferencia queda el póster.
 
 ### Evidencia
 
-`lint`, `tsc` y build limpios · 47 páginas · auditoría `ES 378/378 · EN 378/378 · PT 378/378` · contraste sobre el **video en movimiento** sin fallos en 2 viewports × 2 posiciones de scroll × **5 momentos del bucle** —una foto no exige esto, un video sí, porque el fondo cambia con cada fotograma— · hero, estructura y header sin fallos.
+`lint`, `tsc` y build limpios · 47 páginas · `ES 378/378 · EN 378/378 · PT 378/378` · contraste sobre el **video en movimiento** sin fallos en 2 viewports × 2 posiciones de scroll × 5 momentos del bucle · hero y estructura sin fallos.
 
-`estacion-medellin.mp4` (el recorte de 4 s entregado antes) y `C1972.mov` quedan fuera del repositorio.
+`C1972.mov` y `estacion-medellin.mp4` quedan fuera del repositorio.
 
 ### Consecuencia
 
-`estacionInfraestructura` —la foto que ocupó el beat 2 mientras no había video— **queda registrada y sin uso**. Se conserva a propósito: el registro de media es un catálogo de lo que existe, y volver a ella es cambiar una línea.
+`estacionInfraestructura` —la foto que ocupó el beat 2 mientras no había video— queda registrada y sin uso. Se conserva: el registro de media es un catálogo de lo que existe.
+
+### Pendiente
+
+Durante el primer ~20% del recorrido de la sección el titular **cruza el borde del video recortado**: el texto aparece completo cuando el recorte aún está al 23%, y una línea vertical parte las palabras. Medido a 5%, 10% y 15% de scroll. Se corrige retrasando la aparición del texto o reduciendo el recorte inicial; no se tocó porque cambia el ritmo del beat.

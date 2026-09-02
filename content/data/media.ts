@@ -38,33 +38,33 @@ export const media = {
   /**
    * SIGNATURE MOMENT · entregado el 2026-09-01.
    *
-   * ── EL BUCLE SE CONSTRUYÓ, NO SE RECIBIÓ ─────────────────────────────────
+   * ── POR QUÉ EL BUCLE NECESITÓ UN FUNDIDO ─────────────────────────────────
    * El original (`C1972.mov`, fuera del repositorio) son 27 s en HEVC Main 10
-   * a 3840×2160 y 13.6 Mbps. Es un TRAVELLING continuo por una fila de
-   * cargadores: la cámara nunca vuelve sobre sus pasos.
+   * a 4K. Es un TRAVELLING continuo: medido, la cámara se mueve entre 3.5 y
+   * 14.4 por segundo y **no se detiene en ningún momento**. Consecuencias:
    *
-   * Se buscó el punto de corte MIDIENDO, no a ojo: se extrajeron fotogramas a
-   * 6 fps y se evaluaron todas las ventanas de 10–12 s comparando no un
-   * fotograma sino la secuencia de medio segundo alrededor de cada extremo,
-   * para que casaran imagen Y movimiento. **Ninguna cierra**: el mejor coste
-   * fue 23.8 sobre 255 y el peor 36.7 — un rango estrecho y todo alto, que es
-   * la firma de un plano que avanza sin volver.
+   * · No existe ventana que cierre. Se evaluaron todas las de 10–12 s
+   *   comparando la secuencia de medio segundo alrededor de cada extremo:
+   *   mejor coste 23.8 sobre 255, peor 36.7. Rango estrecho y todo alto.
+   * · El fundido cruzado de cola sobre cabeza se estanca en 12.6 y produce
+   *   una doble exposición: disuelve entre dos imágenes distintas.
+   * · La ida y vuelta cierra numéricamente (6.4) pero **se ve mal**: el
+   *   desenfoque de movimiento va al revés y el ojo lo detecta como rebobinado.
+   *   Verificado por el usuario mirándolo, no por métrica.
    *
-   * También se probó el fundido cruzado de la cola sobre la cabeza. Bajaba el
-   * salto de 34 a 12.6 y **se estancaba ahí**: un fundido disuelve entre dos
-   * imágenes distintas, no devuelve la cámara a su origen. El resultado era
-   * una doble exposición de un segundo, peor que el corte.
+   * La solución que sí funciona en un plano que avanza: bucle RECTO con
+   * entrada y salida al color del fondo (`--color-canvas`). Los dos extremos
+   * llegan al mismo tono, así que no hay salto — cierre medido **3.7/255**—, y
+   * bajo el velo oscuro de la sección se lee como un respiro del plano, no
+   * como un efecto.
    *
-   * La solución para un travelling es IDA Y VUELTA: 5.5 s del mejor tramo
-   * —donde la fila de equipos se lee mejor— seguidos del mismo tramo
-   * invertido. Cierra por construcción, porque la cámara vuelve por donde
-   * vino, y da 11 s, dentro del rango de 8–14 s del brief.
+   * El fundido son 0.5 s y no más: cierra igual de bien que 0.8 s (2.2) pero
+   * interrumpe la mitad de tiempo.
    *
-   * Codificado a crf 32: comparado a tamaño real contra crf 30, la diferencia
-   * es indistinguible, y es un fondo bajo un velo. Así entra en los 2 MB.
-   *
-   * El póster es el fotograma 0 del bucle final, no una foto aparte: es lo que
-   * se ve mientras carga y lo que queda fijo con `prefers-reduced-motion`.
+   * ── EL PÓSTER NO SALE DEL FOTOGRAMA 0 ────────────────────────────────────
+   * Con la entrada fundida, el fotograma 0 es casi negro. El póster se toma
+   * del CENTRO del bucle, que es lo que debe verse mientras el video carga y
+   * lo que queda fijo con `prefers-reduced-motion`.
    */
   estacionMedellin: {
     id: "estacion-medellin",
