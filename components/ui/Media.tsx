@@ -32,6 +32,7 @@ export function Media({
   fill = false,
   aspect,
   position,
+  quality,
 }: {
   asset: MediaAsset;
   lang: Locale;
@@ -65,6 +66,12 @@ export function Media({
    * sigue siendo el valor por defecto.
    */
   position?: string;
+  /**
+   * Calidad de codificación. Solo se pasa cuando el peso del asset lo exige:
+   * una fotografía muy detallada puede superar el presupuesto de §29 a la
+   * calidad por defecto. Los valores admitidos se declaran en `next.config.ts`.
+   */
+  quality?: number;
 }) {
   const shape = fill ? "" : aspects[aspect ?? asset.aspect];
 
@@ -78,6 +85,7 @@ export function Media({
             fill
             sizes={sizes}
             priority={priority}
+            quality={quality}
             className={cn("object-cover", position)}
           />
         </div>

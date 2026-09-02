@@ -55,7 +55,20 @@ export function InfrastructureSignature({ lang }: { lang: Locale }) {
   const insetPct = useTransform(scrollYProgress, [0, 0.7], reduce ? [0, 0] : [28, 0]);
   const clipPath = useTransform(insetPct, (v) => `inset(${v}% ${v}% ${v}% ${v}%)`);
   const scale = useTransform(scrollYProgress, [0, 0.7], reduce ? [1, 1] : [1.12, 1]);
-  const scrimOpacity = useTransform(scrollYProgress, [0.15, 0.6], reduce ? [0.8, 0.8] : [0.15, 0.85]);
+  /**
+   * RECALIBRADO al entrar la fotografía real (2026-09-01).
+   *
+   * Los valores anteriores —de 0.15 a 0.85— se fijaron contra el hueco
+   * PLANO del placeholder, donde el fondo era una superficie uniforme y
+   * oscura. Con foto real el párrafo y el rótulo caen sobre el cargador
+   * iluminado y dejan de leerse: a 0.15 de opacidad no hay velo que valga.
+   *
+   * El suelo sube a 0.55 y el techo a 1. Se conserva la intención —el velo
+   * CRECE con el recorrido, acompañando la apertura del recorte— pero parte
+   * de un punto en el que el texto ya es legible, que es cuando empieza a
+   * aparecer (`whileInView` con margen del 20%).
+   */
+  const scrimOpacity = useTransform(scrollYProgress, [0.1, 0.45], reduce ? [1, 1] : [0.8, 1]);
 
   /** Fase de entrada del texto. `once: true` — visible es para siempre. */
   const phase = (delay: number) => ({
@@ -79,13 +92,19 @@ export function InfrastructureSignature({ lang }: { lang: Locale }) {
     >
       <div className="sticky top-0 flex h-dvh flex-col justify-end overflow-hidden motion-reduce:static motion-reduce:h-auto">
         <motion.div style={{ scale, clipPath }} className="absolute inset-0">
-          <Media asset={media.estacionMedellin} lang={lang} fill sizes="100vw" className="h-full" />
+          <Media
+            asset={media.estacionInfraestructura}
+            lang={lang}
+            fill
+            sizes="100vw"
+            className="h-full"
+          />
         </motion.div>
 
         <motion.div
           aria-hidden="true"
           style={{ opacity: scrimOpacity }}
-          className="absolute inset-0 bg-gradient-to-t from-canvas via-canvas/50 to-transparent"
+          className="absolute inset-0 bg-gradient-to-t from-canvas via-canvas/88 to-canvas/45"
         />
 
         <Container className="relative z-(--z-raised) py-(--spacing-section-tight)">

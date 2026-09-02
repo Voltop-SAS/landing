@@ -12,6 +12,15 @@ const nextConfig: NextConfig = {
 
   images: {
     formats: ["image/avif", "image/webp"],
+    /**
+     * Next solo sirve las calidades declaradas aquí; cualquier otra devuelve
+     * error. Se añade 70 para la fotografía del hero: es el elemento LCP y a
+     * la calidad por defecto pesaba 332 KB en pantallas Retina, por encima del
+     * presupuesto de 250 KB que fija §29, con el LCP a 2.44s contra un límite
+     * de 2.5s. Bajar el máster no servía —de 330 a 318 KB—: quien manda es el
+     * codificador AVIF, no el origen.
+     */
+    qualities: [70, 75],
   },
 };
 

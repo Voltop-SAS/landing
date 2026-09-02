@@ -42,8 +42,8 @@ const VEIL = {
     vertical: `linear-gradient(to top, ${canvas(100)} 0%, ${canvas(96)} 48%, ${canvas(80)} 80%, ${canvas(52)} 100%)`,
   },
   desktop: {
-    vertical: `linear-gradient(to top, ${canvas(100)} 0%, ${canvas(82)} 45%, ${canvas(48)} 82%, ${canvas(22)} 100%)`,
-    lateral: `linear-gradient(to right, ${canvas(68)} 0%, ${canvas(40)} 44%, transparent 72%)`,
+    vertical: `linear-gradient(to top, ${canvas(100)} 0%, ${canvas(90)} 45%, ${canvas(60)} 82%, ${canvas(30)} 100%)`,
+    lateral: `linear-gradient(to right, ${canvas(70)} 0%, ${canvas(44)} 48%, transparent 78%)`,
     /**
      * Banda superior, bajo el header.
      *
@@ -62,7 +62,7 @@ const VEIL = {
      * Solo en escritorio. En móvil el velo vertical ya llega al 52% arriba
      * —por eso ahí sí cumplía— y sumarle esta banda lo oscurecería sin motivo.
      */
-    superior: `linear-gradient(to bottom, ${canvas(72)} 0%, ${canvas(42)} 12%, transparent 22%)`,
+    superior: `linear-gradient(to bottom, ${canvas(80)} 0%, ${canvas(50)} 12%, transparent 22%)`,
   },
 } as const;
 
@@ -80,17 +80,23 @@ export function Hero({ lang }: { lang: Locale }) {
           móvil el hueco es mucho más estrecho (0.52), así que conserva todo el
           alto y recorta a los lados: centrado se quedaría con la pared del
           fondo y perdería el cargador con la marca, que está a la izquierda.
-          Anclar al 24% lo deja como sujeto sin afectar a escritorio: se probó
-          contra 18% y 30% y es el que mantiene el equipo en cuadro sin perder
-          el muro oscuro que sostiene la legibilidad del titular. */}
+          En la fotografía actual el cargador con marca está a la DERECHA del
+          centro (~55–68% del ancho), así que el anclaje va al 62%: es el que
+          lo deja centrado y legible en el recorte vertical. Se probó contra
+          24%, 40% y 52%; por debajo del 50% el equipo queda cortado en el
+          borde y el encuadre se reduce al lateral oscuro del vehículo.
+          En escritorio el valor no interviene: ahí se conserva todo el ancho. */}
       <div className="absolute inset-0">
         <Media
-          asset={media.heroInfraestructura}
+          asset={media.heroVehiculoCargando}
           lang={lang}
           fill
           priority
           sizes="100vw"
-          position="object-[24%_50%]"
+          position="object-[62%_50%]"
+          /* Ver `qualities` en next.config.ts: esta foto es el elemento LCP y
+             a calidad por defecto se salía del presupuesto de peso. */
+          quality={70}
           className="h-full"
         />
       </div>
@@ -119,8 +125,14 @@ export function Hero({ lang }: { lang: Locale }) {
           valor llevaba el antetítulo a 8.65:1 cuando basta con ~5, y apagaba la
           fotografía sin necesidad — que es el 70% de la dirección visual (§12).
 
-          Valores de barridos medidos: el peor elemento queda 12% por encima de
-          su umbral en móvil y 17% en escritorio. */}
+          RECALIBRADO el 2026-09-01 al cambiar la fotografía del hero. La nueva
+          es más clara justo donde va el texto: con el velo anterior el
+          antetítulo caía a 3.36:1. Y se recalibró contra el **percentil 99**,
+          no contra el 90 —la lección del bloque 17—: bajo un fondo irregular
+          el promedio esconde el punto donde el trazo de una letra desaparece.
+
+          Márgenes con el criterio nuevo: +12% en escritorio, +31% en móvil
+          (móvil ya cumplía y no se tocó). */}
       <div aria-hidden="true" className="absolute inset-0 md:hidden" style={{ background: VEIL.mobile.vertical }} />
       <div aria-hidden="true" className="absolute inset-0 hidden md:block" style={{ background: VEIL.desktop.vertical }} />
       <div aria-hidden="true" className="absolute inset-0 hidden md:block" style={{ background: VEIL.desktop.lateral }} />

@@ -879,3 +879,60 @@ Ni al mínimo se llega a una separación aceptable, y a 16px las cuatro entradas
 Barrido de **360 a 1440px**: logo sin deformar en ningún ancho (proporción 4.27 constante), separación ≥16px siempre que hay navegación visible, sin overflow, y exclusión correcta entre menú y navegación —nunca ambos, nunca ninguno—. **Selector de idioma accesible en los dos modos**, verificado a 768, 800, 831 (menú) y 832 (header).
 
 Las cuatro auditorías del Hero siguen limpias: contraste del hero, estructura, contraste del header y rendimiento (LCP 1.29s en escritorio con 4G lenta y CPU ×4).
+
+---
+
+## Bloque 19 · Fotografía real en los dos primeros beats — 2026-09-01
+
+**Encargo:** la foto que estaba en el hero pasa al beat 2, y una fotografía nueva ocupa el hero.
+
+| Archivo entregado | Máster web derivado | Dónde |
+|---|---|---|
+| `Hero.png` (60.9 MB) | `hero-vehiculo-cargando.jpg` · 2560 × 1706 | Beat 1 · Hero |
+| `Hero_Banner.png` (50.3 MB) | `estacion-infraestructura.jpg` · 2560 × 1706 | Beat 2 · Signature moment |
+
+**Los dos originales superan el límite de 50 MB del optimizador de Next**, así que ninguno puede servirse directamente. Ambos quedan en `public/` sin commitear: 111 MB de binario no pertenecen a un árbol de git.
+
+El beat 2 no rellena `estacionMedellin` —es un asset de tipo VIDEO, todavía pendiente— sino que usa una entrada de foto nueva. Cuando el video llegue, la sección puede volver a él cambiando una línea.
+
+### Encuadre del hero: de 24% a 62%
+
+En la foto anterior el cargador estaba a la izquierda; en la nueva está a la **derecha del centro** (~55–68% del ancho). Con el anclaje heredado, el recorte vertical de móvil se quedaba con el lateral oscuro del vehículo y perdía el equipo con marca. Probado contra 24%, 40% y 52%: por debajo del 50% el cargador queda cortado en el borde. En escritorio el valor no interviene —ahí se conserva todo el ancho—.
+
+### Contraste: recalibrado contra p99
+
+La fotografía nueva es más clara donde va el texto. Con el velo anterior el antetítulo caía a **3.36:1**. Se recalibró **contra el percentil 99** —la lección del bloque 17— en lugar del promedio.
+
+Un matiz que salió de mirar y no de medir: la primera calibración cumplía pero dejaba el lado izquierdo casi plano, porque el velo lateral oscurecía justo donde el vehículo ya es oscuro. Se comprobó cuánto se podía aligerar sin perder cumplimiento y el lateral bajó de 0.88/0.62 a **0.70/0.44**, conservando 1.10× de margen. La foto recupera presencia sin sacrificar AA.
+
+### El beat 2 estaba muy por debajo
+
+Su velo (`via-canvas/50`, opacidad animada **de 0.15 a 0.85**) se fijó contra el hueco PLANO del placeholder. Con foto real, el párrafo y el rótulo caían sobre el cargador iluminado y dejaban de leerse — visible sin necesidad de medir.
+
+Se conserva la intención —el velo crece con el recorrido, acompañando la apertura del recorte— pero partiendo de un punto donde el texto ya es legible: **de 0.8 a 1**, sobre un degradado `via-canvas/88 to-canvas/45`. Verificado en 3 viewports × 4 posiciones de scroll.
+
+### Peso: el nuevo asset se salía del presupuesto
+
+La fotografía nueva tiene mucho más detalle fino (piedra, reflejos) y AVIF la comprime peor: **332 KB en Retina**, por encima de los 250 KB de §29.
+
+Bajar la calidad del máster **no sirvió** —de 330 a 318 KB—: quien manda es el codificador AVIF, no el origen. Se añadió la calidad 70 a `next.config.ts` (Next solo sirve las declaradas) y una prop `quality` en `Media`, aplicada **solo a este asset**.
+
+| | Antes | Después |
+|---|---|---|
+| Móvil | 38.7 KB | **30.3 KB** |
+| Escritorio | 202.3 KB | **147.4 KB** |
+| Retina | **332.1 KB** ✗ | **235.1 KB** ✓ |
+
+### Sobre la medición del LCP
+
+Las primeras lecturas daban 2.44–2.60 s, al borde del límite. Son la **primera petición**, cuando Next optimiza la imagen bajo demanda: un coste único por variante, no por usuario. Con la caché caliente la mediana de cuatro lecturas es **0.43 s en móvil y 0.44 s en escritorio**, con 4G lenta y CPU ×4.
+
+### Evidencia
+
+`lint`, `tsc` y build limpios · 47 páginas · auditoría `ES 378/378 · EN 378/378 · PT 378/378` · contraste del hero sin fallos en 14 viewports × 6 elementos · estructura sin incidencias en 16 viewports · header sin fallos en 7 viewports · beat 2 sin fallos en las posiciones reales de lectura.
+
+**Nota sobre el beat 2 al 85% de scroll:** la medición reporta fallos ahí, y son artefacto. A esa altura el texto está saliendo por detrás del header (medido: y de viewport 29–93 con un header de 80px). No es una posición de lectura.
+
+### Nota de método
+
+Esta sección costó cuatro intentos de medición fallidos antes de dar un número fiable: coordenadas de página frente a viewport en una sección `sticky`, un contenedor de texto mal seleccionado que dejaba parte del texto visible, y un selector de velo que no encontraba el elemento —lo que hacía que tres variantes del barrido dieran idéntico resultado porque **ninguna se aplicaba**—. El patrón que sí funciona con `sticky`: capturar el viewport completo y recortar en el análisis con coordenadas de viewport.
