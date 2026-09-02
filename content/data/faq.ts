@@ -9,35 +9,37 @@ import { routes } from "@/lib/i18n/routes";
  * portugués son traducción de ese original, no versiones nuevas: si el español
  * cambia, los otros dos cambian con él.
  *
- * ── DOS AFIRMACIONES QUE ESTÁN LEVANTADAS ────────────────────────────────
- * La página que aloja este FAQ muestra, dos secciones más arriba y bajo el
- * buscador, esta nota:
+ * ── LA DISPONIBILIDAD SE DEJA COMO ESTÁ ─────────────────────────────────
+ * La respuesta 2 ofrece "disponibilidad" y la respuesta 1 habla de la sesión
+ * "en tiempo real", mientras `states.pendingRealtime` avisa dos secciones más
+ * arriba de que la disponibilidad en tiempo real todavía no está integrada.
+ * DECISIÓN DE CAMILO (2026-09-02): en este alcance no se conecta nada; el
+ * texto se queda en el front y se edita aquí cuando la disponibilidad cambie.
+ * Se registra para que quien lo lea mañana sepa que es deliberado.
  *
- *   "La disponibilidad en tiempo real llegará con la integración de datos
- *    de operación."   (`states.pendingRealtime`)
+ * ── DOS ENLACES QUE AHORA SÍ EXISTEN ────────────────────────────────────
+ * Soporte: WhatsApp +57 315 986 4931, operado vía Freshchat. Se publica como
+ * `wa.me`, NO como `tel:`. Un `tel:` lanza una LLAMADA telefónica; el canal
+ * de soporte es la conversación de WhatsApp, y `wa.me` es lo que la abre.
  *
- * Y aquí abajo, la respuesta 2 ofrece "disponibilidad" entre lo que se
- * consulta antes de llegar, y la 1 habla de la sesión "en tiempo real".
- * Son cosas distintas —la sesión propia no es la disponibilidad de la red—
- * pero conviven en la misma página, y §19 dice que un titular es un contrato.
- * Queda REGISTRADO para decisión de producto, no corregido por cuenta propia.
- *
- * ── EL ENLACE QUE NO ESTÁ ────────────────────────────────────────────────
- * La respuesta 5 remite a "los canales disponibles en Voltop". Hoy el sitio
- * no nombra ninguno: el único formulario es el de `/empresas#contacto`, que
- * es captación B2B para dueños de espacio y sería el destino equivocado para
- * alguien con un problema a mitad de carga. Por eso esa respuesta va SIN
- * enlace: §15 prohíbe publicar un enlace sin destino real, y prefiero una
- * respuesta sin salida a una salida que decepcione. En cuanto exista un canal
- * de soporte —WhatsApp, correo, chat en la app— se añade aquí.
+ * Descarga de la app: https://app.voltop.co/ — al implementarlo devolvía 503
+ * en tres intentos seguidos, con user-agent de navegador y por HTTP y HTTPS
+ * (`voltop.co` sí respondía 200, así que era el subdominio). Se publica igual
+ * porque es el dominio oficial y el sitio no está en producción, pero QUEDA
+ * PENDIENTE DE VERIFICAR ANTES DEL LANZAMIENTO: §15 no admite un enlace que
+ * no lleva a ninguna parte.
  */
 
 export type FaqItem = {
   id: string;
   question: Localized;
   answer: Localized;
-  /** Enlace de salida cuando la respuesta continúa en otra parte del sitio. */
-  link?: { label: Localized; href: string };
+  /**
+   * Enlace de salida cuando la respuesta continúa en otra parte.
+   * `external` cambia dos cosas: el href se usa tal cual (sin prefijo de
+   * idioma) y el enlace se abre en pestaña nueva anunciándolo (WCAG 3.2.5).
+   */
+  link?: { label: Localized; href: string; external?: boolean };
 };
 
 export const faq: FaqItem[] = [
@@ -54,8 +56,9 @@ export const faq: FaqItem[] = [
       pt: "Baixe o aplicativo da Voltop, encontre uma estação por perto, conecte seu veículo e siga os passos para iniciar o carregamento. Pelo aplicativo você acompanha e gerencia sua sessão em tempo real.",
     },
     link: {
-      label: { es: "Ver los tres pasos", en: "See the three steps", pt: "Ver os três passos" },
-      href: `${routes.red}#como-cargar`,
+      label: { es: "Descargar la app", en: "Get the app", pt: "Baixar o aplicativo" },
+      href: "https://app.voltop.co/",
+      external: true,
     },
   },
   {
@@ -116,7 +119,10 @@ export const faq: FaqItem[] = [
       en: "We're here for you. If anything comes up before, during or after a charge, you can reach our support team through Voltop's available channels.",
       pt: "Estamos aqui para ajudar. Se tiver algum problema antes, durante ou depois de um carregamento, você pode falar com nosso time de suporte pelos canais disponíveis da Voltop.",
     },
-    /* Sin enlace a propósito: hoy no existe un canal de soporte que nombrar.
-       Ver la nota de cabecera. */
+    link: {
+      label: { es: "Escríbenos por WhatsApp", en: "Message us on WhatsApp", pt: "Fale com a gente no WhatsApp" },
+      href: "https://wa.me/573159864931",
+      external: true,
+    },
   },
 ];

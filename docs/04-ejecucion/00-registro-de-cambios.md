@@ -1313,3 +1313,33 @@ El titular de sección pasó de "Lo que preguntan antes de cargar" a **"Antes, d
 ### Evidencia
 
 `lint` y build limpios · `ES 394/394 · EN 394/394 · PT 394/394` · 5 preguntas, 43–63 caracteres/línea en 390/768/1440 y en los tres idiomas, 0px de desbordamiento, ambos enlaces con destino real (`#como-cargar`, `#ciudades`).
+
+---
+
+## Bloque 30 · FAQ: los dos enlaces que faltaban — 2026-09-02
+
+**Decisiones de Camilo (2026-09-02):**
+
+**1 · La disponibilidad se queda como está.** La respuesta 2 ofrece "disponibilidad" y la 1 habla de sesión "en tiempo real", mientras `states.pendingRealtime` avisa dos secciones más arriba de que eso todavía no está integrado. En este alcance no se conecta nada: el texto vive en el front y se edita ahí cuando la disponibilidad cambie. Queda anotado en `content/data/faq.ts` para que quien lo lea mañana sepa que es deliberado y no un descuido.
+
+**2 · Soporte: WhatsApp +57 315 986 4931**, operado vía Freshchat.
+
+Se publica como **`wa.me/573159864931`, no como `tel:`**. Un `tel:` lanza una **llamada telefónica**; el canal de soporte es la conversación de WhatsApp, y `wa.me` es lo que la abre. Verificado: responde 200 y redirige a `api.whatsapp.com/send/?phone=573159864931`. *(Si además se quiere que llame por teléfono, es otro enlace y se añade aparte.)*
+
+**3 · Descarga de la app: `https://app.voltop.co/`**
+
+> **PENDIENTE ANTES DEL LANZAMIENTO.** Al implementarlo devolvía **503 en tres intentos seguidos**, con user-agent de navegador y por HTTP y HTTPS. `voltop.co` respondía 200, así que el problema era del subdominio, no del dominio. Se publica igual porque es el dominio oficial y el sitio no está en producción, pero **§15 no admite un enlace que no lleva a ninguna parte**: hay que verificarlo antes de publicar.
+
+Con esto la respuesta 5 deja de ser un callejón sin salida y O8 (badges de tienda) deja de bloquear al FAQ: cuatro de cinco respuestas mandan a la app y ahora hay por dónde ir.
+
+### La flecha de los enlaces externos
+
+Primero usé el glifo `↗`. No funcionaba: en esta mono sale **más pequeño y fino que la `→`**, y quedaba desparejado justo al lado de ella — el mismo problema que tuvo el icono de Facebook en el footer. Se cambió por la **misma `→`, movida en diagonal al pasar el cursor**, que es exactamente lo que hace `Button`. Así "esto te saca del sitio" se dice de una sola forma en todo el sitio.
+
+`Accordion` recibe el aviso de pestaña nueva **por prop**, no importando copy: §24 le prohíbe contener texto literal.
+
+### Evidencia
+
+`lint`, `tsc` y build limpios · `ES 395/395 · EN 395/395 · PT 395/395`
+
+Los tres enlaces, en los tres idiomas: los externos con `target="_blank"`, `rel="noopener noreferrer"` y el aviso en el nombre accesible (*"Descargar la app · Se abre en una pestaña nueva"*, *"Escríbenos por WhatsApp · Se abre en una pestaña nueva"*); el interno resuelve a `/es/red#ciudades`, `/en/red#ciudades`, `/pt/red#ciudades`, sin prefijo de idioma pegado a las URLs absolutas.

@@ -8,7 +8,7 @@ export type AccordionItem = {
   id: string;
   question: string;
   answer: string;
-  link?: { label: string; href: string };
+  link?: { label: string; href: string; external?: boolean };
 };
 
 /**
@@ -33,7 +33,22 @@ export type AccordionItem = {
  * accesibilidad Y del orden de tabulación. Sin él, un lector de pantalla
  * leería las cinco respuestas seguidas y Tab caería en enlaces invisibles.
  */
-export function Accordion({ items, className }: { items: AccordionItem[]; className?: string }) {
+/** Un solo sitio para el enlace de salida: interno y externo solo difieren
+    en la flecha y en el aviso de pestaña nueva. */
+const enlace =
+  "group mt-4 inline-flex items-center gap-2 font-mono text-mono text-brand transition-colors hover:text-ink";
+
+export function Accordion({
+  items,
+  className,
+  /** Texto de "se abre en pestaña nueva". Llega por prop: este componente es
+      UI genérica y §24 le prohíbe contener copy literal. */
+  newTabLabel,
+}: {
+  items: AccordionItem[];
+  className?: string;
+  newTabLabel: string;
+}) {
   const uid = useId();
   const [abiertas, setAbiertas] = useState<Set<string>>(new Set());
 
@@ -100,15 +115,37 @@ export function Accordion({ items, className }: { items: AccordionItem[]; classN
                 >
                   <p className="measure-narrow text-body text-ink-2">{item.answer}</p>
                   {item.link ? (
-                    <Link
-                      href={item.link.href}
-                      className="group mt-4 inline-flex items-center gap-2 font-mono text-mono text-brand transition-colors hover:text-ink"
-                    >
-                      {item.link.label}
-                      <span aria-hidden="true" className="transition-transform duration-(--duration-fast) ease-(--ease-overshoot) group-hover:translate-x-1">
-                        →
-                      </span>
-                    </Link>
+                    item.link.external ? (
+                      /* Externo: pestaña nueva anunciada (WCAG 3.2.5) y la
+                         MISMA flecha que el enlace interno, movida en diagonal
+                         al pasar el cursor. Es exactamente lo que hace
+                         `Button`, y así "esto te saca del sitio" se dice de una
+                         sola forma en todo el sitio.
+
+                         Probé antes con el glifo ↗ y no funcionaba: en esta
+                         mono sale más pequeño y fino que la →, y quedaba
+                         desparejado justo al lado de ella. Mismo problema que
+                         tuvo el icono de Facebook en el footer. */
+                      <a
+                        href={item.link.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={enlace}
+                      >
+                        {item.link.label}
+                        <span className="sr-only"> · {newTabLabel}</span>
+                        <span aria-hidden="true" className="transition-transform duration-(--duration-fast) ease-(--ease-overshoot) group-hover:-translate-y-1 group-hover:translate-x-1">
+                          →
+                        </span>
+                      </a>
+                    ) : (
+                      <Link href={item.link.href} className={enlace}>
+                        {item.link.label}
+                        <span aria-hidden="true" className="transition-transform duration-(--duration-fast) ease-(--ease-overshoot) group-hover:translate-x-1">
+                          →
+                        </span>
+                      </Link>
+                    )
                   ) : null}
                 </div>
               </div>

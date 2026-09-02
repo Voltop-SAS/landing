@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { isLocale, t, type Locale } from "@/lib/i18n/config";
 import { href, routes, alternatesFor } from "@/lib/i18n/routes";
 import { red } from "@/content/copy/red";
-import { actions, states, units } from "@/content/copy/common";
+import { actions, states, units, a11y } from "@/content/copy/common";
 import { getStations, getCities, getCitiesWithStations, getFaq } from "@/lib/data";
 import { Section, Container, Eyebrow, SectionHeading, ProcessList } from "@/components/ui/layout";
 import { Button } from "@/components/ui/Button";
@@ -134,11 +134,20 @@ export default async function RedPage({ params }: Props) {
           </SectionHeading>
           <Accordion
             className="mt-10"
+            newTabLabel={t(a11y.opensInNewTab, lang)}
             items={preguntas.map((p) => ({
               id: p.id,
               question: t(p.question, lang),
               answer: t(p.answer, lang),
-              link: p.link ? { label: t(p.link.label, lang), href: href(lang, p.link.href) } : undefined,
+              link: p.link
+                ? {
+                    label: t(p.link.label, lang),
+                    // Un href externo ya está completo: prefijarlo con el
+                    // idioma lo convertiría en `/es/https://…`.
+                    href: p.link.external ? p.link.href : href(lang, p.link.href),
+                    external: p.link.external,
+                  }
+                : undefined,
             }))}
           />
         </Container>
