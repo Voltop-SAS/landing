@@ -69,6 +69,12 @@ export function Footer({ lang }: { lang: Locale }) {
           </p>
           <div className="flex flex-wrap items-center gap-x-6">
             <Link
+              href={href(lang, routes.terms)}
+              className="inline-flex min-h-11 items-center transition-colors hover:text-ink"
+            >
+              {t(footer.terms, lang)}
+            </Link>
+            <Link
               href={href(lang, routes.privacy)}
               className="inline-flex min-h-11 items-center transition-colors hover:text-ink"
             >

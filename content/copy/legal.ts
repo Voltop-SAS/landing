@@ -48,3 +48,35 @@ export const legal = {
     sections: [] as { heading: Localized; body: Localized[] }[],
   },
 };
+
+/**
+ * Envoltorio de los documentos legales. El TEXTO va en
+ * `content/data/legal-docs.ts` y es español plano; aquí solo lo que rodea al
+ * documento, que sí se traduce.
+ */
+export const legalDoc = {
+  eyebrow: { es: "Legal", en: "Legal", pt: "Legal", } satisfies Localized,
+  tocTitle: { es: "Contenido", en: "Contents", pt: "Conteúdo", } satisfies Localized,
+  updatedLabel: { es: "Última actualización", en: "Last updated", pt: "Última atualização", } satisfies Localized,
+  /**
+   * Solo se muestra en inglés y portugués. Dice lo que hay que decir: el
+   * documento existe en español y esa es la versión que obliga. Prometer una
+   * traducción que nadie ha emitido sería peor que mostrar el original.
+   */
+  spanishOnly: {
+    es: "",
+    en: "This document is issued in Spanish, and the Spanish version is the binding one. An official English version will be published when Voltop's legal team issues it.",
+    pt: "Este documento é emitido em espanhol, e a versão em espanhol é a que tem valor legal. Uma versão oficial em português será publicada quando a área jurídica da Voltop a emitir.",
+  } satisfies Localized,
+  terms: {
+    meta: {
+      title: { es: "Términos y condiciones", en: "Terms and conditions", pt: "Termos e condições", } satisfies Localized,
+      description: {
+        es: "Términos y condiciones de uso de la plataforma, la aplicación, el sitio web y las estaciones de carga de Voltop.",
+        en: "Terms and conditions for the use of Voltop's platform, app, website and charging stations.",
+        pt: "Termos e condições de uso da plataforma, do aplicativo, do site e das estações de carga da Voltop.",
+      } satisfies Localized,
+    },
+    title: { es: "Términos y condiciones", en: "Terms and conditions", pt: "Termos e condições", } satisfies Localized,
+  },
+};

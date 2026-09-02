@@ -48,6 +48,7 @@ import * as dataMedia from "@/content/data/media";
 import * as dataPosts from "@/content/data/posts";
 import * as dataFaq from "@/content/data/faq";
 import * as dataLinks from "@/content/data/links";
+import * as dataLegalDocs from "@/content/data/legal-docs";
 
 const SOURCES: Record<string, unknown> = {
   "copy/common": copyCommon,
@@ -64,6 +65,9 @@ const SOURCES: Record<string, unknown> = {
   "data/posts": dataPosts,
   "data/faq": dataFaq,
   "data/links": dataLinks,
+  /* Español plano a propósito: ver la cabecera del archivo. Aporta 0 nodos
+     `Localized` y por eso no altera el recuento de cobertura. */
+  "data/legal-docs": dataLegalDocs,
 };
 
 const isPlainObject = (v: unknown): v is Record<string, unknown> =>

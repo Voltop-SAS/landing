@@ -21,6 +21,7 @@ export const routes = {
   nosotros: "/nosotros",
   novedades: "/novedades",
   privacy: "/legal/privacidad",
+  terms: "/legal/terminos",
   post: (slug: string) => `/novedades/${slug}`,
   city: (slug: string) => `/red/${slug}`,
   station: (slug: string) => `/red/estacion/${slug}`,

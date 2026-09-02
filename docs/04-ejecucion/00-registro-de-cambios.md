@@ -1372,3 +1372,40 @@ Nuevo `content/data/links.ts` con la URL de la app y la de WhatsApp. Antes viví
 ### Evidencia
 
 `lint`, `tsc` y build limpios · `ES 394/394 · EN 394/394 · PT 394/394` · CTA con nombre accesible *"Descargar la app (Se abre en una pestaña nueva)"* y ayuda resolviendo a `/es/red#preguntas`.
+
+---
+
+## Bloque 32 · Términos y condiciones y política de datos — 2026-09-02
+
+El área legal entregó los dos documentos (2026-09-02, con fecha de emisión 29 de mayo de 2026). Con eso se cierra el bloqueo más antiguo del proyecto.
+
+- **`/legal/terminos`** — nueva. 38 secciones.
+- **`/legal/privacidad`** — deja de mostrar "texto legal pendiente" y pierde el `noindex`: la marca existía por no tener texto definitivo. 20 secciones.
+- Ambas entran al **sitemap** con su fecha real de emisión, no la del build — justo lo que la cabecera de `sitemap.ts` reprochaba.
+- El footer enlaza las dos.
+
+### Generado, no transcrito
+
+El contenido se extrajo de los `.docx` con un script. Transcribir 250 párrafos a mano habría metido erratas en un texto donde **una errata es un problema legal**. Resultado: 58 secciones, 109 párrafos, 12 listas.
+
+### Por qué el texto legal NO es `Localized`
+
+Todo el contenido del sitio lleva los tres idiomas obligatorios. Estos dos documentos no: son **español plano**.
+
+No es una traducción pendiente. Un instrumento jurídico traducido por quien no lo emitió deja de ser el mismo instrumento — cambia obligaciones, plazos y definiciones sin que nadie las haya aprobado. §38 dice que el texto legal lo emite el área legal y "no se redacta ni se aproxima"; traducirlo **es** aproximarlo.
+
+Las páginas en inglés y portugués muestran el original con un aviso de que la versión española es la vinculante. El cuerpo va envuelto en `lang="es"` para que un lector de pantalla no lea 38 secciones de español con fonética inglesa.
+
+### El índice no es decoración
+
+38 secciones sin índice significan buscar "cancelación" a rueda de ratón. Fijo a la izquierda en pantallas anchas, plegado en un `<details>` nativo en estrechas — sin JS y sin ARIA a medias. Verificado: saltar a la sección 10 deja el título a 149px del borde, por debajo del header de 80px, gracias a `scroll-mt-28`.
+
+### Dos cosas que aparecieron leyendo los documentos
+
+**1 · Existe un canal de soporte real: `soporte@voltop.co`**, declarado en la política de datos. Pendiente de decidir si se suma al FAQ junto al WhatsApp.
+
+**2 · La contradicción de "disponibilidad" se resuelve sola.** Los términos declaran, entre los servicios de la Plataforma: *"Consultar la ubicación y disponibilidad de las Estaciones de Carga"*. Es decir, el producto **sí** ofrece disponibilidad en la app. La respuesta 2 del FAQ era correcta; la que sobra es la nota `states.pendingRealtime` de `/red`, que habla de la integración de datos de operación del SITIO, no de la app.
+
+### Evidencia
+
+`lint`, `tsc` y build limpios · 50 páginas estáticas (antes 47) · `ES 402/402 · EN 402/402 · PT 402/402` · un solo `h1`, 38 secciones ancladas, 0px de desbordamiento, aviso de idioma presente solo en EN y PT.

@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { publishedLocales, defaultLocale, localeMeta } from "@/lib/i18n/config";
 import { routes, absoluteUrl } from "@/lib/i18n/routes";
+import { legalDocs } from "@/content/data/legal-docs";
 import { assertPublishedLocalesComplete } from "@/lib/i18n/audit";
 import { getStations, getCities, getPostsWithPage, getLatestPostDate } from "@/lib/data";
 
@@ -50,6 +51,23 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "weekly",
     },
     { path: routes.nosotros, priority: 0.7, lastModified: build, changeFrequency: "monthly" },
+    /* Los legales entran al sitemap desde que tienen texto definitivo, y con
+       SU fecha real de emisión —no la del build—, que es justo lo que la
+       cabecera de este archivo reprocha. Prioridad baja: existen para ser
+       encontrados cuando se buscan, no para competir con las páginas de
+       producto. */
+    {
+      path: routes.terms,
+      priority: 0.3,
+      lastModified: new Date(legalDocs.terms.actualizadoISO),
+      changeFrequency: "yearly",
+    },
+    {
+      path: routes.privacy,
+      priority: 0.3,
+      lastModified: new Date(legalDocs.privacy.actualizadoISO),
+      changeFrequency: "yearly",
+    },
     ...getCities().map((c) => ({
       path: routes.city(c.slug),
       priority: 0.8,
