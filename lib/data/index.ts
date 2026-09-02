@@ -13,6 +13,7 @@
 import { stations, type Station } from "@/content/data/stations";
 import { cities, type City } from "@/content/data/cities";
 import { type Post, type PostType } from "@/content/data/posts";
+import { faq, type FaqItem } from "@/content/data/faq";
 import { fetchPosts } from "./posts-source";
 import {
   metrics,
@@ -26,6 +27,11 @@ import {
 } from "@/content/data/company";
 
 /* ------------------------------- Estaciones ------------------------------ */
+
+/** Preguntas frecuentes de /red (§19). */
+export function getFaq(): FaqItem[] {
+  return faq;
+}
 
 export function getStations(): Station[] {
   return stations;

@@ -1240,3 +1240,54 @@ La marca oficial de Facebook es una forma pensada para RELLENO. Trazada tal cual
 ### Evidencia
 
 `lint`, `tsc` y build limpios · `ES 380/380 · EN 380/380 · PT 380/380` · tres enlaces con `rel="noopener noreferrer"`, 44×44 px y nombre accesible verificado en el DOM.
+
+---
+
+## Bloque 28 · Fase 4 · Preguntas frecuentes — 2026-09-02
+
+**Entrega:** cinco preguntas en `/red#preguntas`, acordeón accesible, tres idiomas.
+
+### La pregunta que NO está, y por qué
+
+**"¿Cuánto cuesta cargar?"** es, con diferencia, la más buscada de la categoría. No está: las tarifas no están confirmadas comercialmente —`pricing: null` en todo el dataset— y la decisión de publicarlas sigue abierta (**O5**). §33 prohíbe inventar cifras, y hacerlo en el sitio exacto donde el usuario viene a fiarse de nosotros sería el peor lugar posible para empezar.
+
+**Es la primera que hay que añadir en cuanto exista la decisión.**
+
+Las cinco publicadas cumplen dos condiciones a la vez: se preguntan de verdad antes de ir a cargar, y **se responden con datos que ya tenemos** (conectores y potencias reales del dataset, ciudades reales, el flujo que ya describe "Cómo cargar").
+
+### Decisiones de patrón
+
+**Disclosure, no tabs.** §23 exige "ARIA completa o ninguna". Un botón con `aria-expanded` que controla una región, y nada más: sin `role="tab"`, sin flechas, sin `aria-multiselectable`. El `<button>` nativo ya trae foco, Enter y Espacio.
+
+**Varias abiertas a la vez.** Cerrar la anterior al abrir la siguiente mueve el texto que la persona está leyendo, y comparar potencia con compatibilidad es un caso real.
+
+**El panel no usa `hidden`.** La altura se anima con `grid-rows: 0fr → 1fr`, la única forma de transicionar a altura automática sin medir en JS, y eso obliga a dejar el contenido en el DOM. Cerrado se marca **`inert`**: sale del árbol de accesibilidad y del orden de tabulación. Sin él, un lector de pantalla leería las cinco respuestas seguidas.
+
+**Ubicación.** Después de "Cómo cargar" y antes del handoff B2B, siguiendo el orden en que aparecen las dudas: primero cómo funciona, luego lo que queda suelto, y la última pregunta entrega el hilo a la sección B2B que sigue. Carril estrecho: ninguna sección vecina repite estructura (rejilla → 3 columnas → carril → fila única), que es como §12 pide construir el ritmo.
+
+### Un defecto corregido en móvil
+
+El panel llevaba `pr-10` para librar la columna del `+/−`. En móvil la respuesta va **debajo** del botón: ahí no libraba nada y robaba 40px a una medida de línea ya justa. Pasó a `md:pr-10`.
+
+### Hallazgo lateral: `.measure` no rinde lo que dice
+
+`.measure` vale `62ch` y su comentario declara "45–75 caracteres". Medido sobre el render real da **~83**. La causa: `ch` es el ancho del glifo "0", bastante más ancho que el carácter medio de un texto con espacios. La proporción en esta tipografía es ~1.31, así que `62ch` ≈ 83 caracteres.
+
+**Afecta a todo el sitio, no solo al FAQ.** Aquí se resolvió usando `measure-narrow` (46ch → 59–62 caracteres reales). Corregir `.measure` globalmente cambiaría secciones ya aprobadas, así que **queda levantado como decisión pendiente**, no ejecutado.
+
+### Evidencia
+
+`lint`, `tsc` y build limpios · `ES 396/396 · EN 396/396 · PT 396/396`
+
+| Verificación | Resultado |
+|---|---|
+| Cerradas al cargar · `aria-controls` resuelve | 5/5 |
+| Objetivo táctil (móvil) | 78–98px |
+| Paneles `inert` cerrados | 5/5 |
+| Enter y Espacio abren · varias simultáneas | Sí |
+| Outline de encabezados | h1 → h2 → h3, sin saltos |
+| Caracteres/línea (390/768/1440, ES·EN·PT) | 43–62 |
+| Desbordamiento horizontal | 0px |
+| Contraste pregunta / respuesta / enlace / icono | 17.5 · 9.05 · 11.37 · 6.34 |
+| Foco visible | outline 2px sólido |
+| Reduced-motion: elementos invisibles | 0 |

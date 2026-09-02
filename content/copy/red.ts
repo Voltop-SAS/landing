@@ -126,6 +126,15 @@ export const red = {
     ],
   },
 
+  faq: {
+    eyebrow: { es: "Preguntas frecuentes", en: "FAQ", pt: "Perguntas frequentes", } satisfies Localized,
+    title: {
+      es: "Lo que preguntan antes de cargar",
+      en: "What people ask before they charge",
+      pt: "O que perguntam antes de carregar",
+    } satisfies Localized,
+  },
+
   hostHandoff: {
     title: { es: "¿Tienes un espacio con parqueadero?", en: "Do you have a space with parking?", pt: "Você tem um espaço com estacionamento?", } satisfies Localized,
     body: {

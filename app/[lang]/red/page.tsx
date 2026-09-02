@@ -5,11 +5,12 @@ import { isLocale, t, type Locale } from "@/lib/i18n/config";
 import { href, routes, alternatesFor } from "@/lib/i18n/routes";
 import { red } from "@/content/copy/red";
 import { actions, states, units } from "@/content/copy/common";
-import { getStations, getCities, getCitiesWithStations } from "@/lib/data";
+import { getStations, getCities, getCitiesWithStations, getFaq } from "@/lib/data";
 import { Section, Container, Eyebrow, SectionHeading, ProcessList } from "@/components/ui/layout";
 import { Button } from "@/components/ui/Button";
 import { Reveal } from "@/components/ui/Reveal";
 import { StationFinder } from "@/components/red/StationFinder";
+import { Accordion } from "@/components/ui/Accordion";
 
 type Props = { params: Promise<{ lang: string }> };
 
@@ -41,6 +42,7 @@ export default async function RedPage({ params }: Props) {
   const stations = getStations();
   const cities = getCities();
   const coverage = getCitiesWithStations();
+  const preguntas = getFaq();
 
   return (
     <>
@@ -110,6 +112,33 @@ export default async function RedPage({ params }: Props) {
               step: s.step,
               title: t(s.title, lang),
               body: t(s.body, lang),
+            }))}
+          />
+        </Container>
+      </Section>
+
+      {/* Preguntas frecuentes — carril estrecho.
+
+          Va DESPUÉS de "cómo cargar" y antes del handoff a B2B por el orden en
+          que aparecen las dudas: primero cómo funciona, luego lo que queda sin
+          resolver, y la última pregunta ("¿puedo tener una estación?") entrega
+          el hilo a la sección B2B que sigue.
+
+          Carril estrecho sobre ancho de contenido: ninguna sección vecina
+          repite estructura (rejilla de ciudades → 3 columnas de proceso →
+          carril → fila única), que es como §12 pide construir el ritmo. */}
+      <Section id="preguntas" space="base" className="border-t border-line" ariaLabelledby="faq-title">
+        <Container width="narrow" align="rail">
+          <SectionHeading id="faq-title" kicker={t(red.faq.eyebrow, lang)}>
+            {t(red.faq.title, lang)}
+          </SectionHeading>
+          <Accordion
+            className="mt-10"
+            items={preguntas.map((p) => ({
+              id: p.id,
+              question: t(p.question, lang),
+              answer: t(p.answer, lang),
+              link: p.link ? { label: t(p.link.label, lang), href: href(lang, p.link.href) } : undefined,
             }))}
           />
         </Container>
