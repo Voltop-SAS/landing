@@ -1343,3 +1343,32 @@ Primero usé el glifo `↗`. No funcionaba: en esta mono sale **más pequeño y 
 `lint`, `tsc` y build limpios · `ES 395/395 · EN 395/395 · PT 395/395`
 
 Los tres enlaces, en los tres idiomas: los externos con `target="_blank"`, `rel="noopener noreferrer"` y el aviso en el nombre accesible (*"Descargar la app · Se abre en una pestaña nueva"*, *"Escríbenos por WhatsApp · Se abre en una pestaña nueva"*); el interno resuelve a `/es/red#ciudades`, `/en/red#ciudades`, `/pt/red#ciudades`, sin prefijo de idioma pegado a las URLs absolutas.
+
+---
+
+## Bloque 31 · Fase 5 · Navbar — 2026-09-02
+
+El navbar pasa a la estructura de Electra: **logo · menú · ¿Necesitas ayuda? · selector de idioma · CTA de app**.
+
+### El CTA global cambia de destino
+
+De **"Encontrar cargador"** a **"Descargar la app"**. No es un cambio estético: "Encontrar cargador" llevaba a `/red`, que ya está en el menú dos centímetros a la izquierda. El CTA duplicaba una entrada de navegación en lugar de ofrecer algo que la navegación no da. La app sí lo es — es donde de verdad se carga y se paga.
+
+Dos excepciones razonadas:
+
+- **`/empresas` conserva el suyo.** En B2B la conversión es la conversación con el equipo; sustituirla por una descarga de app rompería el journey.
+- **`/red` deja de ser `null`.** Antes no tenía CTA porque "encontrar cargador" dentro del buscador era redundante. Descargar la app no lo es: es exactamente el paso siguiente de quien acaba de encontrar dónde cargar.
+
+El evento de medición pasa a `cta_descargar_app_click`. Se conserva `cta_encontrar_cargador_click` porque sigue emitiéndose desde los CTA de página que llevan a `/red`.
+
+### "¿Necesitas ayuda?"
+
+Va **antes** del selector, en texto y sin borde. Es un enlace de RESCATE, no una acción: con borde competiría con el CTA que tiene al lado. Lleva a `/red#preguntas`, que es donde están las respuestas. En móvil entra como última entrada de la lista del menú — esconderla en un menú que no la lista sería peor que no tenerla.
+
+### Fuente única para los enlaces externos
+
+Nuevo `content/data/links.ts` con la URL de la app y la de WhatsApp. Antes vivían repetidas en `faq.ts` y en el header, y **una URL repetida es una URL que algún día cambia en un sitio y no en el otro**. La advertencia del 503 vive ahí, junto al valor.
+
+### Evidencia
+
+`lint`, `tsc` y build limpios · `ES 394/394 · EN 394/394 · PT 394/394` · CTA con nombre accesible *"Descargar la app (Se abre en una pestaña nueva)"* y ayuda resolviendo a `/es/red#preguntas`.

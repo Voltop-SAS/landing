@@ -14,6 +14,10 @@
 export type EventName =
   // B2C
   | "cta_encontrar_cargador_click"
+  /* El CTA global del header pasó a ser la descarga de la app. Se conserva
+     `cta_encontrar_cargador_click` porque sigue usándose en los CTA de página
+     que llevan a /red; el del header ahora emite este. */
+  | "cta_descargar_app_click"
   | "red_buscar"
   | "red_filtro_aplicado"
   | "red_filtros_limpiados"

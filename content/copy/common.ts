@@ -1,5 +1,6 @@
 import type { Localized } from "@/lib/i18n/config";
 import { routes } from "@/lib/i18n/routes";
+import { externalLinks } from "@/content/data/links";
 
 /**
  * COPY COMPARTIDO · navegación, acciones, formularios, estados y accesibilidad.
@@ -51,14 +52,39 @@ export const nav: { label: Localized; href: string }[] = [
  * CTA global CONTEXTUAL. Un solo slot que cambia por ruta.
  * En /red no hay CTA: el usuario ya está en la herramienta (§15).
  */
-export const headerCta: Record<string, { label: Localized; href: string } | null> = {
-  home: { label: { es: "Encontrar cargador", en: "Find a charger", pt: "Encontrar carregador", }, href: routes.red },
-  nosotros: { label: { es: "Encontrar cargador", en: "Find a charger", pt: "Encontrar carregador", }, href: routes.red },
-  /* El registro es una superficie de LECTURA, no una herramienta, así que el
-     CTA global sigue aplicando —a diferencia de /red, donde el usuario ya está
-     dentro de la herramienta y el CTA sería redundante (§15). */
-  novedades: { label: { es: "Encontrar cargador", en: "Find a charger", pt: "Encontrar carregador", }, href: routes.red },
-  red: null,
+/** Etiqueta única del CTA de app: se usa en el header y en el menú móvil. */
+export const appCta: Localized = { es: "Descargar la app", en: "Get the app", pt: "Baixar o aplicativo" };
+
+/** Acceso a las preguntas frecuentes desde el navbar. */
+export const helpLink: { label: Localized; href: string } = {
+  label: { es: "¿Necesitas ayuda?", en: "Need help?", pt: "Precisa de ajuda?" },
+  href: `${routes.red}#preguntas`,
+};
+
+/**
+ * CTA GLOBAL DEL HEADER · uno solo, contextual por ruta (§15).
+ *
+ * Pasó de "Encontrar cargador" a "Descargar la app". El motivo no es estético:
+ * "Encontrar cargador" llevaba a /red, que YA está en el menú dos centímetros
+ * a la izquierda. El CTA duplicaba una entrada de navegación en lugar de
+ * ofrecer algo que la navegación no da. La app sí lo es —es donde de verdad
+ * se carga y se paga—, así que ahora el botón lleva ahí.
+ *
+ * /empresas conserva el suyo: en B2B la conversión es la conversación con el
+ * equipo, y sustituirla por una descarga de app rompería el journey.
+ *
+ * /red deja de ser `null`. Antes no tenía CTA porque "encontrar cargador"
+ * dentro del buscador era redundante; descargar la app no lo es: es
+ * exactamente el paso siguiente de quien acaba de encontrar dónde cargar.
+ */
+export const headerCta: Record<
+  string,
+  { label: Localized; href: string; external?: boolean } | null
+> = {
+  home: { label: appCta, href: externalLinks.app, external: true },
+  nosotros: { label: appCta, href: externalLinks.app, external: true },
+  novedades: { label: appCta, href: externalLinks.app, external: true },
+  red: { label: appCta, href: externalLinks.app, external: true },
   empresas: { label: { es: "Hablar con el equipo", en: "Talk to the team", pt: "Falar com o time", }, href: `${routes.empresas}#contacto` },
 };
 

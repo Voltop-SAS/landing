@@ -1,5 +1,6 @@
 import type { Localized } from "@/lib/i18n/config";
 import { routes } from "@/lib/i18n/routes";
+import { externalLinks } from "./links";
 
 /**
  * COLECCIÓN · Preguntas frecuentes
@@ -57,7 +58,7 @@ export const faq: FaqItem[] = [
     },
     link: {
       label: { es: "Descargar la app", en: "Get the app", pt: "Baixar o aplicativo" },
-      href: "https://app.voltop.co/",
+      href: externalLinks.app,
       external: true,
     },
   },
@@ -121,7 +122,7 @@ export const faq: FaqItem[] = [
     },
     link: {
       label: { es: "Escríbenos por WhatsApp", en: "Message us on WhatsApp", pt: "Fale com a gente no WhatsApp" },
-      href: "https://wa.me/573159864931",
+      href: externalLinks.whatsapp,
       external: true,
     },
   },

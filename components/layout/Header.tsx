@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { t, type Locale } from "@/lib/i18n/config";
 import { href, routes, stripLocale } from "@/lib/i18n/routes";
-import { nav, headerCta, a11y } from "@/content/copy/common";
+import { nav, headerCta, helpLink, a11y } from "@/content/copy/common";
 import { Button } from "@/components/ui/Button";
 import { LangSwitch } from "@/components/layout/LangSwitch";
 import { Logo } from "@/components/layout/Logo";
@@ -155,6 +155,17 @@ export function Header({ lang }: { lang: Locale }) {
             {/* El selector de idioma sale del header móvil y baja al menú. Es un
                 control de baja frecuencia que ocupaba 88px del espacio más
                 valioso de la pantalla, y ese espacio lo necesita el CTA. */}
+            {/* "¿Necesitas ayuda?" antes del selector: es un enlace de
+                RESCATE, no una acción, así que se dice en texto y sin borde
+                para que no compita con el CTA que tiene al lado. Lleva al FAQ,
+                que es donde están las respuestas. */}
+            <Link
+              href={href(lang, helpLink.href)}
+              className="hidden min-h-11 items-center text-body-s text-ink-2 transition-colors hover:text-ink nav:inline-flex"
+            >
+              {t(helpLink.label, lang)}
+            </Link>
+
             <div className="hidden nav:block">
               <LangSwitch lang={lang} />
             </div>
@@ -169,7 +180,9 @@ export function Header({ lang }: { lang: Locale }) {
                   variant="secondary"
                   size="s"
                   arrow
-                  href={href(lang, cta.href)}
+                  href={cta.external ? cta.href : href(lang, cta.href)}
+                  external={cta.external}
+                  lang={lang}
                   onClick={() => trackCta(context)}
                 >
                   {t(cta.label, lang)}
@@ -216,6 +229,14 @@ export function Header({ lang }: { lang: Locale }) {
                 {t(item.label, lang)}
               </Link>
             ))}
+            {/* En móvil la ayuda entra en la lista: no hay sitio en la barra y
+                esconderla en un menú que no la lista sería peor que no tenerla. */}
+            <Link
+              href={href(lang, helpLink.href)}
+              className="border-b border-line py-5 font-display text-display-m text-ink-2"
+            >
+              {t(helpLink.label, lang)}
+            </Link>
           </nav>
 
           <div className="mt-auto flex flex-col gap-8 px-(--spacing-gutter) pb-10 pt-8">
@@ -227,7 +248,9 @@ export function Header({ lang }: { lang: Locale }) {
                 variant="primary"
                 size="l"
                 arrow
-                href={href(lang, cta.href)}
+                href={cta.external ? cta.href : href(lang, cta.href)}
+                external={cta.external}
+                lang={lang}
                 className="w-full"
                 onClick={() => trackCta(context)}
               >
@@ -248,7 +271,7 @@ export function Header({ lang }: { lang: Locale }) {
 
 /** Evento del plan de medición para el CTA global (§31). */
 function trackCta(context: string) {
-  track(context === "empresas" ? "cta_b2b_click" : "cta_encontrar_cargador_click", {
+  track(context === "empresas" ? "cta_b2b_click" : "cta_descargar_app_click", {
     ubicacion: "header",
     contexto: context,
   });

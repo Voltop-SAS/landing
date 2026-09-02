@@ -47,6 +47,7 @@ import * as dataCompany from "@/content/data/company";
 import * as dataMedia from "@/content/data/media";
 import * as dataPosts from "@/content/data/posts";
 import * as dataFaq from "@/content/data/faq";
+import * as dataLinks from "@/content/data/links";
 
 const SOURCES: Record<string, unknown> = {
   "copy/common": copyCommon,
@@ -62,6 +63,7 @@ const SOURCES: Record<string, unknown> = {
   "data/media": dataMedia,
   "data/posts": dataPosts,
   "data/faq": dataFaq,
+  "data/links": dataLinks,
 };
 
 const isPlainObject = (v: unknown): v is Record<string, unknown> =>
