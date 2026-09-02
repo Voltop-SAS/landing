@@ -250,6 +250,57 @@ export const media = {
     aspect: "3/2",
     availability: "entregado",
   },
+
+  /**
+   * PELÍCULA DE MARCA · entregada el 2026-09-02 (`Video Home.mov`, 377 MB).
+   *
+   * ── NO ES MATERIAL DE FONDO, Y ESO DECIDE CÓMO SE INTEGRA ────────────────
+   * Son 65 s con narración, subtítulos QUEMADOS en inglés de los ~5 s a los
+   * ~58 s y cierre con logo. Es una pieza terminada, no metraje suelto.
+   *
+   * Por eso va con controles y no como fondo en bucle silenciado:
+   * · Silenciada pierde el mensaje, que está en la narración.
+   * · En bucle, 65 s con logo de cierre no son un bucle: son una película
+   *   reiniciándose.
+   * · Y un fondo silenciado con subtítulos en inglés contradice la regla del
+   *   propio brief de assets —"sin texto quemado: no se puede traducir ni leer
+   *   por asistencia"— sobre un sitio en tres idiomas.
+   *
+   * ── PENDIENTE, Y NO ES MENOR ─────────────────────────────────────────────
+   * Los subtítulos quemados en inglés se ven igual en `/es` y en `/pt`, y no
+   * son accesibles: un lector de pantalla no los alcanza. WCAG 1.2.2 pide
+   * subtítulos reales para audio pregrabado. La solución correcta es un máster
+   * SIN texto quemado más pistas `.vtt` en los tres idiomas. Registrado en
+   * `docs/05-assets-todo`.
+   *
+   * ── PÓSTER ELEGIDO POR MEDICIÓN ──────────────────────────────────────────
+   * Se puntuaron los 130 fotogramas (2 fps) por energía de bordes y
+   * exposición, descartando el tramo con subtítulos, y se afinó el instante a
+   * 12 fps. Los aéreos de Medellín puntuaban más alto en nitidez pero son
+   * genéricos: la métrica premia detalle, no relevancia. El elegido —**4.4 s**,
+   * el más nítido de su plano— son unas manos conectando el cargador: muestra
+   * el servicio EN USO, es humano, funciona a cualquier tamaño y no lleva
+   * texto ni una marca ajena dominando.
+   */
+  filmVoltop: {
+    id: "film-voltop",
+    kind: "video",
+    src: "/voltop-film.mp4",
+    poster: "/voltop-film-poster.jpg",
+    alt: {
+      es: "Película de marca de Voltop: la red de carga en Medellín, con el equipo y las estaciones en operación",
+      en: "Voltop brand film: the charging network in Medellín, with the team and stations in service",
+      pt: "Filme institucional da Voltop: a rede de carregamento em Medellín, com a equipe e as estações em operação",
+    },
+    role: {
+      es: "Beat 7. Pieza que se ve, no fondo: cierra la narrativa de la Home con la visión de la compañía en voz propia.",
+      en: "Beat 7. A piece to be watched, not a background: closes the Home narrative with the company's vision in its own voice.",
+      pt: "Beat 7. Peça para assistir, não fundo: fecha a narrativa da Home com a visão da empresa em sua própria voz.",
+    },
+    duration: "1:05",
+    aspect: "16/9",
+    availability: "entregado",
+  },
 } satisfies Record<string, MediaAsset>;
 
 export type MediaKey = keyof typeof media;

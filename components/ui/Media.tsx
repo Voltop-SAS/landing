@@ -34,6 +34,7 @@ export function Media({
   aspect,
   position,
   quality,
+  controls,
 }: {
   asset: MediaAsset;
   lang: Locale;
@@ -73,6 +74,8 @@ export function Media({
    * calidad por defecto. Los valores admitidos se declaran en `next.config.ts`.
    */
   quality?: number;
+  /** Ver `VideoMedia`: convierte el vídeo de fondo en pieza con controles. */
+  controls?: boolean;
 }) {
   const shape = fill ? "" : aspects[aspect ?? asset.aspect];
 
@@ -100,6 +103,7 @@ export function Media({
         <VideoMedia
           asset={asset}
           lang={lang}
+          controls={controls}
           className={cn("absolute inset-0 h-full w-full object-cover", position)}
         />
       </div>

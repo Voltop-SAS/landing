@@ -27,10 +27,23 @@ export function VideoMedia({
   asset,
   lang,
   className,
+  controls = false,
 }: {
   asset: MediaAsset;
   lang: Locale;
   className?: string;
+  /**
+   * `true` cuando el material es una PIEZA QUE SE VE, no un fondo.
+   *
+   * Cambia el comportamiento entero: con controles no hay reproducción
+   * automática, no hay bucle y no se silencia. Un fondo se mira sin querer;
+   * una pieza con narración se decide ver, y para eso hace falta poder darle
+   * play, pausar, buscar y oírla.
+   *
+   * `prefers-reduced-motion` deja de aplicar aquí: nada arranca solo, así que
+   * no hay movimiento que la preferencia deba frenar.
+   */
+  controls?: boolean;
 }) {
   const reduce = useReducedMotion();
   const ref = useRef<HTMLVideoElement>(null);
@@ -39,21 +52,25 @@ export function VideoMedia({
      navegador arrancó la reproducción antes de hidratar, hay que detenerlo. */
   useEffect(() => {
     const v = ref.current;
-    if (!v) return;
+    if (!v || controls) return;
     if (reduce) v.pause();
     else void v.play().catch(() => {});
-  }, [reduce]);
+  }, [reduce, controls]);
 
   return (
     <video
       ref={ref}
       className={className}
       poster={asset.poster ?? undefined}
+      /* `none` en los dos modos: un fondo no debe competir con el LCP, y una
+         pieza con controles no debe descargar 27 MB a quien no le dio play.
+         Solo viaja el póster hasta que alguien lo pide. */
       preload="none"
-      muted
-      loop
+      controls={controls || undefined}
+      muted={!controls}
+      loop={!controls}
       playsInline
-      autoPlay={!reduce}
+      autoPlay={controls ? undefined : !reduce}
       aria-label={t(asset.alt, lang)}
     >
       <source src={asset.src ?? undefined} type="video/mp4" />

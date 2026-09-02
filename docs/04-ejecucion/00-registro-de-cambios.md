@@ -1065,3 +1065,52 @@ Contraste del hero, estructura y header: sin fallos.
 ### Lección
 
 Calibrar una animación proporcional contra un solo viewport no sirve. El síntoma —"se ve raro"— aparecía en 9 de 12 anchos y en el que yo revisaba no aparecía.
+
+---
+
+## Bloque 23 · La película de marca, como pieza y no como fondo — 2026-09-02
+
+**Entrega:** `Video Home.mov` — 65 s, 3840 × 2160, 46 Mbps, **377 MB**, con audio PCM.
+
+### El material obligó a cambiar el enfoque
+
+No es metraje de fondo: es una **pieza terminada** con narración, subtítulos quemados en inglés (~4.2 s a ~58 s) y cierre con logo. Integrarla como el resto de vídeos del sitio —autoplay, silenciada, en bucle— habría fallado en tres frentes:
+
+- **Silenciada pierde el mensaje**, que está en la narración.
+- **En bucle no es un bucle:** 65 s con logo de cierre son una película reiniciándose.
+- **Subtítulos en inglés sobre `/es` y `/pt`** contradicen la regla del brief de assets.
+
+Por eso `Media` y `VideoMedia` ganan un modo `controls`: con él no hay reproducción automática, ni bucle, ni silencio. Un fondo se mira sin querer; una pieza con narración se decide ver, y para eso hace falta poder darle play, pausar, buscar y oírla. `prefers-reduced-motion` deja de aplicar en ese modo porque nada arranca solo.
+
+**Ubicación:** beat 7, en la franja ancha bajo la cita del fundador — que ya estaba compuesta como *material presentado*, no como fondo. `visionCeo` sigue registrado y pendiente: es otra pieza.
+
+### El póster, elegido midiendo
+
+Se puntuaron los 130 fotogramas (2 fps) por energía de bordes y exposición, descartando el tramo con subtítulos. Elegido **4.0 s**: unas manos conectando el cargador a un vehículo.
+
+Los aéreos de Medellín puntuaban más alto en nitidez y se descartaron — **la métrica premia detalle, no relevancia**.
+
+**Un error propio que costó dos intentos:** con `-ss` antes de `-i`, ffmpeg busca por fotograma clave y no por tiempo exacto. El primer póster acabó en el segundo ~5, justo sobre un subtítulo quemado, y el análisis de nitidez apuntaba a 4.4 s —ya dentro del plano siguiente— por el mismo desfase. Rehecho con `-ss` después de `-i`.
+
+### Rendimiento
+
+| | |
+|---|---|
+| Servido | 1920 × 1080, H.264 High + AAC 128k, `faststart`, **27.6 MB** |
+| **Antes de darle play** | **67 KB** — solo el póster, en los 7 viewports probados |
+| **CLS** | **0** en los 7 viewports |
+| Proporción | 1.776–1.780 (16:9 exacto) en todos los anchos |
+
+El `aspect-[16/9]` que aplica `Media` reserva el espacio, así que el póster entra sin desplazar nada. Los 27.6 MB no viajan hasta que alguien los pide.
+
+### Pendiente, y no es menor
+
+**El vídeo tiene cero pistas `<track>`** y sus subtítulos están quemados en inglés. WCAG 1.2.2 exige subtítulos reales para audio pregrabado, y los quemados no son accesibles ni traducibles. Hace falta un máster **sin texto incrustado** más `.vtt` en los tres idiomas. Registrado como decisión D3 en `docs/05-assets-todo`.
+
+**El vídeo es utilizable, pero esta sección no cumple 1.2.2 hasta que llegue ese máster.**
+
+### Evidencia
+
+`lint`, `tsc` y build limpios · 47 páginas · `ES 380/380 · EN 380/380 · PT 380/380` · reproducción verificada con audio (`muted:false`, `volume:1`, 65.13 s) · `aria-label` presente y alcanzable por teclado · con `prefers-reduced-motion` sigue pausado · contraste del hero y estructura sin fallos.
+
+`Video Home.mov` (377 MB) queda fuera del repositorio.

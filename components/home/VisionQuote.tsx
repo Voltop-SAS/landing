@@ -49,7 +49,17 @@ export function VisionQuote({ lang }: { lang: Locale }) {
 
       <Container width="wide" className="mt-16">
         <Reveal delay={0.08}>
-          <Media asset={media.visionCeo} lang={lang} sizes="(min-width: 1600px) 1600px, 100vw" />
+          {/* Pieza con controles, no fondo: lleva narración y subtítulos
+              quemados, así que silenciarla en bucle perdería el mensaje.
+              Ver la cabecera de `filmVoltop` en el registro de media.
+              El `aspect-[16/9]` que aplica `Media` reserva el espacio, así que
+              el póster entra sin desplazar nada. */}
+          <Media
+            asset={media.filmVoltop}
+            lang={lang}
+            controls
+            sizes="(min-width: 1600px) 1600px, 100vw"
+          />
         </Reveal>
       </Container>
     </Section>

@@ -257,3 +257,37 @@ en las cinco rutas.
 5. **Texto legal** — bloquea la publicación del formulario.
 6. **CRM** — convierte el formulario en un formulario.
 7. El resto del material, métricas y logos de partners.
+
+
+---
+
+## 5 · Película de marca — entregada, con un pendiente de accesibilidad
+
+**Entregada el 2026-09-02:** `Video Home.mov`, 65 s, 3840 × 2160, 46 Mbps, 377 MB, con audio PCM.
+**Servida como** `voltop-film.mp4` — 1920 × 1080, H.264 + AAC 128k, `faststart`, **27.6 MB**.
+Vive en el beat 7 de la Home, en la franja ancha bajo la cita.
+
+**Va con controles, no como fondo.** Tiene narración y subtítulos quemados: silenciada en bucle perdería el mensaje. Con `preload="none"` solo viaja el póster —67 KB— hasta que alguien le da play.
+
+### D3 · Hace falta un máster sin texto quemado
+
+Los subtítulos están **incrustados en la imagen, en inglés, de los ~4.2 s a los ~58 s**. Dos problemas:
+
+1. **Se ven igual en `/es` y en `/pt`.** Contradice la regla común de este documento: *sin texto quemado en la imagen, no se puede traducir ni leer por asistencia*.
+2. **No son accesibles.** Un lector de pantalla no los alcanza y no se pueden desactivar. WCAG 1.2.2 exige subtítulos reales para audio pregrabado, y el vídeo hoy tiene **cero pistas `<track>`**.
+
+**Lo que hay que pedir:**
+
+| | |
+|---|---|
+| Máster | El mismo corte **sin subtítulos quemados** |
+| Subtítulos | Tres archivos `.vtt` — español, inglés y portugués |
+| Transcripción | Del audio, para poder generar los `.vtt` sin transcribir de oído |
+
+Con eso, el reproductor gana `<track kind="captions">` por idioma y el problema se cierra. Hasta entonces el vídeo es utilizable pero **no cumple 1.2.2**.
+
+### El póster se eligió midiendo
+
+Se puntuaron 130 fotogramas (2 fps) por energía de bordes y exposición, descartando el tramo con subtítulos, y se afinó el instante con búsqueda exacta a 8 fps. Elegido: **4.0 s**, unas manos conectando el cargador a un vehículo — muestra el servicio en uso, es humano, no lleva texto ni marca ajena dominando, y funciona a cualquier tamaño. 67 KB.
+
+Los aéreos de Medellín (58–63 s) puntuaban más alto en nitidez y se descartaron: la métrica premia detalle, no relevancia.
