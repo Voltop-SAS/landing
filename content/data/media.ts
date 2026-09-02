@@ -274,17 +274,15 @@ export const media = {
    * `docs/05-assets-todo`.
    *
    * ── PÓSTER ──────────────────────────────────────────────────────────────
-   * **Segundo 2.0**, elegido por el usuario: el vehículo entrando por la rampa
-   * del parqueadero. Se verificó que el tramo está limpio de subtítulos y que
-   * la nitidez es plana entre 1.9 y 2.15 s —26.2 frente a 25.9—, así que no
-   * hay trepidación que evitar en un plano con el coche en movimiento.
+   * **Segundo 3.0**, elegido por el usuario: dos vehículos cargando en el
+   * parqueadero, con los equipos Voltop y la luz azul al fondo. Es el que
+   * mejor encaja con el registro oscuro del sitio y el que más muestra
+   * infraestructura propia.
    *
-   * Pesa 138.7 KB frente a los 120 KB que fija el brief. Es un plano con mucho
-   * detalle fino —follaje, ladrillo, texturas— y ni a calidad 13 baja del
-   * umbral. Se acepta a conciencia: no es el elemento LCP, vive en el beat 7 y
-   * es lo ÚNICO que se descarga antes de que alguien pulse play. Se comparó
-   * contra 1600px mejor comprimido al mismo peso y la diferencia a tamaño real
-   * es indistinguible.
+   * Verificado limpio de subtítulos —los primeros aparecen a ~4.2 s— y, al ser
+   * un plano más oscuro y con menos detalle fino, entra en el presupuesto de
+   * 120 KB: **110.8 KB**. El candidato anterior (2.0 s, el vehículo en la
+   * rampa) no bajaba de 138 KB ni a calidad 13.
    */
   filmVoltop: {
     id: "film-voltop",

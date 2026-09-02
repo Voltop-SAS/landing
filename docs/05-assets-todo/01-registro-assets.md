@@ -288,8 +288,6 @@ Con eso, el reproductor gana `<track kind="captions">` por idioma y el problema 
 
 ### El póster
 
-**Segundo 2.0**, elegido por el usuario: el vehículo entrando por la rampa del parqueadero. Verificado limpio de subtítulos, y con nitidez plana entre 1.9 y 2.15 s (26.2 vs 25.9), así que no hay trepidación pese al movimiento.
+**Segundo 3.0**: dos vehículos cargando en el parqueadero, con los equipos Voltop y la luz azul al fondo. Encaja con el registro oscuro del sitio y muestra infraestructura propia.
 
-**138.7 KB frente a los 120 KB de presupuesto.** Es un plano de mucho detalle fino y ni a calidad 13 baja del umbral; se comparó contra 1600 px mejor comprimido al mismo peso y a tamaño real la diferencia es indistinguible. Se acepta: no es el LCP, vive en el beat 7 y es lo único que viaja antes de pulsar play.
-
-**A revisar:** en ese fotograma la puerta del vehículo lee "PORSCHE EXPERIENCE", y a tamaño completo es el texto más legible del encuadre. En la portada de una pieza de marca de Voltop, la marca más visible acaba siendo ajena. Decisión de marca, no técnica.
+Verificado limpio de subtítulos quemados (los primeros aparecen a ~4.2 s). **110.8 KB — dentro del presupuesto de 120 KB**, porque es un plano oscuro y con poco detalle fino. Se descartaron dos candidatos previos: el de 4.0 s (manos conectando, 67 KB) y el de 2.0 s (vehículo en la rampa), que no bajaba de 138 KB ni a calidad 13 y llevaba "PORSCHE EXPERIENCE" como el texto más legible del encuadre.

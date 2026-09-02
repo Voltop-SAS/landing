@@ -1132,3 +1132,25 @@ El `aspect-[16/9]` que aplica `Media` reserva el espacio, así que el póster en
 ### Evidencia
 
 Build limpio · CLS **0** y proporción 16:9 exacta a 390 y 1440 px · **138.7 KB descargados antes de play**, nada más · vídeo pausado hasta que el usuario lo pide.
+
+---
+
+## Bloque 25 · Portada definitiva de la película — 2026-09-02
+
+**Segundo 3.0**, elegido por el usuario: dos vehículos cargando en el parqueadero, con los equipos Voltop y la luz azul al fondo.
+
+Es la mejor de las tres candidatas por tres motivos, y dos son medibles:
+
+| | 4.0 s · manos | 2.0 s · rampa | **3.0 s · parqueadero** |
+|---|---|---|---|
+| Peso | 67 KB ✓ | 138.7 KB ✗ | **110.8 KB ✓** |
+| Limpio de subtítulos | sí | sí | **sí** |
+| Marca ajena dominante | no | "PORSCHE EXPERIENCE" en la puerta | insignia trasera, menor |
+| Registro visual | oscuro | claro | **oscuro, como el sitio** |
+| Infraestructura Voltop visible | parcial | no | **sí, dos equipos al fondo** |
+
+El de 2.0 s no bajaba de 138 KB ni a calidad 13 —plano con mucho detalle fino—; este es más oscuro y comprime mejor, así que **vuelve a entrar en el presupuesto de 120 KB**.
+
+### Evidencia
+
+Build limpio · CLS **0** y proporción 16:9 exacta a 390 y 1440 px · **110.9 KB descargados antes de pulsar play**, nada más · vídeo pausado hasta que el usuario lo pide.
