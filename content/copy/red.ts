@@ -128,10 +128,14 @@ export const red = {
 
   faq: {
     eyebrow: { es: "Preguntas frecuentes", en: "FAQ", pt: "Perguntas frequentes", } satisfies Localized,
+    /* El titular sigue al contenido: la última pregunta es sobre ayuda
+       DURANTE una carga, así que "antes de cargar" dejaba fuera parte de lo
+       que hay debajo. La fórmula recoge el arco entero y toma prestada la
+       cadencia de la propia respuesta 5. */
     title: {
-      es: "Lo que preguntan antes de cargar",
-      en: "What people ask before they charge",
-      pt: "O que perguntam antes de carregar",
+      es: "Antes, durante y después de cargar",
+      en: "Before, during and after a charge",
+      pt: "Antes, durante e depois de carregar",
     } satisfies Localized,
   },
 

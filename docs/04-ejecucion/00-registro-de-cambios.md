@@ -1291,3 +1291,25 @@ El panel llevaba `pr-10` para librar la columna del `+/−`. En móvil la respue
 | Contraste pregunta / respuesta / enlace / icono | 17.5 · 9.05 · 11.37 · 6.34 |
 | Foco visible | outline 2px sólido |
 | Reduced-motion: elementos invisibles | 0 |
+
+---
+
+## Bloque 29 · FAQ: copy definitivo de Camilo — 2026-09-02
+
+Las cinco preguntas y respuestas las escribió Camilo. El español va **literal**; inglés y portugués son traducción de ese original, no versiones nuevas.
+
+El eje cambió: mis cinco preguntas eran técnicas (conectores, potencias, cobertura, B2B); estas cinco son **de experiencia** —cómo cargo, dónde, cuánto cuesta, cómo pago, qué hago si algo falla— y son las que de verdad se hacen. La tarifa dejó de estar bloqueada porque la respuesta describe **el mecanismo, no la cifra**: "antes de iniciar tu carga podrás consultar la tarifa aplicable". Eso se puede publicar hoy sin inventar nada.
+
+El titular de sección pasó de "Lo que preguntan antes de cargar" a **"Antes, durante y después de cargar"**: la última pregunta es sobre ayuda *durante* una carga, y el titular anterior dejaba fuera parte de lo que hay debajo.
+
+### Tres cosas quedan levantadas, no corregidas
+
+**1 · "Disponibilidad" contra la nota de la misma página.** Dos secciones más arriba, bajo el buscador, `/red` muestra: *"La disponibilidad en tiempo real llegará con la integración de datos de operación."* La respuesta 2 ofrece "disponibilidad" entre lo que se consulta antes de llegar. Son afirmaciones que conviven en una sola página y §19 dice que un titular es un contrato. **Decisión de producto**, no de copy.
+
+**2 · La respuesta 5 no tiene a dónde ir.** Remite a "los canales disponibles en Voltop" y hoy el sitio no nombra ninguno. El único formulario es `/empresas#contacto`, captación B2B para dueños de espacio: destino equivocado para alguien con un problema a mitad de carga. Va **sin enlace** —§15 prohíbe publicar enlaces sin destino real— hasta que exista un canal (WhatsApp, correo, chat en la app).
+
+**3 · Cuatro de cinco respuestas mandan a la app, y el sitio no la entrega.** No hay enlaces de App Store ni Google Play (**O8**), así que el FAQ pide descargar algo que desde aquí no se puede descargar. La respuesta 2 lleva enlace a la cobertura por ciudad para que al menos esa no muera en la app.
+
+### Evidencia
+
+`lint` y build limpios · `ES 394/394 · EN 394/394 · PT 394/394` · 5 preguntas, 43–63 caracteres/línea en 390/768/1440 y en los tres idiomas, 0px de desbordamiento, ambos enlaces con destino real (`#como-cargar`, `#ciudades`).
