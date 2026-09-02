@@ -11,6 +11,7 @@ import { BusinessIntro } from "@/components/home/BusinessIntro";
 import { ProofCase } from "@/components/home/ProofCase";
 import { NetworkNews } from "@/components/home/NetworkNews";
 import { VisionQuote } from "@/components/home/VisionQuote";
+import { AppDownload } from "@/components/home/AppDownload";
 import { CloseCta } from "@/components/home/CloseCta";
 
 type Props = { params: Promise<{ lang: string }> };
@@ -59,6 +60,7 @@ export default async function HomePage({ params }: Props) {
       <ProofCase lang={lang} />
       <NetworkNews lang={lang} />
       <VisionQuote lang={lang} />
+      <AppDownload lang={lang} />
       <CloseCta lang={lang} />
     </>
   );

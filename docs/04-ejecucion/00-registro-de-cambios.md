@@ -1409,3 +1409,54 @@ Las páginas en inglés y portugués muestran el original con un aviso de que la
 ### Evidencia
 
 `lint`, `tsc` y build limpios · 50 páginas estáticas (antes 47) · `ES 402/402 · EN 402/402 · PT 402/402` · un solo `h1`, 38 secciones ancladas, 0px de desbordamiento, aviso de idioma presente solo en EN y PT.
+
+---
+
+## Bloque 33 · La app: sección, insignias y componente flotante — 2026-09-02
+
+Con la URL de descarga entregada, se desbloquean tres puntos de la lista de Electra a la vez.
+
+### El QR se generó y se VERIFICÓ
+
+No hay librería de QR en el proyecto y no se añadió ninguna: un código de una URL fija no necesita código en tiempo de ejecución. Se generó una vez y se guardó como `public/qr-descargar-app.svg` — **1.2 KB**, 33×33 módulos.
+
+Lo importante es que **se decodificó después de generarlo** y devuelve exactamente `https://app.voltop.co/`. Un QR mal generado es indistinguible de uno bueno a simple vista, y publicarlo sin comprobarlo habría sido publicar un enlace roto que nadie detecta hasta que un usuario lo escanea.
+
+Lleva la **zona tranquila de 4 módulos** que exige la especificación, y va sobre blanco: invertirlo para que "combine" con el lienzo oscuro hace que muchos teléfonos fallen.
+
+### Insignias de tienda
+
+Dibujadas como SVG, no incrustadas como PNG: las oficiales vienen con fondo negro fijo, que sobre un lienzo casi negro desaparece, y ampliadas se ven borrosas.
+
+**Las dos apuntan a `app.voltop.co` a propósito**: es un enlace dinámico que resuelve a la tienda correcta según el dispositivo. **INCOMPLETO** — cuando existan las URLs directas de cada ficha se añaden a `externalLinks` y cada insignia apunta a la suya.
+
+El rótulo superior usa la **redacción oficial de Apple y Google en cada idioma**, no una traducción propia: ambas fijan esa línea en sus guías de marca, y una insignia con texto inventado deja de ser la insignia.
+
+### Sección de descarga en la Home
+
+Va entre la película y el cierre. Lo que promete está tomado de lo que **los Términos y Condiciones declaran como servicios de la Plataforma** (§4 del documento legal): ubicación y disponibilidad, activación por QR, historial de sesiones y cobros. No se promete nada que el documento legal no reconozca, que es la forma más barata de cumplir §19.
+
+El QR se **oculta por debajo de `md`** en vez de encogerse: en un teléfono el código sobra, porque las insignias ya funcionan ahí. En escritorio es al revés — las insignias llevan a una ficha que no se puede instalar en el aparato que tienes delante, y el QR salta ese hueco.
+
+### Componente flotante: cuatro reglas, y las cuatro son restricciones
+
+Un elemento fijo compite con todo el contenido durante todo el recorrido, así que tiene que justificar cada segundo que ocupa la pantalla.
+
+| Regla | Por qué | Verificado |
+|---|---|---|
+| No aparece sobre el Hero | Ahí ya hay un CTA grande a la vista | opacidad 0 |
+| Se aparta cuando la sección de descarga entra en pantalla | Flotar "descarga la app" sobre la sección que ya lo ofrece es ruido | opacidad 0 |
+| Aparece en la zona intermedia | Es donde no compite con nada | opacidad 1 |
+| Se cierra y no vuelve | Un flotante que reaparece tras cerrarlo es una trampa | — |
+
+Además se calla en `/empresas` —donde la conversión es el formulario y §15 prohíbe que los CTA compitan— y en los legales, donde tapar contenido durante una lectura larga estorba. Y solo existe en escritorio: en un teléfono el QR no puede escanearse a sí mismo.
+
+No atrapa el foco ni bloquea el scroll, porque **no es un diálogo modal**: es contenido complementario. Sí responde a Escape y usa `inert` mientras está oculto, para que no queden enlaces alcanzables con Tab en una tarjeta invisible.
+
+### Corregido sobre la marcha
+
+La tarjeta blanca del QR flotante se estiraba a lo ancho del panel, dejando medio panel en blanco: el texto que acompaña al código es `sr-only` y no ocupa espacio, así que `flex` repartía a un solo hijo visible. Pasó a `w-fit` centrado.
+
+### Evidencia
+
+`lint`, `tsc` y build limpios · `ES 415/415 · EN 415/415 · PT 415/415` · QR decodificado y coincidente · las tres reglas de visibilidad del flotante medidas en el render real.

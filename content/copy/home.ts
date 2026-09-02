@@ -107,4 +107,65 @@ export const home = {
       body: { es: "Cuéntanos tu caso y te proponemos una solución.", en: "Tell us your case and we'll propose a solution.", pt: "Conte o seu caso e propomos uma solução.", } satisfies Localized,
     },
   },
+
+  /**
+   * SECCIÓN DE DESCARGA DE LA APP.
+   *
+   * Lo que promete está tomado de lo que los Términos y Condiciones declaran
+   * como servicios de la Plataforma (§4 del documento legal): consultar
+   * ubicación y disponibilidad, activar por QR, gestionar sesiones e historial.
+   * No se promete nada que el documento legal no reconozca — que es la forma
+   * más barata de cumplir §19 ("un titular es un contrato").
+   */
+  app: {
+    eyebrow: { es: "La app", en: "The app", pt: "O aplicativo", } satisfies Localized,
+    title: {
+      es: "Cargar empieza en tu teléfono",
+      en: "Charging starts on your phone",
+      pt: "Carregar começa no seu celular",
+    } satisfies Localized,
+    lead: {
+      es: "Encuentra una estación, mira si está libre y activa el cargador escaneando un QR. La sesión y sus cobros quedan ahí, sin papeles y sin llamar a nadie.",
+      en: "Find a station, see whether it's free and start the charger by scanning a QR code. The session and its charges stay there — no paperwork, no phone calls.",
+      pt: "Encontre uma estação, veja se está livre e ative o carregador escaneando um QR. A sessão e as cobranças ficam ali, sem papelada e sem ligar para ninguém.",
+    } satisfies Localized,
+    features: [
+      {
+        es: "Ubicación y disponibilidad de cada estación",
+        en: "Location and availability of every station",
+        pt: "Localização e disponibilidade de cada estação",
+      },
+      {
+        es: "Activación por QR, sin tarjeta ni membresía",
+        en: "Start by QR, no card or membership",
+        pt: "Ativação por QR, sem cartão nem assinatura",
+      },
+      {
+        es: "Historial de sesiones y cobros en un sitio",
+        en: "Session history and charges in one place",
+        pt: "Histórico de sessões e cobranças em um só lugar",
+      },
+    ] satisfies Localized[],
+    qrLabel: {
+      es: "Escanea para descargar",
+      en: "Scan to download",
+      pt: "Escaneie para baixar",
+    } satisfies Localized,
+    qrAlt: {
+      es: "Código QR que abre la descarga de la app de Voltop",
+      en: "QR code that opens the Voltop app download",
+      pt: "Código QR que abre o download do aplicativo da Voltop",
+    } satisfies Localized,
+  },
+
+  /** Componente flotante de descarga. */
+  appFloating: {
+    title: { es: "Descarga la app", en: "Get the app", pt: "Baixe o aplicativo" },
+    body: {
+      es: "Escanea el código y carga desde tu teléfono.",
+      en: "Scan the code and charge from your phone.",
+      pt: "Escaneie o código e carregue pelo seu celular.",
+    },
+    dismiss: { es: "Cerrar", en: "Dismiss", pt: "Fechar" },
+  },
 };

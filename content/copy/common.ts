@@ -385,3 +385,15 @@ export const footer = {
   } satisfies Localized,
   rights: { es: "Todos los derechos reservados.", en: "All rights reserved.", pt: "Todos os direitos reservados.", } satisfies Localized,
 };
+
+/**
+ * Rótulo superior de cada insignia de tienda.
+ *
+ * La redacción es la OFICIAL de Apple y Google en cada idioma, no una
+ * traducción propia: ambas publican guías de marca que fijan esta línea, y una
+ * insignia con texto inventado deja de ser la insignia.
+ */
+export const storeBadges = {
+  apple: { es: "Descárgalo en el", en: "Download on the", pt: "Baixar na", } satisfies Localized,
+  google: { es: "Disponible en", en: "Get it on", pt: "Disponível no", } satisfies Localized,
+};

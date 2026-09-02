@@ -6,6 +6,7 @@ import { a11y, brand } from "@/content/copy/common";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { SmoothScroll } from "@/components/layout/SmoothScroll";
+import { AppFloating } from "@/components/layout/AppFloating";
 
 /**
  * LAYOUT POR IDIOMA
@@ -95,6 +96,7 @@ export default async function LangLayout({
       <SmoothScroll />
       <Header lang={lang} />
       <main id="contenido">{children}</main>
+      <AppFloating lang={lang} />
       <Footer lang={lang} />
     </div>
   );
