@@ -110,15 +110,15 @@ export function AppFloating({ lang }: { lang: Locale }) {
       {/* ESCRITORIO — tarjeta con QR */}
       <div
         className={cn(
-          "glass fixed bottom-6 right-6 z-(--z-header) hidden w-[16.5rem] rounded-(--radius-structural) p-5 lg:block",
+          "glass fixed bottom-6 right-6 z-(--z-header) hidden w-[17rem] rounded-(--radius-structural) p-5 lg:block",
           transicion,
           mostrar ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-3 opacity-0",
         )}
       >
-        <div className="flex items-start justify-between gap-2">
-          <p className="pt-1 font-display text-display-s font-semibold text-ink">{t(c.title, lang)}</p>
-          <div className="-mr-2 -mt-2">{cerrar}</div>
-        </div>
+        {/* El cerrar va POSICIONADO, no en flujo: compartiendo fila con el
+            título le robaba 44px y "Descarga la app" partía en dos líneas. */}
+        <div className="absolute right-2 top-2">{cerrar}</div>
+        <p className="pr-10 font-display text-display-s font-semibold text-ink">{t(c.title, lang)}</p>
         <p className="mt-1.5 text-body-s text-ink-2">{t(c.body, lang)}</p>
 
         <a

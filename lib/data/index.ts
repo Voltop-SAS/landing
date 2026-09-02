@@ -151,6 +151,28 @@ export function getCity(slug: string): City | undefined {
 }
 
 /** Ciudades que efectivamente tienen estaciones, con su conteo. */
+/**
+ * AGREGADOS DE LA RED, calculados desde el dataset.
+ *
+ * Ninguna de estas cifras se escribe a mano en ningún sitio: §33 prohíbe
+ * inventar cifras, y una cifra escrita a mano es una cifra que deja de ser
+ * verdad en cuanto se añade una estación. Añadir un registro actualiza la
+ * Home sola.
+ */
+export function getNetworkSummary() {
+  const operativas = stations.filter((s) => s.status === "operativa");
+  const potencias = operativas.map((s) => s.powerKw).filter((p): p is number => typeof p === "number");
+  const conectores = [...new Set(operativas.flatMap((s) => s.connectors))];
+  return {
+    estaciones: operativas.length,
+    puntos: operativas.reduce((n, s) => n + (s.points ?? 0), 0),
+    ciudades: new Set(operativas.map((s) => s.citySlug)).size,
+    potenciaMin: potencias.length ? Math.min(...potencias) : null,
+    potenciaMax: potencias.length ? Math.max(...potencias) : null,
+    conectores,
+  };
+}
+
 export function getCitiesWithStations(): { city: City; count: number; operational: number }[] {
   return cities
     .map((city) => {

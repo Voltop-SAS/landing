@@ -1492,3 +1492,33 @@ La barra respeta `env(safe-area-inset-bottom)`: sin eso, en un iPhone queda bajo
 `soporte@voltop.co` sale de la Política de Tratamiento de Datos, donde VOLTOP S.A.S. lo declara como dato de contacto — no de una suposición. Aparece en el **footer**, completo y en texto (un correo que se puede copiar de un vistazo ahorra un clic y un formulario), y como **segunda salida de la pregunta de ayuda** del FAQ.
 
 Para eso el acordeón pasó de admitir un enlace a admitir varios: WhatsApp resuelve lo urgente —alguien varado en una estación— y el correo sirve para lo que necesita adjuntarse o quedar por escrito. Elegir por el usuario habría sido peor.
+
+---
+
+## Bloque 35 · Fase 6 · La sección de la red en la Home — 2026-09-02
+
+### Qué había y por qué se fue
+
+Un índice tipográfico: tabla de estaciones con ciudad, potencia y estado. Estaba bien resuelto, pero **repetía en la Home lo que `/red` hace mejor y con filtros**. §14 dice que la Home PRESENTA y las internas PROFUNDIZAN; listar el inventario aquí invertía esa relación y obligaba a mantener la misma tabla en dos sitios.
+
+Ahora la Home responde a otra pregunta —**"¿esto ya existe y llega donde yo estoy?"**— y deja el inventario a `/red`.
+
+### Las cifras no están escritas en ninguna parte
+
+Puntos, potencias, ciudades y conectores se **calculan desde el dataset** en `getNetworkSummary()`. Una cifra escrita a mano deja de ser verdad en cuanto se añade una estación, y §33 prohíbe inventar cifras: la forma más segura de no inventarlas es **no poder escribirlas**. Añadir un registro actualiza la Home sola.
+
+Hoy rinde: **27 puntos de carga · 60–120 kW · CCS1 · CCS2 · GB-T**, y dos tarjetas de ciudad con sus conteos reales de estaciones operativas frente a totales.
+
+### El asset que llevaba meses parado
+
+`estacionInfraestructura` estaba registrada desde el principio y **sin usar en ningún sitio**: material real de Voltop desaprovechado. Va como **suelo muy atenuado, no como sujeto** — el sujeto son los datos. Así la sección no repite la estructura del beat anterior (vídeo revelado por scroll en un marco contenido) ni la del Hero (fotografía a sangre con el titular encima).
+
+El vidrio es el mismo material de la tarjeta de descarga. Si el sitio va a tener un lenguaje de superficie, tiene que repetirse o no es un lenguaje.
+
+### Corregido en el camino
+
+El título del flotante partía en dos líneas: el botón de cerrar compartía fila y le robaba 44px de ancho. Ahora va posicionado fuera del flujo.
+
+### Evidencia
+
+`lint`, `tsc` y build limpios · `ES 418/418 · EN 418/418 · PT 418/418` · 0px de desbordamiento en 1440, 768 y 390 · cifras verificadas contra el dataset.

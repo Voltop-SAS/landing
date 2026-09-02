@@ -2,74 +2,140 @@ import Link from "next/link";
 import { t, type Locale } from "@/lib/i18n/config";
 import { href, routes } from "@/lib/i18n/routes";
 import { home } from "@/content/copy/home";
-import { actions } from "@/content/copy/common";
-import { getStations, getCity } from "@/lib/data";
-import { Section, Container, SectionHeading } from "@/components/ui/layout";
-import { StatusBadge } from "@/components/ui/data";
+import { actions, units } from "@/content/copy/common";
+import { media } from "@/content/data/media";
+import { getCitiesWithStations, getNetworkSummary } from "@/lib/data";
+import { Section, Container, Eyebrow } from "@/components/ui/layout";
+import { Media } from "@/components/ui/Media";
 import { Button } from "@/components/ui/Button";
 import { Reveal } from "@/components/ui/Reveal";
 
 /**
- * BEAT 3 · LA RED — Intensidad: Media · Registro: Silencio · Espacio: tight
- * ESTRUCTURA: índice ancho, denso y puramente tipográfico. SIN media.
+ * BEAT 3 · LA RED
+ * Ver docs/MASTER-PROJECT-DEFINITION.md §12, §14 y §33.
  *
- * Contraste deliberado: llega después de dos beats a sangre completa, así que
- * su fuerza es la precisión, no la imagen. Usa el lenguaje de ficha técnica
- * (mono + hairlines) que la auditoría identificó como lo más propio de Voltop.
+ * ── QUÉ HABÍA ANTES Y POR QUÉ SE FUE ─────────────────────────────────────
+ * Un índice tipográfico: tabla de estaciones con columnas de ciudad, potencia
+ * y estado. Estaba bien resuelto, pero repetía en la Home lo que /red hace
+ * mejor y con filtros. §14 dice que la Home PRESENTA y las internas PROFUNDIZAN;
+ * listar el inventario aquí invertía esa relación y obligaba a mantener la
+ * misma tabla en dos sitios.
  *
- * Antes eran dos columnas con foto y dos CTAs al mismo destino: se eliminó la
- * redundancia y la repetición estructural con el beat siguiente.
+ * Ahora la Home responde a otra pregunta —"¿esto ya existe y llega donde yo
+ * estoy?"— y deja el inventario a /red.
+ *
+ * ── LAS CIFRAS NO ESTÁN ESCRITAS ─────────────────────────────────────────
+ * Puntos, potencias, ciudades y conectores se CALCULAN desde el dataset en
+ * `getNetworkSummary()`. Una cifra escrita a mano deja de ser verdad en cuanto
+ * se añade una estación, y §33 prohíbe inventar cifras: la forma más segura de
+ * no inventarlas es no poder escribirlas. Añadir un registro actualiza esta
+ * sección sola.
+ *
+ * ── POR QUÉ FOTO DE SUELO Y NO OTRA COSA ─────────────────────────────────
+ * `estacionInfraestructura` llevaba registrada desde el principio y sin usar:
+ * material real de Voltop parado. Va como SUELO muy atenuado, no como sujeto —
+ * el sujeto son los datos. Así no repite la estructura del beat anterior, que
+ * es un vídeo revelado por scroll dentro de un marco contenido, ni la del
+ * Hero, que es fotografía a sangre con el titular encima.
+ *
+ * El vidrio (`.glass`) es el mismo material de la tarjeta de descarga: si el
+ * sitio va a tener un lenguaje de superficie, tiene que repetirse o no es un
+ * lenguaje.
  */
 export function NetworkIndex({ lang }: { lang: Locale }) {
-  const stations = getStations();
+  const resumen = getNetworkSummary();
+  const cobertura = getCitiesWithStations();
+
+  const cifras = [
+    { etiqueta: t(home.network.stats.points, lang), valor: String(resumen.puntos) },
+    {
+      etiqueta: t(home.network.stats.power, lang),
+      valor:
+        resumen.potenciaMin && resumen.potenciaMax
+          ? `${resumen.potenciaMin}–${resumen.potenciaMax} kW`
+          : "—",
+    },
+    { etiqueta: t(home.network.stats.connectors, lang), valor: resumen.conectores.join(" · ") },
+  ];
 
   return (
-    <Section id="red" space="tight" ariaLabelledby="red-title">
-      {/* `content`, no `wide`. Era el peor descuadre del sitio: una tabla de
-          DATOS en el contenedor de sangrado, con el borde izquierdo 100px a la
-          izquierda del header y del resto de la página. `wide` se reserva a
-          media (ver `Container`). De paso, las columnas dejan de repartirse en
-          1500px y la información se lee junta en lugar de dispersa. */}
+    <Section id="red" space="base" className="relative isolate overflow-hidden" ariaLabelledby="red-title">
+      {/* Suelo. `aria-hidden` porque no aporta información: lo que hay que leer
+          son los datos de encima. */}
+      <div aria-hidden="true" className="absolute inset-0 -z-10">
+        <Media
+          asset={media.estacionInfraestructura}
+          lang={lang}
+          fill
+          sizes="100vw"
+          quality={70}
+          position="object-[50%_45%]"
+          className="h-full w-full"
+        />
+        {/* Dos velos: uno plano que fija el piso de contraste y otro vertical
+            que funde la sección con las vecinas para que la foto no aparezca
+            recortada por una línea dura. */}
+        <div className="absolute inset-0 bg-canvas/88" />
+        <div className="absolute inset-0 bg-gradient-to-b from-canvas via-transparent to-canvas" />
+      </div>
+
       <Container>
-        <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
-          <SectionHeading id="red-title" kicker={t(home.network.eyebrow, lang)}>
-            {t(home.network.title, lang)}
-          </SectionHeading>
+        <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
+          <div>
+            <Eyebrow>{t(home.network.eyebrow, lang)}</Eyebrow>
+            <h2
+              id="red-title"
+              className="mt-4 max-w-[14ch] font-display text-display-l font-semibold text-balance text-ink"
+            >
+              {t(home.network.title, lang)}
+            </h2>
+          </div>
           <p className="measure-narrow text-body text-ink-2">{t(home.network.lead, lang)}</p>
         </div>
 
-        {/* Índice de estaciones — cada fila es navegable en su totalidad */}
-        <div className="mt-12">
-          <div className="hidden grid-cols-[1.6fr_1fr_0.8fr_0.9fr] gap-6 border-b border-line pb-3 font-mono text-mono uppercase tracking-wider text-ink-3 md:grid">
-            <span>{t(home.network.columns.station, lang)}</span>
-            <span>{t(home.network.columns.city, lang)}</span>
-            <span>{t(home.network.columns.power, lang)}</span>
-            <span>{t(home.network.columns.status, lang)}</span>
-          </div>
-
-          <ul>
-            {stations.map((s, i) => {
-              const city = getCity(s.citySlug);
-              return (
-                <Reveal as="li" key={s.slug} delay={i * 0.04} y={12}>
-                  <Link
-                    href={href(lang, routes.station(s.slug))}
-                    className="group grid grid-cols-2 items-baseline gap-x-6 gap-y-1 border-b border-line py-5 transition-colors hover:bg-surface-1 md:grid-cols-[1.6fr_1fr_0.8fr_0.9fr] md:py-6"
+        {/* Ciudades: la respuesta a "¿llega donde yo estoy?". Una tarjeta por
+            ciudad, no una por estación — eso es el inventario y vive en /red. */}
+        <ul className="mt-12 grid gap-4 sm:grid-cols-2">
+          {cobertura.map(({ city, count, operational }, i) => (
+            <Reveal as="li" key={city.slug} delay={i * 0.07} y={14}>
+              <Link
+                href={href(lang, routes.city(city.slug))}
+                className="glass group relative flex h-full flex-col justify-between gap-14 rounded-(--radius-structural) p-7 sm:gap-20 transition-transform duration-(--duration-base) ease-(--ease-out) hover:-translate-y-1 motion-reduce:hover:translate-y-0"
+              >
+                <div className="flex items-start justify-between gap-4">
+                  <h3 className="font-display text-display-m font-semibold text-ink transition-colors group-hover:text-brand">
+                    {city.name}
+                  </h3>
+                  <span className="mt-2 font-mono text-mono text-ink-3">{city.region}</span>
+                </div>
+                <div className="flex items-end justify-between gap-4">
+                  <p className="font-mono text-mono text-ink-2">
+                    {operational} {t(operational === 1 ? units.station : units.stations, lang)}{" "}
+                    {t(home.network.live, lang)}
+                    {operational !== count ? <span className="text-ink-3"> · {count} total</span> : null}
+                  </p>
+                  <span
+                    aria-hidden="true"
+                    className="text-ink-3 transition-transform duration-(--duration-fast) ease-(--ease-overshoot) group-hover:translate-x-1 group-hover:text-brand"
                   >
-                    <span className="col-span-2 font-display text-display-s font-semibold text-ink transition-colors group-hover:text-brand md:col-span-1">
-                      {s.name}
-                    </span>
-                    <span className="text-body-s text-ink-2">{city?.name}</span>
-                    <span className="font-mono text-mono text-ink-2">{s.powerKw} kW</span>
-                    <span className="justify-self-start md:justify-self-auto">
-                      <StatusBadge status={s.status} lang={lang} />
-                    </span>
-                  </Link>
-                </Reveal>
-              );
-            })}
-          </ul>
-        </div>
+                    →
+                  </span>
+                </div>
+              </Link>
+            </Reveal>
+          ))}
+        </ul>
+
+        {/* Ficha técnica de la red en una línea. Registro de dato, no de
+            eslogan: mono, hairlines y cero adjetivos. */}
+        <dl className="mt-4 grid gap-px overflow-hidden rounded-(--radius-structural) border border-line bg-line sm:grid-cols-3">
+          {cifras.map((c) => (
+            <div key={c.etiqueta} className="bg-canvas/60 px-7 py-6 backdrop-blur-sm">
+              <dt className="font-mono text-mono uppercase tracking-[0.14em] text-ink-3">{c.etiqueta}</dt>
+              <dd className="mt-2 font-display text-display-s font-semibold text-ink">{c.valor}</dd>
+            </div>
+          ))}
+        </dl>
 
         <div className="mt-10">
           <Button variant="ghost" arrow href={href(lang, routes.red)}>

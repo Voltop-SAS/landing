@@ -61,12 +61,15 @@ export const home = {
       en: "Stations live in places where people already stop: universities, hotels, shopping centers and exit corridors.",
       pt: "Estações em operação em lugares onde as pessoas já param: universidades, hotéis, shoppings e corredores de saída.",
     } satisfies Localized,
-    columns: {
-      station: { es: "Estación", en: "Station", pt: "Estação", } satisfies Localized,
-      city: { es: "Ciudad", en: "City", pt: "Cidade", } satisfies Localized,
-      power: { es: "Potencia", en: "Power", pt: "Potência", } satisfies Localized,
-      status: { es: "Estado", en: "Status", pt: "Status", } satisfies Localized,
+    /* Etiquetas de los agregados. Las CIFRAS no están aquí: se calculan desde
+       el dataset en `getNetworkSummary`, porque una cifra escrita a mano deja
+       de ser verdad en cuanto se añade una estación (§33). */
+    stats: {
+      points: { es: "Puntos de carga", en: "Charge points", pt: "Pontos de carga" } satisfies Localized,
+      power: { es: "Potencia", en: "Power", pt: "Potência" } satisfies Localized,
+      connectors: { es: "Conectores", en: "Connectors", pt: "Conectores" } satisfies Localized,
     },
+    live: { es: "en operación", en: "live", pt: "em operação" } satisfies Localized,
   },
 
   /* BEAT 4 · EMPRESAS — columna estrecha, respiración. Intensidad: Media-baja */
