@@ -1602,3 +1602,27 @@ También se retiraron los 5 SVG del andamiaje de Next, sin una sola referencia e
 ### Evidencia
 
 `lint`, `tsc` y build limpios · `ES 418/418 · EN 418/418 · PT 418/418` · **27 combinaciones** (9 rutas × 3 viewports) con 0px de desbordamiento y un solo `h1` · `FAQPage` en `/red`, `EVChargingStation` + `BreadcrumbList` en la ficha · los 6 eventos con emisor verificado.
+
+---
+
+## Bloque 37 · Fase 7 · View Transitions — intentada y revertida — 2026-09-02
+
+**No se implementó, y conviene dejar escrito por qué para que nadie lo intente otra vez sin saberlo.**
+
+`next.config.ts` acepta `experimental: { viewTransition: true }` y el build llega a imprimir **`✓ viewTransition`**. Eso induce a error: solo significa que el flag pasa el esquema de configuración de Next, no que haya transiciones.
+
+Lo que hace ese flag es habilitar el componente **`<ViewTransition>` de React**, y ese componente **no existe en React 19.2.4 estable**: `unstable_ViewTransition` es `undefined`. Vive solo en el canal experimental.
+
+**Verificado empíricamente, no deducido.** Con el flag activo, instrumentando `document.startViewTransition` antes de navegar de la Home a `/red`:
+
+```
+el navegador soporta la API: true
+transiciones disparadas:     0
+reglas ::view-transition:    3
+```
+
+Las reglas CSS estaban puestas y el navegador soporta la API — pero nadie la llama. Era **código muerto con aspecto de función**, que es peor que no tener nada: el siguiente que lo lea creerá que las transiciones existen.
+
+Se revirtió todo: el flag, el CSS de `::view-transition-old/new` y la retirada del `template.tsx`. La transición de Motion que había vuelve a ser la que opera.
+
+**Para hacerlo de verdad hay que mover React al canal experimental.** Esa es una decisión de riesgo en un sitio que va a producción, y no es mía: queda en la lista de pendientes para decidir.
