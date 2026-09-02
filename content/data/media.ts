@@ -273,14 +273,18 @@ export const media = {
    * SIN texto quemado más pistas `.vtt` en los tres idiomas. Registrado en
    * `docs/05-assets-todo`.
    *
-   * ── PÓSTER ELEGIDO POR MEDICIÓN ──────────────────────────────────────────
-   * Se puntuaron los 130 fotogramas (2 fps) por energía de bordes y
-   * exposición, descartando el tramo con subtítulos, y se afinó el instante a
-   * 12 fps. Los aéreos de Medellín puntuaban más alto en nitidez pero son
-   * genéricos: la métrica premia detalle, no relevancia. El elegido —**4.4 s**,
-   * el más nítido de su plano— son unas manos conectando el cargador: muestra
-   * el servicio EN USO, es humano, funciona a cualquier tamaño y no lleva
-   * texto ni una marca ajena dominando.
+   * ── PÓSTER ──────────────────────────────────────────────────────────────
+   * **Segundo 2.0**, elegido por el usuario: el vehículo entrando por la rampa
+   * del parqueadero. Se verificó que el tramo está limpio de subtítulos y que
+   * la nitidez es plana entre 1.9 y 2.15 s —26.2 frente a 25.9—, así que no
+   * hay trepidación que evitar en un plano con el coche en movimiento.
+   *
+   * Pesa 138.7 KB frente a los 120 KB que fija el brief. Es un plano con mucho
+   * detalle fino —follaje, ladrillo, texturas— y ni a calidad 13 baja del
+   * umbral. Se acepta a conciencia: no es el elemento LCP, vive en el beat 7 y
+   * es lo ÚNICO que se descarga antes de que alguien pulse play. Se comparó
+   * contra 1600px mejor comprimido al mismo peso y la diferencia a tamaño real
+   * es indistinguible.
    */
   filmVoltop: {
     id: "film-voltop",

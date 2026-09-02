@@ -1114,3 +1114,21 @@ El `aspect-[16/9]` que aplica `Media` reserva el espacio, así que el póster en
 `lint`, `tsc` y build limpios · 47 páginas · `ES 380/380 · EN 380/380 · PT 380/380` · reproducción verificada con audio (`muted:false`, `volume:1`, 65.13 s) · `aria-label` presente y alcanzable por teclado · con `prefers-reduced-motion` sigue pausado · contraste del hero y estructura sin fallos.
 
 `Video Home.mov` (377 MB) queda fuera del repositorio.
+
+---
+
+## Bloque 24 · Portada de la película, cambiada a elección del usuario — 2026-09-02
+
+**Cambio:** el póster pasa del fotograma de 4.0 s —manos conectando el cargador, elegido por medición— al **de 2.0 s**, el vehículo entrando por la rampa del parqueadero. Preferencia del usuario.
+
+**Verificado antes de aplicarlo:**
+- El tramo está **limpio de subtítulos quemados** (los primeros aparecen a ~4.2 s).
+- Nitidez **plana entre 1.9 y 2.15 s** (26.2 frente a 25.9): el coche está en movimiento, pero no hay trepidación que evitar. Se usa el 2.0 exacto que se pidió.
+
+**Peso: 138.7 KB frente a los 120 KB del brief.** Es un plano con mucho detalle fino —follaje, ladrillo, texturas— y ni a calidad 13 baja del umbral. Se comparó contra 1600 px mejor comprimido al mismo peso y a tamaño real es indistinguible. Se acepta a conciencia: no es el elemento LCP, vive en el beat 7 y es lo único que se descarga antes de pulsar play.
+
+**Observación de marca, no técnica:** en ese fotograma la puerta del vehículo lee **"PORSCHE EXPERIENCE"**, y a tamaño completo es el texto más legible del encuadre. En la portada de una pieza de marca de Voltop, la marca más visible acaba siendo ajena. Queda anotado para que se decida con criterio, no por descuido.
+
+### Evidencia
+
+Build limpio · CLS **0** y proporción 16:9 exacta a 390 y 1440 px · **138.7 KB descargados antes de play**, nada más · vídeo pausado hasta que el usuario lo pide.

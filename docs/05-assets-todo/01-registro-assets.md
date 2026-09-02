@@ -286,8 +286,10 @@ Los subtítulos están **incrustados en la imagen, en inglés, de los ~4.2 s a l
 
 Con eso, el reproductor gana `<track kind="captions">` por idioma y el problema se cierra. Hasta entonces el vídeo es utilizable pero **no cumple 1.2.2**.
 
-### El póster se eligió midiendo
+### El póster
 
-Se puntuaron 130 fotogramas (2 fps) por energía de bordes y exposición, descartando el tramo con subtítulos, y se afinó el instante con búsqueda exacta a 8 fps. Elegido: **4.0 s**, unas manos conectando el cargador a un vehículo — muestra el servicio en uso, es humano, no lleva texto ni marca ajena dominando, y funciona a cualquier tamaño. 67 KB.
+**Segundo 2.0**, elegido por el usuario: el vehículo entrando por la rampa del parqueadero. Verificado limpio de subtítulos, y con nitidez plana entre 1.9 y 2.15 s (26.2 vs 25.9), así que no hay trepidación pese al movimiento.
 
-Los aéreos de Medellín (58–63 s) puntuaban más alto en nitidez y se descartaron: la métrica premia detalle, no relevancia.
+**138.7 KB frente a los 120 KB de presupuesto.** Es un plano de mucho detalle fino y ni a calidad 13 baja del umbral; se comparó contra 1600 px mejor comprimido al mismo peso y a tamaño real la diferencia es indistinguible. Se acepta: no es el LCP, vive en el beat 7 y es lo único que viaja antes de pulsar play.
+
+**A revisar:** en ese fotograma la puerta del vehículo lee "PORSCHE EXPERIENCE", y a tamaño completo es el texto más legible del encuadre. En la portada de una pieza de marca de Voltop, la marca más visible acaba siendo ajena. Decisión de marca, no técnica.
