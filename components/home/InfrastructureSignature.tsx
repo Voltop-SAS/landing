@@ -52,9 +52,34 @@ export function InfrastructureSignature({ lang }: { lang: Locale }) {
 
   /* El MATERIAL se revela con scroll-scrub: arranca recortado y se abre a
      sangre completa. Los hooks se llaman siempre, sin condicionales. */
-  const insetPct = useTransform(scrollYProgress, [0, 0.7], reduce ? [0, 0] : [28, 0]);
+  /**
+   * ── LA APERTURA, RECALIBRADA AL ENTRAR EL VIDEO ───────────────────────────
+   * Los valores originales —`inset` de 28% a 0 sobre el 70% del recorrido,
+   * `scale` de 1.12 a 1— se fijaron contra el hueco del placeholder, que era
+   * una superficie QUIETA. Con material real fallaban por tres motivos, y los
+   * tres se veían:
+   *
+   * 1. EL BORDE PARTÍA EL TITULAR. El texto empieza al 14.2% del ancho y el
+   *    recorte llegaba al 28%: durante el primer 20% del recorrido una línea
+   *    vertical cortaba las palabras. Medido a 5%, 10% y 15% de scroll.
+   *    → El recorte ahora arranca en 10%, por debajo de ese 14.2%. El texto
+   *      queda SIEMPRE dentro del cuadro, en cualquier punto del recorrido.
+   *
+   * 2. COMPETÍA CON EL PLANO. Una caja creciendo mientras la cámara avanza son
+   *    dos movimientos a la vez; se percibe como agitación, no como apertura.
+   *    → 10% en lugar de 28% lo convierte en un asentamiento, no en una caja
+   *      que crece, y termina antes (45% del recorrido) para no arrastrarse
+   *      sobre el movimiento del propio plano.
+   *
+   * 3. AMPLIABA EL VIDEO Y SE VEÍA BLANDO. Con `scale: 1.12`, en una Retina de
+   *    1440 había que estirar la fuente hasta ~3226px. Con la fuente a 1920
+   *    eso era un 1.68× de ampliación.
+   *    → `scale` baja a 1.05 y la fuente sube a 2560: la ampliación pasa a
+   *      1.18×. La profundidad se conserva; la blandura desaparece.
+   */
+  const insetPct = useTransform(scrollYProgress, [0, 0.45], reduce ? [0, 0] : [10, 0]);
   const clipPath = useTransform(insetPct, (v) => `inset(${v}% ${v}% ${v}% ${v}%)`);
-  const scale = useTransform(scrollYProgress, [0, 0.7], reduce ? [1, 1] : [1.12, 1]);
+  const scale = useTransform(scrollYProgress, [0, 0.45], reduce ? [1, 1] : [1.05, 1]);
   /**
    * RECALIBRADO al entrar la fotografía real (2026-09-01).
    *

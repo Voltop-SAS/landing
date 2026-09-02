@@ -989,3 +989,25 @@ Verificado: sin preferencia reproduce; con preferencia queda el póster.
 ### Pendiente
 
 Durante el primer ~20% del recorrido de la sección el titular **cruza el borde del video recortado**: el texto aparece completo cuando el recorte aún está al 23%, y una línea vertical parte las palabras. Medido a 5%, 10% y 15% de scroll. Se corrige retrasando la aparición del texto o reduciendo el recorte inicial; no se tocó porque cambia el ritmo del beat.
+
+---
+
+## Bloque 21 · La apertura del beat 2, recalibrada al material real — 2026-09-01
+
+**Origen:** dos observaciones del usuario tras verlo — *"se ve un poco pixelado"* y *"me gusta la animación con el scroll, solo que como está se ve raro"*.
+
+Las dos tenían la misma causa de fondo: **los valores de la animación se fijaron contra el hueco del placeholder, que era una superficie quieta.** Con material real dejan de servir.
+
+| Síntoma | Causa medida | Corrección |
+|---|---|---|
+| Video blando | `scale: 1.12` obliga a estirar la fuente hasta ~3226 px en una Retina de 1440. Con la fuente a 1920, un **1.68× de ampliación** | Fuente a **2560** y `scale` a **1.05** → ampliación **1.18×** |
+| La apertura se veía rara | El titular empieza al **14.2%** del ancho y el recorte llegaba al **28%**: durante el primer 20% del recorrido una línea vertical partía las palabras. Medido a 5%, 10% y 15% de scroll | Recorte inicial a **10%**, por debajo del 14.2%. El texto queda dentro del cuadro **en todo el recorrido**, verificado en 8 puntos |
+| Movimiento poco fluido | Una caja creciendo mientras la cámara avanza son dos movimientos compitiendo | 10% en vez de 28% lo vuelve un asentamiento, y termina antes (45% del recorrido en vez de 70%) para no arrastrarse sobre el movimiento del plano |
+
+**Se probó retirar la apertura por completo** —dejando que el plano fuera el único movimiento— y se descartó: el usuario quiere la animación, y el problema no era que existiera sino su calibración.
+
+**Peso:** 1.82 → 2.92 MB por subir de 1920 a 2560 px. Por encima de los 2 MB del brief, y es una decisión consciente: el video es `preload="none"`, está bajo el pliegue y no es el elemento LCP. La nitidez en el beat que la sección llama *signature* vale ese megabyte.
+
+### Evidencia
+
+`lint`, `tsc` y build limpios · 47 páginas · titular dentro del cuadro en 8 puntos del recorrido (2%–60%) · contraste del hero y estructura sin fallos · `prefers-reduced-motion`: sección colapsada a 0.67× viewport, video pausado, recorte en 0%.
