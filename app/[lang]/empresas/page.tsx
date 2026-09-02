@@ -47,7 +47,7 @@ export default async function EmpresasPage({ params }: Props) {
         </Container>
 
         <Container width="wide" className="mt-16">
-          <Media asset={media.espacioComercial} lang={lang} sizes="(min-width: 1600px) 1600px, 100vw" aspect="21/9" />
+          <Media asset={media.espacioComercial} lang={lang} corner sizes="(min-width: 1600px) 1600px, 100vw" aspect="21/9" />
         </Container>
       </Section>
 

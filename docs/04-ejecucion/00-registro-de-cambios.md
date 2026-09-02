@@ -1154,3 +1154,54 @@ El de 2.0 s no bajaba de 138 KB ni a calidad 13 —plano con mucho detalle fino�
 ### Evidencia
 
 Build limpio · CLS **0** y proporción 16:9 exacta a 390 y 1440 px · **110.9 KB descargados antes de pulsar play**, nada más · vídeo pausado hasta que el usuario lo pide.
+
+---
+
+## Bloque 26 · Fases 1–2 · Vocabulario visual y microinteracción — 2026-09-02
+
+**Origen:** análisis de `go-electra.com` como referencia, con extracción de estilos computados —no lectura de su HTML—. Objetivo declarado: elevar el nivel visual y de interacción **sin rediseñar** ni perder identidad.
+
+### Lo que el análisis encontró, medido
+
+Extraídos todos los radios y transiciones del sitio de referencia:
+
+| Radio | Usos | Qué es |
+|---|---|---|
+| `9999px` | 22 | Píldoras de botón |
+| **`0 80px 0 0`** | **17** | **Una esquina superior derecha sobredimensionada** |
+| `0 128px 0 0` | 4 | La misma, mayor |
+
+| Movimiento | Valores |
+|---|---|
+| Duraciones | 0.15s ×12 · 0.2s ×35 · 0.4s ×25 |
+| Easing dominante | `cubic-bezier(0.4, 0, 0.2, 1)` ×60 |
+| **Sobreimpulso** | **`cubic-bezier(0.34, 1.56, 0.64, 1)` ×4** |
+
+Dos conclusiones: la esquina asimétrica es su firma visual entera, y **el rebote aparece solo cuatro veces en todo el sitio**. La contención es el patrón, no el efecto.
+
+### Fase 1 · Tokens
+
+| Token | Valor | Criterio |
+|---|---|---|
+| `--radius-signature` | `clamp(1.75rem, 1rem + 3.2vw, 4rem)` | Fluido como la tipografía (§22): 64px sobre un bloque de 1440 es el 4.4% de su ancho, pero sobre uno de 360 sería el 18%. Con `clamp` se mantiene la proporción, no el valor |
+| `--ease-overshoot` | `cubic-bezier(0.34, 1.56, 0.64, 1)` | Único easing con sobreimpulso del sistema. Reservado a microinteracciones de control |
+
+**`Media` gana la prop `corner`**, activada por bloque y no por defecto: un fondo a sangre no tiene esquinas que redondear, y aplicarlo a todo lo convertiría en textura en lugar de firma.
+
+Aplicada a los **7 bloques de media en línea**: película del beat 7, franja e imagen de `/nosotros`, apertura de `/empresas`, portada y cuerpo de novedades, y la entrada del registro. **No** a los fondos a sangre (hero, beat 2).
+
+Proporción resultante: **9.0% del ancho a 360px y 4.3% a 1920px** (la referencia ronda el 11% — más contenido, acorde a nuestro registro oscuro).
+
+### Fase 2 · Microinteracción
+
+La flecha de `Button` pasa a `--ease-overshoot` y su recorrido de 2px a 4px: **con 2px el sobreimpulso no se percibe y solo se siente lento**, que es peor que no tenerlo.
+
+Es el **único** uso del rebote en el sistema, con presupuesto declarado en el token: si aparece más de cinco veces en una vista, sobra.
+
+### Corrección al análisis
+
+La primera lectura interpretó el CTA del hero de la referencia como un **buscador**. No lo es: es un botón con microinteracción que lleva a la página de estaciones —exactamente lo que el CTA de Voltop ya hace—. La fase que proponía convertir nuestro CTA en buscador **se elimina**; lo que quedaba de valor era la microinteracción, y eso es la fase 2.
+
+### Evidencia
+
+`lint`, `tsc` y build limpios · 47 páginas · `ES 380/380 · EN 380/380 · PT 380/380` · contraste del hero sin fallos en 14 viewports · estructura sin incidencias en 16 · header sin fallos en 7 · **sin overflow en 7 anchos × 5 rutas** · con `prefers-reduced-motion` la transición de la flecha queda en 1e-06s (anulada por la regla global).

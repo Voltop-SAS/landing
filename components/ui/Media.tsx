@@ -35,6 +35,7 @@ export function Media({
   position,
   quality,
   controls,
+  corner = false,
 }: {
   asset: MediaAsset;
   lang: Locale;
@@ -76,13 +77,24 @@ export function Media({
   quality?: number;
   /** Ver `VideoMedia`: convierte el vídeo de fondo en pieza con controles. */
   controls?: boolean;
+  /**
+   * Esquina de firma (`--radius-signature`) en la superior derecha.
+   *
+   * Se activa por bloque y no por defecto: un fondo a sangre no tiene esquinas
+   * que redondear, y aplicarlo a todo lo convertiría en textura en lugar de
+   * firma. Va en los bloques que viven DENTRO de un contenedor.
+   */
+  corner?: boolean;
 }) {
   const shape = fill ? "" : aspects[aspect ?? asset.aspect];
+  /* `overflow-hidden` ya está en los tres envoltorios, así que el recorte de
+     la esquina se aplica también al contenido —foto, vídeo o hueco—. */
+  const esquina = corner ? "rounded-tr-(--radius-signature)" : "";
 
   if (asset.src) {
     if (asset.kind === "photo") {
       return (
-        <div className={cn("relative overflow-hidden bg-surface-1", shape, className)}>
+        <div className={cn("relative overflow-hidden bg-surface-1", shape, esquina, className)}>
           <Image
             src={asset.src}
             alt={t(asset.alt, lang)}
@@ -99,7 +111,7 @@ export function Media({
        `prefers-reduced-motion`, que no es consultable desde el servidor.
        La fotografía —la rama de arriba— sigue siendo servidor puro. */
     return (
-      <div className={cn("relative overflow-hidden bg-surface-1", shape, className)}>
+      <div className={cn("relative overflow-hidden bg-surface-1", shape, esquina, className)}>
         <VideoMedia
           asset={asset}
           lang={lang}
@@ -110,7 +122,7 @@ export function Media({
     );
   }
 
-  return <MediaPending asset={asset} lang={lang} fill={fill} className={cn(shape, className)} />;
+  return <MediaPending asset={asset} lang={lang} fill={fill} className={cn(shape, esquina, className)} />;
 }
 
 /**

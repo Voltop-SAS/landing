@@ -106,8 +106,14 @@ function Inner({
             fill="none"
             aria-hidden="true"
             className={cn(
-              "shrink-0 transition-transform duration-(--duration-fast) ease-out",
-              external ? "group-hover:-translate-y-0.5 group-hover:translate-x-0.5" : "group-hover:translate-x-0.5"
+              /* Único sitio del sistema con `--ease-overshoot`. La flecha sale
+                 un poco más lejos de lo que aterriza y vuelve: es lo que hace
+                 que el control se sienta vivo en vez de correcto.
+                 El recorrido sube de 2px a 4px porque con 2px el sobreimpulso
+                 no se percibe — se siente lento, que es peor que no tenerlo.
+                 `prefers-reduced-motion` lo anula globalmente (globals.css). */
+              "shrink-0 transition-transform duration-(--duration-fast) ease-(--ease-overshoot)",
+              external ? "group-hover:-translate-y-1 group-hover:translate-x-1" : "group-hover:translate-x-1"
             )}
           >
             {external ? (

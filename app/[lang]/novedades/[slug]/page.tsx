@@ -140,6 +140,7 @@ export default async function PostPage({ params }: Props) {
               asset={post.cover}
               lang={lang}
               aspect="16/9"
+              corner
               sizes="(min-width: 768px) 46rem, 100vw"
               priority
             />

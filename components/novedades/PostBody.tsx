@@ -64,7 +64,7 @@ export function PostBody({ blocks, lang }: { blocks: PostBlock[]; lang: Locale }
           case "media":
             return (
               <figure key={i} className="my-4">
-                <Media asset={block.asset} lang={lang} sizes="(min-width: 768px) 46rem, 100vw" />
+                <Media asset={block.asset} lang={lang} corner sizes="(min-width: 768px) 46rem, 100vw" />
                 <figcaption className="mt-3 text-body-s text-ink-3">
                   {t(block.asset.alt, lang)}
                 </figcaption>

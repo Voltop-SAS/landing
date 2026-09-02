@@ -58,6 +58,7 @@ export function VisionQuote({ lang }: { lang: Locale }) {
             asset={media.filmVoltop}
             lang={lang}
             controls
+            corner
             sizes="(min-width: 1600px) 1600px, 100vw"
           />
         </Reveal>

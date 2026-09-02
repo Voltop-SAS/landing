@@ -135,6 +135,7 @@ export default async function NovedadesPage({ params }: Props) {
                     asset={featured.cover}
                     lang={lang}
                     aspect="21/9"
+                    corner
                     sizes="(min-width: 1280px) 76rem, 100vw"
                     priority
                   />

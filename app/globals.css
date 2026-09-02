@@ -154,6 +154,20 @@
   --radius-structural: 10px;     /* datos, estructura */
   --radius-pill: 999px;          /* acciones, energía */
 
+  /**
+   * RADIO DE FIRMA · una sola esquina, sobredimensionada.
+   *
+   * Es el recurso que convierte un bloque de fotografía en una pieza
+   * compuesta. Se aplica SIEMPRE a la misma esquina —la superior derecha— y
+   * nunca a las cuatro: cuatro esquinas grandes es una tarjeta genérica; una
+   * sola es una decisión.
+   *
+   * Fluido, como la tipografía (§22): 64px sobre un bloque de 1440 es el 4.4%
+   * de su ancho, pero sobre uno de 360 sería el 18% y se comería la imagen.
+   * Con `clamp` mantiene la proporción en lugar del valor.
+   */
+  --radius-signature: clamp(1.75rem, 1rem + 3.2vw, 4rem);
+
   --breakpoint-xs: 480px;
   /**
    * Ancho al que el header completo cabe sin apretarse.
@@ -185,6 +199,15 @@
   --ease-standard: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-current: cubic-bezier(0.65, 0, 0.35, 1);
   --ease-exit: cubic-bezier(0.4, 0, 1, 1);
+  /**
+   * REBOTE · el único easing con sobreimpulso del sistema.
+   *
+   * Reservado a microinteracciones de control —una flecha que avanza, un
+   * estado que confirma—, nunca a entradas de sección ni a nada que ocupe
+   * media pantalla. En dosis pequeñas da carácter; repetido, marea.
+   * Presupuesto: si aparece más de cinco veces en una vista, sobra.
+   */
+  --ease-overshoot: cubic-bezier(0.34, 1.56, 0.64, 1);
 
   --duration-instant: 120ms;
   --duration-fast: 200ms;

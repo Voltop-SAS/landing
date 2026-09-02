@@ -89,7 +89,7 @@ export default async function NosotrosPage({ params }: Props) {
 
       {/* Material real, a sangre — respiración entre bloques de texto */}
       <Container width="wide">
-        <Media asset={media.infraestructuraAmplia} lang={lang} sizes="(min-width: 1600px) 1600px, 100vw" aspect="21/9" />
+        <Media asset={media.infraestructuraAmplia} lang={lang} corner sizes="(min-width: 1600px) 1600px, 100vw" aspect="21/9" />
       </Container>
 
       {/* Cómo construimos — cuadrícula estructural */}
@@ -169,7 +169,7 @@ export default async function NosotrosPage({ params }: Props) {
         </Container>
 
         <Container width="wide" className="mt-14">
-          <Media asset={media.visionCeo} lang={lang} sizes="(min-width: 1600px) 1600px, 100vw" />
+          <Media asset={media.visionCeo} lang={lang} corner sizes="(min-width: 1600px) 1600px, 100vw" />
         </Container>
       </Section>
 
