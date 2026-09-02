@@ -9,6 +9,7 @@ import { getCitiesWithStations } from "@/lib/data";
 import { Section, Container, Eyebrow } from "@/components/ui/layout";
 import { Media } from "@/components/ui/Media";
 import { Button } from "@/components/ui/Button";
+import { TrackClick } from "@/components/analytics/TrackClick";
 
 /**
  * BEAT 1 · HERO — Intensidad: Alta · Registro: Impacto
@@ -28,7 +29,9 @@ import { Button } from "@/components/ui/Button";
  * sigan al sistema si el color de fondo cambia (§24: cero literales de color).
  */
 const canvas = (pct: number) =>
-  pct >= 100 ? "var(--color-canvas)" : `color-mix(in srgb, var(--color-canvas) ${pct}%, transparent)`;
+  pct >= 100
+    ? "var(--color-canvas)"
+    : `color-mix(in srgb, var(--color-canvas) ${pct}%, transparent)`;
 
 const VEIL = {
   /**
@@ -70,7 +73,11 @@ export function Hero({ lang }: { lang: Locale }) {
   const coverage = getCitiesWithStations();
 
   return (
-    <Section register="impacto" space="none" className="flex min-h-[88dvh] flex-col justify-end overflow-hidden">
+    <Section
+      register="impacto"
+      space="none"
+      className="flex min-h-[88dvh] flex-col justify-end overflow-hidden"
+    >
       {/* Material real de fondo.
           `object-position` en 30% horizontal: `object-cover` recorta por el eje
           que sobra, y ese eje cambia con el dispositivo. En escritorio el hueco
@@ -133,13 +140,32 @@ export function Hero({ lang }: { lang: Locale }) {
 
           Márgenes con el criterio nuevo: +12% en escritorio, +31% en móvil
           (móvil ya cumplía y no se tocó). */}
-      <div aria-hidden="true" className="absolute inset-0 md:hidden" style={{ background: VEIL.mobile.vertical }} />
-      <div aria-hidden="true" className="absolute inset-0 hidden md:block" style={{ background: VEIL.desktop.vertical }} />
-      <div aria-hidden="true" className="absolute inset-0 hidden md:block" style={{ background: VEIL.desktop.lateral }} />
-      <div aria-hidden="true" className="absolute inset-0 hidden md:block" style={{ background: VEIL.desktop.superior }} />
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 md:hidden"
+        style={{ background: VEIL.mobile.vertical }}
+      />
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 hidden md:block"
+        style={{ background: VEIL.desktop.vertical }}
+      />
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 hidden md:block"
+        style={{ background: VEIL.desktop.lateral }}
+      />
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 hidden md:block"
+        style={{ background: VEIL.desktop.superior }}
+      />
 
       {/* Acento de corriente: una sola línea, en el borde. Señal, no textura. */}
-      <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-px brand-gradient opacity-70" />
+      <div
+        aria-hidden="true"
+        className="absolute inset-x-0 bottom-0 h-px brand-gradient opacity-70"
+      />
 
       <Container className="relative z-(--z-raised) pb-(--spacing-section-tight) pt-32">
         <Eyebrow tone="brand">{t(home.hero.eyebrow, lang)}</Eyebrow>
@@ -148,21 +174,51 @@ export function Hero({ lang }: { lang: Locale }) {
           {t(home.hero.title, lang)}
         </h1>
 
-        <p className="mt-7 measure text-body-l text-ink-2">{t(home.hero.lead, lang)}</p>
+        <p className="mt-7 measure text-body-l text-ink-2">
+          {t(home.hero.lead, lang)}
+        </p>
 
         <div className="mt-10">
-          <Button variant="primary" size="l" arrow href={href(lang, routes.red)}>
-            {t(actions.findCharger, lang)}
-          </Button>
+          {/* El evento estaba declarado en §31 y no lo emitía nadie: el header
+              pasó a medir la descarga de la app, y ningún CTA de página medía
+              la entrada a la red. */}
+          <TrackClick
+            event="cta_encontrar_cargador_click"
+            props={{ ubicacion: "hero" }}
+          >
+            <Button
+              variant="primary"
+              size="l"
+              arrow
+              href={href(lang, routes.red)}
+            >
+              {t(actions.findCharger, lang)}
+            </Button>
+          </TrackClick>
         </div>
 
         {/* Señal de scroll. `home.hero.scrollHint` estaba escrito y sin usar, y
             el hero mide 88dvh con un beat de 170vh justo debajo: sin una pista,
             no hay nada que indique que la página continúa. */}
-        <p aria-hidden="true" className="mt-12 flex items-center gap-2 font-mono text-mono uppercase tracking-wider text-ink-3">
+        <p
+          aria-hidden="true"
+          className="mt-12 flex items-center gap-2 font-mono text-mono uppercase tracking-wider text-ink-3"
+        >
           {t(home.hero.scrollHint, lang)}
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" className="animate-bounce motion-reduce:animate-none">
-            <path d="M12 5v14M6 13l6 6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          <svg
+            width="12"
+            height="12"
+            viewBox="0 0 24 24"
+            fill="none"
+            className="animate-bounce motion-reduce:animate-none"
+          >
+            <path
+              d="M12 5v14M6 13l6 6 6-6"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
           </svg>
         </p>
 
@@ -170,7 +226,10 @@ export function Hero({ lang }: { lang: Locale }) {
             ancla la composición y abre una segunda entrada al journey B2C.
             No es decoración ni una cifra inventada. */}
         {coverage.length > 0 && (
-          <nav aria-label={t(red.cities.title, lang)} className="mt-8 border-t border-line-strong pt-6">
+          <nav
+            aria-label={t(red.cities.title, lang)}
+            className="mt-8 border-t border-line-strong pt-6"
+          >
             <ul className="flex flex-wrap items-center gap-x-8 gap-y-2">
               {/* En móvil la etiqueta ocupa su propia línea. Compartiéndola,
                   "Bogotá" cabía al lado y "Medellín" caía sola a una segunda

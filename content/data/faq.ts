@@ -150,7 +150,7 @@ export const faq: FaqItem[] = [
         /* Dos caminos y no uno: WhatsApp resuelve lo urgente —alguien varado
            en una estación— y el correo sirve para lo que necesita adjuntar o
            dejar por escrito. Elegir por el usuario habría sido peor. */
-        label: { es: "Escribir a soporte", en: "Email support", pt: "Escrever para o suporte" },
+        label: { es: "Escríbenos por correo", en: "Email us", pt: "Escreva para a gente" },
         href: externalLinks.soporte,
         external: true,
       },

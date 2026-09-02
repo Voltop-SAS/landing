@@ -30,9 +30,9 @@ export const novedades = {
   } satisfies Localized,
 
   intro: {
-    es: "Cada estación que abre, cada alianza que se firma. El registro de lo que Voltop construye, en orden.",
-    en: "Every station that opens, every partnership signed. The record of what Voltop builds, in order.",
-    pt: "Cada estação que abre, cada parceria firmada. O registro do que a Voltop constrói, em ordem.",
+    es: "Cada estación que abre, cada alianza que se firma. El registro de lo que Voltop construye.",
+    en: "Every station that opens, every partnership signed. The record of what Voltop builds.",
+    pt: "Cada estação que abre, cada parceria firmada. O registro do que a Voltop constrói.",
   } satisfies Localized,
 
   /**

@@ -38,9 +38,11 @@ export const cities: City[] = [
     name: "Medellín",
     region: "Antioquia",
     intro: {
-      es: "Carga rápida en El Poblado y puntos estratégicos del Valle de Aburrá, integrada a espacios comerciales.",
-      en: "Fast charging in El Poblado and strategic points across the Aburrá Valley, integrated into commercial spaces.",
-      pt: "Carregamento rápido em El Poblado e pontos estratégicos do Vale de Aburrá, integrados a espaços comerciais.",
+      /* "Puntos estratégicos" era relleno. El intro de Bogotá, en esta misma
+         colección, es concreto y muy superior; esto lo pone a la par. */
+      es: "Carga rápida en El Poblado: 120 kW dentro de San Fernando Plaza, con más estaciones en camino por el Valle de Aburrá.",
+      en: "Fast charging in El Poblado: 120 kW inside San Fernando Plaza, with more stations on the way across the Aburrá Valley.",
+      pt: "Carregamento rápido em El Poblado: 120 kW dentro do San Fernando Plaza, com mais estações a caminho no Vale de Aburrá.",
     },
     featured: true,
   },

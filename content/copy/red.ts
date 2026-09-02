@@ -23,9 +23,13 @@ export const red = {
     eyebrow: { es: "La red", en: "The network", pt: "A rede", } satisfies Localized,
     title: { es: "Encuentra dónde cargar", en: "Find where to charge", pt: "Encontre onde carregar", } satisfies Localized,
     lead: {
-      es: "Busca por nombre o ciudad y filtra por conector, potencia y estado.",
-      en: "Search by name or city and filter by connector, power and status.",
-      pt: "Busque por nome ou cidade e filtre por conector, potência e status.",
+      /* Describía la interfaz que el usuario ya está viendo. Ahora mantiene la
+         pista de uso y añade dato concreto: la precisión es lo que suena a
+         compañía técnica. Las cifras son las mismas que calcula
+         `getNetworkSummary`; si divergen, manda el dataset. */
+      es: "Filtra por ciudad, conector y potencia. Hoy cargamos en Bogotá y Medellín, de 60 a 150 kW.",
+      en: "Filter by city, connector and power. Today we charge in Bogotá and Medellín, from 60 to 150 kW.",
+      pt: "Filtre por cidade, conector e potência. Hoje carregamos em Bogotá e Medellín, de 60 a 150 kW.",
     } satisfies Localized,
   },
 
@@ -37,7 +41,10 @@ export const red = {
 
   filters: {
     /** Etiqueta del grupo. El chip de dentro dice qué hace; el grupo, de qué es. */
-    availabilityGroup: { es: "Disponibilidad", en: "Availability", pt: "Disponibilidade", } satisfies Localized,
+    /* Se llamaba "Disponibilidad", que es exactamente la capacidad que esta
+       misma página declara no integrada dos secciones más arriba. El chip de
+       dentro dice "Solo en operación", que es un ESTADO. */
+    availabilityGroup: { es: "Estado", en: "Status", pt: "Status", } satisfies Localized,
     city: { es: "Ciudad", en: "City", pt: "Cidade", } satisfies Localized,
     connector: { es: "Conector", en: "Connector", pt: "Conector", } satisfies Localized,
     power: { es: "Potencia mínima", en: "Minimum power", pt: "Potência mínima", } satisfies Localized,
@@ -59,7 +66,9 @@ export const red = {
    */
   sort: {
     label: { es: "Ordenar por", en: "Sort by", pt: "Ordenar por", } satisfies Localized,
-    relevance: { es: "Recomendadas", en: "Recommended", pt: "Recomendado", } satisfies Localized,
+    /* "Recomendadas" implica personalización o un motor de recomendación que
+       no existe: `lib/data` documenta que es el orden curado del dataset (§19). */
+    relevance: { es: "Destacadas", en: "Featured", pt: "Destaques", } satisfies Localized,
     power: { es: "Más potencia", en: "Highest power", pt: "Maior potência", } satisfies Localized,
     status: { es: "En operación primero", en: "Live first", pt: "Em operação primeiro", } satisfies Localized,
     city: { es: "Ciudad", en: "City", pt: "Cidade", } satisfies Localized,
@@ -94,7 +103,9 @@ export const red = {
 
   howToCharge: {
     eyebrow: { es: "Cómo cargar", en: "How to charge", pt: "Como carregar", } satisfies Localized,
-    title: { es: "Tres pasos y sigues tu día", en: "Three steps and you're on your way", pt: "Três passos e você já está carregando", } satisfies Localized,
+    /* El portugués prometía otra cosa ("y ya estás cargando") que el español y
+       el inglés ("y sigues tu día"). La promesa es la misma en los tres. */
+    title: { es: "Tres pasos y sigues tu día", en: "Three steps and you're on your way", pt: "Três passos e você segue o seu dia", } satisfies Localized,
     steps: [
       {
         step: "01",
@@ -116,7 +127,9 @@ export const red = {
       },
       {
         step: "03",
-        title: { es: "Sigue", en: "Go", pt: "Ir", } satisfies Localized,
+        /* "Sigue" solo es ambiguo en español (¿seguir qué?), y los tres
+           idiomas decían cosas distintas. El cuerpo ya dice esto exacto. */
+        title: { es: "Sigue tu día", en: "Get on with your day", pt: "Siga o seu dia", } satisfies Localized,
         body: {
           es: "Consulta el progreso desde el teléfono mientras haces lo que ibas a hacer.",
           en: "Track progress from your phone while you get on with your day.",
@@ -183,9 +196,13 @@ export const station = {
    */
   pendingPricingTag: { es: "Pendiente", en: "Pending", pt: "Pendente", } satisfies Localized,
   pendingPricing: {
-    es: "Tarifa pendiente de confirmación comercial.",
-    en: "Pricing pending commercial confirmation.",
-    pt: "Tarifa pendente de confirmação comercial.",
+    /* "Confirmación comercial" es vocabulario de nuestro backlog delante de
+       alguien que solo quiere saber cuánto cuesta. La etiqueta "Pendiente" se
+       queda; el texto ahora da el paso siguiente, igual que la respuesta 3 del
+       FAQ. */
+    es: "Todavía no publicamos la tarifa de esta estación. La ves en la app antes de iniciar la carga.",
+    en: "We haven't published this station's rate yet. You'll see it in the app before you start charging.",
+    pt: "Ainda não publicamos a tarifa desta estação. Você a vê no app antes de iniciar o carregamento.",
   } satisfies Localized,
 };
 

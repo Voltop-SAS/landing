@@ -105,9 +105,13 @@ export const businessSegments: BusinessSegment[] = [
     label: { es: "Partner", en: "Partner", pt: "Parceiro", },
     headline: { es: "Construyamos la red juntos", en: "Let's build the network together", pt: "Vamos construir a rede juntos", },
     proposition: {
-      es: "Integraciones técnicas, alianzas de expansión y acuerdos con fabricantes y operadores que quieren conectarse a la red líder de Colombia.",
-      en: "Technical integrations, expansion alliances and agreements with manufacturers and operators looking to connect to Colombia's leading network.",
-      pt: "Integrações técnicas, alianças de expansão e acordos com fabricantes e operadoras que querem se conectar à principal rede da Colômbia.",
+      /* Decía "la red líder de Colombia": un reclamo de liderazgo de mercado
+         sin fuente ni métrica validada, en la página que un partner o un
+         inversionista lee con más lupa. §33 no admite eso. La invitación
+         funciona además mejor para esa audiencia que la afirmación. */
+      es: "Integraciones técnicas, alianzas de expansión y acuerdos con fabricantes y operadores que quieren construir la red de carga de Colombia con nosotros.",
+      en: "Technical integrations, expansion partnerships and agreements with manufacturers and operators that want to build Colombia's charging network with us.",
+      pt: "Integrações técnicas, parcerias de expansão e acordos com fabricantes e operadoras que querem construir a rede de carregamento da Colômbia com a gente.",
     },
     benefits: [
       { es: "Integración técnica con la plataforma", en: "Technical platform integration", pt: "Integração técnica com a plataforma", },

@@ -21,9 +21,12 @@ export const empresas = {
   hero: {
     eyebrow: { es: "Empresas y espacios", en: "Business and spaces", pt: "Empresas e espaços", } satisfies Localized,
     title: {
-      es: "Carga eléctrica para tu negocio, operada por nosotros",
-      en: "EV charging for your business, operated by us",
-      pt: "Carregamento elétrico para a sua empresa, operado por nós",
+      /* El diferencial —que lo operamos nosotros— iba enterrado en una cola
+         pasiva. El lead de abajo ya detalla diseñar, instalar, operar y
+         mantener, así que el titular puede quedarse con el trato. */
+      es: "Tú pones el espacio. Nosotros ponemos la red.",
+      en: "You bring the space. We bring the network.",
+      pt: "Você entra com o espaço. A gente entra com a rede.",
     } satisfies Localized,
     lead: {
       es: "Diseñamos, instalamos, operamos y mantenemos la infraestructura. Tú defines el objetivo; nosotros nos encargamos de que funcione todos los días.",

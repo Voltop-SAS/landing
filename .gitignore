@@ -52,3 +52,22 @@ next-env.d.ts
 /.claude/skills/information-architect/
 /.claude/skills/accessibility-auditor/
 /.claude/skills/content-copy-designer/
+
+# ── MÁSTERES DE MEDIA ─────────────────────────────────────────────────────
+# 481 MB de originales que viven en `public/` para poder derivar de ellos, y
+# que NUNCA deben entrar en git: un binario de ese tamaño en el árbol es
+# PERMANENTE — quitarlo después exige reescribir la historia del repositorio.
+#
+# Estaban sin trackear y sin ignorar, que es la peor combinación posible: un
+# `git add .` distraído los commitea y ya no hay vuelta atrás.
+#
+# Lo que se sirve son las derivadas optimizadas, que sí están versionadas:
+# hero-vehiculo-cargando.jpg, estacion-infraestructura.jpg,
+# estacion-medellin-loop.mp4 y voltop-film.mp4.
+#
+# PENDIENTE: archivar los másteres fuera del repositorio (Drive, S3) y dejar
+# aquí solo un puntero. Mientras tanto, ignorarlos evita el daño irreversible.
+/public/Hero.png
+/public/Hero_Banner.png
+/public/Video Home.mov
+/public/estacion-medellin.mp4

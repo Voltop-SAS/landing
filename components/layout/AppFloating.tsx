@@ -8,6 +8,7 @@ import { home } from "@/content/copy/home";
 import { a11y } from "@/content/copy/common";
 import { externalLinks } from "@/content/data/links";
 import { stripLocale, routes } from "@/lib/i18n/routes";
+import { track } from "@/lib/analytics";
 import { cn } from "@/lib/cn";
 
 /**
@@ -24,8 +25,10 @@ import { cn } from "@/lib/cn";
  *    "descarga la app" sobre la sección que ya lo ofrece, mejor y con más
  *    sitio, es ruido.
  *
- * 3. SE CIERRA Y NO VUELVE. Un flotante que reaparece tras cerrarlo es una
- *    trampa, no un componente.
+ * 3. SE CIERRA Y NO VUELVE — DE VERDAD. Con estado en memoria volvía en cuanto
+ *    recargabas, que es exactamente la trampa que la regla decía evitar. Ahora
+ *    la decisión se guarda en `localStorage`, envuelta en `try/catch` porque en
+ *    navegación privada o con las cookies bloqueadas el simple ACCESO lanza.
  *
  * 4. SE CALLA EN /empresas Y EN LOS LEGALES. En B2B la conversión es el
  *    formulario y §15 prohíbe que los CTA compitan; en un texto legal, tapar
@@ -50,10 +53,37 @@ import { cn } from "@/lib/cn";
  * que no queden enlaces alcanzables con Tab dentro de una tarjeta invisible.
  * Solo se animan `opacity` y `transform` (§29).
  */
+const CLAVE_CERRADO = "voltop:app-flotante-cerrado";
+
 export function AppFloating({ lang }: { lang: Locale }) {
   const c = home.appFloating;
   const [pasadoElHero, setPasadoElHero] = useState(false);
   const [cerrado, setCerrado] = useState(false);
+
+  /* Se lee después de montar, nunca durante el render: en servidor no existe
+     `localStorage`, y leerlo en el estado inicial rompería la hidratación. */
+  useEffect(() => {
+    /* Diferido a un fotograma: `setState` síncrono dentro de un efecto encadena
+       renders y React lo señala. Aquí además no urge — la tarjeta no aparece
+       hasta pasado el Hero, así que nadie ve el fotograma intermedio. */
+    const id = requestAnimationFrame(() => {
+      try {
+        if (localStorage.getItem(CLAVE_CERRADO) === "1") setCerrado(true);
+      } catch {
+        /* Sin almacenamiento el componente funciona igual; solo olvida. */
+      }
+    });
+    return () => cancelAnimationFrame(id);
+  }, []);
+
+  const descartar = () => {
+    setCerrado(true);
+    try {
+      localStorage.setItem(CLAVE_CERRADO, "1");
+    } catch {
+      /* ídem */
+    }
+  };
   const [seccionALaVista, setSeccionALaVista] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -78,7 +108,7 @@ export function AppFloating({ lang }: { lang: Locale }) {
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && ref.current?.contains(document.activeElement)) setCerrado(true);
+      if (e.key === "Escape" && ref.current?.contains(document.activeElement)) descartar();
     };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
@@ -94,7 +124,7 @@ export function AppFloating({ lang }: { lang: Locale }) {
   const cerrar = (
     <button
       type="button"
-      onClick={() => setCerrado(true)}
+      onClick={descartar}
       aria-label={t(c.dismiss, lang)}
       className="grid size-11 shrink-0 place-items-center rounded-(--radius-pill) text-ink-3 transition-colors duration-(--duration-fast) hover:bg-white/10 hover:text-ink"
     >
@@ -125,6 +155,7 @@ export function AppFloating({ lang }: { lang: Locale }) {
           href={externalLinks.app}
           target="_blank"
           rel="noopener noreferrer"
+          onClick={() => track("app_store_click", { tienda: "dinamico", ubicacion: "flotante_escritorio" })}
           /* El código se queda SOBRE BLANCO aunque el marco sea de vidrio: un
              lector espera módulos oscuros sobre fondo claro, y teñirlo para que
              "combine" hace fallar a muchos teléfonos. El vidrio es el marco; el
@@ -164,6 +195,7 @@ export function AppFloating({ lang }: { lang: Locale }) {
             href={externalLinks.app}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={() => track("app_store_click", { tienda: "dinamico", ubicacion: "flotante_movil" })}
             className="brand-gradient inline-flex h-11 shrink-0 items-center rounded-(--radius-pill) px-4 text-body-s font-semibold text-on-brand transition-[filter] duration-(--duration-fast) hover:brightness-105"
           >
             {t(c.open, lang)}

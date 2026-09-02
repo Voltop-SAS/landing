@@ -24,14 +24,17 @@ export const nosotros = {
   hero: {
     eyebrow: { es: "Nosotros", en: "About us", pt: "Sobre nós", } satisfies Localized,
     title: {
-      es: "Infraestructura para un país que se está electrificando",
-      en: "Infrastructure for a country going electric",
-      pt: "Infraestrutura para um país que se eletrifica",
+      es: "Un país no se electrifica sin dónde cargar.",
+      en: "No country goes electric without somewhere to charge.",
+      pt: "Nenhum país se eletrifica sem onde carregar.",
     } satisfies Localized,
     lead: {
-      es: "Voltop existe porque la transición eléctrica de Colombia no depende de los vehículos, sino de dónde se cargan. Construimos esa parte.",
-      en: "Voltop exists because Colombia's electric transition doesn't depend on the vehicles, but on where they charge. We build that part.",
-      pt: "A Voltop existe porque a transição elétrica da Colômbia não depende dos veículos, e sim de onde eles carregam. Nós construímos essa parte.",
+      /* La idea del antiguo lead subió al titular, que es donde se recuerda.
+         El lead queda libre para introducir la capa tecnológica en la página
+         donde se construye credibilidad. */
+      es: "Voltop construye y opera esa parte: una red de carga rápida en las ciudades del país, con la tecnología que la hace simple de usar.",
+      en: "Voltop builds and runs that part: a fast-charging network across the country's cities, with the technology that makes it simple to use.",
+      pt: "A Voltop constrói e opera essa parte: uma rede de carregamento rápido nas cidades do país, com a tecnologia que a torna simples de usar.",
     } satisfies Localized,
   },
 
@@ -95,9 +98,12 @@ export const nosotros = {
     eyebrow: { es: "Impacto", en: "Impact", pt: "Impacto", } satisfies Localized,
     title: { es: "Una red que crece con el país", en: "A network growing with the country", pt: "Uma rede que cresce junto com o país", } satisfies Localized,
     lead: {
-      es: "Estas son las cifras con las que medimos nuestro avance.",
-      en: "These are the figures by which we measure our progress.",
-      pt: "Estes são os números pelos quais medimos nosso avanço.",
+      /* Antes anunciaba cifras y justo debajo aparecía "Cifras en validación:
+         preferimos no publicar una imprecisa". La página se contradecía a sí
+         misma en pantalla; ahora la contención ES el mensaje. */
+      es: "Medimos el avance de la red con datos de operación, no con estimaciones.",
+      en: "We measure the network's progress with operational data, not estimates.",
+      pt: "Medimos o avanço da rede com dados de operação, não com estimativas.",
     } satisfies Localized,
     /** Estado honesto mientras las cifras no estén validadas (§33). */
     pendingTitle: { es: "Cifras en validación", en: "Figures under validation", pt: "Números em validação", } satisfies Localized,
@@ -115,7 +121,8 @@ export const nosotros = {
 
   trust: {
     eyebrow: { es: "Confianza", en: "Trust", pt: "Confiança", } satisfies Localized,
-    title: { es: "Lo que dicen quienes ya trabajan con nosotros", en: "What those already working with us say", pt: "O que dizem quem já trabalha com a gente", } satisfies Localized,
+    /* El portugués anterior ("O que dizem quem…") era agramatical. */
+    title: { es: "Lo dicen ellos, no nosotros.", en: "Their words, not ours.", pt: "As palavras são deles, não nossas.", } satisfies Localized,
     partnersTitle: { es: "Espacios y organizaciones aliadas", en: "Partner spaces and organizations", pt: "Espaços e organizações parceiras", } satisfies Localized,
   },
 };

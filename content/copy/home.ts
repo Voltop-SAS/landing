@@ -21,9 +21,11 @@ export const home = {
       pt: "Voltop · A rede de carregamento que move a Colômbia",
     } satisfies Localized,
     description: {
-      es: "Infraestructura de carga para vehículos eléctricos en Colombia. Encuentra dónde cargar y descubre soluciones para empresas, flotas y espacios comerciales.",
-      en: "EV charging infrastructure in Colombia. Find where to charge and explore solutions for companies, fleets and commercial spaces.",
-      pt: "Infraestrutura de carregamento elétrico na Colômbia. Encontre onde carregar e conheça as soluções para empresas, frotas e espaços comerciais.",
+      /* Es el resultado de búsqueda. Abría con "Infraestructura", que nadie
+         teclea, y no nombraba ni las ciudades que sí se buscan ni la app. */
+      es: "Carga rápida para carros eléctricos en Bogotá y Medellín. Encuentra estación, actívala con la app y sigue tu día. También soluciones para empresas y flotas.",
+      en: "Fast charging for electric cars in Bogotá and Medellín. Find a station, start it from the app and get on with your day. Plus solutions for companies and fleets.",
+      pt: "Carregamento rápido para carros elétricos em Bogotá e Medellín. Encontre uma estação, ative pelo app e siga o seu dia. E também soluções para empresas e frotas.",
     } satisfies Localized,
   },
 
@@ -32,9 +34,12 @@ export const home = {
     eyebrow: { es: "Red de carga eléctrica · Colombia", en: "EV charging network · Colombia", pt: "Rede de carregamento elétrico · Colômbia", } satisfies Localized,
     title: { es: "La red que mueve a Colombia", en: "The network that moves Colombia", pt: "A rede que move a Colômbia", } satisfies Localized,
     lead: {
-      es: "Construimos y operamos la infraestructura de carga que hace posible el cambio a eléctrico: para quien conduce hoy y para quien todavía lo está pensando.",
-      en: "We build and operate the charging infrastructure that makes going electric possible — for those already driving, and for those still deciding.",
-      pt: "Construímos e operamos a infraestrutura de carregamento que torna possível ir de elétrico — para quem já dirige e para quem ainda está decidindo.",
+      /* El párrafo más leído del sitio era 100% sujeto-Voltop: no nombraba la
+         app ni decía qué hace el usuario. Conserva la credibilidad de
+         infraestructura, pero cierra en la persona que va a cargar. */
+      es: "Carga rápida donde ya te mueves y una app que la abre con un escaneo. Nosotros construimos y operamos la red; tú solo conectas.",
+      en: "Fast charging where you already go, and an app that starts it with a scan. We build and run the network; you just plug in.",
+      pt: "Carregamento rápido onde você já circula e um app que inicia tudo com um escaneio. Nós construímos e operamos a rede; você só conecta.",
     } satisfies Localized,
     scrollHint: { es: "Desplázate", en: "Scroll", pt: "Deslize", } satisfies Localized,
   },

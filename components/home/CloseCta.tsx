@@ -4,6 +4,7 @@ import { home } from "@/content/copy/home";
 import { actions } from "@/content/copy/common";
 import { Section, Container, SectionHeading } from "@/components/ui/layout";
 import { Button } from "@/components/ui/Button";
+import { TrackClick } from "@/components/analytics/TrackClick";
 
 /**
  * BEAT 7 · CIERRE — Intensidad: Alta · Registro: Impacto
@@ -16,11 +17,18 @@ import { Button } from "@/components/ui/Button";
  */
 export function CloseCta({ lang }: { lang: Locale }) {
   return (
-    <Section register="impacto" space="base" className="overflow-hidden border-t border-line">
+    <Section
+      register="impacto"
+      space="base"
+      className="overflow-hidden border-t border-line"
+    >
       <div
         aria-hidden="true"
         className="pointer-events-none absolute -bottom-1/2 left-1/2 size-[42rem] -translate-x-1/2 rounded-full opacity-20 blur-[140px]"
-        style={{ background: "radial-gradient(circle, var(--color-brand), transparent 70%)" }}
+        style={{
+          background:
+            "radial-gradient(circle, var(--color-brand), transparent 70%)",
+        }}
       />
 
       <Container className="relative z-(--z-raised)">
@@ -31,11 +39,23 @@ export function CloseCta({ lang }: { lang: Locale }) {
             <p className="font-mono text-mono uppercase tracking-wider text-brand">
               {t(home.close.b2c.label, lang)}
             </p>
-            <p className="mt-4 max-w-[34ch] text-body-l text-ink">{t(home.close.b2c.body, lang)}</p>
+            <p className="mt-4 max-w-[34ch] text-body-l text-ink">
+              {t(home.close.b2c.body, lang)}
+            </p>
             <div className="mt-7">
-              <Button variant="primary" size="l" arrow href={href(lang, routes.red)}>
-                {t(actions.findCharger, lang)}
-              </Button>
+              <TrackClick
+                event="cta_encontrar_cargador_click"
+                props={{ ubicacion: "cierre" }}
+              >
+                <Button
+                  variant="primary"
+                  size="l"
+                  arrow
+                  href={href(lang, routes.red)}
+                >
+                  {t(actions.findCharger, lang)}
+                </Button>
+              </TrackClick>
             </div>
           </div>
 
@@ -43,9 +63,15 @@ export function CloseCta({ lang }: { lang: Locale }) {
             <p className="font-mono text-mono uppercase tracking-wider text-ink-3">
               {t(home.close.b2b.label, lang)}
             </p>
-            <p className="mt-4 max-w-[34ch] text-body text-ink-2">{t(home.close.b2b.body, lang)}</p>
+            <p className="mt-4 max-w-[34ch] text-body text-ink-2">
+              {t(home.close.b2b.body, lang)}
+            </p>
             <div className="mt-7">
-              <Button variant="secondary" arrow href={href(lang, `${routes.empresas}#contacto`)}>
+              <Button
+                variant="secondary"
+                arrow
+                href={href(lang, `${routes.empresas}#contacto`)}
+              >
                 {t(actions.talkToTeam, lang)}
               </Button>
             </div>

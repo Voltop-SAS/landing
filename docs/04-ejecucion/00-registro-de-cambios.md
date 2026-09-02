@@ -1522,3 +1522,83 @@ El título del flotante partía en dos líneas: el botón de cerrar compartía f
 ### Evidencia
 
 `lint`, `tsc` y build limpios · `ES 418/418 · EN 418/418 · PT 418/418` · 0px de desbordamiento en 1440, 768 y 390 · cifras verificadas contra el dataset.
+
+---
+
+## Bloque 36 · Pasada de tono, medición y datos estructurados — 2026-09-02
+
+Tres auditorías especializadas en paralelo (copy, plan vs implementación, QA). Esto es lo que se ejecutó de las dos primeras.
+
+### El diagnóstico de fondo del copy
+
+El sitio estaba bien escrito y era honesto, pero **hablaba como constructora de infraestructura, no como compañía de producto**: "infraestructura" 21 veces, "instalamos/operamos/mantenemos" 36 veces, y fuera del bloque de descarga y del FAQ **la app aparecía en una sola línea de copy narrativo**. El brief pide exactamente lo contrario.
+
+La corrección **no borra la narrativa de infraestructura** —es real, diferencial frente a Electra y honesta— sino que **rebalancea**: mete la capa digital donde no estaba.
+
+| Dónde | Antes | Ahora |
+|---|---|---|
+| Tagline (aparece en `title`, meta y OG) | "Infraestructura de carga para la movilidad eléctrica de Colombia" | "La red de carga eléctrica de Colombia, simple y en tu teléfono" |
+| Lead del Hero — el párrafo más leído | 100% sujeto-Voltop, sin mencionar la app ni al usuario | "Carga rápida donde ya te mueves y una app que la abre con un escaneo. Nosotros construimos y operamos la red; tú solo conectas." |
+| Meta description de la Home | Abría con "Infraestructura", palabra que nadie teclea | Nombra Bogotá, Medellín y la app |
+| Titular de `/nosotros` | "Infraestructura para un país que se está electrificando" | "Un país no se electrifica sin dónde cargar." |
+| Titular de `/empresas` | "Carga eléctrica para tu negocio, operada por nosotros" | "Tú pones el espacio. Nosotros ponemos la red." |
+
+### Seis promesas que el producto no cumplía (§19 · §33)
+
+1. **"la red líder de Colombia"** — reclamo de liderazgo de mercado sin fuente, en la página que un inversionista lee con más lupa. Pasó a una invitación: *"…que quieren construir la red de carga de Colombia con nosotros"*.
+2. **"Recomendadas"** — implicaba un motor de recomendación; `lib/data` documenta que es el orden curado del dataset. Ahora **"Destacadas"**.
+3. **Filtro "Disponibilidad"** — rotulaba como activa la capacidad que la misma página declara no integrada dos secciones más arriba. Ahora **"Estado"**, que es lo que el chip de dentro dice.
+4. **"La red crece cada mes"** — cadencia que nadie validó.
+5. **"dobla la potencia de la red en Bogotá"** — cierto hoy, **falso el día que abra Corredor Norte** (150 kW, Bogotá), anunciado en la entrada de al lado. Un registro cuyas entradas caducan es peor que uno que solo declara el hecho.
+6. **"puntos estratégicos del Valle de Aburrá"** — relleno; ahora dato real.
+
+### Vocabulario interno que salía a la interfaz
+
+"Integración de datos de operación", "CRM", "confirmación comercial". Es honesto en un prototipo, pero el usuario lo lee como *"esta gente me habla de sus procesos"*. Dos capas: **honestidad en el mensaje, lenguaje de producto en la superficie**.
+
+El peor caso era el **callejón sin salida del formulario B2B**, en el instante de máxima intención: decía que no se había enviado y ahí terminaba. El comentario del archivo justificaba no dar alternativa *"porque no hay correo ni teléfono confirmados"* — **eso dejó de ser cierto**. Ahora ofrece WhatsApp y `soporte@voltop.co`, los dos verificados.
+
+Y **"Correo corporativo"** pasó a **"Correo"**: imponía un requisito que la validación no exige, en el campo de mayor abandono y justo al perfil que más escribe desde Gmail.
+
+### Registro de los CTA, unificado
+
+Conversión y marca en **imperativo de segunda persona**; solo las acciones de sistema y los filtros en infinitivo. Estaban mezclados sin criterio: *"Descargar la app"* convivía con *"Descarga la app"* para la misma acción.
+
+### Tres inconsistencias entre idiomas
+
+- **"Nosotros"** era `Company` en el navbar y `About us` en el footer. Una entrada con dos nombres es dos entradas para quien la lee.
+- El paso 03 de "Cómo cargar" se llamaba **"Sigue" / "Go" / "Ir"**: tres palabras vagas y distintas.
+- El portugués de "Tres pasos y sigues tu día" prometía otra cosa: *"y ya estás cargando"*.
+- Y el portugués de la sección de confianza era **agramatical** (*"O que dizem quem…"`).
+
+### Medición: cuatro eventos declarados y sin un solo emisor
+
+§31 declaraba eventos que nunca se disparaban.
+
+| Evento | Estado | Ahora |
+|---|---|---|
+| `estacion_vista` | **La única vista del plan sin emisor**, y es el final del embudo B2C | `TrackView` en la ficha, con estación, ciudad, potencia, conectores y estado |
+| `app_store_click` | Conversión primaria B2C, sin medir en **tres** superficies | 4 emisores: dos insignias, flotante escritorio, barra móvil |
+| `cta_encontrar_cargador_click` | El registro afirmaba que se emitía; **cero call sites** | Hero y cierre de la Home, distinguidos por ubicación |
+
+Para poder medir sin convertir páginas enteras a cliente se creó **`TrackClick`**: una isla que envuelve con `display: contents`, de modo que `Button` sigue siendo Server Component y el envoltorio **no existe para el layout** — meter un `<span>` alrededor de un botón habría roto el `flex` del padre.
+
+### Datos estructurados que faltaban (§29)
+
+- **`FAQPage`** en `/red` — el activo SEO más barato que quedaba sin explotar: cinco preguntas en tres idiomas con las respuestas exactas que la gente teclea. Se genera **desde la misma colección que pinta el acordeón**, así que no pueden divergir: un dato estructurado que no coincide con lo visible penaliza en vez de ayudar.
+- **`BreadcrumbList`** en la ficha de estación — era el único de los tres tipos que §29 exige sin cumplir. Las migas visuales ya existían; esto es la misma jerarquía dicha para el buscador.
+
+### Riesgo irreversible neutralizado
+
+**481 MB** de másteres (`Hero.png`, `Hero_Banner.png`, `Video Home.mov`, `estacion-medellin.mp4`) estaban en `public/` **sin trackear Y sin ignorar** — la peor combinación posible: un `git add .` distraído los mete en la historia, y un binario de ese tamaño en el árbol de git es **permanente**. Ahora están en `.gitignore`. Sigue pendiente archivarlos fuera del repositorio.
+
+También se retiraron los 5 SVG del andamiaje de Next, sin una sola referencia en el código.
+
+### Otras correcciones
+
+- **El flotante ahora sí "se cierra y no vuelve"**: la decisión se guarda en `localStorage` con `try/catch`, porque en navegación privada el simple ACCESO lanza. Antes era estado en memoria y reaparecía al recargar — justo la trampa que la regla decía evitar.
+- **Las cifras de la red cuentan al entrar en pantalla** (`CountUp`). El valor final **ya está en el HTML servido**: si el JS no llega, ahí está el número. Y se escribe directo en el nodo con una referencia, sin `useState` — contar con estado son 60 renders de React por segundo para mover un texto.
+
+### Evidencia
+
+`lint`, `tsc` y build limpios · `ES 418/418 · EN 418/418 · PT 418/418` · **27 combinaciones** (9 rutas × 3 viewports) con 0px de desbordamiento y un solo `h1` · `FAQPage` en `/red`, `EVChargingStation` + `BreadcrumbList` en la ficha · los 6 eventos con emisor verificado.

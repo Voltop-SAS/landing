@@ -9,6 +9,7 @@ import { Section, Container, Eyebrow } from "@/components/ui/layout";
 import { Media } from "@/components/ui/Media";
 import { Button } from "@/components/ui/Button";
 import { Reveal } from "@/components/ui/Reveal";
+import { CountUp } from "@/components/ui/CountUp";
 
 /**
  * BEAT 3 · LA RED
@@ -46,8 +47,10 @@ export function NetworkIndex({ lang }: { lang: Locale }) {
   const resumen = getNetworkSummary();
   const cobertura = getCitiesWithStations();
 
-  const cifras = [
-    { etiqueta: t(home.network.stats.points, lang), valor: String(resumen.puntos) },
+  const cifras: { etiqueta: string; valor: React.ReactNode }[] = [
+    /* La única que cuenta es la que ES un número. "60–120 kW" y la lista de
+       conectores no son cantidades: animarlas sería movimiento por moverse. */
+    { etiqueta: t(home.network.stats.points, lang), valor: <CountUp value={resumen.puntos} /> },
     {
       etiqueta: t(home.network.stats.power, lang),
       valor:
@@ -110,7 +113,8 @@ export function NetworkIndex({ lang }: { lang: Locale }) {
                 </div>
                 <div className="flex items-end justify-between gap-4">
                   <p className="font-mono text-mono text-ink-2">
-                    {operational} {t(operational === 1 ? units.station : units.stations, lang)}{" "}
+                    <CountUp value={operational} />{" "}
+                    {t(operational === 1 ? units.station : units.stations, lang)}{" "}
                     {t(home.network.live, lang)}
                     {operational !== count ? <span className="text-ink-3"> · {count} total</span> : null}
                   </p>

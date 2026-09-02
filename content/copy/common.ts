@@ -16,9 +16,13 @@ import { externalLinks } from "@/content/data/links";
 export const brand = {
   name: "Voltop",
   tagline: {
-    es: "Infraestructura de carga para la movilidad eléctrica de Colombia.",
-    en: "Charging infrastructure for Colombia's electric mobility.",
-    pt: "Infraestrutura de carregamento para a mobilidade elétrica da Colômbia.",
+    /* Es el `<title>`, la meta description global y el subtítulo de la imagen
+       Open Graph: la frase que más se repite de la marca. Describía una CLASE
+       DE ACTIVO —"infraestructura"— y no un producto; ahora nombra la red y la
+       app, que es lo que la distingue. */
+    es: "La red de carga eléctrica de Colombia, simple y en tu teléfono.",
+    en: "Colombia's EV charging network — simple, and on your phone.",
+    pt: "A rede de carregamento elétrico da Colômbia, simples e no seu celular.",
   } satisfies Localized,
 };
 
@@ -45,7 +49,11 @@ export const nav: { label: Localized; href: string }[] = [
   { label: { es: "Red", en: "Network", pt: "Rede", }, href: routes.red },
   { label: { es: "Empresas", en: "Business", pt: "Empresas", }, href: routes.empresas },
   { label: { es: "Novedades", en: "Newsroom", pt: "Novidades", }, href: routes.novedades },
-  { label: { es: "Nosotros", en: "Company", pt: "Companhia", }, href: routes.nosotros },
+  /* El mismo destino se llamaba "Company" en el navbar y "About us" en el
+     footer, y en portugués "Companhia" — que además es la etiqueta del
+     segmento B2B "Empresa". Una entrada de navegación con dos nombres es dos
+     entradas para quien la lee. */
+  { label: { es: "Nosotros", en: "About us", pt: "Sobre nós", }, href: routes.nosotros },
 ];
 
 /**
@@ -53,7 +61,7 @@ export const nav: { label: Localized; href: string }[] = [
  * En /red no hay CTA: el usuario ya está en la herramienta (§15).
  */
 /** Etiqueta única del CTA de app: se usa en el header y en el menú móvil. */
-export const appCta: Localized = { es: "Descargar la app", en: "Get the app", pt: "Baixar o aplicativo" };
+export const appCta: Localized = { es: "Descarga la app", en: "Get the app", pt: "Baixe o app" };
 
 /** Acceso a las preguntas frecuentes desde el navbar. */
 export const helpLink: { label: Localized; href: string } = {
@@ -89,13 +97,19 @@ export const headerCta: Record<
 };
 
 export const actions = {
-  findCharger: { es: "Encontrar cargador", en: "Find a charger", pt: "Encontrar carregador", } satisfies Localized,
+  /* REGLA DE REGISTRO (§13): conversión y marca en IMPERATIVO de segunda
+     persona; solo las acciones de sistema y los filtros van en infinitivo
+     ("Quitar filtros", "Ocultar filtros"). En español el infinitivo es el
+     registro del formulario administrativo, y aquí se estaban mezclando los
+     dos sin criterio: "Descargar la app" convivía con "Descarga la app" para
+     la misma acción. */
+  findCharger: { es: "Encuentra dónde cargar", en: "Find where to charge", pt: "Encontre onde carregar", } satisfies Localized,
   seeNetwork: { es: "Ver la red completa", en: "See the full network", pt: "Ver a rede completa", } satisfies Localized,
   businessSolutions: { es: "Soluciones para empresas", en: "Business solutions", pt: "Soluções para empresas", } satisfies Localized,
   talkToTeam: { es: "Hablar con el equipo", en: "Talk to the team", pt: "Falar com o time", } satisfies Localized,
   seeStation: { es: "Ver esta estación", en: "See this station", pt: "Ver esta estação", } satisfies Localized,
   getDirections: { es: "Cómo llegar", en: "Get directions", pt: "Como chegar", } satisfies Localized,
-  knowVoltop: { es: "Conoce a Voltop", en: "About Voltop", pt: "Conheça a Voltop", } satisfies Localized,
+  knowVoltop: { es: "Conoce Voltop", en: "About Voltop", pt: "Conheça a Voltop", } satisfies Localized,
   backToNetwork: { es: "Volver a la red", en: "Back to the network", pt: "Voltar para a rede", } satisfies Localized,
   hostStation: { es: "Lleva Voltop a tu espacio", en: "Bring Voltop to your space", pt: "Leve a Voltop para o seu espaço", } satisfies Localized,
 };
@@ -120,9 +134,9 @@ export const units = {
 export const leadForm = {
   title: { es: "Cuéntanos qué necesitas", en: "Tell us what you need", pt: "Conte o que você precisa", } satisfies Localized,
   intro: {
-    es: "Un especialista revisa tu caso y te responde con una propuesta concreta.",
-    en: "A specialist reviews your case and replies with a concrete proposal.",
-    pt: "Um especialista analisa o seu caso e responde com uma proposta concreta.",
+    es: "Alguien del equipo lee tu caso y te responde con una propuesta concreta.",
+    en: "Someone on the team reads your case and replies with a concrete proposal.",
+    pt: "Alguém do time lê o seu caso e responde com uma proposta concreta.",
   } satisfies Localized,
   caseLabel: { es: "Tu caso", en: "Your case", pt: "Seu caso", } satisfies Localized,
 
@@ -132,7 +146,11 @@ export const leadForm = {
       error: { es: "Escribe tu nombre para saber cómo dirigirnos a ti.", en: "Enter your name so we know how to address you.", pt: "Escreva seu nome para sabermos como falar com você.", } satisfies Localized,
     },
     email: {
-      label: { es: "Correo corporativo", en: "Work email", pt: "E-mail corporativo", } satisfies Localized,
+      /* "Corporativo" imponía un requisito que la validación NO exige
+         (`LeadForm` solo comprueba la forma del correo), y justo al perfil que
+         más escribe desde Gmail: el dueño de un parqueadero o de una flota
+         pequeña. */
+      label: { es: "Correo", en: "Email", pt: "E-mail", } satisfies Localized,
       hint: { es: "Te respondemos a este correo.", en: "We'll reply to this address.", pt: "Respondemos para este e-mail.", } satisfies Localized,
       error: { es: "Revisa el correo: parece que falta algo (ejemplo: nombre@empresa.com).", en: "Check the email — something looks off (example: name@company.com).", pt: "Confira o e-mail: parece que falta algo (exemplo: nome@empresa.com).", } satisfies Localized,
     },
@@ -168,7 +186,9 @@ export const leadForm = {
     },
   },
 
-  submit: { es: "Enviar solicitud", en: "Send request", pt: "Enviar solicitação", } satisfies Localized,
+  /* El resto de la página ya dice "Tu caso" y "Cuéntanos tu caso"; el botón
+     decía "solicitud", que es vocabulario de ventanilla. */
+  submit: { es: "Enviar mi caso", en: "Send my case", pt: "Enviar meu caso", } satisfies Localized,
   submitting: { es: "Enviando…", en: "Sending…", pt: "Enviando…", } satisfies Localized,
 
   /** El asterisco por sí solo no comunica nada: necesita leyenda (WCAG 3.3.2). */
@@ -191,9 +211,9 @@ export const leadForm = {
   success: {
     title: { es: "Solicitud enviada", en: "Request sent", pt: "Solicitação enviada", } satisfies Localized,
     body: {
-      es: "Un especialista revisará tu caso y te escribirá al correo que nos dejaste. Respondemos normalmente en uno o dos días hábiles.",
-      en: "A specialist will review your case and write to the email you provided. We usually reply within one or two business days.",
-      pt: "Um especialista vai analisar o seu caso e escrever para o e-mail que você informou. Normalmente respondemos em um ou dois dias úteis.",
+      es: "Alguien del equipo leerá tu caso y te escribirá al correo que nos dejaste. Respondemos normalmente en uno o dos días hábiles.",
+      en: "Someone on the team will read your case and write to the email you provided. We usually reply within one or two business days.",
+      pt: "Alguém do time vai ler o seu caso e escrever para o e-mail que você informou. Normalmente respondemos em um ou dois dias úteis.",
     } satisfies Localized,
   },
 
@@ -209,11 +229,17 @@ export const leadForm = {
    */
   successPending: {
     tag: { es: "Sin enviar", en: "Not sent", pt: "Não enviado", } satisfies Localized,
-    title: { es: "Este formulario aún no envía", en: "This form doesn't send yet", pt: "Este formulário ainda não envia", } satisfies Localized,
+    title: { es: "Todavía no podemos recibirlo aquí", en: "We can't receive it here yet", pt: "Ainda não conseguimos receber por aqui", } satisfies Localized,
+    /* Antes esto era un callejón sin salida en el instante de MÁXIMA intención
+       B2B: te decía que no se había enviado y ahí terminaba. El comentario
+       original justificaba no ofrecer alternativa "porque no hay correo ni
+       teléfono confirmados" — eso dejó de ser cierto: `content/data/links.ts`
+       publica WhatsApp y soporte@voltop.co, ambos verificados. Y "CRM" sale de
+       la cara del cliente: es vocabulario nuestro. */
     body: {
-      es: "La integración con el CRM está pendiente de definir: tu solicitud no se ha enviado y no se ha guardado ningún dato. Cuando la integración esté lista, este mismo formulario llegará al equipo comercial.",
-      en: "The CRM integration is yet to be defined: your request has not been sent and no data has been stored. Once the integration is live, this same form will reach the sales team.",
-      pt: "A integração com o CRM ainda está pendente de definição: sua solicitação não foi enviada e nenhum dado foi armazenado. Quando a integração estiver pronta, este mesmo formulário chegará ao time comercial.",
+      es: "Este formulario aún no está conectado, así que tu solicitud no se envió ni se guardó. Escríbenos por WhatsApp o a soporte@voltop.co y seguimos por ahí.",
+      en: "This form isn't connected yet, so your request wasn't sent or stored. Message us on WhatsApp or write to soporte@voltop.co and we'll take it from there.",
+      pt: "Este formulário ainda não está conectado, então sua solicitação não foi enviada nem armazenada. Fale com a gente no WhatsApp ou escreva para soporte@voltop.co que seguimos por lá.",
     } satisfies Localized,
   },
 
@@ -233,9 +259,10 @@ export const states = {
   noResults: {
     title: { es: "No hay estaciones con esos criterios", en: "No stations match those criteria", pt: "Nenhuma estação atende a esses critérios", } satisfies Localized,
     body: {
-      es: "Prueba con menos filtros o revisa otra ciudad. La red crece cada mes.",
-      en: "Try fewer filters or check another city. The network grows every month.",
-      pt: "Tente menos filtros ou veja outra cidade. A rede cresce todo mês.",
+      /* "Cada mes" era una promesa de cadencia que nadie validó (§33). */
+      es: "Prueba con menos filtros o mira otra ciudad. Hoy cargamos en Bogotá y Medellín, y seguimos abriendo.",
+      en: "Try fewer filters or check another city. Today we charge in Bogotá and Medellín, and we keep opening.",
+      pt: "Tente menos filtros ou veja outra cidade. Hoje carregamos em Bogotá e Medellín, e seguimos abrindo.",
     } satisfies Localized,
     action: { es: "Quitar filtros", en: "Clear filters", pt: "Limpar filtros", } satisfies Localized,
   },
@@ -250,9 +277,13 @@ export const states = {
     home: { es: "Ir al inicio", en: "Go to homepage", pt: "Ir para o início", } satisfies Localized,
   },
   pendingRealtime: {
-    es: "La disponibilidad en tiempo real llegará con la integración de datos de operación.",
-    en: "Real-time availability will arrive with the operations data integration.",
-    pt: "A disponibilidade em tempo real chegará com a integração dos dados de operação.",
+    /* Antes decía "la integración de datos de operación", que es vocabulario
+       de nuestro backlog puesto delante de alguien que solo quiere cargar. Y
+       cerraba la puerta en vez de abrir la siguiente: la app SÍ muestra
+       disponibilidad, y así lo declaran los Términos. */
+    es: "Aquí todavía no mostramos el estado en vivo de cada punto. En la app sí puedes ver la disponibilidad antes de salir.",
+    en: "We don't show live status for each point here yet. In the app you can check availability before you leave.",
+    pt: "Aqui ainda não mostramos o status ao vivo de cada ponto. No app você já consulta a disponibilidade antes de sair.",
   } satisfies Localized,
 };
 

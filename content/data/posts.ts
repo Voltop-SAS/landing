@@ -134,9 +134,13 @@ export const posts: Post[] = [
       pt: "Carregamento de 120 kW no San Fernando Plaza",
     },
     summary: {
-      es: "Seis puntos de alta potencia en El Poblado: la primera estación de Voltop en el Valle de Aburrá que dobla la potencia de la red en Bogotá.",
-      en: "Six high-power points in El Poblado: Voltop's first station in the Aburrá Valley, doubling the power of the Bogotá network.",
-      pt: "Seis pontos de alta potência em El Poblado: a primeira estação da Voltop no Vale de Aburrá, que dobra a potência da rede em Bogotá.",
+      /* "Dobla la potencia de la red en Bogotá" deja de ser cierto el día que
+         abra Corredor Norte —150 kW, Bogotá— anunciado en la entrada de al
+         lado. Un registro cuyas entradas caducan es peor que uno que solo
+         declara el hecho. */
+      es: "Seis puntos de 120 kW en El Poblado: la primera estación de Voltop en el Valle de Aburrá.",
+      en: "Six 120 kW points in El Poblado: Voltop's first station in the Aburrá Valley.",
+      pt: "Seis pontos de 120 kW em El Poblado: a primeira estação da Voltop no Vale de Aburrá.",
     },
     stationSlug: "san-fernando-plaza",
     citySlug: "medellin",
@@ -154,9 +158,9 @@ export const posts: Post[] = [
       pt: "Corredor Norte: 150 kW em construção",
     },
     summary: {
-      es: "Ocho puntos en el corredor de salida norte de Bogotá, la mayor potencia por punto de la red hasta la fecha.",
-      en: "Eight points on Bogotá's northern exit corridor — the highest power per point in the network to date.",
-      pt: "Oito pontos no corredor de saída norte de Bogotá, a maior potência por ponto da rede até hoje.",
+      es: "Ocho puntos de 150 kW en el corredor de salida norte de Bogotá.",
+      en: "Eight 150 kW points on Bogotá's northern exit corridor.",
+      pt: "Oito pontos de 150 kW no corredor de saída norte de Bogotá.",
     },
     stationSlug: "corredor-norte",
     citySlug: "bogota",

@@ -8,6 +8,7 @@ import { actions, a11y, units } from "@/content/copy/common";
 import { getStations, getStation, getCity, getStationsByCity, getPostsForStation } from "@/lib/data";
 import { novedadesInline } from "@/content/copy/novedades";
 import { PostsInline } from "@/components/novedades/PostsInline";
+import { TrackView } from "@/components/analytics/TrackView";
 import { Section, Container, Eyebrow, SectionHeading } from "@/components/ui/layout";
 import { StatusBadge, SpecList, PendingTag } from "@/components/ui/data";
 import { MediaPending } from "@/components/ui/Media";
@@ -104,9 +105,42 @@ export default async function StationPage({ params }: Props) {
     amenityFeature: s.services.map((sv) => ({ "@type": "LocationFeatureSpecification", name: t(sv, lang), value: true })),
   };
 
+  /* §29 pide `BreadcrumbList` en rutas profundas y era el único de los tres
+     tipos de datos estructurados sin cumplir. Las migas VISUALES ya existían
+     justo debajo; esto es la misma jerarquía dicha para el buscador, y va en
+     el mismo orden para que no puedan divergir. */
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: t(red.hero.eyebrow, lang), item: absoluteUrl(lang, routes.red) },
+      ...(city
+        ? [{ "@type": "ListItem", position: 2, name: city.name, item: absoluteUrl(lang, routes.city(city.slug)) }]
+        : []),
+      { "@type": "ListItem", position: city ? 3 : 2, name: s.name, item: absoluteUrl(lang, routes.station(s.slug)) },
+    ],
+  };
+
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
+
+      {/* `estacion_vista` era la ÚNICA vista del plan de medición (§31) sin
+          emisor, y es el final del embudo B2C: sin ella el paso más importante
+          quedaba ciego. `threshold={0}` porque aquí lo que se mide es la
+          PÁGINA, no que un bloque cruce el viewport. */}
+      <TrackView
+        event="estacion_vista"
+        threshold={0}
+        props={{
+          estacion: s.slug,
+          ciudad: s.citySlug,
+          potencia_kw: s.powerKw ?? undefined,
+          conectores: s.connectors.join(","),
+          estado: s.status,
+        }}
+      />
 
       <Section space="none" className="pb-8 pt-32 md:pt-40">
         <Container>

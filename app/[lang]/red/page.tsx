@@ -44,8 +44,27 @@ export default async function RedPage({ params }: Props) {
   const coverage = getCitiesWithStations();
   const preguntas = getFaq();
 
+  /* §29 trata cada landing como activo de búsqueda, y este es el más barato
+     que quedaba sin explotar: cinco preguntas escritas, en tres idiomas, con
+     las respuestas exactas que la gente teclea. Sin `FAQPage` no pueden
+     aparecer como resultado enriquecido.
+
+     Se genera desde la MISMA colección que pinta el acordeón, así que no
+     pueden divergir: un dato estructurado que no coincide con lo visible es
+     motivo de penalización, no de mejora. */
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: preguntas.map((p) => ({
+      "@type": "Question",
+      name: t(p.question, lang),
+      acceptedAnswer: { "@type": "Answer", text: t(p.answer, lang) },
+    })),
+  };
+
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       {/* Apertura FUNCIONAL: en una superficie de producto el marco editorial
           paga alquiler. `pt-24` en móvil deja 32px de aire bajo el header de
           64px en lugar de 64px, y el lead se alinea a la baseline del titular
