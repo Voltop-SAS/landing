@@ -1011,3 +1011,57 @@ Las dos tenían la misma causa de fondo: **los valores de la animación se fijar
 ### Evidencia
 
 `lint`, `tsc` y build limpios · 47 páginas · titular dentro del cuadro en 8 puntos del recorrido (2%–60%) · contraste del hero y estructura sin fallos · `prefers-reduced-motion`: sección colapsada a 0.67× viewport, video pausado, recorte en 0%.
+
+---
+
+## Bloque 22 · La apertura del beat 2 solo funcionaba en tres anchos — 2026-09-01
+
+**Origen:** pregunta del usuario, *"¿crees que funciona a la perfección en los diferentes viewports?"*. No lo estaba, y no se sabía porque **la calibración del bloque 21 se hizo solo a 1440 px**.
+
+### El fallo
+
+El recorte es un **porcentaje del ancho**; el texto arranca tras un **margen fijo**. Escalan distinto, así que la distancia del titular al borde cambia con el viewport:
+
+| Viewport | El titular empieza en | Recorte máx. | ¿El borde parte las palabras? |
+|---|---|---|---|
+| 1024 px | **3.8%** | 9.5% | **sí** |
+| 768 px | 4.3% | 9.5% | **sí** |
+| 390 px | 6.3% | 9.5% | **sí** |
+| 1440 px | 10.3% | 9.5% | no |
+| 1920 px | 20.6% | 9.5% | no |
+
+**Cruzaba en 9 de 12 anchos.** Ajustar el número no lo arregla: no existe un porcentaje que quede por debajo del 3.8% de 1024 y siga siendo una animación visible.
+
+### La corrección: un orden, no un valor
+
+El texto entraba por `whileInView` —al asomar la sección— mientras el recorte seguía a medias. Ahora entra por un **pestillo de un solo sentido** atado al recorrido: primero se asienta el cuadro (termina al 25%), después entra el texto (30%). El borde no puede coincidir con las palabras en ningún ancho, porque ya no coexisten.
+
+Un pestillo y no una opacidad ligada al progreso: la cabecera del archivo ya advertía que eso haría desaparecer el texto al subir. Verificado: al volver arriba tras haber bajado, el texto sigue visible.
+
+Con el orden resuelto, la apertura **recupera recorrido**: 18% en vez de 10%, porque ya no tiene que caber por debajo de un texto.
+
+### Un fallo que la corrección reintrodujo
+
+Atar el texto al recorrido devolvió el problema que la cabecera advertía: **al llegar por `#infraestructura` el progreso es 0, el pestillo no salta y la sección se ve sin una palabra.** Medido: opacidad 0 a 390 y a 1440 px.
+
+Se añadió una salida: si la sección lleva 1.2 s en pantalla y el progreso sigue sin avanzar, se abre sola —cuadro **y** texto—. Abrir solo el texto habría devuelto el borde cruzando las palabras.
+
+Ninguna ruta del sitio enlaza a esa ancla, pero la URL es pública.
+
+### Verificación
+
+| Caso | Resultado |
+|---|---|
+| Borde coincidiendo con texto visible, **14 viewports × 8 puntos de scroll** | **ninguno** |
+| Texto visible al final del recorrido, 14 viewports | **todos** |
+| Llegada por ancla (390 y 1440) | texto visible, recorte 0% |
+| Recarga a media sección | texto visible |
+| Volver arriba tras bajar | texto sigue visible |
+| Recorrido normal al 3% | texto oculto, recorte 16.8% — la apertura ocurre |
+| `prefers-reduced-motion` | sección 0.67× viewport, texto visible, video pausado, recorte 0% |
+
+Contraste del hero, estructura y header: sin fallos.
+
+### Lección
+
+Calibrar una animación proporcional contra un solo viewport no sirve. El síntoma —"se ve raro"— aparecía en 9 de 12 anchos y en el que yo revisaba no aparecía.

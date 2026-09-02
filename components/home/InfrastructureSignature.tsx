@@ -1,7 +1,7 @@
 "use client";
 
-import { useRef } from "react";
-import { motion, useScroll, useTransform, useReducedMotion } from "motion/react";
+import { useEffect, useRef, useState } from "react";
+import { motion, useScroll, useTransform, useMotionValueEvent, useInView, useReducedMotion } from "motion/react";
 import { duration, ease } from "@/lib/motion";
 import { t, type Locale } from "@/lib/i18n/config";
 import { href, routes } from "@/lib/i18n/routes";
@@ -53,33 +53,79 @@ export function InfrastructureSignature({ lang }: { lang: Locale }) {
   /* El MATERIAL se revela con scroll-scrub: arranca recortado y se abre a
      sangre completa. Los hooks se llaman siempre, sin condicionales. */
   /**
-   * ── LA APERTURA, RECALIBRADA AL ENTRAR EL VIDEO ───────────────────────────
-   * Los valores originales —`inset` de 28% a 0 sobre el 70% del recorrido,
-   * `scale` de 1.12 a 1— se fijaron contra el hueco del placeholder, que era
-   * una superficie QUIETA. Con material real fallaban por tres motivos, y los
-   * tres se veían:
+   * ── APERTURA Y TEXTO, ENCADENADOS ────────────────────────────────────────
+   * El texto entraba por `whileInView` —al asomar la sección— mientras el
+   * recorte seguía abierto a medias. El borde del cuadro pasaba entonces por
+   * detrás del titular y una línea vertical partía las palabras.
    *
-   * 1. EL BORDE PARTÍA EL TITULAR. El texto empieza al 14.2% del ancho y el
-   *    recorte llegaba al 28%: durante el primer 20% del recorrido una línea
-   *    vertical cortaba las palabras. Medido a 5%, 10% y 15% de scroll.
-   *    → El recorte ahora arranca en 10%, por debajo de ese 14.2%. El texto
-   *      queda SIEMPRE dentro del cuadro, en cualquier punto del recorrido.
+   * Un recorte porcentual NO puede evitarlo ajustando el número: el recorte es
+   * un porcentaje del ancho y el texto arranca tras un margen fijo, así que la
+   * distancia del texto al borde cambia con el viewport. Medido: el titular
+   * empieza al 3.8% del ancho a 1024px y al 20.6% a 1920px. Un 10% de recorte
+   * cruzaba en 9 de 12 anchos probados.
    *
-   * 2. COMPETÍA CON EL PLANO. Una caja creciendo mientras la cámara avanza son
-   *    dos movimientos a la vez; se percibe como agitación, no como apertura.
-   *    → 10% en lugar de 28% lo convierte en un asentamiento, no en una caja
-   *      que crece, y termina antes (45% del recorrido) para no arrastrarse
-   *      sobre el movimiento del propio plano.
-   *
-   * 3. AMPLIABA EL VIDEO Y SE VEÍA BLANDO. Con `scale: 1.12`, en una Retina de
-   *    1440 había que estirar la fuente hasta ~3226px. Con la fuente a 1920
-   *    eso era un 1.68× de ampliación.
-   *    → `scale` baja a 1.05 y la fuente sube a 2560: la ampliación pasa a
-   *      1.18×. La profundidad se conserva; la blandura desaparece.
+   * La solución no es un valor sino un ORDEN: primero se asienta el cuadro,
+   * después entra el texto. Así el borde nunca coincide con las palabras, sea
+   * cual sea el ancho, y la apertura recupera recorrido —18% en vez de 10%—
+   * porque ya no tiene que caber por debajo de un texto.
    */
-  const insetPct = useTransform(scrollYProgress, [0, 0.45], reduce ? [0, 0] : [10, 0]);
+  const insetPct = useTransform(scrollYProgress, [0, 0.25], reduce ? [0, 0] : [18, 0]);
   const clipPath = useTransform(insetPct, (v) => `inset(${v}% ${v}% ${v}% ${v}%)`);
-  const scale = useTransform(scrollYProgress, [0, 0.45], reduce ? [1, 1] : [1.05, 1]);
+  const scale = useTransform(scrollYProgress, [0, 0.25], reduce ? [1, 1] : [1.06, 1]);
+
+  /**
+   * El texto se destraba cuando la apertura ya terminó (30% del recorrido) y
+   * NO vuelve a ocultarse: es un pestillo de un solo sentido.
+   *
+   * Esto es lo que la cabecera de este archivo ya advertía que no se hiciera
+   * con una opacidad ligada al progreso —volvería a 0 al retroceder y el texto
+   * desaparecería al subir—. Un pestillo conserva la sincronización con el
+   * scroll sin ese efecto.
+   *
+   * La comprobación inicial cubre a quien llega directo por `#infraestructura`
+   * o recarga a media sección: si el progreso ya pasó el umbral, el texto está
+   * visible desde el primer fotograma.
+   */
+  const [abierto, setAbierto] = useState(false);
+  useMotionValueEvent(scrollYProgress, "change", (v) => {
+    if (v > 0.3) setAbierto(true);
+  });
+  /* Diferido un fotograma: `useScroll` no tiene medida hasta después del
+     layout, y actualizar el estado dentro del efecto sin diferir choca con
+     la regla de React y provocaría un renderizado extra en la hidratación. */
+  useEffect(() => {
+    const id = requestAnimationFrame(() => {
+      if (scrollYProgress.get() > 0.3) setAbierto(true);
+    });
+    return () => cancelAnimationFrame(id);
+  }, [scrollYProgress]);
+
+  /**
+   * SALIDA DE EMERGENCIA para quien llega por `#infraestructura` y no se mueve.
+   *
+   * Atar el texto al recorrido reintroducía el fallo que la cabecera de este
+   * archivo ya advertía: al aterrizar en el ancla el progreso es 0, así que el
+   * pestillo no salta y la sección se ve **sin una palabra**. Medido: opacidad
+   * 0 a 390 y a 1440 px.
+   *
+   * Si la sección lleva un momento en pantalla y el progreso sigue sin avanzar,
+   * se abre sola. Y se abre ENTERA —cuadro y texto—: mostrar el texto dejando
+   * el recorte a medias traería de vuelta el borde cruzando las palabras, que
+   * es justo lo que se estaba arreglando.
+   *
+   * Ninguna ruta del sitio enlaza hoy a esta ancla, pero la URL es pública.
+   */
+  const enVista = useInView(ref, { amount: 0.5 });
+  const [forzado, setForzado] = useState(false);
+  useEffect(() => {
+    if (!enVista) return;
+    const id = setTimeout(() => {
+      if (scrollYProgress.get() < 0.15) setForzado(true);
+    }, 1200);
+    return () => clearTimeout(id);
+  }, [enVista, scrollYProgress]);
+
+  const visible = reduce || abierto || forzado;
   /**
    * RECALIBRADO al entrar la fotografía real (2026-09-01).
    *
@@ -95,12 +141,11 @@ export function InfrastructureSignature({ lang }: { lang: Locale }) {
    */
   const scrimOpacity = useTransform(scrollYProgress, [0.1, 0.45], reduce ? [1, 1] : [0.8, 1]);
 
-  /** Fase de entrada del texto. `once: true` — visible es para siempre. */
+  /** Fase de entrada del texto. Se dispara con el pestillo, no al asomar. */
   const phase = (delay: number) => ({
     "data-reveal": "",
     initial: { opacity: 0, y: 32 },
-    whileInView: { opacity: 1, y: 0 },
-    viewport: { once: true, margin: "-20% 0px -20% 0px" },
+    animate: visible ? { opacity: 1, y: 0 } : { opacity: 0, y: 32 },
     transition: { duration: reduce ? 0 : duration.reveal, ease: ease.standard, delay: reduce ? 0 : delay },
   });
 
@@ -116,7 +161,12 @@ export function InfrastructureSignature({ lang }: { lang: Locale }) {
       className="h-[170vh] motion-reduce:h-auto"
     >
       <div className="sticky top-0 flex h-dvh flex-col justify-end overflow-hidden motion-reduce:static motion-reduce:h-auto">
-        <motion.div style={{ scale, clipPath }} className="absolute inset-0">
+        <motion.div
+          style={{ scale, clipPath: forzado ? "inset(0% 0% 0% 0%)" : clipPath }}
+          /* La transición solo actúa en el caso forzado; durante el scroll el
+             valor lo escribe motion en cada fotograma y no hay nada que animar. */
+          className="absolute inset-0 transition-[clip-path] duration-500 ease-out"
+        >
           <Media
             asset={media.estacionMedellin}
             lang={lang}
