@@ -8,7 +8,7 @@ export type AccordionItem = {
   id: string;
   question: string;
   answer: string;
-  link?: { label: string; href: string; external?: boolean };
+  links?: { label: string; href: string; external?: boolean }[];
 };
 
 /**
@@ -36,7 +36,10 @@ export type AccordionItem = {
 /** Un solo sitio para el enlace de salida: interno y externo solo difieren
     en la flecha y en el aviso de pestaña nueva. */
 const enlace =
-  "group mt-4 inline-flex items-center gap-2 font-mono text-mono text-brand transition-colors hover:text-ink";
+  "group inline-flex items-center gap-2 font-mono text-mono text-brand transition-colors hover:text-ink";
+
+const flecha =
+  "transition-transform duration-(--duration-fast) ease-(--ease-overshoot)";
 
 export function Accordion({
   items,
@@ -114,38 +117,40 @@ export function Accordion({
                   className="pb-7 md:pr-10"
                 >
                   <p className="measure-narrow text-body text-ink-2">{item.answer}</p>
-                  {item.link ? (
-                    item.link.external ? (
-                      /* Externo: pestaña nueva anunciada (WCAG 3.2.5) y la
-                         MISMA flecha que el enlace interno, movida en diagonal
-                         al pasar el cursor. Es exactamente lo que hace
-                         `Button`, y así "esto te saca del sitio" se dice de una
-                         sola forma en todo el sitio.
+                  {item.links?.length ? (
+                    <ul className="mt-4 flex flex-wrap items-center gap-x-6 gap-y-2">
+                      {item.links.map((l) =>
+                        l.external ? (
+                          /* Externo: pestaña nueva anunciada (WCAG 3.2.5) y la
+                             MISMA flecha que el enlace interno, movida en
+                             diagonal al pasar el cursor. Es lo que hace
+                             `Button`, y así "esto te saca del sitio" se dice de
+                             una sola forma en todo el sitio.
 
-                         Probé antes con el glifo ↗ y no funcionaba: en esta
-                         mono sale más pequeño y fino que la →, y quedaba
-                         desparejado justo al lado de ella. Mismo problema que
-                         tuvo el icono de Facebook en el footer. */
-                      <a
-                        href={item.link.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className={enlace}
-                      >
-                        {item.link.label}
-                        <span className="sr-only"> · {newTabLabel}</span>
-                        <span aria-hidden="true" className="transition-transform duration-(--duration-fast) ease-(--ease-overshoot) group-hover:-translate-y-1 group-hover:translate-x-1">
-                          →
-                        </span>
-                      </a>
-                    ) : (
-                      <Link href={item.link.href} className={enlace}>
-                        {item.link.label}
-                        <span aria-hidden="true" className="transition-transform duration-(--duration-fast) ease-(--ease-overshoot) group-hover:translate-x-1">
-                          →
-                        </span>
-                      </Link>
-                    )
+                             Probé antes con el glifo ↗ y no servía: en esta
+                             mono sale más pequeño y fino que la →, desparejado
+                             justo al lado de ella. */
+                          <li key={l.href}>
+                            <a href={l.href} target="_blank" rel="noopener noreferrer" className={enlace}>
+                              {l.label}
+                              <span className="sr-only"> · {newTabLabel}</span>
+                              <span aria-hidden="true" className={flecha + " group-hover:-translate-y-1 group-hover:translate-x-1"}>
+                                →
+                              </span>
+                            </a>
+                          </li>
+                        ) : (
+                          <li key={l.href}>
+                            <Link href={l.href} className={enlace}>
+                              {l.label}
+                              <span aria-hidden="true" className={flecha + " group-hover:translate-x-1"}>
+                                →
+                              </span>
+                            </Link>
+                          </li>
+                        ),
+                      )}
+                    </ul>
                   ) : null}
                 </div>
               </div>

@@ -27,4 +27,13 @@ export const externalLinks = {
    * telefónica en lugar de abrir la conversación.
    */
   whatsapp: "https://wa.me/573159864931",
+
+  /**
+   * Correo de soporte. Sale de la Política de Tratamiento de Datos, donde
+   * VOLTOP S.A.S. lo declara como su dato de contacto — no de una suposición.
+   */
+  soporte: "mailto:soporte@voltop.co",
 } as const;
+
+/** El correo en texto, para mostrarlo además de enlazarlo. */
+export const soporteEmail = "soporte@voltop.co";

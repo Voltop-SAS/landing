@@ -31,7 +31,11 @@ export function AppDownload({ lang }: { lang: Locale }) {
   const c = home.app;
 
   return (
-    <Section space="base" className="border-t border-line" ariaLabelledby="app-title">
+    <Section
+      space="base"
+      className="border-t border-line"
+      ariaLabelledby="app-title"
+    >
       <Container>
         <div className="grid gap-12 md:grid-cols-[1fr_auto] md:items-center md:gap-16">
           <div>
@@ -42,7 +46,9 @@ export function AppDownload({ lang }: { lang: Locale }) {
             >
               {t(c.title, lang)}
             </h2>
-            <p className="measure-narrow mt-5 text-body-l text-ink-2">{t(c.lead, lang)}</p>
+            <p className="measure-narrow mt-5 text-body-l text-ink-2">
+              {t(c.lead, lang)}
+            </p>
 
             <ul className="mt-8 space-y-0">
               {c.features.map((f, i) => (
@@ -53,7 +59,10 @@ export function AppDownload({ lang }: { lang: Locale }) {
                   {/* El punto es una marca de lista, no un adorno de marca: en
                       tinta apagada, no en el gradiente. §12 reserva el
                       gradiente para UNA acción por vista. */}
-                  <span aria-hidden="true" className="mt-2.5 size-1 shrink-0 rounded-full bg-ink-3" />
+                  <span
+                    aria-hidden="true"
+                    className="mt-2.5 size-1 shrink-0 rounded-full bg-ink-3"
+                  />
                   {t(f, lang)}
                 </li>
               ))}
@@ -68,20 +77,27 @@ export function AppDownload({ lang }: { lang: Locale }) {
             /* Solo escritorio: ver la cabecera del archivo. */
           >
             <div className="flex flex-col items-center gap-4">
-              <div className="rounded-(--radius-structural) bg-white p-4">
-                <Image
-                  src="/qr-descargar-app.svg"
-                  alt={t(c.qrAlt, lang)}
-                  width={168}
-                  height={168}
-                  /* SVG de 1.2 KB con geometría exacta: pasarlo por el
+              {/* Marco de vidrio con el código sobre blanco dentro: el efecto
+                  va en el marco, nunca en el código. Ver `.glass` y la nota de
+                  `AppFloating`. */}
+              <div className="glass relative rounded-(--radius-structural) p-3">
+                <div className="rounded-[1.125rem] bg-white p-3.5 shadow-[0_10px_28px_-10px_rgb(0_0_0/0.7)]">
+                  <Image
+                    src="/qr-descargar-app.svg"
+                    alt={t(c.qrAlt, lang)}
+                    width={168}
+                    height={168}
+                    /* SVG de 1.2 KB con geometría exacta: pasarlo por el
                      optimizador solo añadiría una petición y riesgo de
                      resampleo en un gráfico donde cada módulo cuenta. */
-                  unoptimized
-                  className="size-[10.5rem]"
-                />
+                    unoptimized
+                    className="block size-[10.5rem]"
+                  />
+                </div>
               </div>
-              <p className="font-mono text-mono text-ink-3">{t(c.qrLabel, lang)}</p>
+              <p className="font-mono text-mono text-ink-3">
+                {t(c.qrLabel, lang)}
+              </p>
             </div>
           </Reveal>
         </div>

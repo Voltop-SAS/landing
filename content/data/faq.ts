@@ -36,11 +36,15 @@ export type FaqItem = {
   question: Localized;
   answer: Localized;
   /**
-   * Enlace de salida cuando la respuesta continúa en otra parte.
+   * Salidas de la respuesta. Es una LISTA porque una pregunta puede tener más
+   * de un camino legítimo —"necesito ayuda" se resuelve por WhatsApp o por
+   * correo, y elegir por el usuario sería peor— pero se mantienen pocas: una
+   * respuesta con cuatro salidas no responde, reparte.
+   *
    * `external` cambia dos cosas: el href se usa tal cual (sin prefijo de
    * idioma) y el enlace se abre en pestaña nueva anunciándolo (WCAG 3.2.5).
    */
-  link?: { label: Localized; href: string; external?: boolean };
+  links?: { label: Localized; href: string; external?: boolean }[];
 };
 
 export const faq: FaqItem[] = [
@@ -56,11 +60,17 @@ export const faq: FaqItem[] = [
       en: "Download the Voltop app, find a station nearby, plug in your vehicle and follow the steps to start charging. From the app you can manage and check your session in real time.",
       pt: "Baixe o aplicativo da Voltop, encontre uma estação por perto, conecte seu veículo e siga os passos para iniciar o carregamento. Pelo aplicativo você acompanha e gerencia sua sessão em tempo real.",
     },
-    link: {
-      label: { es: "Descargar la app", en: "Get the app", pt: "Baixar o aplicativo" },
-      href: externalLinks.app,
-      external: true,
-    },
+    links: [
+      {
+        label: {
+          es: "Descargar la app",
+          en: "Get the app",
+          pt: "Baixar o aplicativo",
+        },
+        href: externalLinks.app,
+        external: true,
+      },
+    ],
   },
   {
     id: "donde",
@@ -77,10 +87,16 @@ export const faq: FaqItem[] = [
     /* La respuesta manda a la app, pero quien lee esto está de pie sobre el
        buscador de la web. El enlace evita que la única salida sea una tienda
        de aplicaciones cuyo enlace todavía no tenemos (O8). */
-    link: {
-      label: { es: "Ver cobertura por ciudad", en: "See coverage by city", pt: "Ver cobertura por cidade" },
-      href: `${routes.red}#ciudades`,
-    },
+    links: [
+      {
+        label: {
+          es: "Ver cobertura por ciudad",
+          en: "See coverage by city",
+          pt: "Ver cobertura por cidade",
+        },
+        href: `${routes.red}#ciudades`,
+      },
+    ],
   },
   {
     id: "precio",
@@ -120,10 +136,24 @@ export const faq: FaqItem[] = [
       en: "We're here for you. If anything comes up before, during or after a charge, you can reach our support team through Voltop's available channels.",
       pt: "Estamos aqui para ajudar. Se tiver algum problema antes, durante ou depois de um carregamento, você pode falar com nosso time de suporte pelos canais disponíveis da Voltop.",
     },
-    link: {
-      label: { es: "Escríbenos por WhatsApp", en: "Message us on WhatsApp", pt: "Fale com a gente no WhatsApp" },
-      href: externalLinks.whatsapp,
-      external: true,
-    },
+    links: [
+      {
+        label: {
+          es: "Escríbenos por WhatsApp",
+          en: "Message us on WhatsApp",
+          pt: "Fale com a gente no WhatsApp",
+        },
+        href: externalLinks.whatsapp,
+        external: true,
+      },
+      {
+        /* Dos caminos y no uno: WhatsApp resuelve lo urgente —alguien varado
+           en una estación— y el correo sirve para lo que necesita adjuntar o
+           dejar por escrito. Elegir por el usuario habría sido peor. */
+        label: { es: "Escribir a soporte", en: "Email support", pt: "Escrever para o suporte" },
+        href: externalLinks.soporte,
+        external: true,
+      },
+    ],
   },
 ];

@@ -5,6 +5,7 @@ import { footer, brand, a11y } from "@/content/copy/common";
 import { Container } from "@/components/ui/layout";
 import { Logo } from "@/components/layout/Logo";
 import { SocialLinks } from "@/components/layout/SocialLinks";
+import { externalLinks, soporteEmail } from "@/content/data/links";
 
 /**
  * FOOTER · Server Component
@@ -35,6 +36,18 @@ export function Footer({ lang }: { lang: Locale }) {
               <Logo />
             </Link>
             <p className="mt-4 max-w-xs text-body-s text-ink-3">{t(brand.tagline, lang)}</p>
+            {/* El correo de soporte, visible y en texto. Está declarado en la
+                Política de Tratamiento de Datos como dato de contacto de
+                VOLTOP S.A.S., así que es el canal oficial y merece estar donde
+                se busca: el footer. Se muestra COMPLETO en lugar de esconderlo
+                tras un "Contáctanos", porque un correo que se puede copiar de
+                un vistazo ahorra un clic y un formulario. */}
+            <a
+              href={externalLinks.soporte}
+              className="mt-5 inline-flex min-h-11 items-center font-mono text-mono text-ink-2 transition-colors hover:text-brand"
+            >
+              {soporteEmail}
+            </a>
             <SocialLinks lang={lang} />
           </div>
 

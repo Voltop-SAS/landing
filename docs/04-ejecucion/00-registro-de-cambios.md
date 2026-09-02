@@ -1460,3 +1460,35 @@ La tarjeta blanca del QR flotante se estiraba a lo ancho del panel, dejando medi
 ### Evidencia
 
 `lint`, `tsc` y build limpios · `ES 415/415 · EN 415/415 · PT 415/415` · QR decodificado y coincidente · las tres reglas de visibilidad del flotante medidas en el render real.
+
+---
+
+## Bloque 34 · Vidrio, soporte y el flotante en móvil — 2026-09-02
+
+### `.glass` — una superficie, no un div translúcido
+
+Tres capas con trabajos distintos: el **medio** (`backdrop-filter` con desenfoque *y* saturación), el **canto especular** (borde de 1px con gradiente, dibujado con dos máscaras en XOR porque CSS no admite `border-image` con radios) y la **profundidad** (sombra amplia + realce interior).
+
+La parte que casi siempre se olvida es **`brightness`**. Sin atenuar el fondo, un titular claro que pase por detrás se lee A TRAVÉS del panel y compite con el texto de encima. Con ella, lo de atrás sigue insinuándose —que es la gracia— pero ya no disputa la lectura.
+
+Los valores salen de un **barrido medido sobre el peor caso**: la barra móvil, que cruza titulares de tamaño display a lo ancho de la pantalla, en 18 posiciones de scroll. En estado estable nada se lee a través ni al 52%; se dejó en **68%** por margen frente a un artefacto de composición —durante el scroll animado el navegador puede pintar el `backdrop-filter` con un fotograma atrasado—.
+
+Contraste sobre el píxel **compuesto**: panel entre `rgb(15,22,38)` y `rgb(26,32,46)` en todo el recorrido, texto principal a **16.5:1** y secundario a **10.6:1**.
+
+Sin `backdrop-filter` el panel pasa a fondo sólido. Es la única salida honesta: translúcido sin desenfoque deja el texto sobre lo que haya detrás.
+
+### Un fallo que costó encontrar
+
+`.glass` declaraba `position: relative`. `.glass` y `.fixed` de Tailwind tienen **la misma especificidad** —una clase—, así que ganaba la que apareciera después en la hoja: la tarjeta flotante dejaba de estar fija y aparecía **a 3013px del viewport** en lugar de anclada abajo a la derecha. Ahora `.glass` no declara `position` y quien la use sin `fixed`/`absolute` añade `relative` en el marcado.
+
+### El flotante ya existe en móvil
+
+Antes se ocultaba por debajo de `lg`, que es tanto como decir que la mitad del tráfico no lo veía nunca. Ahora son **dos piezas, no una encogida**: en escritorio la tarjeta con QR; en móvil una barra baja con la acción directa, porque un teléfono no puede escanearse a sí mismo.
+
+La barra respeta `env(safe-area-inset-bottom)`: sin eso, en un iPhone queda bajo el indicador de inicio y el botón de cerrar se vuelve intocable. Verificado: 366×70 px, anclada a 12px del borde, objetivos táctiles de 66×44 y 44×44.
+
+### Correo de soporte
+
+`soporte@voltop.co` sale de la Política de Tratamiento de Datos, donde VOLTOP S.A.S. lo declara como dato de contacto — no de una suposición. Aparece en el **footer**, completo y en texto (un correo que se puede copiar de un vistazo ahorra un clic y un formulario), y como **segunda salida de la pregunta de ayuda** del FAQ.
+
+Para eso el acordeón pasó de admitir un enlace a admitir varios: WhatsApp resuelve lo urgente —alguien varado en una estación— y el correo sirve para lo que necesita adjuntarse o quedar por escrito. Elegir por el usuario habría sido peor.

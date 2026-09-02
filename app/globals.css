@@ -300,6 +300,97 @@ body {
   box-shadow: 0 0 60px -12px color-mix(in srgb, var(--color-brand-2) 55%, transparent);
 }
 
+/* =========================================================================
+   SUPERFICIE DE VIDRIO
+   Ver docs/MASTER-PROJECT-DEFINITION.md §12–13.
+
+   Una superficie que deja pasar el fondo y se comporta como un material, no
+   como una caja con opacidad. Tres capas, y cada una hace un trabajo distinto:
+
+   1. EL MEDIO — `backdrop-filter` con desenfoque Y saturación. La saturación
+      es lo que separa esto de "un div translúcido": el vidrio real concentra
+      el color de lo que hay detrás en lugar de lavarlo. Sin ella, sobre un
+      lienzo casi negro el panel se ve gris sucio.
+
+   2. EL CANTO ESPECULAR — un borde de 1px con GRADIENTE, no un color plano.
+      La luz entra por arriba a la izquierda y se apaga hacia abajo, que es lo
+      que da la lectura de "pieza con volumen". Se dibuja con dos máscaras
+      compuestas en XOR porque CSS no admite `border-image` con radios.
+
+   3. LA PROFUNDIDAD — dos sombras: una amplia y difusa que despega la pieza
+      del fondo, y un realce interior arriba que simula el grosor del canto.
+
+   ── LEGIBILIDAD POR ENCIMA DEL EFECTO ─────────────────────────────────
+   El fondo se queda en 62%, no más abajo. Por debajo de eso el texto empieza
+   a competir con lo que pasa por detrás al hacer scroll, y §23 exige 4.5:1
+   contra el fondo COMPUESTO, no contra el token teórico.
+
+   ── SIN `backdrop-filter` NO HAY VIDRIO, HAY OPACIDAD ────────────────
+   Donde el navegador no lo soporta el panel pasa a fondo sólido. Es la única
+   salida honesta: un fondo translúcido sin desenfoque deja el texto sobre lo
+   que haya detrás y se vuelve ilegible.
+   ========================================================================= */
+/* OJO: aquí NO se declara `position`.
+   `.glass` y `.fixed` de Tailwind tienen la misma especificidad —una clase—,
+   así que gana la que aparezca después en la hoja. Con `position: relative`
+   dentro de `.glass`, un elemento `glass fixed` dejaba de estar fijo y se
+   colocaba en el flujo: la tarjeta flotante aparecía a 3013px del viewport en
+   lugar de anclada abajo a la derecha.
+   El `::before` necesita un ancestro posicionado, así que quien use `.glass`
+   sin `fixed`/`absolute` debe añadir `relative` en el marcado. */
+.glass {
+  background: color-mix(in srgb, var(--color-surface-2) 68%, transparent);
+  /* `brightness` es lo que hace legible al vidrio, y es la parte que casi
+     siempre se olvida. Sin atenuar el fondo, un titular claro que pase por
+     detrás se lee A TRAVÉS del panel y compite con el texto de encima; con
+     ella, lo de atrás sigue insinuándose —que es la gracia— pero ya no
+     disputa la lectura. `saturate` evita que esa atenuación deje un gris
+     sucio: el vidrio real concentra el color de lo que hay detrás.
+
+     Los valores salen de un barrido MEDIDO sobre el peor caso —la barra móvil,
+     que cruza titulares de tamaño display a lo ancho de la pantalla— en 18
+     posiciones de scroll. En estado estable nada se lee a través ni siquiera
+     al 52%; se deja en 68% por margen frente a un artefacto de composición:
+     durante el scroll animado el navegador puede pintar el `backdrop-filter`
+     con un fotograma atrasado, y con más opacidad ese parpadeo no se nota. */
+  backdrop-filter: blur(32px) saturate(190%) brightness(0.32);
+  -webkit-backdrop-filter: blur(32px) saturate(190%) brightness(0.32);
+  box-shadow:
+    0 24px 60px -20px rgb(0 0 0 / 0.65),
+    0 2px 10px -4px rgb(0 0 0 / 0.4),
+    inset 0 1px 0 0 rgb(255 255 255 / 0.08);
+}
+
+.glass::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    150deg,
+    rgb(255 255 255 / 0.34) 0%,
+    rgb(255 255 255 / 0.1) 28%,
+    rgb(255 255 255 / 0.03) 52%,
+    color-mix(in srgb, var(--color-brand) 16%, transparent) 100%
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glass {
+    background: var(--color-surface-2);
+  }
+}
+
 /* Medida de línea legible (45–75 caracteres) */
 .measure {
   max-width: 62ch;

@@ -166,6 +166,14 @@ export const home = {
       en: "Scan the code and charge from your phone.",
       pt: "Escaneie o código e carregue pelo seu celular.",
     },
+    /* La barra móvil tiene una línea, no dos: el mensaje se dice más corto en
+       lugar de recortar el de escritorio con puntos suspensivos. */
+    bodyMobile: {
+      es: "Carga desde tu teléfono",
+      en: "Charge from your phone",
+      pt: "Carregue pelo seu celular",
+    },
+    open: { es: "Abrir", en: "Open", pt: "Abrir" },
     dismiss: { es: "Cerrar", en: "Dismiss", pt: "Fechar" },
   },
 };

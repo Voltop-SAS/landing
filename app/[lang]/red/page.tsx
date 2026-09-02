@@ -139,15 +139,13 @@ export default async function RedPage({ params }: Props) {
               id: p.id,
               question: t(p.question, lang),
               answer: t(p.answer, lang),
-              link: p.link
-                ? {
-                    label: t(p.link.label, lang),
-                    // Un href externo ya está completo: prefijarlo con el
-                    // idioma lo convertiría en `/es/https://…`.
-                    href: p.link.external ? p.link.href : href(lang, p.link.href),
-                    external: p.link.external,
-                  }
-                : undefined,
+              links: p.links?.map((l) => ({
+                label: t(l.label, lang),
+                // Un href externo ya está completo: prefijarlo con el idioma
+                // lo convertiría en `/es/https://…`.
+                href: l.external ? l.href : href(lang, l.href),
+                external: l.external,
+              })),
             }))}
           />
         </Container>
