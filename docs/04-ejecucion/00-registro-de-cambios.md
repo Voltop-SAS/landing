@@ -1673,3 +1673,43 @@ Y se retiraron del repositorio nueve scripts de verificación que se habían col
 ### Lo que el barrido confirmó que está bien
 
 **98 combinaciones** sin desbordamiento horizontal · un solo `h1` y cero saltos de nivel en 14 rutas · **CLS = 0** en 14 combinaciones, LCP 44–208ms · ~1400 nodos de texto sin un solo fallo de contraste sobre el compuesto, en los tres idiomas · cero `href="#"` · todos los `target="_blank"` con `rel` y aviso · todas las imágenes con `alt` · reduced-motion sin un solo elemento invisible **incluso con JavaScript desactivado** · menú móvil con foco atrapado, Escape y scroll bloqueado · 404 real con salidas.
+
+---
+
+## Bloque 39 · Los datos reales de la red — 2026-09-02
+
+**El sitio estaba afirmando una red mayor y más potente de la que existe.** Camilo entregó el dataset real: tres estaciones, no cuatro.
+
+| | Antes (publicado) | Real |
+|---|---|---|
+| Universidad EAN | 10 puntos · 60 kW · CCS1, CCS2, GB-T | **18 puntos · 22–80 kW** · GB/T, CCS1, CCS2 |
+| Grand Hyatt | 11 puntos · 60 kW | 11 puntos · **30 kW** · GB/T |
+| Wake (Medellín) | — | **6 puntos · 80 kW** · GB/T, CCS2 |
+| San Fernando Plaza | 6 puntos · 120 kW | **NO EXISTE** |
+| Corredor Norte | 8 puntos · 150 kW | **NO EXISTE** |
+| Total de la red | 4 estaciones · 27 puntos · 60–150 kW | **3 estaciones · 35 puntos · 22–80 kW** |
+
+### La potencia pasa a ser un rango
+
+`powerKw: number` → `powerKw: { min, max }`. La EAN tiene cargadores de 22 a 80 kW, y publicar solo el máximo diría que **todos** sus puntos cargan a 80 — exactamente el tipo de promesa que §19 no admite. Cuando todos los puntos son iguales, `min === max` y se muestra una sola cifra: "30–30 kW" no informa, confunde.
+
+El cambio de tipo hizo de guardia: **el compilador señaló los 11 sitios** que pintaban o comparaban potencias, incluidos dos criterios de orden y el agregado de la Home. Ninguno se quedó atrás por descuido.
+
+### Los filtros de potencia se derivan del dataset
+
+Estaban fijos en `[0, 50, 100, 150]`. Con las potencias reales, **100+ y 150+ no devolvían ninguna estación**: dos de los cuatro controles garantizados a dar cero resultados, cuando §16 dice que si algo parece un filtro, filtra.
+
+Ahora se calculan desde los máximos distintos de las estaciones: hoy salen **`Todas · 30+ · 80+`**. Añadir una estación de 150 kW hace aparecer ese escalón sola; retirarla lo quita. Y si todas las estaciones tuvieran la misma potencia, **el grupo entero desaparece** en lugar de quedarse como un control que no reduce nada.
+
+### Lo que arrastraban esas dos estaciones fantasma
+
+- **Dos entradas de novedades** anunciaban sus aperturas. Retiradas: una apertura publicada de una estación inexistente no es un dato desactualizado, es un dato **falso**, y el registro pierde su única función —ser el sitio donde consta lo que de verdad pasó— en cuanto admite una.
+- **El intro de Medellín** describía "120 kW dentro de San Fernando Plaza". Ahora describe Wake, sin inventar barrio: la dirección no se ha entregado.
+- **El lead de `/red`** decía "de 60 a 150 kW". Se quitó la cifra en lugar de actualizarla: ya se quedó obsoleta una vez, y el dato exacto vive en cada ficha, generado desde el dataset.
+- **La novedad de la EAN** hablaba de "diez puntos de 60 kW". Corregida a dieciocho, de 22 a 80.
+
+Las tres estaciones pasan a `dataStatus: "verified"`. La dirección de Wake y las coordenadas de las tres siguen sin entregarse y **no se inventan**.
+
+### Evidencia
+
+`lint`, `tsc` y build limpios · `ES 409/409 · EN 409/409 · PT 409/409` · Home rindiendo **35 puntos · 22–80 kW · GB-T · CCS1 · CCS2** · `/red` con 3 estaciones y chips `Todas · 30+ kW · 80+ kW`.

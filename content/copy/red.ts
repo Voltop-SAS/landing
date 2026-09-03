@@ -27,9 +27,13 @@ export const red = {
          pista de uso y añade dato concreto: la precisión es lo que suena a
          compañía técnica. Las cifras son las mismas que calcula
          `getNetworkSummary`; si divergen, manda el dataset. */
-      es: "Filtra por ciudad, conector y potencia. Hoy cargamos en Bogotá y Medellín, de 60 a 150 kW.",
-      en: "Filter by city, connector and power. Today we charge in Bogotá and Medellín, from 60 to 150 kW.",
-      pt: "Filtre por cidade, conector e potência. Hoje carregamos em Bogotá e Medellín, de 60 a 150 kW.",
+      /* Sin cifras escritas a mano. El rango de potencia cambia con cada
+         estación que entra, y aquí ya se quedó obsoleto una vez: decía "de 60
+         a 150 kW" cuando la red real va de 22 a 80. Las cifras exactas están
+         en la ficha de cada estación, que se genera desde el dataset. */
+      es: "Filtra por ciudad, conector y potencia. Cada ficha indica cuántos puntos tiene y a qué potencia cargan.",
+      en: "Filter by city, connector and power. Each station shows how many points it has and at what power they charge.",
+      pt: "Filtre por cidade, conector e potência. Cada ficha indica quantos pontos tem e em que potência carregam.",
     } satisfies Localized,
   },
 
@@ -212,7 +216,8 @@ export const station = {
 
 export type StationMetaVars = {
   city: string;
-  powerKw: number;
+  /** Ya formateada: "22–80 kW" o "30 kW". */
+  powerKw: string;
   points: number;
   connectors: string;
 };
@@ -233,10 +238,10 @@ export type StationMetaVars = {
 export const stationMeta = {
   description: {
     es: (v: StationMetaVars) =>
-      `Estación de carga Voltop en ${v.city}: ${v.powerKw} kW, ${v.points} puntos y conectores ${v.connectors}.`,
+      `Estación de carga Voltop en ${v.city}: ${v.powerKw}, ${v.points} puntos y conectores ${v.connectors}.`,
     en: (v: StationMetaVars) =>
-      `Voltop charging station in ${v.city}: ${v.powerKw} kW, ${v.points} points and ${v.connectors} connectors.`,
+      `Voltop charging station in ${v.city}: ${v.powerKw}, ${v.points} points and ${v.connectors} connectors.`,
     pt: (v: StationMetaVars) =>
-      `Estação de carregamento Voltop em ${v.city}: ${v.powerKw} kW, ${v.points} pontos e conectores ${v.connectors}.`,
+      `Estação de carregamento Voltop em ${v.city}: ${v.powerKw}, ${v.points} pontos e conectores ${v.connectors}.`,
   } satisfies Localized<(v: StationMetaVars) => string>,
 };

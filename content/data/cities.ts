@@ -40,9 +40,12 @@ export const cities: City[] = [
     intro: {
       /* "Puntos estratégicos" era relleno. El intro de Bogotá, en esta misma
          colección, es concreto y muy superior; esto lo pone a la par. */
-      es: "Carga rápida en El Poblado: 120 kW dentro de San Fernando Plaza, con más estaciones en camino por el Valle de Aburrá.",
-      en: "Fast charging in El Poblado: 120 kW inside San Fernando Plaza, with more stations on the way across the Aburrá Valley.",
-      pt: "Carregamento rápido em El Poblado: 120 kW dentro do San Fernando Plaza, com mais estações a caminho no Vale de Aburrá.",
+      /* Corregido con los datos reales: la estación de Medellín es Wake, de
+         80 kW, no San Fernando Plaza de 120. La referencia a El Poblado sale
+         también: no consta la dirección. */
+      es: "Nuestra primera estación en Medellín, con 80 kW y seis puntos de carga.",
+      en: "Our first station in Medellín, with 80 kW and six charge points.",
+      pt: "Nossa primeira estação em Medellín, com 80 kW e seis pontos de carga.",
     },
     featured: true,
   },

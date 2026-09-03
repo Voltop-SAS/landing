@@ -15,6 +15,7 @@ import { MediaPending } from "@/components/ui/Media";
 import { Button } from "@/components/ui/Button";
 import { DirectionsButton } from "@/components/red/DirectionsButton";
 import { media } from "@/content/data/media";
+import { formatPowerKw } from "@/content/data/stations";
 
 type Props = { params: Promise<{ lang: string; slug: string }> };
 
@@ -58,7 +59,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       /* Sin ciudad resuelta se omite el topónimo en lugar de imprimir
          "undefined" en la descripción que ve el buscador. */
       city: city?.name ?? "Colombia",
-      powerKw: s.powerKw,
+      powerKw: formatPowerKw(s.powerKw),
       points: s.points,
       connectors: s.connectors.join(", "),
     }),
@@ -86,7 +87,7 @@ export default async function StationPage({ params }: Props) {
     : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${s.name}, ${t(s.address, lang)}`)}`;
 
   const specs = [
-    { label: t(stationCopy.specs.power, lang), value: `${s.powerKw} kW`, tone: "number" as const },
+    { label: t(stationCopy.specs.power, lang), value: formatPowerKw(s.powerKw), tone: "number" as const },
     { label: t(stationCopy.specs.points, lang), value: `${s.points}`, tone: "number" as const },
     { label: t(stationCopy.specs.connectors, lang), value: s.connectors.join(" · "), tone: "text" as const },
     { label: t(stationCopy.specs.hours, lang), value: t(s.hours, lang), tone: "text" as const },
@@ -136,7 +137,7 @@ export default async function StationPage({ params }: Props) {
         props={{
           estacion: s.slug,
           ciudad: s.citySlug,
-          potencia_kw: s.powerKw ?? undefined,
+          potencia_kw: s.powerKw.max,
           conectores: s.connectors.join(","),
           estado: s.status,
         }}
@@ -279,7 +280,7 @@ export default async function StationPage({ params }: Props) {
                       {n.name}
                     </span>
                     <span className="font-mono text-mono text-ink-2">
-                      {n.powerKw} kW · {n.points} {t(units.pointsShort, lang)}
+                      {formatPowerKw(n.powerKw)} · {n.points} {t(units.pointsShort, lang)}
                     </span>
                   </Link>
                 </li>

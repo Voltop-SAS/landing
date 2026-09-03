@@ -7,6 +7,7 @@ import { href, routes } from "@/lib/i18n/routes";
 import { red } from "@/content/copy/red";
 import { states, units } from "@/content/copy/common";
 import type { Station } from "@/content/data/stations";
+import { formatPowerKw } from "@/content/data/stations";
 import type { City } from "@/content/data/cities";
 import {
   filterStations,
@@ -59,7 +60,25 @@ import { cn } from "@/lib/cn";
 
 type Props = { lang: Locale; stations: Station[]; cities: City[] };
 
-const POWER_STEPS = [0, 50, 100, 150];
+/**
+ * ESCALONES DEL FILTRO DE POTENCIA — derivados del dataset, no escritos.
+ *
+ * Estaban fijos en `[0, 50, 100, 150]`. Con las potencias reales de la red
+ * (22–80 kW), los escalones de 100+ y 150+ **no devolvían ninguna estación**:
+ * dos de los cuatro controles del filtro estaban garantizados a dar cero
+ * resultados, y §16 dice que ningún control es decorativo — si parece un
+ * filtro, filtra.
+ *
+ * Derivarlos evita que vuelva a pasar. Se toman los máximos distintos de las
+ * estaciones, se ordenan y se antepone el 0 ("todas"). Añadir una estación de
+ * 150 kW hace aparecer ese escalón sola; retirarla lo quita.
+ */
+function calcularEscalones(stations: Station[]): number[] {
+  const maximos = [...new Set(stations.map((s) => s.powerKw.max))].sort((a, b) => a - b);
+  /* Si todas las estaciones tuvieran la misma potencia, el filtro no separaría
+     nada: mejor un solo escalón "todas" que un control que no reduce. */
+  return maximos.length > 1 ? [0, ...maximos] : [0];
+}
 
 type Coords = { lat: number; lng: number };
 type GeoState = "idle" | "locating" | "granted" | "denied";
@@ -107,7 +126,7 @@ const EMPTY: Criteria = {
  * el HTML servido siempre trae la lista completa. La cobertura indexable por
  * ciudad ya la dan las rutas `/red/[ciudad]`, que era el motivo SEO original.
  */
-function readCriteria(): Criteria {
+function readCriteria(escalones: number[]): Criteria {
   const p = new URLSearchParams(window.location.search);
   const kw = Number(p.get(PARAM.power));
   const sort = p.get(PARAM.sort);
@@ -115,7 +134,7 @@ function readCriteria(): Criteria {
     query: p.get(PARAM.q) ?? "",
     city: p.get(PARAM.city) ?? "",
     connector: p.get(PARAM.connector) ?? "",
-    minPower: POWER_STEPS.includes(kw) ? kw : 0,
+    minPower: escalones.includes(kw) ? kw : 0,
     onlyLive: p.get(PARAM.live) === "1",
     /* `distance` no se restaura de la URL: exige permiso de ubicación, y un
        enlace no puede concederlo. */
@@ -186,6 +205,8 @@ export function StationFinder({ lang, stations, cities }: Props) {
   const hasFilters = Boolean(query || city || connector || minPower || onlyLive);
   const activeCount = [city, connector, minPower, onlyLive].filter(Boolean).length;
 
+  const escalones = useMemo(() => calcularEscalones(stations), [stations]);
+
   /* ── URL → criterio, una sola vez al montar.
      `setState` dentro de un efecto es exactamente lo que la regla
      `react-hooks/set-state-in-effect` vigila, y aquí es el caso que la propia
@@ -194,8 +215,9 @@ export function StationFinder({ lang, stations, cities }: Props) {
      asignación, sin cascada. */
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    setCriteria(readCriteria());
-  }, []);
+    setCriteria(readCriteria(escalones));
+  }, [escalones]);
+
 
   const results = useMemo(
     () => sortStations(filterStations(stations, filters, cityName), sort, { cityNameOf: cityName, origin }),
@@ -364,13 +386,17 @@ export function StationFinder({ lang, stations, cities }: Props) {
             ))}
           </FilterGroup>
 
-          <FilterGroup label={t(red.filters.power, lang)}>
-            {POWER_STEPS.map((p) => (
-              <Chip key={p} active={minPower === p} onClick={() => { set("minPower", p); onFilter("potencia", p); }}>
-                {p === 0 ? t(red.filters.allM, lang) : `${p}+ kW`}
-              </Chip>
-            ))}
-          </FilterGroup>
+          {/* Con un solo escalón el grupo no separa nada, así que no se pinta:
+              un filtro que no filtra es un control decorativo (§16). */}
+          {escalones.length > 1 && (
+            <FilterGroup label={t(red.filters.power, lang)}>
+              {escalones.map((p) => (
+                <Chip key={p} active={minPower === p} onClick={() => { set("minPower", p); onFilter("potencia", p); }}>
+                  {p === 0 ? t(red.filters.allM, lang) : `${p}+ kW`}
+                </Chip>
+              ))}
+            </FilterGroup>
+          )}
 
           {/* La etiqueta del grupo dice DE QUÉ es; el chip, QUÉ hace. Antes las
               dos decían "Solo en operación". */}
@@ -440,7 +466,7 @@ export function StationFinder({ lang, stations, cities }: Props) {
                     </p>
                   </div>
                   <p className="font-mono text-mono text-ink-2">
-                    {s.powerKw} kW · {s.points} {t(units.pointsShort, lang)}
+                    {formatPowerKw(s.powerKw)} · {s.points} {t(units.pointsShort, lang)}
                   </p>
                   <p className="font-mono text-mono text-ink-3">{s.connectors.join(" / ")}</p>
                   <StatusBadge status={s.status} lang={lang} className="justify-self-start lg:justify-self-end" />

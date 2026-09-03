@@ -61,7 +61,9 @@ export function filterStations(list: Station[], f: StationFilters, cityNameOf: (
   return list.filter((s) => {
     if (f.citySlug && s.citySlug !== f.citySlug) return false;
     if (f.connector && !s.connectors.includes(f.connector as Station["connectors"][number])) return false;
-    if (f.minPowerKw && s.powerKw < f.minPowerKw) return false;
+    /* Se compara contra el MÁXIMO: una estación con puntos de 22 y de 80
+        entra en el filtro "80+", porque efectivamente puedes cargar a 80 ahí. */
+    if (f.minPowerKw && s.powerKw.max < f.minPowerKw) return false;
     if (f.onlyAvailable && s.status !== "operativa") return false;
     if (f.query) {
       const q = normalize(f.query);
@@ -113,10 +115,10 @@ export function sortStations(
   const out = [...list];
   switch (sort) {
     case "power":
-      return out.sort((a, b) => b.powerKw - a.powerKw || a.name.localeCompare(b.name));
+      return out.sort((a, b) => b.powerKw.max - a.powerKw.max || a.name.localeCompare(b.name));
     case "status":
       return out.sort(
-        (a, b) => statusRank[a.status] - statusRank[b.status] || b.powerKw - a.powerKw
+        (a, b) => statusRank[a.status] - statusRank[b.status] || b.powerKw.max - a.powerKw.max
       );
     case "city":
       return out.sort(
@@ -161,14 +163,17 @@ export function getCity(slug: string): City | undefined {
  */
 export function getNetworkSummary() {
   const operativas = stations.filter((s) => s.status === "operativa");
-  const potencias = operativas.map((s) => s.powerKw).filter((p): p is number => typeof p === "number");
+  /* El mínimo de la red es el mínimo de los mínimos y el máximo el de los
+     máximos: publicar "80 kW" cuando hay puntos de 22 sería prometer de más. */
+  const minimos = operativas.map((s) => s.powerKw.min);
+  const maximos = operativas.map((s) => s.powerKw.max);
   const conectores = [...new Set(operativas.flatMap((s) => s.connectors))];
   return {
     estaciones: operativas.length,
     puntos: operativas.reduce((n, s) => n + (s.points ?? 0), 0),
     ciudades: new Set(operativas.map((s) => s.citySlug)).size,
-    potenciaMin: potencias.length ? Math.min(...potencias) : null,
-    potenciaMax: potencias.length ? Math.max(...potencias) : null,
+    potenciaMin: minimos.length ? Math.min(...minimos) : null,
+    potenciaMax: maximos.length ? Math.max(...maximos) : null,
     conectores,
   };
 }

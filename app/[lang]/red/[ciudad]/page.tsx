@@ -12,6 +12,7 @@ import { Section, Container, Eyebrow, SectionHeading } from "@/components/ui/lay
 import { StatusBadge } from "@/components/ui/data";
 import { Reveal } from "@/components/ui/Reveal";
 import { TrackView } from "@/components/analytics/TrackView";
+import { formatPowerKw } from "@/content/data/stations";
 
 type Props = { params: Promise<{ lang: string; ciudad: string }> };
 
@@ -118,7 +119,7 @@ export default async function CityPage({ params }: Props) {
                     <p className="mt-0.5 text-body-s text-ink-3">{t(s.address, lang)}</p>
                   </div>
                   <p className="font-mono text-mono text-ink-2">
-                    {s.powerKw} kW · {s.points} {t(units.pointsShort, lang)}
+                    {formatPowerKw(s.powerKw)} · {s.points} {t(units.pointsShort, lang)}
                   </p>
                   <p className="font-mono text-mono text-ink-3">{s.connectors.join(" / ")}</p>
                   <StatusBadge status={s.status} lang={lang} className="justify-self-start md:justify-self-end" />

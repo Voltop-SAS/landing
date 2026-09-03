@@ -89,9 +89,11 @@ export const posts: Post[] = [
       pt: "Nova estação na Universidade EAN",
     },
     summary: {
-      es: "Diez puntos de carga de 60 kW en el campus, abiertos al público y en operación permanente.",
-      en: "Ten 60 kW charging points on campus, open to the public and operating around the clock.",
-      pt: "Dez pontos de carregamento de 60 kW no campus, abertos ao público e em operação permanente.",
+      /* Cifras corregidas con los datos reales (2026-09-02): 18 puntos y
+         22–80 kW, no diez de 60. */
+      es: "Dieciocho puntos de carga en el campus, abiertos al público y en operación permanente.",
+      en: "Eighteen charging points on campus, open to the public and operating around the clock.",
+      pt: "Dezoito pontos de carregamento no campus, abertos ao público e em operação permanente.",
     },
     cover: media.aperturaEan,
     stationSlug: "universidad-ean",
@@ -102,9 +104,9 @@ export const posts: Post[] = [
       {
         kind: "parrafo",
         text: {
-          es: "La estación de la Universidad EAN entra en operación con diez puntos de carga de 60 kW, disponibles las 24 horas y abiertos tanto a la comunidad universitaria como a cualquier conductor.",
-          en: "The Universidad EAN station enters service with ten 60 kW charging points, available 24 hours a day and open both to the university community and to any driver.",
-          pt: "A estação da Universidade EAN entra em operação com dez pontos de carregamento de 60 kW, disponíveis 24 horas por dia e abertos tanto à comunidade universitária quanto a qualquer motorista.",
+          es: "La estación de la Universidad EAN entra en operación con dieciocho puntos de carga de 22 a 80 kW, disponibles las 24 horas y abiertos tanto a la comunidad universitaria como a cualquier conductor.",
+          en: "The Universidad EAN station enters service with eighteen charging points from 22 to 80 kW, available 24 hours a day and open both to the university community and to any driver.",
+          pt: "A estação da Universidade EAN entra em operação com dezoito pontos de carregamento de 22 a 80 kW, disponíveis 24 horas por dia e abertos tanto à comunidade universitária quanto a qualquer motorista.",
         },
       },
       {
@@ -124,50 +126,12 @@ export const posts: Post[] = [
     status: "publicado",
     dataStatus: "placeholder",
   },
-  {
-    slug: "san-fernando-plaza-medellin",
-    type: "apertura",
-    date: "2026-05-07",
-    title: {
-      es: "Carga de 120 kW en San Fernando Plaza",
-      en: "120 kW charging at San Fernando Plaza",
-      pt: "Carregamento de 120 kW no San Fernando Plaza",
-    },
-    summary: {
-      /* "Dobla la potencia de la red en Bogotá" deja de ser cierto el día que
-         abra Corredor Norte —150 kW, Bogotá— anunciado en la entrada de al
-         lado. Un registro cuyas entradas caducan es peor que uno que solo
-         declara el hecho. */
-      es: "Seis puntos de 120 kW en El Poblado: la primera estación de Voltop en el Valle de Aburrá.",
-      en: "Six 120 kW points in El Poblado: Voltop's first station in the Aburrá Valley.",
-      pt: "Seis pontos de 120 kW em El Poblado: a primeira estação da Voltop no Vale de Aburrá.",
-    },
-    stationSlug: "san-fernando-plaza",
-    citySlug: "medellin",
-    body: [],
-    status: "publicado",
-    dataStatus: "placeholder",
-  },
-  {
-    slug: "corredor-norte-proxima-apertura",
-    type: "noticia",
-    date: "2026-04-22",
-    title: {
-      es: "Corredor Norte: 150 kW en construcción",
-      en: "Corredor Norte: 150 kW under construction",
-      pt: "Corredor Norte: 150 kW em construção",
-    },
-    summary: {
-      es: "Ocho puntos de 150 kW en el corredor de salida norte de Bogotá.",
-      en: "Eight 150 kW points on Bogotá's northern exit corridor.",
-      pt: "Oito pontos de 150 kW no corredor de saída norte de Bogotá.",
-    },
-    stationSlug: "corredor-norte",
-    citySlug: "bogota",
-    body: [],
-    status: "publicado",
-    dataStatus: "placeholder",
-  },
+  /* AQUÍ HABÍA DOS ENTRADAS MÁS: "San Fernando Plaza" y "Corredor Norte".
+     Se retiraron el 2026-09-02 junto con sus estaciones: anunciaban aperturas
+     de puntos que no existen. Una apertura publicada de una estación
+     inexistente no es un dato desactualizado, es un dato falso, y el registro
+     pierde su única función —ser el sitio donde consta lo que de verdad
+     pasó— en cuanto admite una. */
   {
     slug: "grand-hyatt-bogota",
     type: "alianza",
