@@ -73,6 +73,16 @@ export function VideoMedia({
       autoPlay={controls ? undefined : !reduce}
       aria-label={t(asset.alt, lang)}
     >
+      {/* El ORDEN importa: el navegador se queda con la PRIMERA fuente cuyo
+          `media` case, así que la variante ligera va antes. Sin `media` en la
+          segunda, cualquier pantalla mayor recibe el máster.
+
+          `<source media>` se evalúa una sola vez al cargar, no al redimensionar:
+          es lo correcto aquí —nadie cambia de teléfono a monitor a mitad de
+          página— y evita recargar el vídeo en cada cambio de tamaño. */}
+      {asset.srcMobile ? (
+        <source src={asset.srcMobile} media="(max-width: 767px)" type="video/mp4" />
+      ) : null}
       <source src={asset.src ?? undefined} type="video/mp4" />
     </video>
   );

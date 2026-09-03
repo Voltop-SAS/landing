@@ -7,14 +7,14 @@ import { TrackClick } from "@/components/analytics/TrackClick";
  * BADGES DE TIENDA
  * Ver docs/MASTER-PROJECT-DEFINITION.md §15 y §23.
  *
- * ── LAS DOS APUNTAN AL MISMO SITIO, Y ESTÁ BIEN ──────────────────────────
- * `app.voltop.co` es un ENLACE DINÁMICO: resuelve a App Store o a Google Play
- * según el dispositivo que lo abre. Por eso ambas insignias llevan ahí en vez
- * de a dos URLs de ficha distintas.
+ * ── CADA INSIGNIA VA A SU TIENDA ─────────────────────────────────────────
+ * Durante un tiempo ambas apuntaron al enlace dinámico `app.voltop.co` porque
+ * no había fichas. Ya las hay (2026-09-02), y cada insignia va a la suya: una
+ * insignia DICE a qué tienda lleva, y mandarla a un redirector que decide por
+ * su cuenta contradice lo que ella misma promete.
  *
- * INCOMPLETO A PROPÓSITO: cuando existan las URLs directas de cada ficha, se
- * añaden a `externalLinks` y cada insignia apunta a la suya. Hasta entonces el
- * enlace dinámico cumple la función y evita publicar dos `href` inventados.
+ * Además, hoy son la ÚNICA ruta de descarga que funciona: el enlace dinámico
+ * sigue devolviendo 503.
  *
  * Y sigue en pie la advertencia de `content/data/links.ts`: el dominio
  * devolvía 503 el 2026-09-02. Hay que verificarlo antes del lanzamiento.
@@ -63,7 +63,7 @@ export function StoreBadges({
             props={{ tienda: "app_store", ubicacion: "seccion" }}
           >
             <a
-              href={externalLinks.app}
+              href={externalLinks.appStore}
               target="_blank"
               rel="noopener noreferrer"
               className={insignia}
@@ -93,7 +93,7 @@ export function StoreBadges({
             props={{ tienda: "google_play", ubicacion: "seccion" }}
           >
             <a
-              href={externalLinks.app}
+              href={externalLinks.googlePlay}
               target="_blank"
               rel="noopener noreferrer"
               className={insignia}

@@ -13,6 +13,23 @@ import { externalLinks } from "@/content/data/links";
  * Regla: un titular es un contrato. No se promete lo que el producto no hace.
  */
 
+/**
+ * Datos registrales de la compañía. Salen de la Política de Tratamiento de
+ * Datos y de los Términos, donde constan como información pública de VOLTOP
+ * S.A.S. — no son un dato interno que estemos exponiendo por decisión propia.
+ *
+ * Los usa `Organization` en los datos estructurados: un buscador que puede
+ * verificar identidad legal, dirección y contacto trata a la marca como una
+ * entidad real, no como un sitio más.
+ */
+export const empresa = {
+  razonSocial: "VOLTOP S.A.S.",
+  nit: "901.723.964-6",
+  direccion: "Cra. 15 # 80-90",
+  ciudad: "Bogotá",
+  pais: "CO",
+} as const;
+
 export const brand = {
   name: "Voltop",
   tagline: {
@@ -235,6 +252,24 @@ export const leadForm = {
    * que de verdad pasó. No se ofrece un canal alternativo porque no hay
    * correo ni teléfono confirmados en el dataset: no se inventan datos (§33).
    */
+  /**
+   * Confirmación cuando el formulario redacta un correo.
+   *
+   * Dice EXACTAMENTE lo que pasó. "Solicitud enviada" sería mentira: el
+   * mensaje está redactado, no enviado, y quien no lo mande no llega a
+   * nosotros. Que la persona sepa que le falta un clic es la diferencia entre
+   * un lead y un lead perdido.
+   */
+  successEmail: {
+    tag: { es: "Casi listo", en: "Almost there", pt: "Quase lá", } satisfies Localized,
+    title: { es: "Te abrimos el correo", en: "We opened your email", pt: "Abrimos o seu e-mail", } satisfies Localized,
+    body: {
+      es: "Tu mensaje ya está redactado con todo lo que nos contaste. Solo tienes que enviarlo y te respondemos en uno o dos días hábiles. Si no se abrió, escríbenos a soporte@voltop.co.",
+      en: "Your message is already written with everything you told us. Just send it and we'll reply within one or two business days. If it didn't open, write to soporte@voltop.co.",
+      pt: "Sua mensagem já está escrita com tudo o que você nos contou. Basta enviá-la e respondemos em um ou dois dias úteis. Se não abriu, escreva para soporte@voltop.co.",
+    } satisfies Localized,
+  },
+
   successPending: {
     tag: { es: "Sin enviar", en: "Not sent", pt: "Não enviado", } satisfies Localized,
     title: { es: "Todavía no podemos recibirlo aquí", en: "We can't receive it here yet", pt: "Ainda não conseguimos receber por aqui", } satisfies Localized,

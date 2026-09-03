@@ -19,6 +19,17 @@ export type MediaAsset = {
   kind: MediaKind;
   /** Ruta del archivo final. `null` mientras no se haya recibido. */
   src: string | null;
+  /**
+   * Variante ligera para pantallas pequeñas.
+   *
+   * No es una optimización cosmética: el bucle de Medellín está codificado a
+   * 2560×1440 y un teléfono de 390px no puede mostrar ni una sexta parte de
+   * esos píxeles. Servirlo tal cual son 2.9 MB de datos móviles gastados en
+   * resolución invisible.
+   *
+   * `null` = no hay variante y todos reciben la única que existe.
+   */
+  srcMobile?: string | null;
   /** Frame de portada — crítico para LCP y para el estado sin reproducir. */
   poster: string | null;
   /** Texto alternativo / descripción accesible. Obligatorio siempre. */
@@ -70,6 +81,8 @@ export const media = {
     id: "estacion-medellin",
     kind: "video",
     src: "/estacion-medellin-loop.mp4",
+    /* 960×540 · 0.66 MB frente a 2.92 MB del máster. */
+    srcMobile: "/estacion-medellin-loop-movil.mp4",
     poster: "/estacion-medellin-poster.jpg",
     alt: {
       es: "Nueva estación de carga Voltop en Medellín, vista general de la infraestructura",

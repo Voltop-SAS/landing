@@ -5,6 +5,7 @@ import Link from "next/link";
 import { t, type Locale } from "@/lib/i18n/config";
 import { href, routes } from "@/lib/i18n/routes";
 import { leadForm } from "@/content/copy/common";
+import { leadRecipients } from "@/content/data/links";
 import { Button } from "@/components/ui/Button";
 import { PendingTag } from "@/components/ui/data";
 import { track } from "@/lib/analytics";
@@ -35,21 +36,50 @@ type Status = "idle" | "loading" | "success";
 type Errors = Partial<Record<"name" | "email" | "company" | "consent", string>>;
 
 /**
- * INTERRUPTOR DE HONESTIDAD. `false` mientras no exista destino de envío.
+ * DESTINO DEL FORMULARIO.
  *
- * Mientras esté en `false`, el formulario NO afirma haber enviado nada: el
- * estado de confirmación explica que la integración está pendiente. Al conectar
- * el CRM se pone en `true` y el copy real de `leadForm.success` —ya escrito y
- * traducido— entra sin tocar nada más.
+ * - `"ninguno"`: no hay a dónde enviar. El formulario lo DICE y no finge.
+ * - `"correo"`: abre el cliente de correo con todo redactado. Es lo que hay
+ *   hoy (decisión del 2026-09-02) y funciona sin servidor.
+ * - `"crm"`: envío automático. Requiere backend o servicio de formularios.
+ *
+ * POR QUÉ CORREO Y NO UN SERVICIO: el sitio es completamente estático, así que
+ * no hay servidor donde recibir un POST. Un `mailto:` es la única vía que
+ * funciona HOY sin dar de alta nada. Tiene dos costes que conviene tener
+ * presentes: pierde a quien no tenga cliente de correo configurado, y expone
+ * las tres direcciones en el HTML. Un servicio de formularios los resuelve
+ * ambos y solo cambia esta función.
  */
-const CRM_ENABLED = false;
+const DESTINO: "ninguno" | "correo" | "crm" = "correo";
 
 async function submitLead(payload: Record<string, FormDataEntryValue>): Promise<void> {
-  // PUNTO DE INTEGRACIÓN CRM. Nombres de campo estables: name, email,
-  // company, phone, message, segment, consent.
-  // Mientras no exista destino, se simula la latencia de red.
-  void payload;
-  await new Promise((r) => setTimeout(r, 900));
+  if (DESTINO !== "correo") {
+    void payload;
+    await new Promise((r) => setTimeout(r, 900));
+    return;
+  }
+
+  /* Nombres de campo estables del plan: name, email, company, phone, message,
+     segment. El asunto lleva el segmento para poder filtrar sin abrir. */
+  const v = (k: string) => String(payload[k] ?? "").trim();
+  const asunto = `Voltop · ${v("segment") || "Contacto"} · ${v("company") || v("name")}`;
+  const cuerpo = [
+    `Nombre: ${v("name")}`,
+    `Correo: ${v("email")}`,
+    `Empresa: ${v("company")}`,
+    v("phone") ? `Teléfono: ${v("phone")}` : null,
+    `Segmento: ${v("segment")}`,
+    "",
+    v("message") || "(sin mensaje)",
+    "",
+    "— Enviado desde el formulario de voltop.co",
+  ]
+    .filter(Boolean)
+    .join("\n");
+
+  window.location.href =
+    `mailto:${leadRecipients.join(",")}` +
+    `?subject=${encodeURIComponent(asunto)}&body=${encodeURIComponent(cuerpo)}`;
 }
 
 export function LeadForm({ lang, segmentKey, segmentLabel }: { lang: Locale; segmentKey: string; segmentLabel: string }) {
@@ -109,7 +139,7 @@ export function LeadForm({ lang, segmentKey, segmentLabel }: { lang: Locale; seg
   };
 
   if (status === "success") {
-    const confirmation = CRM_ENABLED ? leadForm.success : leadForm.successPending;
+    const confirmation = DESTINO === "correo" ? leadForm.successEmail : leadForm.successPending;
 
     return (
       <div
@@ -118,7 +148,7 @@ export function LeadForm({ lang, segmentKey, segmentLabel }: { lang: Locale; seg
         role="status"
         className="border border-line bg-surface-1 p-8 md:p-10"
       >
-        {CRM_ENABLED ? (
+        {DESTINO !== "ninguno" ? (
           <div className="grid size-11 place-items-center rounded-(--radius-pill) brand-gradient text-on-brand">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
               <path d="m5 13 4 4L19 7" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -155,7 +185,7 @@ export function LeadForm({ lang, segmentKey, segmentLabel }: { lang: Locale; seg
 
       {/* Aviso de demo ANTES de pedir el dato. Estaba en mono de 12px debajo
           del botón, donde nadie lo lee antes de escribir su correo. */}
-      {!CRM_ENABLED && (
+      {DESTINO === "ninguno" && (
         <p className="mt-6 border-l-2 border-warn/70 bg-warn/8 px-4 py-3 text-body-s text-ink-2">
           {t(leadForm.demoNotice, lang)}
         </p>

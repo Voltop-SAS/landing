@@ -12,35 +12,51 @@
   /* ---------------------------------------------------------------
      COLOR · Canvas y superficies (registro Silencio)
      --------------------------------------------------------------- */
-  --color-canvas: #0a0f1c;
-  --color-surface-1: #0e1424;
-  --color-surface-2: #141c30;
-  --color-surface-3: #1c2740;
+  /* PALETA OFICIAL DE VOLTOP, entregada el 2026-09-02. Sustituye a la
+     provisional. `canvas` y `surface-2` son los dos fondos que define la
+     marca; `surface-1` y `surface-3` se interpolan entre ellos y por encima,
+     porque el sistema necesita cuatro niveles de profundidad y la marca
+     define dos. Si mañana se fijan oficialmente, se sustituyen aquí. */
+  --color-canvas: #0a0f1a;    /* marca · BG primary */
+  --color-surface-1: #0d1420;
+  --color-surface-2: #111827; /* marca · BG secondary */
+  --color-surface-3: #1a2334;
 
   /* ---------------------------------------------------------------
      COLOR · Tinta
      Todos los tonos de texto cumplen WCAG AA (≥4.5:1) sobre canvas,
      surface-1, surface-2 y surface-3. Verificado, no asumido.
      --------------------------------------------------------------- */
-  --color-ink: #f2f5fa;      /* 17.4:1 sobre canvas */
-  --color-ink-2: #a9b3c4;    /*  9.1:1 sobre canvas */
-  --color-ink-3: #8b95a8;    /*  6.3:1 sobre canvas · 4.9:1 sobre surface-3 */
+  --color-ink: #e6e9ee;      /* marca · Text primary   — 15.74:1 sobre canvas */
+  --color-ink-2: #a3b2c3;    /* marca · Text secondary —  8.86:1 sobre canvas */
+  /* Tercer nivel: la marca define DOS tonos de texto y el sistema usa tres
+     (etiquetas mono, pies, metadatos). Se conserva el que ya cumplía —6.35:1
+     sobre canvas y 5.88:1 sobre surface-2— en vez de inventar uno nuevo. */
+  --color-ink-3: #8b95a8;
 
   /* ---------------------------------------------------------------
      COLOR · Marca (registro Impacto: la "corriente" verde→cian)
      El gradiente es SEÑAL, no textura: máx. 1 acción primaria por vista.
      --------------------------------------------------------------- */
-  --color-brand: #45e0a8;
-  --color-brand-2: #28c6e6;
-  --color-brand-press: #00b5e2;
-  --color-on-brand: #04121c;  /* 11.3:1 sobre el gradiente */
+  /* El gradiente oficial va de `brand-2` (cian) a `brand` (verde). Se
+     conserva el orden de las variables para no tocar los componentes: `brand`
+     es el color de acento y `brand-2` el segundo punto del gradiente. */
+  --color-brand: #51d9b2;     /* marca · Brand secondary — 10.87:1 sobre canvas */
+  --color-brand-2: #0fc7e1;   /* marca · Brand primary   —  9.38:1 sobre canvas */
+  --color-brand-press: #0fc7e1;
+  /* Sobre los dos colores de marca el texto tiene que ser OSCURO: el blanco
+     da 2.04:1 y el fondo de marca 9.38:1. Medido, no supuesto. */
+  --color-on-brand: #0a0f1a;
 
   /* ---------------------------------------------------------------
      COLOR · Semántico (estados). Sustituye literales sueltos.
      --------------------------------------------------------------- */
-  --color-live: #45e0a8;      /* estación operativa */
-  --color-warn: #e8b464;      /* provisional / mantenimiento — 10.1:1 */
-  --color-idle: #8b95a8;      /* próximamente */
+  --color-live: #38d398;      /* marca · Success — 9.98:1 sobre canvas */
+  --color-error: #e2555a;     /* marca · Error   — 5.18:1 sobre canvas */
+  /* PENDIENTE: la marca define un tono `warning` pero no entregó su hex. Se
+     conserva el provisional, que cumple AA, hasta recibirlo. */
+  --color-warn: #e8b464;
+  --color-idle: #8b95a8;
 
   /* ---------------------------------------------------------------
      COLOR · Líneas y foco
@@ -62,7 +78,9 @@
   --color-line: rgba(255, 255, 255, 0.09);
   --color-line-strong: rgba(255, 255, 255, 0.18);
   --color-line-control: rgba(255, 255, 255, 0.36);
-  --color-focus: #6ee7c7;
+  /* El anillo de foco usa el acento de marca: es el color con el que el
+     sitio dice "aquí". */
+  --color-focus: #51d9b2;
 
   /* ---------------------------------------------------------------
      TIPOGRAFÍA · Familias
@@ -285,12 +303,14 @@ body {
 /* =========================================================================
    UTILIDADES DE MARCA
    ========================================================================= */
+/* Dirección OFICIAL del gradiente: cian → verde (#0FC7E1 → #51D9B2). Iba al
+   revés; la marca lo define en ese orden y el orden se nota en cada botón. */
 .brand-gradient {
-  background-image: linear-gradient(100deg, var(--color-brand), var(--color-brand-2));
+  background-image: linear-gradient(100deg, var(--color-brand-2), var(--color-brand));
 }
 
 .brand-text {
-  background-image: linear-gradient(100deg, var(--color-brand), var(--color-brand-2));
+  background-image: linear-gradient(100deg, var(--color-brand-2), var(--color-brand));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;

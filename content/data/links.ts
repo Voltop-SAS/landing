@@ -22,6 +22,22 @@ export const externalLinks = {
   app: "https://app.voltop.co/",
 
   /**
+   * Fichas directas de cada tienda (entregadas 2026-09-02). Las insignias
+   * apuntan aquí y no al enlace dinámico: cada insignia dice a qué tienda va,
+   * así que mandarlas a un redirector que decide por su cuenta contradice lo
+   * que la propia insignia promete.
+   *
+   * Apple: se usa la ficha de COLOMBIA (`/co/`), no la de México que venía en
+   * el enlace original. Ambas responden 200, pero el storefront determina
+   * moneda y disponibilidad, y el sitio es colombiano.
+   *
+   * Google: sin `pcampaignid`, que es un parámetro de campaña del botón de
+   * compartir y no pertenece a la URL canónica.
+   */
+  appStore: "https://apps.apple.com/co/app/voltop/id6759729784",
+  googlePlay: "https://play.google.com/store/apps/details?id=co.voltop.charging",
+
+  /**
    * Soporte. El número es de WhatsApp y se atiende vía Freshchat, así que se
    * enlaza con `wa.me` y NO con `tel:`: un `tel:` lanzaría una llamada
    * telefónica en lugar de abrir la conversación.
@@ -37,3 +53,17 @@ export const externalLinks = {
 
 /** El correo en texto, para mostrarlo además de enlazarlo. */
 export const soporteEmail = "soporte@voltop.co";
+
+/**
+ * Destinatarios de los leads comerciales (definidos el 2026-09-02).
+ *
+ * ADVERTENCIA: publicar direcciones en el HTML las expone a rastreadores de
+ * spam. Es el precio de no tener servidor. La solución real es un servicio de
+ * formularios —o un alias único tipo `comercial@voltop.co`— y entonces esta
+ * lista desaparece del cliente.
+ */
+export const leadRecipients = [
+  "bruno@voltop.co",
+  "juan.ocampo@voltop.co",
+  "camilo.guzman@voltop.co",
+] as const;

@@ -79,7 +79,9 @@ export const stations: Station[] = [
     name: "Universidad EAN",
     citySlug: "bogota",
     address: { es: "Calle 79 #11-45, Bogotá", en: "Calle 79 #11-45, Bogotá", pt: "Calle 79 #11-45, Bogotá", },
-    geo: null,
+    /* Extraídas de los enlaces de Google Maps entregados el 2026-09-02, no
+       transcritas a ojo desde un mapa. */
+    geo: { lat: 4.6631495, lng: -74.0599846 },
     connectors: ["GB-T", "CCS1", "CCS2"],
     powerKw: { min: 22, max: 80 },
     points: 18,
@@ -101,7 +103,7 @@ export const stations: Station[] = [
     name: "Grand Hyatt",
     citySlug: "bogota",
     address: { es: "Calle 24A #57-60, Bogotá", en: "Calle 24A #57-60, Bogotá", pt: "Calle 24A #57-60, Bogotá", },
-    geo: null,
+    geo: { lat: 4.6440714, lng: -74.1026313 },
     connectors: ["GB-T"],
     powerKw: { min: 30, max: 30 },
     points: 11,
@@ -121,10 +123,8 @@ export const stations: Station[] = [
     slug: "wake",
     name: "Wake",
     citySlug: "medellin",
-    /* La dirección no se ha entregado: se deja el nombre de la ciudad, que sí
-       es un dato. Inventar una calle sería inventar un destino físico. */
-    address: { es: "Medellín", en: "Medellín", pt: "Medellín", },
-    geo: null,
+    address: { es: "Cra. 35 #10b-66, El Poblado, Medellín", en: "Cra. 35 #10b-66, El Poblado, Medellín", pt: "Cra. 35 #10b-66, El Poblado, Medellín", },
+    geo: { lat: 6.2096216, lng: -75.5756009 },
     connectors: ["GB-T", "CCS2"],
     powerKw: { min: 80, max: 80 },
     points: 6,

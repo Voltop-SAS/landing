@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Space_Grotesk, Inter, JetBrains_Mono } from "next/font/google";
+import { Space_Grotesk, Poppins, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
 import { defaultLocale, localeMeta, t } from "@/lib/i18n/config";
@@ -37,11 +37,31 @@ import { brand } from "@/content/copy/common";
  * Las tipografías se cargan aquí y no en `[lang]`: las variables tienen que
  * existir en `<html>` también para las páginas que viven fuera del segmento de
  * idioma, como el 404 de raíz.
- * PLACEHOLDER hasta recibir las tipografías de marca (§32, decisión abierta O1).
+ * ESTADO DE LAS TIPOGRAFÍAS (2026-09-02):
+ * - Poppins: ENTREGADA e integrada. Es la de interfaz.
+ * - Marope: entregada como decisión pero NO está en Google Fonts ni en ningún
+ *   repositorio abierto. Hace falta el archivo con licencia. Mientras tanto,
+ *   los titulares siguen en Space Grotesk como marcador de posición.
+ * - JetBrains Mono: no la define la marca. Se conserva para el registro de
+ *   ficha técnica (etiquetas, cifras, metadatos).
  */
 
 const display = Space_Grotesk({ variable: "--font-display-raw", subsets: ["latin"], display: "swap" });
-const sans = Inter({ variable: "--font-sans-raw", subsets: ["latin"], display: "swap" });
+/**
+ * POPPINS · tipografía de interfaz de Voltop (entregada 2026-09-02).
+ * Sustituye a Inter, que era el marcador de posición.
+ *
+ * Los pesos se declaran explícitamente porque Poppins NO es variable en
+ * Google Fonts: sin esta lista, `next/font` descarga solo el regular y todo
+ * lo semibold se sintetiza —el navegador "engorda" el trazo— con un
+ * resultado sucio en titulares grandes.
+ */
+const sans = Poppins({
+  variable: "--font-sans-raw",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
+});
 const mono = JetBrains_Mono({ variable: "--font-mono-raw", subsets: ["latin"], display: "swap" });
 
 export const metadata: Metadata = {

@@ -78,8 +78,8 @@ export const businessSegments: BusinessSegment[] = [
     benefits: [
       { es: "Instalación y operación de principio a fin", en: "End-to-end installation and operation", pt: "Instalação e operação de ponta a ponta", },
       { es: "Mantenimiento y soporte incluidos", en: "Maintenance and support included", pt: "Manutenção e suporte incluídos", },
-    ],
-    benefitsPorConfirmar: [
+      /* CONFIRMADAS por producto el 2026-09-02: el backoffice de Voltop las
+         soporta. Vuelven a "Qué incluye". */
       { es: "Control de acceso y consumo por colaborador", en: "Per-employee access and usage control", pt: "Controle de acesso e uso por colaborador", },
       { es: "Reportes de energía y disponibilidad", en: "Energy and availability reporting", pt: "Relatórios de energia e disponibilidade", },
     ],
@@ -100,9 +100,12 @@ export const businessSegments: BusinessSegment[] = [
     benefits: [
       { es: "Dimensionamiento según rutas y turnos", en: "Sized around routes and shifts", pt: "Dimensionado por rotas e turnos", },
       { es: "Acceso a la red pública Voltop", en: "Access to the public Voltop network", pt: "Acesso à rede pública Voltop", },
-    ],
-    benefitsPorConfirmar: [
-      { es: "Carga programada en horario valle", en: "Scheduled off-peak charging", pt: "Carregamento programado fora do pico", },
+      /* "Carga programada en horario valle" NO vuelve: producto confirmó que
+         no existen tarifas por franja horaria. Lo que sí existe es RESERVAR,
+         que es una capacidad distinta y mejor —resuelve la incertidumbre de
+         llegar y encontrar ocupado— así que se dice esa. */
+      { es: "Reserva de carga para tus turnos", en: "Charge reservations for your shifts", pt: "Reserva de carregamento para os seus turnos", },
+      /* CONFIRMADA: trazabilidad de punta a punta. */
       { es: "Datos de consumo por vehículo", en: "Per-vehicle consumption data", pt: "Dados de consumo por veículo", },
     ],
   },
@@ -238,9 +241,12 @@ export const founder: Person = {
   name: "Bruno Ocampo",
   role: { es: "Fundador y CEO", en: "Founder & CEO", pt: "Fundador e CEO", },
   photo: null,
+  /* Texto entregado por Camilo el 2026-09-02 en respuesta a la propuesta
+     alternativa. Sustituye a la versión anterior, que podía firmarla
+     cualquier empresa de energía. */
   quote: {
-    es: "Colombia está lista para un futuro eléctrico. Conectamos al país con infraestructura confiable, diseñada para crecer y transformar la movilidad.",
-    en: "Colombia is ready for an electric future. We connect the country with reliable infrastructure, built to grow and transform mobility.",
-    pt: "A Colômbia está pronta para um futuro elétrico. Conectamos o país com infraestrutura confiável, feita para crescer e transformar a mobilidade.",
+    es: "Creemos que Colombia puede liderar la transición hacia la movilidad eléctrica en América Latina. En Voltop estamos construyendo la infraestructura para hacerlo posible: una red confiable, escalable y cada vez más presente en el país. Lo que construimos hoy definirá cómo nos moveremos mañana.",
+    en: "We believe Colombia can lead Latin America's shift to electric mobility. At Voltop we're building the infrastructure to make it possible: a reliable, scalable network with a growing presence across the country. What we build today will define how we move tomorrow.",
+    pt: "Acreditamos que a Colômbia pode liderar a transição para a mobilidade elétrica na América Latina. Na Voltop estamos construindo a infraestrutura para tornar isso possível: uma rede confiável, escalável e cada vez mais presente no país. O que construímos hoje vai definir como nos moveremos amanhã.",
   },
 };

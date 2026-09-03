@@ -3,7 +3,8 @@ import { notFound } from "next/navigation";
 import { isLocale, t, type Locale } from "@/lib/i18n/config";
 import { alternatesFor, SITE_URL } from "@/lib/i18n/routes";
 import { home } from "@/content/copy/home";
-import { brand, footer } from "@/content/copy/common";
+import { brand, footer, empresa } from "@/content/copy/common";
+import { soporteEmail } from "@/content/data/links";
 
 import { Hero } from "@/components/home/Hero";
 import { InfrastructureSignature } from "@/components/home/InfrastructureSignature";
@@ -62,6 +63,20 @@ export default async function HomePage({ params }: Props) {
     name: brand.name,
     url: SITE_URL,
     description: t(brand.tagline, lang),
+    legalName: empresa.razonSocial,
+    taxID: empresa.nit,
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: empresa.direccion,
+      addressLocality: empresa.ciudad,
+      addressCountry: empresa.pais,
+    },
+    contactPoint: {
+      "@type": "ContactPoint",
+      contactType: "customer support",
+      email: soporteEmail,
+      availableLanguage: ["es", "en", "pt"],
+    },
     sameAs: footer.social.map((r) => r.url),
   };
 
