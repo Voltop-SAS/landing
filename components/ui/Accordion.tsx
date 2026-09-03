@@ -35,8 +35,11 @@ export type AccordionItem = {
  */
 /** Un solo sitio para el enlace de salida: interno y externo solo difieren
     en la flecha y en el aviso de pestaña nueva. */
+/* `min-h-11`: sin ella estos enlaces medían 16.8px de alto, por debajo de los
+   24px de WCAG 2.5.8, y no son enlaces en línea dentro de una frase, así que
+   no les vale la excepción. `Footer` y `PostsInline` ya lo hacían. */
 const enlace =
-  "group inline-flex items-center gap-2 font-mono text-mono text-brand transition-colors hover:text-ink";
+  "group inline-flex min-h-11 items-center gap-2 font-mono text-mono text-brand transition-colors hover:text-ink";
 
 const flecha =
   "transition-transform duration-(--duration-fast) ease-(--ease-overshoot)";

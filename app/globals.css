@@ -251,11 +251,22 @@ body {
   color: var(--color-ink);
 }
 
-/* Foco visible accesible — nunca se elimina el outline */
-:where(a, button, input, textarea, select, summary, [tabindex]):focus-visible {
+/* Foco visible accesible — nunca se elimina el outline.
+
+   `video`, `audio`, `iframe` y `details` están en la lista porque también son
+   focalizables y quedaban fuera: el reproductor de la película recibía el
+   anillo POR DEFECTO de Chrome —un hilo azul de 1px— en vez del del sistema,
+   y era prácticamente invisible sobre el vídeo.
+
+   `transition-property: none` no es un capricho: `outline-color` entra en la
+   lista de `transition-colors` de Tailwind v4, así que el anillo aparecía con
+   un fundido de 450ms partiendo del color del texto. Un indicador de foco que
+   tarda en llegar no cumple su función, que es decirte DÓNDE ESTÁS ahora. */
+:where(a, button, input, textarea, select, summary, video, audio, iframe, details, [tabindex]):focus-visible {
   outline: 2px solid var(--color-focus);
   outline-offset: 2px;
   border-radius: 4px;
+  transition-property: none;
 }
 
 /* Enlace de salto al contenido (WCAG 2.4.1) */

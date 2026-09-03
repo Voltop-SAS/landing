@@ -21,9 +21,22 @@ import { cn } from "@/lib/cn";
  *
  * 1. NO APARECE SOBRE EL HERO. Ahí ya hay un CTA grande a la vista.
  *
- * 2. SE APARTA CUANDO LA SECCIÓN DE DESCARGA ENTRA EN PANTALLA. Flotar
- *    "descarga la app" sobre la sección que ya lo ofrece, mejor y con más
- *    sitio, es ruido.
+ * 2. SE APARTA ANTE TRES ZONAS, NO UNA. Empezó vigilando solo la sección de
+ *    descarga —flotar "descarga la app" sobre la sección que ya lo ofrece es
+ *    ruido— y eso dejaba dos colisiones reales que encontró la auditoría:
+ *
+ *    · `#infraestructura` es un panel FIJADO a pantalla completa con su
+ *      contenido anclado abajo. La barra móvil tapaba el CTA hasta un 84% y
+ *      el pie al 100%, y como el contenido está pinneado durante todo el pin,
+ *      NO HABÍA NINGUNA POSICIÓN DE SCROLL QUE LO LIBERARA.
+ *
+ *    · `#vision` lleva la película con `controls`. La tarjeta de escritorio se
+ *      solapaba con la barra de reproducción: un clic en silenciar o en
+ *      pantalla completa ABRÍA LA TIENDA DE APPS. Un flotante que secuestra un
+ *      control ajeno no es intrusivo, es un fallo.
+ *
+ *    Vigilar una lista y no un elemento es además lo que evita que el próximo
+ *    bloque a pantalla completa vuelva a chocar sin que nadie se entere.
  *
  * 3. SE CIERRA Y NO VUELVE — DE VERDAD. Con estado en memoria volvía en cuanto
  *    recargabas, que es exactamente la trampa que la regla decía evitar. Ahora
@@ -54,6 +67,9 @@ import { cn } from "@/lib/cn";
  * Solo se animan `opacity` y `transform` (§29).
  */
 const CLAVE_CERRADO = "voltop:app-flotante-cerrado";
+
+/** Zonas donde el flotante estorba. Ver la regla 2 en la cabecera. */
+const ZONAS_MUDAS = ["app-title", "infraestructura", "vision"];
 
 export function AppFloating({ lang }: { lang: Locale }) {
   const c = home.appFloating;
@@ -95,14 +111,27 @@ export function AppFloating({ lang }: { lang: Locale }) {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  /* Regla 2 */
+  /* Regla 2 — ver la cabecera. Se cuentan las zonas visibles en lugar de
+     guardar un booleano por elemento: con varias solapándose, un booleano
+     único se pisaría a sí mismo al salir de una mientras se entra en otra. */
   useEffect(() => {
-    const objetivo = document.getElementById("app-title");
-    if (!objetivo) return;
-    const io = new IntersectionObserver(([e]) => setSeccionALaVista(e.isIntersecting), {
-      rootMargin: "0px 0px -15% 0px",
-    });
-    io.observe(objetivo);
+    const objetivos = ZONAS_MUDAS.map((id) => document.getElementById(id)).filter(
+      (n): n is HTMLElement => n !== null,
+    );
+    if (objetivos.length === 0) return;
+
+    const visibles = new Set<Element>();
+    const io = new IntersectionObserver(
+      (entradas) => {
+        for (const e of entradas) {
+          if (e.isIntersecting) visibles.add(e.target);
+          else visibles.delete(e.target);
+        }
+        setSeccionALaVista(visibles.size > 0);
+      },
+      { rootMargin: "0px 0px -10% 0px" },
+    );
+    objetivos.forEach((n) => io.observe(n));
     return () => io.disconnect();
   }, []);
 

@@ -13,7 +13,7 @@ import type { Localized } from "@/lib/i18n/config";
 
 export const nosotros = {
   meta: {
-    title: { es: "Nosotros · Voltop", en: "About us · Voltop", pt: "Sobre nós · Voltop", } satisfies Localized,
+    title: { es: "Nosotros", en: "About us", pt: "Sobre nós", } satisfies Localized,
     description: {
       es: "Voltop construye y opera la infraestructura de carga para vehículos eléctricos de Colombia. Nuestra historia, nuestra red y el equipo detrás.",
       en: "Voltop builds and operates Colombia's EV charging infrastructure. Our story, our network and the team behind it.",

@@ -10,7 +10,7 @@ import type { Localized } from "@/lib/i18n/config";
 
 export const empresas = {
   meta: {
-    title: { es: "Soluciones para empresas · Voltop", en: "Business solutions · Voltop", pt: "Soluções para empresas · Voltop", } satisfies Localized,
+    title: { es: "Soluciones para empresas", en: "Business solutions", pt: "Soluções para empresas", } satisfies Localized,
     description: {
       es: "Infraestructura de carga para empresas, flotas, espacios comerciales y partners. Instalamos, operamos y mantenemos de principio a fin.",
       en: "Charging infrastructure for companies, fleets, commercial spaces and partners. We install, operate and maintain end to end.",

@@ -11,7 +11,7 @@ import type { Localized } from "@/lib/i18n/config";
 
 export const red = {
   meta: {
-    title: { es: "Red de carga · Voltop", en: "Charging network · Voltop", pt: "Rede de carregamento · Voltop", } satisfies Localized,
+    title: { es: "Red de carga", en: "Charging network", pt: "Rede de carregamento", } satisfies Localized,
     description: {
       es: "Encuentra estaciones de carga Voltop en Colombia: ubicación, conectores, potencia y servicios de cada estación.",
       en: "Find Voltop charging stations across Colombia: location, connectors, power and amenities for each station.",

@@ -24,7 +24,13 @@ export function Footer({ lang }: { lang: Locale }) {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="border-t border-line bg-surface-1">
+    /* `pb` extra en móvil: la barra flotante mide 70px y al llegar al fondo
+       del documento no queda scroll para apartarla, así que tapaba de forma
+       permanente los enlaces legales y el aviso de prototipo. Reservar el
+       espacio es la única solución real — esconderla ahí abajo la quitaría
+       justo donde más se decide. Desaparece en `lg`, donde el flotante es una
+       tarjeta en la esquina y no cruza el pie. */
+    <footer className="border-t border-line bg-surface-1 pb-[calc(5.5rem+env(safe-area-inset-bottom))] lg:pb-0">
       <Container className="py-(--spacing-section-tight)">
         <div className="grid gap-10 md:grid-cols-[1.5fr_repeat(3,1fr)] md:gap-8">
           <div>

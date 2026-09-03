@@ -71,3 +71,8 @@ next-env.d.ts
 /public/Hero_Banner.png
 /public/Video Home.mov
 /public/estacion-medellin.mp4
+
+# Scripts de verificación de un solo uso (capturas, contraste, foco). Se
+# escriben, se ejecutan y se tiran: no son código de producto y versionarlos
+# solo ensucia el árbol.
+/*.mjs

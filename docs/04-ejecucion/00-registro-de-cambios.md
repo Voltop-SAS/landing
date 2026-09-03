@@ -1626,3 +1626,50 @@ Las reglas CSS estaban puestas y el navegador soporta la API — pero nadie la l
 Se revirtió todo: el flag, el CSS de `::view-transition-old/new` y la retirada del `template.tsx`. La transición de Motion que había vuelve a ser la que opera.
 
 **Para hacerlo de verdad hay que mover React al canal experimental.** Esa es una decisión de riesgo en un sitio que va a producción, y no es mía: queda en la lista de pendientes para decidir.
+
+---
+
+## Bloque 38 · QA: ocho defectos corregidos — 2026-09-02
+
+Barrido independiente sobre el build de producción: 14 rutas × 7 viewports, contraste medido sobre **píxel compuesto** (con el texto blanqueado para leer el fondo real, percentiles p01/p50/p99), foco recorrido con Tab, `prefers-reduced-motion` con y sin JavaScript.
+
+### BLOQUEANTE · el flotante tapaba el momento firma, y no había forma de librarlo
+
+En `#infraestructura` el contenido va **anclado al borde inferior de un panel fijado a pantalla completa**. La barra móvil se le superponía encima: CTA tapado hasta el **84% a 375px y el 100% a 768px**, pie al **100%** en todos. Y como el contenido está pinneado durante todo el pin, **no existía ninguna posición de scroll que lo liberara**. Presente en 11 de 11 posiciones.
+
+### ALTA · la tarjeta secuestraba los controles del vídeo
+
+La tarjeta de escritorio se solapaba con la barra de reproducción de la película. Medido con `elementFromPoint`: al 85% y al 95% del ancho el impacto era la tarjeta en 1024, 1280 y 1440. **Un clic en silenciar o en pantalla completa abría la tienda de apps.** Un flotante que secuestra un control ajeno no es intrusivo: es un fallo.
+
+**Causa común de los dos:** la regla 2 vigilaba **una sola sección**. Ahora vigila una lista (`app-title`, `infraestructura`, `vision`) contando zonas visibles en un `Set` — con un booleano único, salir de una zona mientras se entra en otra se pisaba a sí mismo.
+
+| | Antes | Ahora |
+|---|---|---|
+| Solape con el CTA del panel fijado | 11/11 posiciones | **0/11** en 375, 390, 768 y 1023 |
+| Controles del vídeo | tarjeta al 85% y 95% del ancho | **vídeo** en 1024, 1280, 1440 y 1920 |
+
+### ALTA · el pie quedaba tapado para siempre en móvil
+
+Al llegar al fondo del documento no queda scroll para apartar la barra, así que los enlaces legales quedaban cubiertos de forma **permanente**: 29–32% cada uno y el aviso de prototipo al 100%. El `<footer>` reserva ahora `5.5rem + safe-area` por debajo de `lg`. Verificado: **0 elementos tapados**.
+
+### MEDIA
+
+| Defecto | Medida | Corrección |
+|---|---|---|
+| Marca duplicada en el `<title>` | "Red de carga · Voltop · Voltop" en 3 páginas × 3 idiomas | El `template` ya añade el sufijo; se quitó del copy |
+| El `<video>` sin anillo de foco | Recibía el azul por defecto de Chrome, invisible sobre el vídeo | `video, audio, iframe, details` añadidos a la lista de `:focus-visible` |
+| Fecha legal sin localizar | "Last updated: 29 de mayo de 2026" en inglés | `formatDate` por idioma. El texto legal sigue en español a propósito; su metadato, no |
+| Enlaces del acordeón a **16.8px** | Por debajo de los 24px de WCAG 2.5.8, y no son enlaces en línea | `min-h-11` |
+| "Cerrar menú" inalcanzable con Tab | 14 pulsaciones daban vueltas por los 7 enlaces del panel | Ver abajo |
+
+**El caso del botón de cerrar merece explicación.** Vive en la barra, o sea **antes del panel en el DOM**, y el orden de tabulación sigue el DOM: al llegar al último enlace, Tab saltaba fuera. Añadirlo al final de la lista no bastaba —el trampeo por extremos solo cierra el ciclo del último al primero—. Se pasó a **recorrido por índice**, moviendo el foco explícitamente en cada paso, para que el orden lógico mande sobre el del documento. Verificado: el ciclo pasa por CERRAR y Escape sigue cerrando.
+
+### BAJA
+
+El anillo de foco **entraba con un fundido de 450ms** partiendo del color del texto: `outline-color` está en la lista de `transition-colors` de Tailwind v4. Un indicador de foco que tarda en llegar no cumple su función, que es decirte dónde estás **ahora**. Corregido con `transition-property: none`.
+
+Y se retiraron del repositorio nueve scripts de verificación que se habían colado en un commit anterior; `/*.mjs` entra al `.gitignore` para que no vuelva a pasar.
+
+### Lo que el barrido confirmó que está bien
+
+**98 combinaciones** sin desbordamiento horizontal · un solo `h1` y cero saltos de nivel en 14 rutas · **CLS = 0** en 14 combinaciones, LCP 44–208ms · ~1400 nodos de texto sin un solo fallo de contraste sobre el compuesto, en los tres idiomas · cero `href="#"` · todos los `target="_blank"` con `rel` y aviso · todas las imágenes con `alt` · reduced-motion sin un solo elemento invisible **incluso con JavaScript desactivado** · menú móvil con foco atrapado, Escape y scroll bloqueado · 404 real con salidas.

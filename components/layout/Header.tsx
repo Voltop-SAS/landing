@@ -74,9 +74,16 @@ export function Header({ lang }: { lang: Locale }) {
     if (!open) return;
     lockScroll();
 
+    /* El botón de cerrar vive FUERA del panel —está en la barra, y ahí debe
+       seguir— pero es el control de cierre visible. Recorriendo solo el panel,
+       Tab daba vueltas entre los 7 enlaces y nunca llegaba a él: visible e
+       inoperable con teclado. Se añade al final del recorrido. */
     const panel = panelRef.current;
-    const focusables = panel?.querySelectorAll<HTMLElement>('a[href], button:not([disabled])');
-    focusables?.[0]?.focus();
+    const delPanel = panel
+      ? Array.from(panel.querySelectorAll<HTMLElement>('a[href], button:not([disabled])'))
+      : [];
+    const focusables = toggleRef.current ? [...delPanel, toggleRef.current] : delPanel;
+    focusables[0]?.focus();
 
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
@@ -84,16 +91,22 @@ export function Header({ lang }: { lang: Locale }) {
         toggleRef.current?.focus();
         return;
       }
-      if (e.key !== "Tab" || !focusables || focusables.length === 0) return;
-      const first = focusables[0];
-      const last = focusables[focusables.length - 1];
-      if (e.shiftKey && document.activeElement === first) {
-        e.preventDefault();
-        last.focus();
-      } else if (!e.shiftKey && document.activeElement === last) {
-        e.preventDefault();
-        first.focus();
-      }
+      if (e.key !== "Tab" || focusables.length === 0) return;
+
+      /* Recorrido POR ÍNDICE, no por extremos.
+         El botón de cerrar está en la barra, o sea ANTES del panel en el DOM,
+         y el orden de tabulación sigue el DOM: al llegar al último enlace del
+         panel, Tab saltaba fuera y nunca lo alcanzaba. Con extremos no bastaba
+         —solo cerraba el ciclo del último al primero—; hay que mover el foco
+         explícitamente en cada paso para que el orden LÓGICO mande sobre el
+         orden del documento. */
+      const i = focusables.indexOf(document.activeElement as HTMLElement);
+      if (i === -1) return;
+      e.preventDefault();
+      const siguiente = e.shiftKey
+        ? (i - 1 + focusables.length) % focusables.length
+        : (i + 1) % focusables.length;
+      focusables[siguiente].focus();
     };
 
     document.addEventListener("keydown", onKeyDown);

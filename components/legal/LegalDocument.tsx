@@ -1,6 +1,7 @@
 import { t, defaultLocale, type Locale } from "@/lib/i18n/config";
 import { legalDoc } from "@/content/copy/legal";
 import type { LegalDoc } from "@/content/data/legal-docs";
+import { formatDate } from "@/lib/dates";
 import { Section, Container } from "@/components/ui/layout";
 
 /**
@@ -69,9 +70,13 @@ export function LegalDocument({
           <h1 className="mt-5 max-w-[18ch] font-display text-display-xl font-semibold text-balance text-ink">
             {titulo}
           </h1>
+          {/* La fecha se FORMATEA por idioma, como el resto del sitio. Antes
+              se pintaba la cadena literal del documento y se leía "Last
+              updated: 29 de mayo de 2026" en inglés. El texto legal se queda
+              en español a propósito; su metadato, no. */}
           <p className="mt-6 font-mono text-mono text-ink-3">
             {t(legalDoc.updatedLabel, lang)}:{" "}
-            <time dateTime={doc.actualizadoISO}>{doc.actualizado}</time>
+            <time dateTime={doc.actualizadoISO}>{formatDate(doc.actualizadoISO, lang)}</time>
           </p>
 
           {avisoIdioma ? (
