@@ -1713,3 +1713,43 @@ Las tres estaciones pasan a `dataStatus: "verified"`. La dirección de Wake y la
 ### Evidencia
 
 `lint`, `tsc` y build limpios · `ES 409/409 · EN 409/409 · PT 409/409` · Home rindiendo **35 puntos · 22–80 kW · GB-T · CCS1 · CCS2** · `/red` con 3 estaciones y chips `Todas · 30+ kW · 80+ kW`.
+
+---
+
+## Bloque 43 · Marca completa y medición conectada — 2026-09-02
+
+### Las tipografías definitivas
+
+**"Marope" era Manrope**, y eso cambia todo para bien: está en Google Fonts y es **variable**, así que un solo archivo cubre el rango entero de pesos.
+
+| Rol | Familia | Por qué |
+|---|---|---|
+| Titulares | **Poppins** | Es la familia del logotipo: titulares y marca hablan con la misma voz |
+| Interfaz y texto | **Manrope** | Variable: un archivo, todos los pesos, menos peso que tres estáticos |
+| Ficha técnica | JetBrains Mono | No la define la marca; cubre un tercer registro que las otras dos no dan |
+
+**Se cargan desde Google Fonts, no desde los `.ttf` del sistema.** `next/font` las sirve desde nuestro propio dominio, ya subconjuntadas a latino y en woff2 —una fracción del peso del TrueType— y sin petición a un tercero. De Poppins se piden **solo los pesos que el código usa** (500 y 600, contados) más el 900 del archivo de marca: sin declararlos, el navegador sintetiza el semibold engordando el trazo, y en un titular de 80px eso se ve sucio.
+
+Space Grotesk e Inter salen del proyecto. **No queda ningún marcador de posición tipográfico.**
+
+**Verificado después del cambio**: cambiar de familia cambia la medida de línea, así que se volvió a medir. Manrope da **46–66 caracteres** en escritorio, dentro del rango de §22 sin recalibrar. Y 42 combinaciones de ruta y viewport sin desbordamiento.
+
+De paso, los legales pasaron de `measure-narrow` a `measure`: 48 caracteres en un documento de 38 secciones multiplica el alto y obliga a un scroll interminable.
+
+### `warning` completa la paleta
+
+`#F6B756` — **10.79:1** sobre canvas. Con esto **no queda ni un color provisional**.
+
+### Google Tag Manager
+
+Contenedor `GTM-WJ5S2LBF`, cargado con `afterInteractive`: la medición no compite con el primer pintado.
+
+**No hizo falta cablear nada más.** `lib/analytics` ya empujaba los eventos del plan a `window.dataLayer`, que es exactamente de donde GTM lee — así que los eventos definidos en §31 empiezan a llegar solos. Verificado: la petición a `gtm.js` sale y el `dataLayer` recibe.
+
+El `<noscript>` lleva `title`: aunque el iframe esté oculto, existe, y sin título un lector de pantalla anuncia "marco" sin poder decir de qué.
+
+> **PENDIENTE DE DECISIÓN:** GTM carga GA4, que instala cookies. La Política de Tratamiento de Datos ya declara el uso de cookies, pero **no hay mecanismo de consentimiento** en el sitio. Conviene decidir si hace falta un banner antes de publicar.
+
+### Evidencia
+
+`lint`, `tsc` y build limpios · `ES 412/412 · EN 412/412 · PT 412/412` · titular en Poppins y cuerpo en Manrope verificados en el render · 42 combinaciones sin desbordamiento · medida de línea 46–66.

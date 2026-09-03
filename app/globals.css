@@ -53,9 +53,7 @@
      --------------------------------------------------------------- */
   --color-live: #38d398;      /* marca · Success — 9.98:1 sobre canvas */
   --color-error: #e2555a;     /* marca · Error   — 5.18:1 sobre canvas */
-  /* PENDIENTE: la marca define un tono `warning` pero no entregó su hex. Se
-     conserva el provisional, que cumple AA, hasta recibirlo. */
-  --color-warn: #e8b464;
+  --color-warn: #f6b756;      /* marca · Warning — 10.79:1 sobre canvas */
   --color-idle: #8b95a8;
 
   /* ---------------------------------------------------------------

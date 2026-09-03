@@ -21,9 +21,11 @@ import { Section, Container } from "@/components/ui/layout";
  * ARIA a medias— para no empujar el texto media pantalla hacia abajo.
  *
  * ── LA MEDIDA MANDA SOBRE EL ANCHO ───────────────────────────────────────
- * El cuerpo usa `measure-narrow` y no el contenedor entero. Un texto legal se
- * lee de arriba abajo durante minutos, y es justo donde una línea larga más
- * cansa. Ver el hallazgo sobre `.measure` en el bloque 28 del registro.
+ * El cuerpo se limita por medida de línea, no por el ancho del contenedor.
+ * Usa `measure` (~62 caracteres) y no `measure-narrow` (~48): en un documento
+ * de 38 secciones, la columna estrecha multiplica el alto y obliga a un scroll
+ * interminable. 62 sigue dentro del rango de §22 y es lo cómodo para una
+ * lectura de minutos.
  */
 export function LegalDocument({
   doc,
@@ -128,11 +130,11 @@ export function LegalDocument({
                 <div className="mt-5 space-y-4">
                   {s.body.map((b, i) =>
                     b.tipo === "parrafo" ? (
-                      <p key={i} className="measure-narrow text-body text-ink-2">
+                      <p key={i} className="measure text-body text-ink-2">
                         {b.texto}
                       </p>
                     ) : (
-                      <ul key={i} className="measure-narrow space-y-2.5">
+                      <ul key={i} className="measure space-y-2.5">
                         {b.items.map((item, j) => (
                           <li key={j} className="flex gap-3 text-body text-ink-2">
                             <span aria-hidden="true" className="mt-2.5 size-1 shrink-0 rounded-full bg-ink-3" />
