@@ -16,13 +16,21 @@ import { externalLinks } from "@/content/data/links";
 export const brand = {
   name: "Voltop",
   tagline: {
-    /* Es el `<title>`, la meta description global y el subtítulo de la imagen
-       Open Graph: la frase que más se repite de la marca. Describía una CLASE
-       DE ACTIVO —"infraestructura"— y no un producto; ahora nombra la red y la
-       app, que es lo que la distingue. */
-    es: "La red de carga eléctrica de Colombia, simple y en tu teléfono.",
-    en: "Colombia's EV charging network — simple, and on your phone.",
-    pt: "A rede de carregamento elétrico da Colômbia, simples e no seu celular.",
+    /* INTENCIÓN: alguien que no conoce Voltop tiene que entender en una línea
+       qué es y qué puede hacer. Es el `<title>`, la meta description global y
+       el subtítulo de la imagen Open Graph: la frase que más se repite.
+       
+       Iba primero como "Infraestructura de carga para la movilidad eléctrica
+       de Colombia" —una clase de activo, no un producto—. La corregí a "LA red
+       de carga eléctrica de Colombia" y ese artículo determinado cometía el
+       mismo error que "la red líder de Colombia" que acabábamos de retirar:
+       con tres estaciones, decir "la red de Colombia" es un claim de liderazgo
+       disfrazado de descripción.
+       
+       Ahora dice qué es, dónde, y las tres cosas que el usuario hace. */
+    es: "Red de carga para carros eléctricos en Colombia. La encuentras, la usas y la pagas desde la app.",
+    en: "Charging network for electric cars in Colombia. Find it, use it and pay for it from the app.",
+    pt: "Rede de carregamento para carros elétricos na Colômbia. Você encontra, usa e paga pelo aplicativo.",
   } satisfies Localized,
 };
 

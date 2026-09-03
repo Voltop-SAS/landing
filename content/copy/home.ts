@@ -47,11 +47,27 @@ export const home = {
   /* BEAT 2 · MEDELLÍN — sticky con scroll-scrub. Intensidad: MUY ALTA */
   infrastructure: {
     eyebrow: { es: "Infraestructura real", en: "Real infrastructure", pt: "Infraestrutura real", } satisfies Localized,
-    title: { es: "No instalamos cargadores. Construimos lugares.", en: "We don't install chargers. We build places.", pt: "Não instalamos carregadores. Construímos lugares.", } satisfies Localized,
+    /* INTENCIÓN: resolver la objeción de fondo del conductor —"cargar me va a
+       robar tiempo y me va a dejar tirado en un sitio incómodo"— explicando
+       POR QUÉ elegimos dónde construir.
+       
+       Decía "No instalamos cargadores. Construimos lugares." Suena bien y no
+       dice nada: no comunica beneficio, no resuelve objeción y no indica qué
+       hacer después. "Construimos lugares" podría firmarlo una constructora,
+       una cadena hotelera o una inmobiliaria.
+       
+       La versión nueva sí tiene trabajo: nombra el beneficio real de nuestra
+       estrategia de ubicación —la carga ocurre dentro de tiempo que ya ibas a
+       gastar— sin prometer velocidad, que con 22–80 kW no podemos prometer. */
+    title: { es: "Cargas mientras haces otra cosa", en: "You charge while you do something else", pt: "Você carrega enquanto faz outra coisa", } satisfies Localized,
     lead: {
-      es: "Cada estación se diseña como un lugar donde detenerse tiene sentido: acceso, cubierta, iluminación, servicios y potencia suficiente para que la parada sea corta.",
-      en: "Every station is designed as a place where stopping makes sense: access, shelter, lighting, amenities and enough power to keep the stop short.",
-      pt: "Cada estação é projetada como um lugar onde parar faz sentido: acesso, cobertura, iluminação, comodidades e potência suficiente para encurtar a parada.",
+      /* "Potencia suficiente para que la parada sea corta" era una promesa de
+         tiempo. Con puntos de 22 kW no se sostiene, y §19 no admite titulares
+         que el producto no cumple. Lo que sí es cierto y sí diferencia es
+         DÓNDE están. */
+      es: "Elegimos universidades, hoteles y centros comerciales: sitios donde ya te ibas a quedar un rato. Con acceso, cubierta, luz y servicios, para que la espera no sea una espera.",
+      en: "We pick universities, hotels and shopping centres — places where you were already going to stay a while. With access, shelter, lighting and amenities, so the wait doesn't feel like one.",
+      pt: "Escolhemos universidades, hotéis e shoppings: lugares onde você já ia ficar um tempo. Com acesso, cobertura, luz e comodidades, para que a espera não pareça espera.",
     } satisfies Localized,
     /** El video llega en la clave `estacionMedellin` del registro de media. */
     caption: { es: "Nueva estación · Medellín", en: "New station · Medellín", pt: "Nova estação · Medellín", } satisfies Localized,
