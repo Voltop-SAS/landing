@@ -44,7 +44,23 @@ export type BusinessSegment = {
   label: Localized;
   headline: Localized;
   proposition: Localized;
+  /** Capacidades CONFIRMADAS. Es lo único que se pinta. */
   benefits: Localized[];
+  /**
+   * Capacidades REDACTADAS PERO NO CONFIRMADAS. No se renderizan.
+   *
+   * §33 y §19 prohíben publicar como capacidad actual algo que el producto no
+   * pueda respaldar hoy. Estas estaban en `benefits` —es decir, publicadas
+   * bajo un rótulo que dice "Qué incluye"— y no constan en la única
+   * documentación de producto que existe: los Términos y Condiciones, cuyo §4
+   * enumera los servicios de la Plataforma (consultar ubicación y
+   * disponibilidad, activar por QR, gestionar sesiones e historial, soporte).
+   *
+   * Se conservan aquí, no se borran: la redacción es buena y el día que
+   * producto confirme que existen, se mueven a `benefits` y aparecen. Lo que
+   * no puede seguir es presentarlas como un hecho.
+   */
+  benefitsPorConfirmar?: Localized[];
   /** Referencia a un caso de éxito que sirve de prueba para este segmento. */
   proofRef?: string;
 };
@@ -61,9 +77,11 @@ export const businessSegments: BusinessSegment[] = [
     },
     benefits: [
       { es: "Instalación y operación de principio a fin", en: "End-to-end installation and operation", pt: "Instalação e operação de ponta a ponta", },
+      { es: "Mantenimiento y soporte incluidos", en: "Maintenance and support included", pt: "Manutenção e suporte incluídos", },
+    ],
+    benefitsPorConfirmar: [
       { es: "Control de acceso y consumo por colaborador", en: "Per-employee access and usage control", pt: "Controle de acesso e uso por colaborador", },
       { es: "Reportes de energía y disponibilidad", en: "Energy and availability reporting", pt: "Relatórios de energia e disponibilidade", },
-      { es: "Mantenimiento y soporte incluidos", en: "Maintenance and support included", pt: "Manutenção e suporte incluídos", },
     ],
     proofRef: "universidad-ean",
   },
@@ -72,15 +90,20 @@ export const businessSegments: BusinessSegment[] = [
     label: { es: "Flota", en: "Fleet", pt: "Frota", },
     headline: { es: "Infraestructura para que tu flota no pare", en: "Infrastructure that keeps your fleet moving", pt: "Infraestrutura que mantém sua frota rodando", },
     proposition: {
-      es: "Diseñamos la capacidad de carga según tus rutas y turnos, con datos de operación para planificar y sin sorpresas de disponibilidad.",
-      en: "We size charging capacity around your routes and shifts, with operational data to plan ahead and no availability surprises.",
-      pt: "Dimensionamos a capacidade de carregamento pelas suas rotas e turnos, com dados de operação para planejar e sem surpresas de disponibilidade.",
+      /* Decía "sin sorpresas de disponibilidad": una GARANTÍA de disponibilidad
+         sobre una red que no publica SLA y cuyo propio sitio declara que el
+         estado en vivo todavía no está integrado. */
+      es: "Diseñamos la capacidad de carga según tus rutas y turnos, y la operamos nosotros para que tu equipo no tenga que hacerlo.",
+      en: "We size charging capacity around your routes and shifts, and we run it so your team doesn't have to.",
+      pt: "Dimensionamos a capacidade de carregamento pelas suas rotas e turnos, e nós a operamos para que sua equipe não precise.",
     },
     benefits: [
       { es: "Dimensionamiento según rutas y turnos", en: "Sized around routes and shifts", pt: "Dimensionado por rotas e turnos", },
+      { es: "Acceso a la red pública Voltop", en: "Access to the public Voltop network", pt: "Acesso à rede pública Voltop", },
+    ],
+    benefitsPorConfirmar: [
       { es: "Carga programada en horario valle", en: "Scheduled off-peak charging", pt: "Carregamento programado fora do pico", },
       { es: "Datos de consumo por vehículo", en: "Per-vehicle consumption data", pt: "Dados de consumo por veículo", },
-      { es: "Acceso a la red pública Voltop", en: "Access to the public Voltop network", pt: "Acesso à rede pública Voltop", },
     ],
   },
   {

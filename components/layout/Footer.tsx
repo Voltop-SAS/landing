@@ -18,7 +18,6 @@ import { externalLinks, soporteEmail } from "@/content/data/links";
  * - los iconos de redes sociales no interactivos.
  *
  * Un enlace sin destino real no se publica. App, ayuda, legal y redes se
- * añadirán aquí cuando existan las URLs correspondientes (§32).
  */
 export function Footer({ lang }: { lang: Locale }) {
   const year = new Date().getFullYear();

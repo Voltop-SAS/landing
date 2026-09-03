@@ -405,7 +405,6 @@ export const footer = {
 
   /**
    * Enlaces sin destino real NO se publican (§15). La app y los términos y
-   * condiciones se añadirán aquí cuando existan las URLs y el texto legal.
    */
   terms: { es: "Términos y condiciones", en: "Terms and conditions", pt: "Termos e condições", } satisfies Localized,
   privacy: { es: "Tratamiento de datos", en: "Data processing", pt: "Tratamento de dados", } satisfies Localized,

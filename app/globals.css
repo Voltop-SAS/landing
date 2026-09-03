@@ -402,12 +402,24 @@ body {
   }
 }
 
-/* Medida de línea legible (45–75 caracteres) */
+/* MEDIDA DE LÍNEA · 45–75 caracteres (§22)
+
+   Los valores NO son el número de caracteres. La unidad `ch` es el ancho del
+   glifo "0", y en esta tipografía el carácter medio de un texto con espacios
+   mide ~1.31 veces menos. Por eso `62ch` rendía ~83 caracteres reales: la
+   regla estaba escrita bien y el valor la incumplía.
+   
+   Calibrado sobre el render, no sobre la teoría:
+     .measure         48ch → ~63 caracteres
+     .measure-narrow  36ch → ~47 caracteres
+   
+   Si se cambia la tipografía hay que volver a medir: la proporción es una
+   propiedad de la fuente, no una constante. */
 .measure {
-  max-width: 62ch;
+  max-width: 48ch;
 }
 .measure-narrow {
-  max-width: 46ch;
+  max-width: 36ch;
 }
 
 /* =========================================================================

@@ -4,7 +4,7 @@
 > Está escrito para ser consumido por cualquier persona o sistema —diseño, UX, desarrollo, contenido, stakeholders u otro asistente de IA— **sin acceso a historial de conversaciones**.
 > Ante cualquier contradicción con otro documento de `/docs`, **prevalece este archivo**.
 >
-> Versión 1.1 · 2026-09-01 · Idioma de trabajo: español (producto trilingüe ES / EN / PT-BR)
+> Versión 1.2 · 2026-09-02 · Idioma de trabajo: español (producto trilingüe ES / EN / PT-BR)
 >
 > **Cambios de la 1.1** (detalle y evidencia en `docs/04-ejecucion/00-registro-de-cambios.md`, bloques 9–13):
 > portugués de Brasil como tercer idioma publicado · Novedades como quinto destino y cuarta puerta de navegación · logo oficial entregado e integrado.
@@ -287,11 +287,14 @@ Premium **es**, en este proyecto:
 
 | Contexto | CTA del header | Destino |
 |---|---|---|
-| Home, Nosotros | Encontrar cargador | /red |
-| Red, Ciudad, Estación | **Ninguno** (el usuario ya está en la herramienta) | — |
+| Home, Nosotros, Novedades, Red, Ciudad, Estación | **Descarga la app** | `app.voltop.co` (enlace dinámico) |
 | Empresas | Hablar con el equipo | Ancla al formulario |
 
-`DECISION` Nunca dos CTAs globales permanentes compitiendo. "Descargar app" es **contextual** dentro del journey del conductor y del footer — nunca global.
+`DECISION` **v1.2 — el CTA global pasa a ser la descarga de la app.** "Encontrar cargador" llevaba a `/red`, que ya está en el menú: el CTA duplicaba una entrada de navegación en lugar de ofrecer algo que la navegación no da. La app sí lo es.
+
+`DECISION` **v1.2 — `/red` deja de ser "ninguno".** El motivo original —"encontrar cargador" dentro del buscador es redundante— dejó de aplicar al cambiar el destino: descargar la app es exactamente el paso siguiente de quien acaba de encontrar dónde cargar.
+
+`DECISION` Sigue en pie: nunca dos CTAs globales permanentes compitiendo. `/empresas` conserva el suyo porque en B2B la conversión es la conversación, y sustituirla por una descarga rompería el journey.
 
 `DECISION` **Footer reducido a tres columnas** con destinos reales. Prohibido: enlaces que apuntan al mismo destino con etiquetas distintas, y enlaces `#` sin destino. Un enlace sin destino real no se publica.
 
@@ -863,6 +866,17 @@ Arquitectura de 4 destinos · estación como página desde datos · componente `
 | **CTA global permanente** en todas las rutas | `01-ia/03` (parcial) | CTA contextual, ausente en `/red` | Redundante donde el usuario ya está |
 | Ciudad como **string libre** en la estación | `01-ia/05` | Entidad Ciudad con ruta propia | Filtros reales y SEO local |
 | Nivel objetivo alcanzable **añadiendo assets** | Supuesto implícito | Requiere rehacer la capa compositiva | Cuatro beats consecutivos comparten estructura |
+| CTA global **"Encontrar cargador"**, ausente en `/red` | §15, §36.5 | **"Descarga la app"** en todas las rutas salvo `/empresas` | El anterior duplicaba una entrada del menú; la app es lo que la navegación no da (bloque 31) |
+| Sitio de **cinco destinos** | §14 | **Siete**: se añaden `/legal/terminos` y `/legal/privacidad` | El área legal entregó los textos (bloque 32) |
+| Texto legal **pendiente**, páginas en `noindex` | §35, §37 (O1) | Texto íntegro publicado e indexable | Entregado el 2026-09-02 (bloque 32) |
+| Logo **pendiente de entrega** | §32 | `Logo_voltop.svg` integrado | Entregado (bloque 13) |
+| Sección de la red en la Home como **índice tipográfico de estaciones** | Narrativa v3, beat 3 | Presentación de cobertura con agregados calculados | Repetía en la Home lo que `/red` hace mejor; §14 invertido (bloque 35) |
+| Red de **4 estaciones**, 60–150 kW | `content/data/stations.ts` | **3 estaciones**, 22–80 kW | Dos no existían y las potencias no correspondían (bloque 39) |
+| `powerKw` como **número único** | Modelo de datos | Rango `{ min, max }` | La EAN tiene puntos de 22 a 80: publicar el máximo prometía de más (bloque 39) |
+| Escalones del filtro de potencia **fijos** (50/100/150) | `StationFinder` | Derivados del dataset | Dos escalones no devolvían ninguna estación (bloque 39) |
+| `.measure` en **62ch** con la etiqueta "45–75 caracteres" | §22 | **48ch** ≈ 63 caracteres reales | `ch` mide el glifo "0", ~1.31× el carácter medio: rendía 83 (bloques 28 y 40) |
+| **View Transitions** como fase del plan | Plan Electra, fase 7 | Descartado | Exige React del canal experimental; no se cambia el canal por una animación (bloque 37) |
+| Capacidades B2B publicadas bajo "Qué incluye" | `content/data/company.ts` | Movidas a `benefitsPorConfirmar`, sin renderizar | No constan en los Términos, la única documentación de producto (bloque 40) |
 
 ---
 

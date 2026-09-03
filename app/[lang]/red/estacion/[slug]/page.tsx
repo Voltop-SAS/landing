@@ -11,7 +11,7 @@ import { PostsInline } from "@/components/novedades/PostsInline";
 import { TrackView } from "@/components/analytics/TrackView";
 import { Section, Container, Eyebrow, SectionHeading } from "@/components/ui/layout";
 import { StatusBadge, SpecList, PendingTag } from "@/components/ui/data";
-import { MediaPending } from "@/components/ui/Media";
+import { Media } from "@/components/ui/Media";
 import { Button } from "@/components/ui/Button";
 import { DirectionsButton } from "@/components/red/DirectionsButton";
 import { media } from "@/content/data/media";
@@ -187,12 +187,36 @@ export default async function StationPage({ params }: Props) {
           titular. El sangrado se reserva a media que lo justifique. */}
       <Section space="none" className="pb-(--spacing-section-tight)">
         <Container>
-          {/* `MediaPending` no impone forma propia, así que aquí el recorte sí
-              va por `className`: no hay clase nativa con la que competir. */}
-          <MediaPending
-            asset={{ ...media.detalleCarga, alt: { es: `Fotografía de la estación ${s.name}`, en: `Photo of the ${s.name} station` } }}
+          {/* `Media`, NO `MediaPending`.
+              Usaba el componente de hueco directamente, así que el día que
+              lleguen las fotos esta ficha seguiría mostrando el rectángulo gris
+              y nadie se enteraría. `Media` cae al hueco por sí solo cuando no
+              hay archivo, y muestra la foto en cuanto exista.
+
+              Y mira PRIMERO la foto propia de la estación: `station.media.photos`
+              existía en el modelo desde el principio y no lo leía nadie. Solo
+              si no hay, recurre al asset genérico de detalle de carga. */}
+          <Media
+            asset={
+              s.media.photos[0]
+                ? {
+                    ...media.detalleCarga,
+                    src: s.media.photos[0].src,
+                    alt: s.media.photos[0].alt,
+                  }
+                : {
+                    ...media.detalleCarga,
+                    alt: {
+                      es: `Fotografía de la estación ${s.name}`,
+                      en: `Photo of the ${s.name} station`,
+                      pt: `Fotografia da estação ${s.name}`,
+                    },
+                  }
+            }
             lang={lang}
-            className="aspect-[21/9] w-full"
+            aspect="21/9"
+            sizes="(min-width: 1280px) 1240px, 100vw"
+            className="w-full"
           />
         </Container>
       </Section>

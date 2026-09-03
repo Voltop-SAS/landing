@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { isLocale, t, type Locale } from "@/lib/i18n/config";
-import { alternatesFor } from "@/lib/i18n/routes";
+import { alternatesFor, SITE_URL } from "@/lib/i18n/routes";
 import { home } from "@/content/copy/home";
+import { brand, footer } from "@/content/copy/common";
 
 import { Hero } from "@/components/home/Hero";
 import { InfrastructureSignature } from "@/components/home/InfrastructureSignature";
@@ -51,8 +52,22 @@ export default async function HomePage({ params }: Props) {
   if (!isLocale(raw)) notFound();
   const lang = raw as Locale;
 
+  /* `Organization` vivía solo en /nosotros. §29 lo pide "en el sitio", y la
+     Home es la página que un buscador toma como representante de la entidad:
+     es la que recibe los enlaces de marca y la que aparece en el panel de
+     conocimiento. Se declara aquí también, con los mismos datos. */
+  const orgJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: brand.name,
+    url: SITE_URL,
+    description: t(brand.tagline, lang),
+    sameAs: footer.social.map((r) => r.url),
+  };
+
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }} />
       <Hero lang={lang} />
       <InfrastructureSignature lang={lang} />
       <NetworkIndex lang={lang} />
