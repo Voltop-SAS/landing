@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Script from "next/script";
 import { Poppins, Manrope, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -97,39 +96,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       className={`${display.variable} ${sans.variable} ${mono.variable}`}
     >
       <body className="min-h-dvh bg-canvas text-ink antialiased">
-        {/* GOOGLE TAG MANAGER · GTM-WJ5S2LBF
-            
-            `afterInteractive` y no `beforeInteractive`: la medición no puede
-            competir con el primer pintado. El contenedor carga en cuanto la
-            página responde, que para analítica es de sobra y deja el LCP
-            intacto.
-            
-            NO hace falta cablear nada más: `lib/analytics` ya empuja todos los
-            eventos del plan a `window.dataLayer`, que es exactamente de donde
-            GTM lee. Los 17 eventos definidos en §31 —descargas de app, vistas
-            de estación, embudo B2B— empiezan a llegar solos.
-            
-            El `<noscript>` va al principio del body porque es su sitio: si no
-            hay JavaScript, el iframe es la única vía de registro. */}
-        <noscript>
-          <iframe
-            src="https://www.googletagmanager.com/ns.html?id=GTM-WJ5S2LBF"
-            height="0"
-            width="0"
-            style={{ display: "none", visibility: "hidden" }}
-            /* Sin título, un lector de pantalla anuncia "marco" y no puede
-               decir de qué. Aunque esté oculto, el elemento existe. */
-            title="Google Tag Manager"
-          />
-        </noscript>
         {children}
-        <Script id="gtm" strategy="afterInteractive">
-          {`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-WJ5S2LBF');`}
-        </Script>
       </body>
     </html>
   );

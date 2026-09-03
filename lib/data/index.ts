@@ -272,9 +272,26 @@ export async function getPostsWithPage(): Promise<Post[]> {
 }
 
 /** Portada del registro: la marcada como destacada o, si no hay, la más reciente. */
+/**
+ * Entrada de portada del registro.
+ *
+ * Prefiere la más reciente que TENGA PORTADA con material entregado. No es un
+ * capricho de orden: la portada es una franja 21/9 en lo más alto de la
+ * página, y sin archivo real se convierte en el rectángulo gris más grande del
+ * sitio. Antes bastaba con `featured: true`, y eso ponía en ese sitio a la
+ * entrada de la EAN, cuya foto todavía no se ha entregado.
+ *
+ * Si ninguna tiene material, cae a la marcada y luego a la más reciente: el
+ * registro sigue funcionando, solo que sin imagen.
+ */
 export async function getFeaturedPost(): Promise<Post | undefined> {
   const list = await getPosts();
-  return list.find((p) => p.featured) ?? list[0];
+  return (
+    list.find((p) => p.featured && p.cover?.src) ??
+    list.find((p) => p.cover?.src) ??
+    list.find((p) => p.featured) ??
+    list[0]
+  );
 }
 
 export async function getLatestPosts(limit: number): Promise<Post[]> {

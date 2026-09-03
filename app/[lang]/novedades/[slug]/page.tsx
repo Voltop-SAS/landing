@@ -175,7 +175,7 @@ export default async function PostPage({ params }: Props) {
                     href={href(lang, routes.city(city.slug))}
                     className="inline-flex min-h-11 items-center self-start text-body-s text-ink-2 transition-colors hover:text-ink"
                   >
-                    {t(novedades.related.city, lang)} — {city.name} →
+                    {t(novedades.related.city, lang)} {city.name} →
                   </Link>
                 )}
               </div>

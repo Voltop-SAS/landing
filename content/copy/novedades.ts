@@ -12,6 +12,19 @@ import type { PostType } from "@/content/data/posts";
  */
 
 export const novedades = {
+  /**
+   * CTA de la portada cuando la entrada es la apertura de una estación.
+   *
+   * En una apertura, el destino útil no es el artículo sino el sitio donde se
+   * puede cargar: el titular ya cuenta la noticia y el vídeo la muestra. El
+   * detalle sigue a un clic — el título enlaza a él.
+   */
+  knowStation: { es: "Conoce la estación", en: "See the station", pt: "Conheça a estação", } satisfies Localized,
+
+  /** Rótulo del tipo de medio. La duración la aporta el propio asset. */
+  mediaLabel: {
+    video: { es: "Video", en: "Video", pt: "Vídeo", } satisfies Localized,
+  },
   meta: {
     title: { es: "Novedades", en: "Newsroom", pt: "Novidades", } satisfies Localized,
     description: {
@@ -106,7 +119,9 @@ export const novedades = {
   /** Enlace de vuelta al producto desde una entrada. Aquí paga la referencia. */
   related: {
     station: { es: "Estación relacionada", en: "Related station", pt: "Estação relacionada", } satisfies Localized,
-    city: { es: "Ver la cobertura de la ciudad", en: "See coverage for this city", pt: "Ver a cobertura da cidade", } satisfies Localized,
+    /* Se completa con el nombre de la ciudad. Antes se concatenaba
+       "Ver la cobertura de la ciudad — Medellín", que la nombraba dos veces. */
+    city: { es: "Ver la cobertura en", en: "See coverage in", pt: "Ver a cobertura em", } satisfies Localized,
   },
 };
 

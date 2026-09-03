@@ -7,6 +7,7 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { SmoothScroll } from "@/components/layout/SmoothScroll";
 import { AppFloating } from "@/components/layout/AppFloating";
+import { CookieConsent } from "@/components/layout/CookieConsent";
 
 /**
  * LAYOUT POR IDIOMA
@@ -97,6 +98,7 @@ export default async function LangLayout({
       <Header lang={lang} />
       <main id="contenido">{children}</main>
       <AppFloating lang={lang} />
+      <CookieConsent lang={lang} />
       <Footer lang={lang} />
     </div>
   );

@@ -470,3 +470,27 @@ export const storeBadges = {
   apple: { es: "Descárgalo en el", en: "Download on the", pt: "Baixar na", } satisfies Localized,
   google: { es: "Disponible en", en: "Get it on", pt: "Disponível no", } satisfies Localized,
 };
+
+/**
+ * AVISO DE COOKIES.
+ *
+ * El sitio carga Google Tag Manager, que a su vez instala cookies de
+ * analítica. La Política de Tratamiento de Datos las declara, pero declararlas
+ * no es lo mismo que pedir permiso: la Ley 1581 exige autorización **previa,
+ * expresa e informada** (§38), y "previa" significa antes de instalarlas.
+ *
+ * Por eso el texto no dice "usamos cookies" en pasado ni da por hecho nada.
+ * Dice qué son, para qué, y deja las dos salidas al mismo nivel: un botón de
+ * rechazo escondido o en gris no es una elección informada.
+ */
+export const cookies = {
+  title: { es: "Cookies de analítica", en: "Analytics cookies", pt: "Cookies de análise", } satisfies Localized,
+  body: {
+    es: "Nos ayudan a entender qué partes del sitio se usan y cuáles no. No las activamos hasta que nos digas.",
+    en: "They help us understand which parts of the site get used and which don't. We won't turn them on until you say so.",
+    pt: "Elas nos ajudam a entender quais partes do site são usadas e quais não. Só ativamos quando você permitir.",
+  } satisfies Localized,
+  accept: { es: "Aceptar", en: "Accept", pt: "Aceitar" } satisfies Localized,
+  reject: { es: "Rechazar", en: "Reject", pt: "Recusar" } satisfies Localized,
+  policy: { es: "Leer la política", en: "Read the policy", pt: "Ler a política" } satisfies Localized,
+};

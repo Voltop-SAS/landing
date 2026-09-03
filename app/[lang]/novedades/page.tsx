@@ -131,14 +131,27 @@ export default async function NovedadesPage({ params }: Props) {
             <Section space="tight">
               <Container>
                 {featured.cover && (
-                  <Media
-                    asset={featured.cover}
-                    lang={lang}
-                    aspect="21/9"
-                    corner
-                    sizes="(min-width: 1280px) 76rem, 100vw"
-                    priority
-                  />
+                  <figure>
+                    <Media
+                      asset={featured.cover}
+                      lang={lang}
+                      aspect="21/9"
+                      corner
+                      sizes="(min-width: 1280px) 76rem, 100vw"
+                      priority
+                    />
+                    {/* Rótulo derivado del asset y pie propio de la portada: el
+                        índice comenta la pieza de otra forma que el detalle,
+                        porque quien lee aquí todavía no ha entrado. */}
+                    <figcaption className="mt-3 text-body-s text-ink-3">
+                      {featured.cover.kind === "video" && featured.cover.duration && (
+                        <span className="mr-3 font-mono text-mono uppercase tracking-wider text-ink-2">
+                          {t(novedades.mediaLabel.video, lang)} · {featured.cover.duration}
+                        </span>
+                      )}
+                      {t(featured.coverCaption ?? featured.cover.alt, lang)}
+                    </figcaption>
+                  </figure>
                 )}
 
                 <div className="mt-8 grid gap-x-10 gap-y-4 md:grid-cols-[9rem_1fr]">
@@ -170,7 +183,22 @@ export default async function NovedadesPage({ params }: Props) {
                     <p className="mt-4 measure text-body-l text-ink-2">
                       {t(featured.summary, lang)}
                     </p>
-                    {hasPage(featured) && (
+                    {/* Si la entrada es la apertura de una estación, el CTA
+                        lleva A LA ESTACIÓN: es el destino que sirve para algo.
+                        Si no, lleva a la entrada. El título enlaza siempre al
+                        detalle, así que ninguna de las dos rutas se pierde. */}
+                    {featured.stationSlug ? (
+                      <div className="mt-6">
+                        <Button
+                          variant="secondary"
+                          size="s"
+                          arrow
+                          href={href(lang, routes.station(featured.stationSlug))}
+                        >
+                          {t(novedades.knowStation, lang)}
+                        </Button>
+                      </div>
+                    ) : hasPage(featured) ? (
                       <div className="mt-6">
                         <Button
                           variant="secondary"
@@ -181,7 +209,7 @@ export default async function NovedadesPage({ params }: Props) {
                           {t(novedades.readEntry, lang)}
                         </Button>
                       </div>
-                    )}
+                    ) : null}
                   </div>
                 </div>
               </Container>

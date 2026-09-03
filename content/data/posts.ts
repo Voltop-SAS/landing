@@ -51,7 +51,14 @@ export type PostBlock =
   | { kind: "lista"; items: Localized[] }
   /** Atribución obligatoria: una cita sin autor no es una cita. */
   | { kind: "cita"; text: Localized; author: string; role: Localized }
-  | { kind: "media"; asset: MediaAsset };
+  /**
+   * `caption` es el pie VISIBLE. Si falta, se usa el `alt` del asset.
+   *
+   * No son lo mismo y por eso se separan: el `alt` describe la imagen para
+   * quien no la ve, y el pie la comenta para quien sí. Usar el alt como pie
+   * obliga a que un solo texto haga dos trabajos, y acaba haciendo mal los dos.
+   */
+  | { kind: "media"; asset: MediaAsset; caption?: Localized };
 
 export type Post = {
   slug: string;
@@ -64,6 +71,8 @@ export type Post = {
   /** Vacío = la entrada vive solo en el índice. Ver cabecera del archivo. */
   body: PostBlock[];
   cover?: MediaAsset;
+  /** Pie de la portada en el índice. Ver `caption` en el bloque `media`. */
+  coverCaption?: Localized;
   /**
    * Referencias, nunca texto libre. Es lo que hace que una apertura aparezca
    * sola en la ficha de su estación y en la página de su ciudad, sin que nadie
@@ -125,6 +134,63 @@ export const posts: Post[] = [
     ],
     status: "publicado",
     dataStatus: "placeholder",
+  },
+  {
+    slug: "apertura-wake-medellin",
+    type: "apertura",
+    date: "2026-04-21",
+    title: {
+      es: "Más potencia para Medellín: nueva estación de carga rápida en Wake",
+      en: "More power for Medellín: a new fast-charging station at Wake",
+      pt: "Mais potência para Medellín: nova estação de carregamento rápido no Wake",
+    },
+    summary: {
+      es: "Hasta 80 kW de potencia para cargar más rápido y pasar más tiempo en movimiento.",
+      en: "Up to 80 kW so you charge faster and spend more time moving.",
+      pt: "Até 80 kW para carregar mais rápido e passar mais tempo em movimento.",
+    },
+    cover: media.aperturaWake,
+    coverCaption: {
+      es: "Así inauguramos Wake: una nueva estación Voltop con carga rápida de hasta 80 kW en Medellín.",
+      en: "This is how we opened Wake: a new Voltop station with fast charging of up to 80 kW in Medellín.",
+      pt: "Assim inauguramos o Wake: uma nova estação Voltop com carregamento rápido de até 80 kW em Medellín.",
+    },
+    stationSlug: "wake",
+    citySlug: "medellin",
+    featured: true,
+    body: [
+      {
+        kind: "media",
+        asset: media.aperturaWake,
+        caption: {
+          es: "Así vivimos la apertura de Wake, nuestra nueva estación de carga rápida en Medellín.",
+          en: "How we experienced the opening of Wake, our new fast-charging station in Medellín.",
+          pt: "Como vivemos a abertura do Wake, nossa nova estação de carregamento rápido em Medellín.",
+        },
+      },
+      {
+        kind: "subtitulo",
+        text: { es: "80 kW para cargar más rápido", en: "80 kW to charge faster", pt: "80 kW para carregar mais rápido", },
+      },
+      {
+        kind: "parrafo",
+        text: {
+          es: "Wake llega a la red Voltop con carga rápida de hasta 80 kW. Más potencia significa menos tiempo conectado y una experiencia de carga mucho más ágil.",
+          en: "Wake joins the Voltop network with fast charging of up to 80 kW. More power means less time plugged in and a much quicker charging experience.",
+          pt: "O Wake chega à rede Voltop com carregamento rápido de até 80 kW. Mais potência significa menos tempo conectado e uma experiência de carregamento muito mais ágil.",
+        },
+      },
+      {
+        kind: "parrafo",
+        text: {
+          es: "Una nueva estación en Medellín que nos acerca a lo que queremos construir: una ciudad donde moverse en eléctrico sea cada vez más fácil.",
+          en: "A new station in Medellín that brings us closer to what we want to build: a city where moving electric keeps getting easier.",
+          pt: "Uma nova estação em Medellín que nos aproxima do que queremos construir: uma cidade onde se mover de elétrico seja cada vez mais fácil.",
+        },
+      },
+    ],
+    status: "publicado",
+    dataStatus: "verified",
   },
   /* AQUÍ HABÍA DOS ENTRADAS MÁS: "San Fernando Plaza" y "Corredor Norte".
      Se retiraron el 2026-09-02 junto con sus estaciones: anunciaban aperturas

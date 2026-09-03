@@ -43,6 +43,10 @@ import { cn } from "@/lib/cn";
  *    la decisión se guarda en `localStorage`, envuelta en `try/catch` porque en
  *    navegación privada o con las cookies bloqueadas el simple ACCESO lanza.
  *
+ * 5. ESPERA A QUE SE DECIDA LO DE LAS COOKIES. Los dos son elementos fijos
+ *    abajo del todo, así que se taparían. Y el orden no es negociable: primero
+ *    se responde a una pregunta legal, después se ofrece una descarga.
+ *
  * 4. SE CALLA EN /empresas Y EN LOS LEGALES. En B2B la conversión es el
  *    formulario y §15 prohíbe que los CTA compitan; en un texto legal, tapar
  *    contenido durante una lectura larga estorba.
@@ -70,6 +74,9 @@ const CLAVE_CERRADO = "voltop:app-flotante-cerrado";
 
 /** Zonas donde el flotante estorba. Ver la regla 2 en la cabecera. */
 const ZONAS_MUDAS = ["app-title", "infraestructura", "vision"];
+
+/** La misma clave que usa `CookieConsent`. Ver la regla 5. */
+const CLAVE_COOKIES = "voltop:cookies";
 
 export function AppFloating({ lang }: { lang: Locale }) {
   const c = home.appFloating;
@@ -101,6 +108,8 @@ export function AppFloating({ lang }: { lang: Locale }) {
     }
   };
   const [seccionALaVista, setSeccionALaVista] = useState(false);
+  /* `false` de partida: mientras no se sepa, el flotante no aparece. */
+  const [cookiesDecididas, setCookiesDecididas] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
   /* Regla 1 — el objetivo es que no coincidan en pantalla, no clavar un píxel. */
@@ -109,6 +118,26 @@ export function AppFloating({ lang }: { lang: Locale }) {
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  /* Regla 5 — se consulta al montar y se vuelve a consultar, porque la
+     decisión puede tomarse con esta misma página abierta y `localStorage` no
+     emite eventos dentro de la propia pestaña. */
+  useEffect(() => {
+    const leer = () => {
+      try {
+        setCookiesDecididas(localStorage.getItem(CLAVE_COOKIES) !== null);
+      } catch {
+        /* Sin almacenamiento no hay aviso que esperar. */
+        setCookiesDecididas(true);
+      }
+    };
+    const id = requestAnimationFrame(leer);
+    const intervalo = window.setInterval(leer, 1000);
+    return () => {
+      cancelAnimationFrame(id);
+      window.clearInterval(intervalo);
+    };
   }, []);
 
   /* Regla 2 — ver la cabecera. Se cuentan las zonas visibles en lugar de
@@ -145,7 +174,8 @@ export function AppFloating({ lang }: { lang: Locale }) {
 
   const ruta = stripLocale(usePathname()) || "/";
   const rutaLoPermite = !ruta.startsWith(routes.empresas) && !ruta.startsWith("/legal");
-  const mostrar = pasadoElHero && !cerrado && !seccionALaVista && rutaLoPermite;
+  const mostrar =
+    pasadoElHero && !cerrado && !seccionALaVista && rutaLoPermite && cookiesDecididas;
 
   const transicion =
     "transition-[opacity,transform] duration-(--duration-base) ease-(--ease-out) motion-reduce:transition-none";

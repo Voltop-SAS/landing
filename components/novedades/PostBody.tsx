@@ -1,6 +1,7 @@
 import { t, type Locale } from "@/lib/i18n/config";
 import { Media } from "@/components/ui/Media";
 import type { PostBlock } from "@/content/data/posts";
+import { novedades } from "@/content/copy/novedades";
 
 /**
  * CUERPO DE UNA ENTRADA · render de bloques tipados.
@@ -65,8 +66,16 @@ export function PostBody({ blocks, lang }: { blocks: PostBlock[]; lang: Locale }
             return (
               <figure key={i} className="my-4">
                 <Media asset={block.asset} lang={lang} corner sizes="(min-width: 768px) 46rem, 100vw" />
+                {/* El rótulo se DERIVA del asset —tipo y duración— en lugar de
+                    escribirse. Un "VIDEO · 1:05" a mano se queda desfasado el
+                    día que se recorte la pieza y nadie lo nota. */}
                 <figcaption className="mt-3 text-body-s text-ink-3">
-                  {t(block.asset.alt, lang)}
+                  {block.asset.kind === "video" && block.asset.duration && (
+                    <span className="mr-3 font-mono text-mono uppercase tracking-wider text-ink-2">
+                      {t(novedades.mediaLabel.video, lang)} · {block.asset.duration}
+                    </span>
+                  )}
+                  {t(block.caption ?? block.asset.alt, lang)}
                 </figcaption>
               </figure>
             );

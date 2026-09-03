@@ -297,6 +297,38 @@ export const media = {
    * 120 KB: **110.8 KB**. El candidato anterior (2.0 s, el vehículo en la
    * rampa) no bajaba de 138 KB ni a calidad 13.
    */
+  /**
+   * APERTURA DE WAKE.
+   *
+   * MISMO ARCHIVO que `filmVoltop` — es la pieza de 1:05 que se entregó como
+   * "Video Home". Se registra aparte porque un asset se identifica por su
+   * FUNCIÓN NARRATIVA, no por su ruta: aquí documenta una apertura concreta y
+   * allí cierra la Home. Alt y `role` distintos porque describen cosas
+   * distintas, aunque los píxeles sean los mismos.
+   *
+   * OJO: eso significa que el mismo vídeo aparece en dos sitios del sitio.
+   * Conviene confirmar que es lo que se quiere, o entregar piezas separadas.
+   */
+  aperturaWake: {
+    id: "apertura-wake",
+    kind: "video",
+    src: "/voltop-film.mp4",
+    poster: "/voltop-film-poster.jpg",
+    alt: {
+      es: "Apertura de la estación Voltop en Wake, Medellín: el equipo y los cargadores entrando en operación",
+      en: "Opening of the Voltop station at Wake, Medellín: the team and the chargers entering service",
+      pt: "Abertura da estação Voltop no Wake, Medellín: a equipe e os carregadores entrando em operação",
+    },
+    role: {
+      es: "Registro de la apertura de Wake. Documenta un hecho concreto, no la marca en general.",
+      en: "Record of the Wake opening. Documents a specific event, not the brand at large.",
+      pt: "Registro da abertura do Wake. Documenta um fato concreto, não a marca em geral.",
+    },
+    duration: "1:05",
+    aspect: "16/9",
+    availability: "entregado",
+  },
+
   filmVoltop: {
     id: "film-voltop",
     kind: "video",
