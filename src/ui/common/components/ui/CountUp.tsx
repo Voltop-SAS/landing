@@ -5,32 +5,32 @@ import { animate, useInView, useReducedMotion } from 'motion/react'
 import { COUNT_DURATION, ease } from '@ui/common/lib/motion'
 
 /**
- * CIFRA QUE CUENTA AL ENTRAR EN PANTALLA
- * Ver docs/MASTER-PROJECT-DEFINITION.md §21 y §29.
+ * FIGURE THAT COUNTS UP WHEN IT ENTERS THE SCREEN
+ * See docs/MASTER-PROJECT-DEFINITION.md §21 and §29.
  *
- * ── EL VALOR FINAL YA ESTÁ EN EL HTML SERVIDO ────────────────────────────
- * El servidor pinta la cifra definitiva. Si el JS no llega, si falla, o si un
- * buscador lee la página, ahí está el número — no un cero ni un hueco. El
- * conteo es un añadido sobre contenido que ya funciona, que es la única forma
- * honesta de animar un dato.
+ * ── THE FINAL VALUE IS ALREADY IN THE SERVED HTML ────────────────────────
+ * The server paints the final figure. If the JS never arrives, if it fails, or
+ * if a search engine reads the page, the number is right there — not a zero
+ * and not a gap. The count-up is an addition on top of content that already
+ * works, which is the only honest way to animate a piece of data.
  *
- * El arranque en cero se escribe en `useLayoutEffect` (vía `useEffect` con
- * escritura directa al nodo antes del primer pintado observable): así no se ve
- * el destello del valor final seguido de un salto a cero.
+ * The start at zero is written in `useLayoutEffect` (via `useEffect` writing
+ * straight to the node before the first observable paint): that way there is
+ * no flash of the final value followed by a jump back to zero.
  *
- * ── SIN `useState` ───────────────────────────────────────────────────────
- * Contar con estado provoca un render por fotograma: a 60fps son 60 renders de
- * React para mover un texto. Aquí se escribe directamente en el nodo con una
- * referencia, que es lo que hace que sea fluido también en gama baja (§29).
+ * ── NO `useState` ────────────────────────────────────────────────────────
+ * Counting with state causes one render per frame: at 60fps that is 60 React
+ * renders to move a piece of text. Here it is written straight to the node
+ * through a ref, which is what keeps it smooth on low-end devices too (§29).
  *
  * ── REDUCED MOTION ───────────────────────────────────────────────────────
- * No se degrada la animación: se OMITE. La cifra ya está puesta, así que no
- * hay nada que hacer y nada que pueda quedar invisible.
+ * The animation is not degraded: it is SKIPPED. The figure is already in
+ * place, so there is nothing to do and nothing that could end up invisible.
  */
 export function CountUp({
   value,
   className,
-  /** Sufijo que no se anima (por ejemplo una unidad). */
+  /** Suffix that is not animated (a unit, for example). */
   suffix = '',
 }: {
   value: number
@@ -38,30 +38,30 @@ export function CountUp({
   suffix?: string
 }) {
   const ref = useRef<HTMLSpanElement>(null)
-  const enVista = useInView(ref, { once: true, margin: '-15%' })
+  const inView = useInView(ref, { once: true, margin: '-15%' })
   const reduce = useReducedMotion()
-  const yaCorrio = useRef(false)
+  const hasRun = useRef(false)
 
   useEffect(() => {
-    if (reduce || !enVista || yaCorrio.current) return
-    const nodo = ref.current
-    if (!nodo) return
-    yaCorrio.current = true
+    if (reduce || !inView || hasRun.current) return
+    const node = ref.current
+    if (!node) return
+    hasRun.current = true
 
-    const controles = animate(0, value, {
+    const controls = animate(0, value, {
       duration: COUNT_DURATION,
       ease: ease.standard,
       onUpdate: (v) => {
-        nodo.textContent = `${Math.round(v)}${suffix}`
+        node.textContent = `${Math.round(v)}${suffix}`
       },
-      /* Pase lo que pase, el nodo termina con el valor exacto: el redondeo del
-         último fotograma no puede dejar la cifra a uno de distancia. */
+      /* Whatever happens, the node ends on the exact value: the last frame's
+         rounding must not leave the figure one off. */
       onComplete: () => {
-        nodo.textContent = `${value}${suffix}`
+        node.textContent = `${value}${suffix}`
       },
     })
-    return () => controles.stop()
-  }, [enVista, reduce, value, suffix])
+    return () => controls.stop()
+  }, [inView, reduce, value, suffix])
 
   return (
     <span

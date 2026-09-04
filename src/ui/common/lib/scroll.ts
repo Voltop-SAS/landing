@@ -1,9 +1,9 @@
 /**
- * Control de scroll compartido.
+ * Shared scroll control.
  *
- * Lenis toma el control del scroll de la página, así que bloquearlo con CSS no
- * basta: hay que detener también el motor. Este módulo mantiene una referencia
- * única y expone bloqueo/desbloqueo para overlays (menú móvil, diálogos).
+ * Lenis takes over the page scroll, so locking it with CSS is not enough: the
+ * engine has to be stopped too. This module keeps a single reference and
+ * exposes lock/unlock for overlays (mobile menu, dialogs).
  */
 
 type LenisLike = {
@@ -25,7 +25,7 @@ export function lockScroll() {
   if (locks > 1) return
   instance?.stop()
   document.body.style.overflow = 'hidden'
-  // Compensa la barra de scroll para que el layout no salte al bloquear.
+  // Compensates for the scrollbar so the layout does not jump when locking.
   const gap = window.innerWidth - document.documentElement.clientWidth
   if (gap > 0) document.body.style.paddingRight = `${gap}px`
 }

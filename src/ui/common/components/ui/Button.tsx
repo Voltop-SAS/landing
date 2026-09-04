@@ -4,16 +4,17 @@ import { t, type Locale } from '~/core/common/domain/i18n/config'
 import { cn } from '@ui/common/lib/cn'
 
 /**
- * BOTÓN VOLTOP · Server Component
- * Ver docs/MASTER-PROJECT-DEFINITION.md §12 y §24.
+ * VOLTOP BUTTON · Server Component
+ * See docs/MASTER-PROJECT-DEFINITION.md §12 and §24.
  *
- * Decisiones del sistema:
- * - Radio DUAL: `pill` para acciones/energía, `structural` para datos.
- * - UNA flecha contextual (→), solo si la acción implica dirección.
- * - Gradiente con DISCIPLINA: `variant="primary"` es la ÚNICA acción
- *   destacada de cada vista. Si hay dos primarios en una pantalla, uno sobra.
- * - Altura mínima 44px en todos los tamaños salvo `xs` (uso no táctil).
- * - Navegación interna SIEMPRE con next/link (§26).
+ * System decisions:
+ * - DUAL radius: `pill` for actions/energy, `structural` for data.
+ * - ONE contextual arrow (→), only when the action implies direction.
+ * - Gradient with DISCIPLINE: `variant="primary"` is the ONLY highlighted
+ *   action in each view. If there are two primaries on a screen, one is one
+ *   too many.
+ * - Minimum height of 44px at every size except `xs` (non-touch use).
+ * - Internal navigation ALWAYS through next/link (§26).
  */
 
 type Variant = 'primary' | 'secondary' | 'ghost' | 'link'
@@ -33,14 +34,14 @@ type Common = {
 type AsLink = Common & {
   href: string
   /**
-   * Abre en pestaña nueva Y LO ANUNCIA. Antes solo hacía lo primero: "Cómo
-   * llegar" —el CTA principal de la ficha de estación— saltaba a Google Maps
-   * sin icono, sin texto y sin aviso a lectores de pantalla (WCAG 3.2.5).
-   * Requiere `locale` para poder decirlo en el idioma de la página.
+   * Opens in a new tab AND SAYS SO. It used to do only the first: "Get
+   * directions" — the main CTA on a station page — jumped to Google Maps with
+   * no icon, no text and no warning for screen readers (WCAG 3.2.5). It needs
+   * `locale` so it can be said in the page's language.
    */
   external?: boolean
   locale?: Locale
-  /** Solo para instrumentación del plan de medición. */
+  /** For measurement plan instrumentation only. */
   onClick?: () => void
   type?: never
   loading?: never
@@ -61,7 +62,7 @@ const base =
   'duration-(--duration-fast) ease-(--ease-standard) ' +
   'active:scale-[0.98] disabled:pointer-events-none disabled:opacity-40 select-none'
 
-/* Altura mínima 44px = touch target accesible (§23). */
+/* Minimum height 44px = accessible touch target (§23). */
 const sizes: Record<Size, string> = {
   l: 'min-h-13 px-7 text-body',
   m: 'min-h-11 px-6 text-body-s',
@@ -69,9 +70,9 @@ const sizes: Record<Size, string> = {
 }
 
 /**
- * `secondary` y `ghost` usan `line-control`: en un botón sin relleno, el borde
- * ES lo que lo hace reconocible como control, así que WCAG 1.4.11 pide ≥3:1.
- * `line` daba 1.25:1 y `line-strong` 1.68:1.
+ * `secondary` and `ghost` use `line-control`: on a button with no fill, the
+ * border IS what makes it recognisable as a control, so WCAG 1.4.11 requires
+ * ≥3:1. `line` gave 1.25:1 and `line-strong` 1.68:1.
  */
 const variants: Record<Variant, string> = {
   primary: 'brand-gradient text-on-brand font-semibold hover:brightness-105 hover:energy-glow',
@@ -96,9 +97,10 @@ function Inner({
       <span className={cn('inline-flex items-center gap-2', loading && 'opacity-0')}>
         {children}
         {arrow && (
-          /* La flecha de salida sustituye a la de dirección cuando el destino
-             está fuera del sitio: es la señal visual del aviso que el `sr-only`
-             da a la asistencia. Una sola flecha, contextual (§12). */
+          /* The outgoing arrow replaces the directional one when the
+             destination is off site: it is the visual counterpart of the
+             warning the `sr-only` gives assistive technology. One arrow,
+             contextual (§12). */
           <svg
             width="16"
             height="16"
@@ -106,12 +108,14 @@ function Inner({
             fill="none"
             aria-hidden="true"
             className={cn(
-              /* Único sitio del sistema con `--ease-overshoot`. La flecha sale
-                 un poco más lejos de lo que aterriza y vuelve: es lo que hace
-                 que el control se sienta vivo en vez de correcto.
-                 El recorrido sube de 2px a 4px porque con 2px el sobreimpulso
-                 no se percibe — se siente lento, que es peor que no tenerlo.
-                 `prefers-reduced-motion` lo anula globalmente (globals.css). */
+              /* The only place in the system using `--ease-overshoot`. The
+                 arrow travels slightly further than where it lands and comes
+                 back: that is what makes the control feel alive rather than
+                 merely correct.
+                 The travel goes from 2px to 4px because at 2px the overshoot
+                 is not perceived — it feels slow, which is worse than not
+                 having it. `prefers-reduced-motion` cancels it globally
+                 (globals.css). */
               'shrink-0 transition-transform duration-(--duration-fast) ease-(--ease-overshoot)',
               external
                 ? 'group-hover:-translate-y-1 group-hover:translate-x-1'

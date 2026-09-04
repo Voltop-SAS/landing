@@ -6,13 +6,14 @@ import { a11y, mediaPlaceholder } from '~/core/common/domain/consts/copy'
 import { VideoMedia } from '@ui/common/components/ui/VideoMedia'
 
 /**
- * MEDIA · punto único de render para fotografía y video narrativo.
- * Ver docs/MASTER-PROJECT-DEFINITION.md §20 y §33.
+ * MEDIA · single render point for photography and narrative video.
+ * See docs/MASTER-PROJECT-DEFINITION.md §20 and §33.
  *
- * Si el asset tiene `src`, se renderiza el material real.
- * Si no, se renderiza un hueco HONESTO que declara qué falta y para qué sirve
- * — no un rectángulo anónimo. Cuando el archivo llegue, basta con rellenar
- * `src` en content/data/media.ts: ningún componente cambia.
+ * If the asset has a `src`, the real material is rendered.
+ * If not, an HONEST placeholder is rendered declaring what is missing and what
+ * it is for — not an anonymous rectangle. When the file arrives, filling in
+ * `src` in `~/core/common/infrastructure/content/media` is enough: no
+ * component changes.
  */
 
 const aspects: Record<MediaAsset['aspect'], string> = {
@@ -44,89 +45,88 @@ export function Media({
   className?: string
   sizes?: string
   priority?: boolean
-  /** `true` cuando el contenedor padre define la altura (full-bleed, sticky). */
+  /** `true` when the parent container defines the height (full-bleed, sticky). */
   fill?: boolean
   /**
-   * Recorte de la composición cuando difiere del nativo del asset.
+   * The composition's crop when it differs from the asset's native one.
    *
-   * Antes esto se hacía pasando `className="aspect-[21/9]"`, que NO sustituía
-   * la clase nativa sino que la acompañaba: `/empresas` servía
-   * `aspect-[4/3] aspect-[21/9]` en el mismo elemento y cuál ganaba dependía
-   * del orden de emisión del CSS, no de la intención. Con una prop, el recorte
-   * es una decisión declarada y solo hay una clase.
+   * This used to be done by passing `className="aspect-[21/9]"`, which did NOT
+   * replace the native class but accompanied it: `/empresas` served
+   * `aspect-[4/3] aspect-[21/9]` on the same element and which one won
+   * depended on the CSS emission order, not on intent. With a prop, the crop
+   * is a declared decision and there is only one class.
    */
   aspect?: MediaAsset['aspect']
   /**
-   * Punto de anclaje del recorte (`object-position`).
+   * The crop's anchor point (`object-position`).
    *
-   * `object-cover` decide POR QUÉ EJE recorta según la forma del hueco, y en un
-   * hero a sangre esa forma cambia por completo entre dispositivos: en
-   * escritorio el hueco es más ancho que la foto, así que se conserva todo el
-   * ancho y se recorta arriba y abajo; en móvil es mucho más estrecho, así que
-   * se conserva todo el alto y se recorta a izquierda y derecha.
+   * `object-cover` decides WHICH AXIS it crops on based on the shape of the
+   * hole, and in a full-bleed hero that shape changes completely between
+   * devices: on desktop the hole is wider than the photo, so the full width is
+   * kept and it crops top and bottom; on mobile it is far narrower, so the
+   * full height is kept and it crops left and right.
    *
-   * Por eso los dos valores no compiten: cada uno solo actúa en el régimen
-   * donde su eje es el que se recorta. Sin esta prop el anclaje es el centro,
-   * que es lo correcto para el resto de composiciones del sitio y por eso
-   * sigue siendo el valor por defecto.
+   * That is why the two values do not compete: each only acts in the regime
+   * where its axis is the one being cropped. Without this prop the anchor is
+   * the centre, which is correct for the rest of the site's compositions and
+   * is why it remains the default.
    */
   position?: string
   /**
-   * `cover` recorta para llenar; `contain` cabe entero dejando aire.
+   * `cover` crops to fill; `contain` fits whole and leaves air.
    *
-   * Por defecto `cover`, que es lo correcto para todo el material de sitio:
-   * una fotografía de una estación o de una ciudad ES un fondo y se recorta
-   * sin perder nada.
+   * `cover` by default, which is right for all the site material: a photograph
+   * of a station or a city IS a background and crops without losing anything.
    *
-   * `contain` existe para el material que es un OBJETO AISLADO —el render del
-   * cargador— donde el recorte destruye el sujeto: un equipo cortado por
-   * arriba o por los lados deja de ser el retrato de un equipo.
+   * `contain` exists for material that is an ISOLATED OBJECT — the charger
+   * render — where cropping destroys the subject: a unit cut off at the top or
+   * the sides stops being the portrait of a unit.
    *
-   * `position` SIGUE ACTUANDO con `contain`, y conviene saberlo: la imagen se
-   * ajusta por un eje y sobra espacio en el otro, y `object-position` decide
-   * dónde se apoya dentro de ese sobrante. Es lo que permite pegar el render
-   * del beat 3 al bloque de texto en lugar de dejarlo flotando en el centro de
-   * su caja.
+   * `position` STILL APPLIES with `contain`, and that is worth knowing: the
+   * image fits along one axis and space is left over on the other, and
+   * `object-position` decides where it rests within that leftover. It is what
+   * allows the beat 3 render to sit against the text block instead of floating
+   * in the centre of its box.
    */
   fit?: 'cover' | 'contain'
   /**
-   * Calidad de codificación. Solo se pasa cuando el peso del asset lo exige:
-   * una fotografía muy detallada puede superar el presupuesto de §29 a la
-   * calidad por defecto. Los valores admitidos se declaran en `next.config.ts`.
+   * Encoding quality. Only passed when the asset's weight demands it: a highly
+   * detailed photograph can blow §29's budget at the default quality. The
+   * accepted values are declared in `next.config.ts`.
    */
   quality?: number
-  /** Ver `VideoMedia`: convierte el vídeo de fondo en pieza con controles. */
+  /** See `VideoMedia`: turns the background video into a piece with controls. */
   controls?: boolean
   /**
-   * Esquina de firma (`--radius-signature`) en la superior derecha.
+   * Signature corner (`--radius-signature`) on the top right.
    *
-   * Se activa por bloque y no por defecto: un fondo a sangre no tiene esquinas
-   * que redondear, y aplicarlo a todo lo convertiría en textura en lugar de
-   * firma. Va en los bloques que viven DENTRO de un contenedor.
+   * Enabled per block and not by default: a full-bleed background has no
+   * corners to round, and applying it everywhere would turn it into texture
+   * instead of a signature. It goes on blocks that live INSIDE a container.
    */
   corner?: boolean
 }) {
   const shape = fill ? '' : aspects[aspect ?? asset.aspect]
   /**
-   * `bg-surface-1` es el fondo que sostiene el hueco mientras la imagen carga,
-   * y con `cover` nunca se ve: la foto lo tapa entero.
+   * `bg-surface-1` is the background holding the placeholder while the image
+   * loads, and with `cover` it is never seen: the photo covers it entirely.
    *
-   * Con `contain` sí se ve, y se convierte en una CAJA. Medido en el beat 3:
-   * el render del cargador viene con fondo transparente y este relleno pintaba
-   * un rectángulo más claro de 662px con una costura vertical visible contra
-   * el fondo de la sección — exactamente la caja que la composición evitaba.
-   * Un objeto aislado se apoya sobre el fondo que le toque, sin superficie
-   * propia detrás.
+   * With `contain` it is seen, and it becomes a BOX. Measured in beat 3: the
+   * charger render comes with a transparent background and this fill painted a
+   * lighter 662px rectangle with a visible vertical seam against the section
+   * background — exactly the box the composition was avoiding. An isolated
+   * object rests on whatever background it lands on, with no surface of its
+   * own behind it.
    */
-  const fondo = fit === 'contain' ? '' : 'bg-surface-1'
-  /* `overflow-hidden` ya está en los tres envoltorios, así que el recorte de
-     la esquina se aplica también al contenido —foto, vídeo o hueco—. */
-  const esquina = corner ? 'rounded-tr-(--radius-signature)' : ''
+  const background = fit === 'contain' ? '' : 'bg-surface-1'
+  /* `overflow-hidden` is already on all three wrappers, so the corner's
+     clipping applies to the content too — photo, video or placeholder. */
+  const cornerClass = corner ? 'rounded-tr-(--radius-signature)' : ''
 
   if (asset.src) {
     if (asset.kind === 'photo') {
       return (
-        <div className={cn('relative overflow-hidden', fondo, shape, esquina, className)}>
+        <div className={cn('relative overflow-hidden', background, shape, cornerClass, className)}>
           <Image
             src={asset.src}
             alt={t(asset.alt, locale)}
@@ -139,11 +139,11 @@ export function Media({
         </div>
       )
     }
-    /* El video vive en un componente de cliente porque tiene que leer
-       `prefers-reduced-motion`, que no es consultable desde el servidor.
-       La fotografía —la rama de arriba— sigue siendo servidor puro. */
+    /* The video lives in a client component because it has to read
+       `prefers-reduced-motion`, which cannot be queried from the server.
+       Photography — the branch above — remains pure server. */
     return (
-      <div className={cn('relative overflow-hidden', fondo, shape, esquina, className)}>
+      <div className={cn('relative overflow-hidden', background, shape, cornerClass, className)}>
         <VideoMedia
           asset={asset}
           locale={locale}
@@ -163,28 +163,30 @@ export function Media({
       asset={asset}
       locale={locale}
       fill={fill}
-      className={cn(shape, esquina, className)}
+      className={cn(shape, cornerClass, className)}
     />
   )
 }
 
 /**
- * Hueco declarado. Comunica QUÉ asset falta y QUÉ función cumple, para que la
- * revisión de diseño pueda evaluar la composición sin el material definitivo.
- * Cumple contraste AA como cualquier otro texto (§33).
+ * Declared placeholder. It communicates WHICH asset is missing and WHAT
+ * function it serves, so a design review can assess the composition without
+ * the final material. It meets AA contrast like any other text (§33).
  *
- * DOS COLOCACIONES, no una:
+ * TWO PLACEMENTS, not one:
  *
- * - Sin `fill` (el hueco ocupa su propio bloque) el rótulo va abajo a la
- *   izquierda con su descripción completa: nada más compite por ese espacio.
+ * - Without `fill` (the placeholder occupies its own block) the label goes
+ *   bottom left with its full description: nothing else competes for that
+ *   space.
  *
- * - Con `fill` (el hueco es el FONDO de una composición) el rótulo se reduce a
- *   la insignia y se ancla a una esquina. Antes iba centrado arriba con la
- *   descripción en dos líneas y, a 390px, se pintaba literalmente encima del
- *   eyebrow y del titular del hero — texto sobre texto en la primera pantalla
- *   del sitio, que es justo lo que §22 prohíbe ("los gráficos de fondo nunca se
- *   superponen al contenido"). En móvil desaparece del todo: el hueco ya se
- *   anuncia por `aria-label` y la descripción vive en el registro de media.
+ * - With `fill` (the placeholder is the BACKGROUND of a composition) the label
+ *   is reduced to the badge and anchored to a corner. It used to be centred at
+ *   the top with the description on two lines and, at 390px, it painted
+ *   literally on top of the hero's eyebrow and headline — text over text on
+ *   the site's first screen, which is exactly what §22 forbids ("background
+ *   graphics never overlap content"). On mobile it disappears entirely: the
+ *   placeholder is already announced through `aria-label` and the description
+ *   lives in the media register.
  */
 export function MediaPending({
   asset,
@@ -195,7 +197,8 @@ export function MediaPending({
   asset: MediaAsset
   locale: Locale
   className?: string
-  /** `true` cuando el hueco es el fondo de una composición con contenido encima. */
+  /** `true` when the placeholder is the background of a composition with
+      content on top. */
   fill?: boolean
 }) {
   const kind = asset.kind === 'video' ? mediaPlaceholder.video : mediaPlaceholder.photo
@@ -214,7 +217,8 @@ export function MediaPending({
         className,
       )}
     >
-      {/* Textura estructural discreta: no imita una foto, declara un hueco. */}
+      {/* Discreet structural texture: it does not imitate a photo, it declares
+          a gap. */}
       <span
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 opacity-[0.07]"

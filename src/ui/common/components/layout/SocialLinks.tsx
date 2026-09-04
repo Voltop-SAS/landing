@@ -2,21 +2,22 @@ import { t, type Locale } from '~/core/common/domain/i18n/config'
 import { a11y, footer } from '~/core/common/domain/consts/copy'
 
 /**
- * ENLACES A REDES SOCIALES.
+ * SOCIAL MEDIA LINKS.
  *
- * ── ACCESIBILIDAD ─────────────────────────────────────────────────────────
- * El icono es `aria-hidden` y el nombre accesible lo da un `sr-only`, no un
- * `aria-label`: así el texto que anuncia la asistencia y el que ve quien usa
- * lupa son el mismo, y no hay dos fuentes de verdad que puedan divergir.
+ * ── ACCESSIBILITY ─────────────────────────────────────────────────────────
+ * The icon is `aria-hidden` and the accessible name comes from an `sr-only`,
+ * not an `aria-label`: that way the text assistive technology announces and
+ * the text someone using magnification sees are the same, and there are not
+ * two sources of truth that can drift apart.
  *
- * Ese `sr-only` incluye el aviso de pestaña nueva (WCAG 3.2.5), como el resto
- * de enlaces externos del sitio.
+ * That `sr-only` includes the new-tab warning (WCAG 3.2.5), like the rest of
+ * the site's external links.
  *
- * El objetivo táctil es de 44px aunque el icono mida 18: el área se declara en
- * el enlace, no en el trazo (§23).
+ * The touch target is 44px even though the icon measures 18: the area is
+ * declared on the link, not on the stroke (§23).
  */
 
-const iconos: Record<string, React.ReactNode> = {
+const icons: Record<string, React.ReactNode> = {
   Instagram: (
     <>
       <rect
@@ -40,10 +41,11 @@ const iconos: Record<string, React.ReactNode> = {
       />
     </>
   ),
-  /* Los tres iconos son un cuadrado redondeado con su glifo dentro, trazados
-     al mismo grosor. La marca oficial de Facebook es una forma para RELLENO;
-     trazarla tal cual daba un contorno de "f" que desentonaba junto a los
-     otros dos. Se redibuja con el mismo lenguaje que Instagram y LinkedIn. */
+  /* All three icons are a rounded square with their glyph inside, drawn at
+     the same stroke weight. Facebook's official mark is a shape meant to be
+     FILLED; stroking it as is produced an "f" outline that clashed next to the
+     other two. It is redrawn in the same language as Instagram and
+     LinkedIn. */
   Facebook: (
     <>
       <rect
@@ -75,10 +77,10 @@ export function SocialLinks({ locale }: { locale: Locale }) {
 
   return (
     <ul className="mt-6 flex items-center gap-1">
-      {footer.social.map((red) => (
-        <li key={red.name}>
+      {footer.social.map((network) => (
+        <li key={network.name}>
           <a
-            href={red.url}
+            href={network.url}
             target="_blank"
             rel="noopener noreferrer"
             className="grid size-11 place-items-center rounded-(--radius-pill) text-ink-3 transition-colors duration-(--duration-fast) hover:bg-surface-2 hover:text-ink"
@@ -93,10 +95,10 @@ export function SocialLinks({ locale }: { locale: Locale }) {
               strokeLinecap="round"
               strokeLinejoin="round"
             >
-              {iconos[red.name]}
+              {icons[network.name]}
             </svg>
             <span className="sr-only">
-              {red.name} · {t(a11y.opensInNewTab, locale)}
+              {network.name} · {t(a11y.opensInNewTab, locale)}
             </span>
           </a>
         </li>

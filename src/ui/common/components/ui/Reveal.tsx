@@ -6,38 +6,37 @@ import { depthMotion, type DepthLevel } from '@ui/common/lib/motion'
 import { useScrolledPast } from '@ui/common/hooks/useScrolledPast'
 
 /**
- * DEPTH · el contenido llega desde el fondo.
+ * DEPTH · content arrives from the back.
  *
- * Es el gesto base del sistema (ver `lib/motion.ts`). Sustituye al
- * `fade + translateY` anterior, que es el reveal por defecto de cualquier
- * plantilla: se percibía como "la página se ha cargado", no como una decisión.
- * Escala más desplazamiento leen como PROFUNDIDAD, que es el concepto que sí
- * pertenece a Voltop —recorrer una instalación— sin representar literalmente
- * nada eléctrico.
+ * It is the system's base gesture (see `@ui/common/lib/motion`). It replaces
+ * the previous `fade + translateY`, which is any template's default reveal: it
+ * was perceived as "the page has loaded", not as a decision. Scale plus offset
+ * read as DEPTH, which is the concept that does belong to Voltop — moving
+ * through an installation — without literally depicting anything electrical.
  *
- * Solo se animan `opacity` y `transform` (§21, regla dura de performance).
+ * Only `opacity` and `transform` are animated (§21, hard performance rule).
  *
- * ── EL ESCALONADO SE PIDE POR ÍNDICE, NO POR RETARDO ──────────────────────
- * Antes cada lista pasaba su propio `delay={i * 0.0x}` y había cuatro ritmos
- * distintos en el sitio. Ahora se pasa la POSICIÓN y el sistema decide el
- * tiempo: un solo ritmo, y ninguna lista puede desviarse sin que se note.
+ * ── STAGGER IS REQUESTED BY INDEX, NOT BY DELAY ───────────────────────────
+ * Each list used to pass its own `delay={i * 0.0x}` and there were four
+ * different rhythms across the site. Now the POSITION is passed and the system
+ * decides the timing: one rhythm, and no list can drift without it showing.
  *
- * ── LA INTENSIDAD BAJA SOLA EN MÓVIL ──────────────────────────────────────
- * `expressive` mueve 24px y escala desde 0.9. En una tarjeta con `.glass` eso
- * significa recomponer un `backdrop-filter` en cada fotograma, y en un teléfono
- * de gama media eso es lo que convierte una animación en un tirón. Por debajo
- * de 768px el nivel cae a `standard` por sí solo: la coreografía se mantiene,
- * el coste no. Es la degradación elegante que pide el mapa, decidida aquí y no
- * en cada componente.
+ * ── THE INTENSITY DROPS BY ITSELF ON MOBILE ───────────────────────────────
+ * `expressive` moves 24px and scales from 0.9. On a card with `.glass` that
+ * means recompositing a `backdrop-filter` on every frame, and on a mid-range
+ * phone that is what turns an animation into a stutter. Below 768px the level
+ * falls to `standard` on its own: the choreography is kept, the cost is not.
+ * It is the graceful degradation the map asks for, decided here and not in
+ * every component.
  *
- * ── DOS REDES DE SEGURIDAD, NO UNA ────────────────────────────────────────
- * 1. `data-reveal` engancha las reglas de `globals.css`: Motion escribe el
- *    estado inicial como estilo en línea, así que el HTML servido lleva
- *    `opacity: 0`. Con `scripting: none` o `prefers-reduced-motion` el CSS lo
- *    anula sin depender del JS.
- * 2. `useScrolledPast` cubre el caso que el CSS no puede ver: recargar a media
- *    página dejaba once bloques invisibles PARA SIEMPRE, porque un observador
- *    de intersección no informa de lo que ya quedó arriba. Ver su cabecera.
+ * ── TWO SAFETY NETS, NOT ONE ──────────────────────────────────────────────
+ * 1. `data-reveal` hooks into the `globals.css` rules: Motion writes the
+ *    initial state as an inline style, so the served HTML carries
+ *    `opacity: 0`. With `scripting: none` or `prefers-reduced-motion` the CSS
+ *    overrides it without depending on the JS.
+ * 2. `useScrolledPast` covers the case CSS cannot see: reloading halfway down
+ *    the page left eleven blocks invisible FOREVER, because an intersection
+ *    observer does not report what is already above. See its file header.
  */
 export function Reveal({
   children,
@@ -47,34 +46,34 @@ export function Reveal({
   as = 'div',
 }: {
   children: React.ReactNode
-  /** `expressive` se reserva a los beats narrativos. Ver el mapa de intensidad. */
+  /** `expressive` is reserved for the narrative beats. See the intensity map. */
   level?: DepthLevel
-  /** Posición en la lista. El sistema la convierte en retardo. */
+  /** Position in the list. The system turns it into a delay. */
   index?: number
   className?: string
   as?: 'div' | 'li' | 'span'
 }) {
   const reduce = useReducedMotion()
-  /* `HTMLElement` y no `HTMLDivElement`: `as` puede ser div, li o span, y un
-     ref tipado al más específico no encaja en los tres. */
+  /* `HTMLElement` rather than `HTMLDivElement`: `as` can be div, li or span,
+     and a ref typed to the most specific one does not fit all three. */
   const ref = useRef<HTMLElement>(null)
   const alreadyPassed = useScrolledPast(ref)
-  const [compact, setCompacto] = useState(false)
+  const [compact, setCompact] = useState(false)
   const Motion = motion[as]
 
-  /* Se resuelve DESPUÉS de montar: en servidor no hay `matchMedia`, y leerlo
-     durante el render rompería la hidratación. */
+  /* Resolved AFTER mounting: there is no `matchMedia` on the server, and
+     reading it during render would break hydration. */
   useEffect(() => {
     const mq = window.matchMedia('(max-width: 767px)')
-    const read = () => setCompacto(mq.matches)
+    const read = () => setCompact(mq.matches)
     read()
     mq.addEventListener('change', read)
     return () => mq.removeEventListener('change', read)
   }, [])
 
-  /* Ya lo dejó atrás: se muestra y punto. Animar la entrada de algo que está
-     fuera de pantalla no lo ve nadie, y esperar a que intersecte —cosa que no
-     va a pasar— es lo que lo dejaba invisible. */
+  /* Already scrolled past: it just shows. Nobody sees the entrance animation
+     of something that is off screen, and waiting for it to intersect — which
+     is not going to happen — is what left it invisible. */
   if (alreadyPassed) {
     return (
       <Motion

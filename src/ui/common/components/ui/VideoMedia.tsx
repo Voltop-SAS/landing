@@ -6,22 +6,23 @@ import { t, type Locale } from '~/core/common/domain/i18n/config'
 import type { MediaAsset } from '~/core/common/domain/entities/Media'
 
 /**
- * VIDEO DE FONDO · respeta la preferencia de movimiento reducido.
+ * BACKGROUND VIDEO · respects the reduced-motion preference.
  *
- * ── POR QUÉ ES UN COMPONENTE APARTE ───────────────────────────────────────
- * `Media` es Server Component y no puede leer una media query. El video se
- * reproducía SIEMPRE, también con `prefers-reduced-motion: reduce`. Con el
- * hueco del placeholder eso no se notaba —no había video— y salió al entrar
- * el material real.
+ * ── WHY IT IS A SEPARATE COMPONENT ────────────────────────────────────────
+ * `Media` is a Server Component and cannot read a media query. The video
+ * played ALWAYS, including under `prefers-reduced-motion: reduce`. With the
+ * placeholder gap that went unnoticed — there was no video — and it surfaced
+ * when the real material arrived.
  *
- * No es un detalle: es un bucle infinito de contenido en movimiento junto al
- * texto que se está leyendo. §21 lo exige y WCAG 2.2.2 pide un mecanismo para
- * detener el movimiento que arranca solo y dura más de cinco segundos.
+ * It is not a detail: it is an infinite loop of moving content next to the
+ * text being read. §21 requires this and WCAG 2.2.2 asks for a mechanism to
+ * stop motion that starts on its own and lasts more than five seconds.
  *
- * Con la preferencia activa no se reproduce y se muestra el **póster**, que es
- * el fotograma 0 del propio bucle: se ve la misma imagen, quieta.
+ * With the preference active it does not play and the **poster** is shown,
+ * which is frame 0 of the loop itself: the same image, still.
  *
- * Solo esta rama es cliente. La fotografía sigue renderizándose en el servidor.
+ * Only this branch is client-side. Photography is still rendered on the
+ * server.
  */
 export function VideoMedia({
   asset,
@@ -33,23 +34,23 @@ export function VideoMedia({
   locale: Locale
   className?: string
   /**
-   * `true` cuando el material es una PIEZA QUE SE VE, no un fondo.
+   * `true` when the material is a PIECE THAT IS WATCHED, not a background.
    *
-   * Cambia el comportamiento entero: con controles no hay reproducción
-   * automática, no hay bucle y no se silencia. Un fondo se mira sin querer;
-   * una pieza con narración se decide ver, y para eso hace falta poder darle
-   * play, pausar, buscar y oírla.
+   * It changes the whole behaviour: with controls there is no autoplay, no
+   * loop and no muting. A background is looked at without meaning to; a piece
+   * with narration is watched by choice, and for that you need to be able to
+   * play, pause, seek and hear it.
    *
-   * `prefers-reduced-motion` deja de aplicar aquí: nada arranca solo, así que
-   * no hay movimiento que la preferencia deba frenar.
+   * `prefers-reduced-motion` stops applying here: nothing starts on its own,
+   * so there is no motion for the preference to hold back.
    */
   controls?: boolean
 }) {
   const reduce = useReducedMotion()
   const ref = useRef<HTMLVideoElement>(null)
 
-  /* `autoPlay` no basta: si la preferencia cambia en caliente, o si el
-     navegador arrancó la reproducción antes de hidratar, hay que detenerlo. */
+  /* `autoPlay` is not enough: if the preference changes on the fly, or if the
+     browser started playback before hydration, it has to be stopped. */
   useEffect(() => {
     const v = ref.current
     if (!v || controls) return
@@ -62,9 +63,9 @@ export function VideoMedia({
       ref={ref}
       className={className}
       poster={asset.poster ?? undefined}
-      /* `none` en los dos modos: un fondo no debe competir con el LCP, y una
-         pieza con controles no debe descargar 27 MB a quien no le dio play.
-         Solo viaja el póster hasta que alguien lo pide. */
+      /* `none` in both modes: a background must not compete with the LCP, and
+         a piece with controls must not download 27 MB for someone who never
+         pressed play. Only the poster travels until somebody asks. */
       preload="none"
       controls={controls || undefined}
       muted={!controls}
@@ -73,13 +74,13 @@ export function VideoMedia({
       autoPlay={controls ? undefined : !reduce}
       aria-label={t(asset.alt, locale)}
     >
-      {/* El ORDEN importa: el navegador se queda con la PRIMERA fuente cuyo
-          `media` case, así que la variante ligera va antes. Sin `media` en la
-          segunda, cualquier pantalla mayor recibe el máster.
+      {/* ORDER matters: the browser takes the FIRST source whose `media`
+          matches, so the light variant goes first. With no `media` on the
+          second one, any larger screen gets the master.
 
-          `<source media>` se evalúa una sola vez al cargar, no al redimensionar:
-          es lo correcto aquí —nadie cambia de teléfono a monitor a mitad de
-          página— y evita recargar el vídeo en cada cambio de tamaño. */}
+          `<source media>` is evaluated once on load, not on resize: that is
+          correct here — nobody switches from phone to monitor mid-page — and
+          it avoids reloading the video on every resize. */}
       {asset.srcMobile ? (
         <source
           src={asset.srcMobile}

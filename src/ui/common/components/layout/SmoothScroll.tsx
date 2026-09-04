@@ -5,8 +5,8 @@ import Lenis from 'lenis'
 import { registerScrollEngine } from '@ui/common/lib/scroll'
 
 /**
- * Scroll suavizado. Se desactiva por completo con `prefers-reduced-motion`
- * y no compite con `scroll-behavior: smooth` (eliminado del CSS base).
+ * Smoothed scrolling. Fully disabled under `prefers-reduced-motion`, and it
+ * does not compete with `scroll-behavior: smooth` (removed from the base CSS).
  */
 export function SmoothScroll() {
   useEffect(() => {

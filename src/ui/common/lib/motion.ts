@@ -1,67 +1,69 @@
 /**
- * EL LENGUAJE DE MOVIMIENTO DE VOLTOP
- * Ver docs/MASTER-PROJECT-DEFINITION.md §21 y el Experience Direction Map.
+ * VOLTOP'S MOTION LANGUAGE
+ * See docs/MASTER-PROJECT-DEFINITION.md §21 and the Experience Direction Map.
  *
- * ── POR QUÉ EXISTE ────────────────────────────────────────────────────────
- * Había DOS sistemas de movimiento en paralelo y desincronizados. En CSS,
- * `@theme` declaraba las curvas y las duraciones; los componentes escribían a
- * mano `[0.22, 1, 0.36, 1]` y `0.6` / `0.7` / `0.32` en tres archivos. Ahora
- * los componentes consumen de aquí y no hay números sueltos en la presentación.
+ * ── WHY IT EXISTS ─────────────────────────────────────────────────────────
+ * There were TWO motion systems running in parallel and out of sync. In CSS,
+ * `@theme` declared the curves and the durations; the components hand-wrote
+ * `[0.22, 1, 0.36, 1]` and `0.6` / `0.7` / `0.32` across three files. Now the
+ * components consume from here and there are no loose numbers in the
+ * presentation layer.
  *
- * ── LAS CUATRO PRIMITIVAS ─────────────────────────────────────────────────
- * Todo el movimiento del sitio se construye combinando cuatro gestos. No hay
- * un quinto: un vocabulario que crece deja de reconocerse, y lo que hace que
- * un sitio se sienta construido con criterio no es la variedad de sus efectos
- * sino que se repitan siempre los mismos con precisión.
+ * ── THE FOUR PRIMITIVES ───────────────────────────────────────────────────
+ * All motion on the site is built by combining four gestures. There is no
+ * fifth one: a vocabulary that keeps growing stops being recognisable, and
+ * what makes a site feel deliberately built is not the variety of its effects
+ * but repeating the same ones with precision.
  *
- * · DEPTH — el contenido llega desde el fondo: escala + opacidad.
- *   CUÁNDO: cualquier entrada en viewport. Es el gesto base.
- *   CUÁNDO NO: sobre cifras, specs o datos de estación. Lo que prueba algo no
- *   se anima; un dato que aparece con gracia se lee como publicidad.
+ * · DEPTH — content arrives from the back: scale + opacity.
+ *   WHEN: any entrance into the viewport. It is the base gesture.
+ *   WHEN NOT: on figures, specs or station data. Anything that proves a point
+ *   is not animated; a number that appears gracefully reads as advertising.
  *
- * · FLOW — el material se desplaza dentro de un marco que no se mueve.
- *   CUÁNDO: solo fotografía y vídeo grandes. De aquí sale la profundidad.
- *   CUÁNDO NO: jamás sobre texto. Un titular con parallax se lee como
- *   plantilla, que es exactamente lo contrario de lo que buscamos.
+ * · FLOW — the material moves inside a frame that stays put.
+ *   WHEN: large photography and video only. This is where depth comes from.
+ *   WHEN NOT: never on text. A headline with parallax reads as a template,
+ *   which is the exact opposite of what we are after.
  *
- * · FRAME — el encuadre se abre y descubre lo que ya estaba ahí.
- *   CUÁNDO: momentos signature. Dos en toda la Home, no más.
- *   CUÁNDO NO: en contenido secundario. Repetido deja de ser un descubrimiento
- *   y pasa a ser una transición cara.
+ * · FRAME — the framing opens up and uncovers what was already there.
+ *   WHEN: signature moments. Two in the whole Home page, no more.
+ *   WHEN NOT: on secondary content. Repeated, it stops being a discovery and
+ *   becomes an expensive transition.
  *
- * · CONTINUITY — algo persiste entre dos estados o dos páginas.
- *   CUÁNDO: hay una relación real entre lo que se deja y lo que se abre.
- *   CUÁNDO NO: entre vistas sin relación. Fingir continuidad desorienta.
+ * · CONTINUITY — something persists across two states or two pages.
+ *   WHEN: there is a real relationship between what is left and what opens.
+ *   WHEN NOT: between unrelated views. Faking continuity is disorienting.
  *
- * ── POR QUÉ TRES INTENSIDADES Y NO CUATRO ─────────────────────────────────
- * Se descartó un nivel SUBTLE. No es una versión pequeña de DEPTH: las
- * microinteracciones se expresan en color, opacidad y dos o tres píxeles, no
- * en escala. Meterlas en la misma escala habría creado un nivel que nadie
- * percibe y que hay que mantener igual.
+ * ── WHY THREE INTENSITIES AND NOT FOUR ────────────────────────────────────
+ * A SUBTLE level was discarded. It is not a smaller version of DEPTH:
+ * microinteractions are expressed in colour, opacity and two or three pixels,
+ * not in scale. Folding them into the same scale would have created a level
+ * nobody perceives and that still has to be maintained.
  *
- * Y SIGNATURE no es un valor más alto de DEPTH: es una composición de varias
- * primitivas ligada al scroll. Por eso no está en esta tabla — se construye en
- * el componente que lo necesita, y por eso son dos y no ocho.
+ * And SIGNATURE is not a higher value of DEPTH: it is a composition of several
+ * primitives tied to scroll. That is why it is not in this table — it is built
+ * in whichever component needs it, and that is why there are two of them and
+ * not eight.
  *
- * ── LA LIMITACIÓN, DICHA ──────────────────────────────────────────────────
- * Esto es un ESPEJO de los tokens de `app/globals.css`, no una fuente
- * compartida: Tailwind lee el CSS y Motion necesita valores de JS. Están
- * duplicados a propósito y en dos sitios que se referencian mutuamente.
- * Si cambias uno, cambia el otro.
+ * ── THE LIMITATION, STATED ────────────────────────────────────────────────
+ * This is a MIRROR of the tokens in `src/app/globals.css`, not a shared
+ * source: Tailwind reads the CSS and Motion needs JS values. They are
+ * duplicated on purpose, in two places that reference each other.
+ * If you change one, change the other.
  * ──────────────────────────────────────────────────────────────────────────
  */
 
-/** Curvas. Espejo de `--ease-*` en globals.css. */
+/** Curves. Mirror of `--ease-*` in globals.css. */
 export const ease = {
-  /** Entradas y transiciones generales. Sale rápido, asienta despacio. */
+  /** Entrances and general transitions. Leaves fast, settles slowly. */
   standard: [0.22, 1, 0.36, 1],
-  /** "Corriente": simétrica, para recorridos ligados al scroll. */
+  /** "Current": symmetric, for scroll-linked journeys. */
   current: [0.65, 0, 0.35, 1],
-  /** Salidas. Arranca lento, acelera al desaparecer. */
+  /** Exits. Starts slow, accelerates as it disappears. */
   exit: [0.4, 0, 1, 1],
 } as const
 
-/** Duraciones EN SEGUNDOS, que es lo que espera Motion. Espejo de `--duration-*`. */
+/** Durations IN SECONDS, which is what Motion expects. Mirror of `--duration-*`. */
 export const duration = {
   fast: 0.2,
   base: 0.32,
@@ -69,23 +71,24 @@ export const duration = {
 } as const
 
 /**
- * Duración del CONTEO de cifras. No tiene espejo en CSS a propósito: no es una
- * transición de interfaz sino una lectura, y por eso no comparte escala con
- * las demás. Antes se escribía como `duration.slow * 2.2`, que es una forma de
- * decir "1.32 segundos" sin decirlo y ataba una lectura a un token de UI.
+ * Duration of the figure COUNT-UP. It deliberately has no CSS mirror: it is
+ * not an interface transition but a reading, and that is why it does not share
+ * a scale with the rest. It used to be written as `duration.slow * 2.2`, which
+ * is a way of saying "1.32 seconds" without saying it and tied a reading to a
+ * UI token.
  */
 export const COUNT_DURATION = 1.3
 
 /**
- * DEPTH · los dos niveles del gesto base.
+ * DEPTH · the two levels of the base gesture.
  *
- * Los valores están calibrados para que se PERCIBAN. Un `scale` de 0.99 es
- * indistinguible de no animar nada, y entonces el trabajo de movimiento no
- * existe para quien mira. `expressive` es deliberadamente visible.
+ * The values are calibrated to be PERCEIVED. A `scale` of 0.99 is
+ * indistinguishable from not animating at all, and then the motion work does
+ * not exist for whoever is looking. `expressive` is deliberately visible.
  *
- * El desplazamiento vertical acompaña a la escala en lugar de sustituirla:
- * solo escala se lee como un zoom de presentación; solo desplazamiento es el
- * `fade + translateY` genérico del que venimos. Juntos leen como profundidad.
+ * The vertical offset accompanies the scale instead of replacing it: scale
+ * alone reads as a presentation zoom; offset alone is the generic
+ * `fade + translateY` we are moving away from. Together they read as depth.
  */
 export const depth = {
   standard: { scale: 0.965, y: 10, duration: 0.55 },
@@ -95,28 +98,28 @@ export const depth = {
 export type DepthLevel = keyof typeof depth
 
 /**
- * Retardo entre hermanos de una misma lista. UN valor para todo el sitio.
+ * Delay between siblings in the same list. ONE value for the whole site.
  *
- * Antes había cuatro —0.05, 0.06, 0.07 y 0.08— repartidos por cuatro archivos.
- * Cuatro valores que nadie distingue no son cuatro decisiones: son la ausencia
- * de una.
+ * There used to be four — 0.05, 0.06, 0.07 and 0.08 — spread across four
+ * files. Four values nobody can tell apart are not four decisions: they are
+ * the absence of one.
  */
 export const STAGGER = 0.07
 
 /**
- * Tope del escalonado. Sin él, una lista de doce elementos hace esperar casi un
- * segundo al último y la página se siente lenta en lugar de coreografiada.
+ * Cap on the stagger. Without it, a twelve-item list makes the last one wait
+ * almost a second and the page feels slow instead of choreographed.
  */
 const STAGGER_MAX = 5
 
 /**
- * DEPTH aplicado. Devuelve las props de Motion completas, incluido el enganche
- * `data-reveal` de la red de seguridad en CSS (ver globals.css): Motion escribe
- * el estado inicial como estilo en línea, así que sin esa red el contenido
- * viajaría invisible en el HTML servido.
+ * DEPTH applied. Returns the complete Motion props, including the
+ * `data-reveal` hook for the CSS safety net (see globals.css): Motion writes
+ * the initial state as an inline style, so without that net the content would
+ * travel invisible in the served HTML.
  *
- * `reduce` lo ANULA por completo en vez de acortarlo: media duración sigue
- * siendo movimiento (§21).
+ * `reduce` CANCELS it entirely rather than shortening it: half the duration is
+ * still motion (§21).
  */
 export function depthMotion(level: DepthLevel, reduce: boolean, index = 0) {
   const d = depth[level]
@@ -126,8 +129,8 @@ export function depthMotion(level: DepthLevel, reduce: boolean, index = 0) {
     'data-reveal': '',
     initial: { opacity: 0, scale: d.scale, y: d.y },
     whileInView: { opacity: 1, scale: 1, y: 0 },
-    /* `once`: el contenido se revela una vez y permanece. Nunca ligamos la
-       opacidad del contenido al progreso de scroll — volvería a 0 al subir. */
+    /* `once`: content is revealed once and stays. We never tie content opacity
+       to scroll progress — it would go back to 0 on the way up. */
     viewport: { once: true, margin: '-80px' },
     transition: {
       duration: reduce ? 0 : d.duration,

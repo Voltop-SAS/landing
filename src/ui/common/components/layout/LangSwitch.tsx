@@ -17,35 +17,36 @@ import { track } from '~/core/common/infrastructure/analytics'
 import { cn } from '@ui/common/lib/cn'
 
 /**
- * SELECTOR DE IDIOMA
- * Ver docs/MASTER-PROJECT-DEFINITION.md §28.
+ * LANGUAGE SWITCH
+ * See docs/MASTER-PROJECT-DEFINITION.md §28.
  *
- * ── POR QUÉ DEJÓ DE SER UN CONTROL SEGMENTADO ─────────────────────────────
- * Era una fila de botones `ES | EN`: legible con dos idiomas, insostenible con
- * tres. Cada opción necesita 44px de alto y de ancho mínimos (§23), así que el
- * control crecía ~44px por idioma —de 88px a 132px— en la zona más disputada
- * del header, que ya había expulsado el selector del header móvil por falta de
- * sitio. Un patrón que se ensancha con cada idioma no es escalable: es una
- * cuenta atrás.
+ * ── WHY IT STOPPED BEING A SEGMENTED CONTROL ──────────────────────────────
+ * It was a row of `ES | EN` buttons: readable with two languages, untenable
+ * with three. Each option needs a minimum of 44px in height and width (§23),
+ * so the control grew ~44px per language — from 88px to 132px — in the most
+ * contested area of the header, which had already pushed the switch out of the
+ * mobile header for lack of room. A pattern that widens with every language is
+ * not scalable: it is a countdown.
  *
- * El desplegable ocupa lo mismo con dos idiomas que con seis.
+ * The dropdown takes up the same room with two languages as with six.
  *
- * ── LO QUE NO CAMBIA ──────────────────────────────────────────────────────
- * Siguen siendo ENLACES, no botones de estado. El idioma vive en la URL, así
- * que cambiar de idioma es navegar: es lo que hace que el idioma sobreviva a
- * la navegación y que todas las versiones sean indexables. Un `<select>` con
- * JavaScript habría roto ambas cosas.
+ * ── WHAT DOES NOT CHANGE ──────────────────────────────────────────────────
+ * They are still LINKS, not state buttons. The language lives in the URL, so
+ * changing language is navigating: that is what makes the language survive
+ * navigation and every version indexable. A `<select>` driven by JavaScript
+ * would have broken both.
  *
- * Cada idioma se nombra EN SU PROPIO IDIOMA (Español · English · Português).
- * Traducir "Português" a "Portugués" se lo muestra en un idioma que quien
- * busca portugués puede no leer, que es exactamente a quien sirve el control.
+ * Each language is named IN ITS OWN LANGUAGE (Español · English · Português).
+ * Translating "Português" into "Portuguese" shows it in a language that
+ * someone looking for Portuguese may not read, which is exactly who the
+ * control serves.
  *
- * ── PATRÓN DE ACCESIBILIDAD ───────────────────────────────────────────────
- * Disclosure, no `role="menu"`. El panel contiene enlaces de navegación y el
- * Tab natural ya los recorre en orden; declarar un menú obligaría a implementar
- * navegación por flechas que aquí no aporta nada y suele quedar a medias.
- * Cierre por Escape con retorno del foco, cierre al pulsar fuera y cierre al
- * navegar (§23).
+ * ── ACCESSIBILITY PATTERN ─────────────────────────────────────────────────
+ * Disclosure, not `role="menu"`. The panel holds navigation links and natural
+ * Tab already walks them in order; declaring a menu would force arrow-key
+ * navigation that adds nothing here and usually ends up half-implemented.
+ * Escape closes and returns focus, pressing outside closes, and navigating
+ * closes (§23).
  */
 export function LangSwitch({
   locale,
@@ -53,17 +54,17 @@ export function LangSwitch({
 }: {
   locale: Locale
   /**
-   * En el menú móvil el selector vive al fondo del panel: abrir hacia abajo
-   * lo dejaría fuera de la pantalla.
+   * In the mobile menu the switch lives at the bottom of the panel: opening
+   * downwards would put it off screen.
    */
   placement?: 'down' | 'up'
 }) {
   const pathname = usePathname()
 
   /**
-   * Se abre "para una ruta": al navegar cambia `pathname` y el panel se cierra
-   * por derivación. Mismo patrón que el menú móvil del header — sin efecto de
-   * limpieza ni renders en cascada.
+   * It opens "for a route": navigating changes `pathname` and the panel closes
+   * by derivation. Same pattern as the header's mobile menu — no cleanup
+   * effect and no cascading renders.
    */
   const [openedFor, setOpenedFor] = useState<string | null>(null)
   const open = openedFor === pathname
@@ -72,12 +73,13 @@ export function LangSwitch({
   const buttonRef = useRef<HTMLButtonElement>(null)
 
   /**
-   * En producción solo se ofrecen los idiomas PUBLICADOS: uno en borrador está
-   * a medias y ofrecerlo sería peor que no tenerlo.
+   * In production only PUBLISHED languages are offered: a draft one is half
+   * done, and offering it would be worse than not having it.
    *
-   * En desarrollo se listan todos, marcados, porque si no hubiera forma de
-   * llegar a un idioma en borrador desde la interfaz habría que escribir la
-   * URL a mano para revisarlo — y lo que cuesta revisar no se revisa.
+   * In development all of them are listed, flagged, because with no way to
+   * reach a draft language from the interface you would have to type the URL
+   * by hand to review it — and whatever is costly to review does not get
+   * reviewed.
    */
   const options = process.env.NODE_ENV === 'development' ? locales : publishedLocales
 
@@ -90,8 +92,9 @@ export function LangSwitch({
       buttonRef.current?.focus()
     }
 
-    /* `pointerdown` y no `click`: cierra al empezar el gesto, sin esperar a que
-       se suelte, y no se traga el clic que el usuario dirigía a otro control. */
+    /* `pointerdown` rather than `click`: it closes as the gesture starts,
+       without waiting for release, and does not swallow the click the user was
+       aiming at another control. */
     const onPointerDown = (e: PointerEvent) => {
       if (!rootRef.current?.contains(e.target as Node)) setOpenedFor(null)
     }
@@ -114,7 +117,7 @@ export function LangSwitch({
         type="button"
         aria-label={`${t(a11y.languageSelector, locale)}: ${localeMeta[locale].name}`}
         aria-expanded={open}
-        aria-controls="selector-idioma"
+        aria-controls="language-switch"
         onClick={() => setOpenedFor(open ? null : pathname)}
         className={cn(
           'press inline-flex min-h-11 items-center gap-1.5 rounded-(--radius-pill) border border-line-control px-3.5',
@@ -143,10 +146,10 @@ export function LangSwitch({
 
       {open && (
         <ul
-          id="selector-idioma"
-          /* `bg-canvas` OPACO a propósito: el header es translúcido con
-             `backdrop-blur`, y un panel translúcido sobre un fondo translúcido
-             deja el texto ilegible sobre el contenido de la página. */
+          id="language-switch"
+          /* `bg-canvas` deliberately OPAQUE: the header is translucent with
+             `backdrop-blur`, and a translucent panel over a translucent
+             background leaves the text illegible against the page content. */
           className={cn(
             'absolute right-0 z-10 min-w-44 overflow-hidden rounded-(--radius-structural)',
             'border border-line-control bg-canvas py-1',
@@ -161,9 +164,9 @@ export function LangSwitch({
                   href={switchLocalePath(pathname, code)}
                   hrefLang={localeMeta[code].hreflang}
                   aria-current={active ? 'true' : undefined}
-                  /* Con tres idiomas, este es el único dato que dirá si el
-                     portugués se usa. Sin él, la decisión de mantenerlo se
-                     tomaría a ciegas. */
+                  /* With three languages, this is the only data that will say
+                     whether Portuguese gets used. Without it, the decision to
+                     keep it would be made blind. */
                   onClick={() => {
                     if (!active) track('idioma_cambiado', { de: locale, a: code })
                   }}
@@ -172,18 +175,18 @@ export function LangSwitch({
                     active ? 'text-ink' : 'text-ink-2 hover:bg-surface-2 hover:text-ink',
                   )}
                 >
-                  {/* El nombre del idioma NO se traduce: es un nombre propio. */}
+                  {/* The language name is NOT translated: it is a proper noun. */}
                   <span lang={localeMeta[code].htmlLang}>
                     {localeMeta[code].name}
-                    {/* Solo visible en desarrollo, donde `options` incluye
-                        borradores. Sin rótulo, un idioma incompleto parecería
-                        terminado y sus huecos, erratas. */}
+                    {/* Only visible in development, where `options` includes
+                        drafts. With no label, an incomplete language would look
+                        finished and its gaps would look like typos. */}
                     {localeStatus[code] === 'borrador' && (
                       <span className="ml-2 font-mono text-mono uppercase text-warn">borrador</span>
                     )}
                   </span>
-                  {/* Ancho reservado siempre: sin esto, la marca de activo
-                      desplazaría el texto de las demás filas. */}
+                  {/* Width always reserved: without this, the active tick
+                      would shift the text of the other rows. */}
                   <span
                     aria-hidden="true"
                     className="w-3 shrink-0 text-brand"

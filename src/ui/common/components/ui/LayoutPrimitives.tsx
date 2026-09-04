@@ -1,42 +1,43 @@
 import { cn } from '@ui/common/lib/cn'
 
 /**
- * PRIMITIVAS DE ESTRUCTURA
- * Ver docs/MASTER-PROJECT-DEFINITION.md §12 y §24.
+ * STRUCTURE PRIMITIVES
+ * See docs/MASTER-PROJECT-DEFINITION.md §12 and §24.
  *
- * El ritmo de página se construye combinando `width` y `space`.
- * REGLA: dos secciones consecutivas no pueden compartir la misma combinación.
+ * Page rhythm is built by combining `width` and `space`.
+ * RULE: two consecutive sections cannot share the same combination.
  */
 
 type Width = 'content' | 'narrow' | 'wide' | 'full'
 
 /**
- * ── EL RIEL ───────────────────────────────────────────────────────────────
+ * ── THE RAIL ──────────────────────────────────────────────────────────────
  *
- * Antes cada ancho se centraba de forma INDEPENDIENTE, así que el borde
- * izquierdo del contenido saltaba según el contenedor. Medido a 1440px:
+ * Each width used to be centred INDEPENDENTLY, so the left edge of the content
+ * jumped around depending on the container. Measured at 1440px:
  *
- *   header y `content` → 148px
- *   `wide`             →  48px
- *   `narrow`           → 380px
+ *   header and `content` → 148px
+ *   `wide`               →  48px
+ *   `narrow`             → 380px
  *
- * En `/nosotros` el riel iba 380 → 148 → 380 → 148 al bajar, y en la ficha de
- * estación el bloque de foto sobresalía 100px a la izquierda del titular. §13
- * pide "alineación óptica revisada"; no había ni alineación estructural.
+ * On `/nosotros` the rail went 380 → 148 → 380 → 148 on the way down, and on a
+ * station page the photo block stuck out 100px to the left of the headline.
+ * §13 asks for "reviewed optical alignment"; there was not even structural
+ * alignment.
  *
- * Ahora hay UN riel, el de `content`, y los demás anchos se relacionan con él:
+ * Now there is ONE rail, `content`'s, and the other widths relate to it:
  *
- * - `content` — el riel. Todo se alinea aquí por defecto.
- * - `narrow`  — MISMO borde izquierdo, medida más corta. Es una columna de
- *               lectura colgada del riel, no un bloque flotando en el centro.
- * - `wide`    — el ÚNICO que rompe el riel, y lo hace a los dos lados por
- *               igual: es un sangrado deliberado. Reservado a MEDIA. Un bloque
- *               de texto o de datos en `wide` es el bug que teníamos, no una
- *               decisión (ver `NetworkIndex`, que pasó a `content`).
+ * - `content` — the rail. Everything aligns here by default.
+ * - `narrow`  — SAME left edge, shorter measure. It is a reading column hung
+ *               off the rail, not a block floating in the centre.
+ * - `wide`    — the ONLY one that breaks the rail, and it does so equally on
+ *               both sides: it is a deliberate bleed. Reserved for MEDIA. A
+ *               block of text or data in `wide` is the bug we had, not a
+ *               decision (see `NetworkIndex`, which moved to `content`).
  *
- * `align="center"` es la excepción declarada: composiciones centradas a
- * propósito (`BusinessIntro`, `VisionQuote`). Al ser explícita, se distingue de
- * un descuadre accidental.
+ * `align="center"` is the declared exception: deliberately centred
+ * compositions (`BusinessIntro`, `VisionQuote`). Being explicit, it is
+ * distinguishable from an accidental misalignment.
  * ──────────────────────────────────────────────────────────────────────────
  */
 type Align = 'rail' | 'center'
@@ -56,14 +57,14 @@ export function Container({
 }: {
   children: React.ReactNode
   width?: Width
-  /** `rail` cuelga del borde izquierdo de `content`. `center` centra a propósito. */
+  /** `rail` hangs off `content`'s left edge. `center` centres on purpose. */
   align?: Align
   className?: string
 }) {
   const frame = 'mx-auto w-full px-(--spacing-gutter)'
 
-  /* `narrow` sobre el riel: marco de `content` + medida corta dentro. Es la
-     única combinación que necesita dos nodos; el resto es un solo div. */
+  /* `narrow` on the rail: `content`'s frame + a short measure inside. It is
+     the only combination that needs two nodes; the rest is a single div. */
   if (width === 'narrow' && align === 'rail') {
     return (
       <div className={cn(frame, widths.content, className)}>
@@ -79,10 +80,10 @@ type Space = 'tight' | 'base' | 'loose' | 'none'
 type Register = 'silencio' | 'impacto'
 
 /**
- * Cada sección aporta la MITAD de la distancia declarada, así que el hueco
- * entre dos secciones ES el token y no su suma. Ver el comentario de
- * `--spacing-section-*` en globals.css: antes `base` seguido de `base` dejaba
- * 288px de vacío en cada par de secciones de cada página interna.
+ * Each section contributes HALF the declared distance, so the gap between two
+ * sections IS the token and not their sum. See the `--spacing-section-*`
+ * comment in globals.css: `base` followed by `base` used to leave 288px of
+ * emptiness between every pair of sections on every internal page.
  */
 const spaces: Record<Space, string> = {
   none: '',
@@ -92,23 +93,28 @@ const spaces: Record<Space, string> = {
 }
 
 /**
- * Sección con registro visual e intensidad de ritmo explícitos.
- * - `silencio`: estructural, plano, editorial. Deja respirar la información.
- * - `impacto`: energía y textura. Reservado a los puntos narrativos clave.
+ * Section with explicit visual register and rhythm intensity.
+ * - `silencio`: structural, flat, editorial. Lets the information breathe.
+ * - `impacto`: energy and texture. Reserved for the key narrative points.
  *
- * `register` es la decisión visual nº8 confirmada del proyecto y hasta ahora
- * NO SE USABA en ningún componente: `CloseCta` era el único con textura y se la
- * aplicaba a mano. Los beats de impacto de la Home (`Hero`,
- * `InfrastructureSignature`, `ProofCase`, `CloseCta`) ya pasan por aquí, así que
- * el concepto existe en el código y no solo en la documentación.
+ * `register` is the project's confirmed visual decision no. 8 and until now it
+ * WAS NOT USED by any component: `CloseCta` was the only one with texture and
+ * applied it by hand. The Home page's impact beats (`Hero`,
+ * `InfrastructureSignature`, `ProofCase`, `CloseCta`) now go through here, so
+ * the concept exists in the code and not only in the documentation.
  *
- * Acepta `ref` porque el signature moment necesita medir su propio scroll.
+ * The literals stay in Spanish because they are the shared vocabulary of the
+ * design system: renaming them would touch every module that declares a
+ * register.
  *
- * `impacto` aplica SOLO la textura. No añade `overflow-hidden`: un `overflow`
- * distinto de `visible` crea un contenedor de scroll y rompería el
- * `position: sticky` del signature moment — el mismo motivo por el que
- * globals.css usa `overflow-x: clip` en `body` y no `hidden`. Cada sección
- * declara su recorte donde lo necesita.
+ * It accepts `ref` because the signature moment needs to measure its own
+ * scroll.
+ *
+ * `impacto` applies ONLY the texture. It does not add `overflow-hidden`: an
+ * `overflow` other than `visible` creates a scroll container and would break
+ * the signature moment's `position: sticky` — the same reason globals.css uses
+ * `overflow-x: clip` on `body` and not `hidden`. Each section declares its own
+ * clipping where it needs it.
  */
 export function Section({
   id,
@@ -147,8 +153,8 @@ export function Section({
 }
 
 /**
- * Antetítulo. Sin punto de gradiente: el gradiente es señal, no decoración
- * repetida en cada sección (§12, disciplina del gradiente).
+ * Eyebrow. No gradient dot: the gradient is a signal, not decoration repeated
+ * in every section (§12, gradient discipline).
  */
 export function Eyebrow({
   children,
@@ -173,31 +179,31 @@ export function Eyebrow({
 }
 
 /**
- * ── EL REGISTRO MEDIO ─────────────────────────────────────────────────────
+ * ── THE MIDDLE REGISTER ───────────────────────────────────────────────────
  *
- * Las páginas internas saltaban de un `h1` de 72px a `h2` de 12px: el
- * encabezado de sección era MÁS PEQUEÑO que el párrafo que introducía. Medido
- * en el DOM renderizado:
+ * Internal pages jumped from a 72px `h1` to 12px `h2`s: the section heading
+ * was SMALLER than the paragraph it introduced. Measured on the rendered DOM:
  *
  *   /red/estacion/…   h1 72px · h2 12px · h2 12px · h2 12px
  *   /red/medellin     h1 72px · h2 12px · h2 12px
  *   /legal/privacidad h1 72px · h2 12px
  *
- * Sin registro intermedio no hay jerarquía, solo un título gigante y una lista
- * plana. §13: "el ojo sabe siempre dónde mirar primero" — no lo sabía.
+ * With no middle register there is no hierarchy, only a giant title and a flat
+ * list. §13: "the eye always knows where to look first" — it did not.
  *
- * Este componente da los dos niveles que faltaban y, de paso, consolida el
- * `<Eyebrow>` + `<h2 className="mt-4 font-display text-display-l …">` que se
- * repetía a mano once veces con clases ligeramente distintas.
+ * This component supplies the two missing levels and, along the way,
+ * consolidates the `<Eyebrow>` + `<h2 className="mt-4 font-display
+ * text-display-l …">` that was hand-repeated eleven times with slightly
+ * different classes.
  *
- * Tamaños, y para qué es cada uno:
- * - `l` (52px) — apertura de sección con peso narrativo propio.
- * - `m` (36px) — encabezado de sección dentro de una página. El registro que
- *                faltaba. Es el que sustituye a los `h2` de mono.
- * - `s` (24px) — subsección o bloque de datos.
+ * Sizes, and what each is for:
+ * - `l` (52px) — section opening with narrative weight of its own.
+ * - `m` (36px) — section heading inside a page. The missing register. This is
+ *                what replaces the mono `h2`s.
+ * - `s` (24px) — subsection or data block.
  *
- * El mono de 12px sigue existiendo, pero vuelve a su sitio: `kicker` y
- * etiquetas de dato. Deja de ser un encabezado.
+ * The 12px mono still exists, but goes back where it belongs: `kicker` and
+ * data labels. It stops being a heading.
  * ──────────────────────────────────────────────────────────────────────────
  */
 const headingSizes = {
@@ -207,21 +213,22 @@ const headingSizes = {
 } as const
 
 /**
- * ── EL TONO DEL ANTETÍTULO ES UNA REGLA, NO UN VALOR POR DEFECTO ──────────
- * `muted` es el valor por omisión, y eso había producido una incoherencia
- * visible: en la Home cuatro beats declaraban `brand` y tres se habían quedado
- * en gris sin que nadie lo decidiera.
+ * ── THE EYEBROW TONE IS A RULE, NOT A DEFAULT ────────────────────────────
+ * `muted` is the fallback value, and that had produced a visible
+ * inconsistency: on the Home page four beats declared `brand` and three had
+ * been left grey without anyone deciding so.
  *
- * La regla, fijada el 2026-09-04:
+ * The rule, set on 2026-09-04:
  *
- * · En la HOME el antetítulo va en `brand`. Es el registro narrativo: los ocho
- *   beats son una secuencia y el acento verde es lo que los encadena.
- * · En las páginas INTERNAS va en `muted`. Ahí el antetítulo rotula secciones
- *   de documentación —capacidades, criterios, FAQ— y un acento de marca por
- *   sección lo convertiría en textura.
+ * · On the HOME page the eyebrow goes in `brand`. It is the narrative
+ *   register: the eight beats are a sequence and the green accent is what
+ *   chains them together.
+ * · On INTERNAL pages it goes in `muted`. There the eyebrow labels
+ *   documentation sections — capabilities, criteria, FAQ — and one brand
+ *   accent per section would turn it into texture.
  *
- * La única excepción es la evidencia de `/empresas`, que es narrativa dentro de
- * una interna y lo declara explícitamente.
+ * The only exception is the evidence block on `/empresas`, which is narrative
+ * inside an internal page and declares it explicitly.
  */
 export function SectionHeading({
   children,
@@ -235,13 +242,13 @@ export function SectionHeading({
 }: {
   children: React.ReactNode
   id?: string
-  /** Antetítulo. Va ANTES del título en la lectura y en el DOM. */
+  /** Eyebrow. It comes BEFORE the title, both in reading and in the DOM. */
   kicker?: React.ReactNode
   kickerTone?: 'muted' | 'brand'
   size?: keyof typeof headingSizes
   as?: 'h2' | 'h3'
   className?: string
-  /** Limita la medida del titular en caracteres, para titulares largos. */
+  /** Caps the headline measure in characters, for long headlines. */
   measure?: string
 }) {
   return (
@@ -262,30 +269,31 @@ export function SectionHeading({
   )
 }
 
-/** Línea divisoria estructural — el lenguaje de "ficha técnica" de Voltop. */
+/** Structural divider — Voltop's "spec sheet" language. */
 export function Rule({ className }: { className?: string }) {
   return <hr className={cn('border-0 border-t border-line', className)} />
 }
 
 /**
- * ── LISTA DE PROCESO ──────────────────────────────────────────────────────
+ * ── PROCESS LIST ──────────────────────────────────────────────────────────
  *
- * El mismo tratamiento —hairline superior + número mono `01/02/03` + título
- * `display-s` + cuerpo— se repetía SEIS veces: los segmentos de la Home, los
- * pasos de "cómo cargar", las capacidades de /empresas, los beneficios del
- * selector, los pilares de /nosotros y los contenidos legales. Todas las listas
- * del sitio eran la misma lista, y eso —más que la repetición de layouts— es
- * por lo que todas las páginas se sentían iguales.
+ * The same treatment — top hairline + mono number `01/02/03` + `display-s`
+ * title + body — was repeated SIX times: the Home page segments, the "how to
+ * charge" steps, the /empresas capabilities, the selector benefits, the
+ * /nosotros pillars and the legal contents. Every list on the site was the
+ * same list, and that — more than the repetition of layouts — is why all the
+ * pages felt alike.
  *
- * La regla que las separa: EL NÚMERO SOLO DONDE EL ORDEN SIGNIFICA ALGO.
+ * The rule that separates them: THE NUMBER ONLY WHERE ORDER MEANS SOMETHING.
  *
- * - Un proceso ("evaluamos → instalamos → operamos → reportamos") es una
- *   secuencia: el número informa y aquí se agranda hasta ser el ancla visual.
- * - Unos pilares o unos beneficios NO son una secuencia. Numerarlos era una
- *   señal falsa: sugería un orden que no existe. Ahí el número desaparece y el
- *   ancla pasa a ser el título (ver los llamadores).
+ * - A process ("we assess → we install → we operate → we report") is a
+ *   sequence: the number informs, and here it grows until it becomes the
+ *   visual anchor.
+ * - Pillars or benefits are NOT a sequence. Numbering them was a false signal:
+ *   it suggested an order that does not exist. There the number disappears and
+ *   the anchor becomes the title (see the callers).
  *
- * Este componente se queda con el primer caso, que es el único con reuso real.
+ * This component keeps the first case, which is the only one with real reuse.
  */
 export function ProcessList({
   items,

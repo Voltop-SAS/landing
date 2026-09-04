@@ -4,58 +4,59 @@ import type { MediaAsset } from '~/core/common/domain/entities/Media'
 import { cn } from '@ui/common/lib/cn'
 
 /**
- * ATRIBUCIÓN DE UNA CITA · retrato + nombre + cargo, como una sola unidad.
+ * QUOTE ATTRIBUTION · portrait + name + role, as a single unit.
  *
- * El sitio tiene DOS secciones de cita —la prueba del cliente en el beat 5 y
- * la visión del fundador en el beat 7— y tenían el mismo problema: una línea
- * de texto atribuyendo unas palabras a un nombre, sin persona.
+ * The site has TWO quote sections — the customer proof in beat 5 and the
+ * founder's vision in beat 7 — and they shared the same problem: a line of
+ * text attributing some words to a name, with no person.
  *
- * Este componente existe para que las dos pertenezcan al mismo sistema sin ser
- * la misma composición. Lo que comparten es la UNIDAD: retrato cuadrado de
- * 96px, hairline, y el nombre sobre el cargo a su derecha. Lo que cambia es
- * DÓNDE se coloca, y eso lo decide la función de cada beat:
+ * This component exists so both belong to the same system without being the
+ * same composition. What they share is the UNIT: 96px square portrait,
+ * hairline, and the name above the role to its right. What changes is WHERE it
+ * is placed, and that is decided by each beat's function:
  *
- * · En el beat 5 va DESPUÉS de la cita. Es una prueba: primero habla el
- *   cliente, después se acredita quién lo dijo.
- * · En el beat 7 va ANTES. Es una visión, no un testimonio: saber quién habla
- *   cambia cómo se leen 300 caracteres de primera persona.
+ * · In beat 5 it goes AFTER the quote. It is proof: first the customer speaks,
+ *   then who said it is credited.
+ * · In beat 7 it goes BEFORE. It is a vision, not a testimonial: knowing who
+ *   is speaking changes how 300 characters of first person are read.
  *
- * ── EL HUECO NO LLEVA RÓTULO ──────────────────────────────────────────────
- * `MediaPending` declara qué falta y para qué, y con razón: en un bloque
- * grande esa declaración es lo que permite revisar la composición sin el
- * material. Pero en 96px no cabe —el rótulo mide más que el hueco— así que
- * aquí el hueco es una superficie callada y lo que falta se declara donde
- * corresponde: en el registro de `content/data/media.ts`.
+ * ── THE PLACEHOLDER CARRIES NO LABEL ──────────────────────────────────────
+ * `MediaPending` declares what is missing and what for, and rightly so: in a
+ * large block that declaration is what makes it possible to review the
+ * composition without the material. But it does not fit in 96px — the label is
+ * bigger than the gap — so here the gap is a silent surface and what is
+ * missing is declared where it belongs: in the
+ * `~/core/common/infrastructure/content/media` register.
  *
- * ── `sizes` CUENTA EL ZOOM, NO LA CAJA ────────────────────────────────────
- * Con `sizes="96px"` la foto se veía PIXELADA, y el motivo es que `sizes` es
- * la promesa que se le hace al optimizador. Declarando 96px, Next servía 256px
- * de ancho; el `focus` amplía 1.75×, así que de esos 256 solo se ve 1/1.75
- * —unos 146— estirados a 336 píxeles de dispositivo en una pantalla 2×. Eso es
- * un aumento de 2.3× sobre el original servido: el recorte se ve mal aunque el
- * archivo tenga 2048px.
+ * ── `sizes` COUNTS THE ZOOM, NOT THE BOX ──────────────────────────────────
+ * With `sizes="96px"` the photo looked PIXELATED, and the reason is that
+ * `sizes` is the promise made to the optimizer. Declaring 96px, Next served
+ * 256px of width; `focus` magnifies 1.75×, so of those 256 only 1/1.75 is
+ * visible — about 146 — stretched across 336 device pixels on a 2× screen.
+ * That is a 2.3× enlargement over what was served: the crop looks bad even
+ * though the file is 2048px.
  *
- * `sizes` declara ahora el ancho REAL que hay que cubrir: caja × zoom × DPR.
- * Sigue siendo una imagen diminuta —decenas de KB en AVIF— y deja de haber
- * ampliación.
+ * `sizes` now declares the REAL width that has to be covered: box × zoom ×
+ * DPR. It is still a tiny image — tens of KB in AVIF — and the enlargement is
+ * gone.
  *
- * ── EL REENCUADRE ESTÁ EN CSS, NO EN EL ARCHIVO ───────────────────────────
- * `focus` amplía y ancla la imagen dentro de su caja. Existe porque los
- * retratos no siempre llegan con el encuadre corto que pide una miniatura: el
- * de Helbert Perico llegó de medio cuerpo, y a 96px eso deja la cara en unos
- * 35px, donde no se reconoce a nadie.
+ * ── THE REFRAMING LIVES IN CSS, NOT IN THE FILE ───────────────────────────
+ * `focus` magnifies and anchors the image inside its box. It exists because
+ * portraits do not always arrive with the tight framing a thumbnail needs: the
+ * one of Helbert Perico arrived as a half-body shot, and at 96px that leaves
+ * the face at around 35px, where nobody is recognisable.
  *
- * Se hace por CSS y no editando el archivo a propósito: el original se
- * conserva intacto —sirve para otros usos y a otros tamaños— y el día que
- * llegue un encuadre corto basta con no pasar `focus`. Recortar el archivo
- * habría hecho lo contrario: una decisión de esta miniatura, irreversible,
- * grabada en el asset.
+ * It is done in CSS rather than by editing the file on purpose: the original
+ * is kept intact — it serves other uses and other sizes — and the day a tight
+ * framing arrives it is enough not to pass `focus`. Cropping the file would
+ * have done the opposite: a decision belonging to this thumbnail, irreversible,
+ * baked into the asset.
  *
- * ── POR QUÉ CUADRADO Y NO REDONDO ─────────────────────────────────────────
- * El avatar circular es EL patrón genérico, y §12 pide justificar cualquier
- * radio por defecto. El cuadrado con el radio estructural es el mismo lenguaje
- * de superficie que las tarjetas de ciudad y el marco del QR: lee como
- * editorial y no como red social.
+ * ── WHY SQUARE AND NOT ROUND ──────────────────────────────────────────────
+ * The circular avatar is THE generic pattern, and §12 asks for any default
+ * radius to be justified. The square with the structural radius is the same
+ * surface language as the city cards and the QR frame: it reads as editorial
+ * and not as social media.
  */
 export function QuoteAttribution({
   asset,
@@ -68,12 +69,13 @@ export function QuoteAttribution({
   asset: MediaAsset
   locale: Locale
   name: string
-  /** Ya traducido por quien llama: el cargo vive en la colección, no aquí. */
+  /** Already translated by the caller: the role lives in the collection, not
+      here. */
   role: string
   /**
-   * Reencuadre por CSS para retratos que no llegan cortos. Ver la cabecera.
-   * Se pasa como clases de escala y origen para que el valor viva en el
-   * componente que conoce el asset, no aquí.
+   * CSS reframing for portraits that do not arrive tightly cropped. See the
+   * file header. It is passed as scale and origin classes so the value lives
+   * in the component that knows the asset, not here.
    */
   focus?: string
   className?: string
@@ -86,8 +88,8 @@ export function QuoteAttribution({
             src={asset.src}
             alt={t(asset.alt, locale)}
             fill
-            /* Ver la nota de arriba: cubre 96px de caja × 1.75 de zoom × 2 de
-               densidad, con margen. */
+            /* See the note above: covers a 96px box × 1.75 zoom × 2 density,
+               with room to spare. */
             sizes="512px"
             className={cn('object-cover', focus)}
           />

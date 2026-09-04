@@ -4,50 +4,51 @@ import { externalLinks } from '~/core/common/domain/consts/links'
 import { TrackClick } from '@ui/common/components/analytics/TrackClick'
 
 /**
- * BADGES DE TIENDA
- * Ver docs/MASTER-PROJECT-DEFINITION.md §15 y §23.
+ * STORE BADGES
+ * See docs/MASTER-PROJECT-DEFINITION.md §15 and §23.
  *
- * ── CADA INSIGNIA VA A SU TIENDA ─────────────────────────────────────────
- * Durante un tiempo ambas apuntaron al enlace dinámico `app.voltop.co` porque
- * no había fichas. Ya las hay (2026-09-02), y cada insignia va a la suya: una
- * insignia DICE a qué tienda lleva, y mandarla a un redirector que decide por
- * su cuenta contradice lo que ella misma promete.
+ * ── EACH BADGE GOES TO ITS OWN STORE ─────────────────────────────────────
+ * For a while both pointed at the dynamic `app.voltop.co` link because there
+ * were no listings. There are now (2026-09-02), and each badge goes to its
+ * own: a badge SAYS which store it leads to, and sending it to a redirector
+ * that decides on its own contradicts what the badge itself promises.
  *
- * Además, hoy son la ÚNICA ruta de descarga que funciona: el enlace dinámico
- * sigue devolviendo 503.
+ * On top of that, they are today the ONLY download route that works: the
+ * dynamic link still returns 503.
  *
- * Y sigue en pie la advertencia de `content/data/links.ts`: el dominio
- * devolvía 503 el 2026-09-02. Hay que verificarlo antes del lanzamiento.
+ * And the warning in `~/core/common/domain/consts/links` still stands: the
+ * domain was returning 503 on 2026-09-02. It has to be verified before launch.
  *
- * ── POR QUÉ SE DIBUJAN Y NO SE INCRUSTAN COMO IMAGEN ─────────────────────
- * Las insignias oficiales se distribuyen como PNG con fondo negro fijo. Sobre
- * un lienzo casi negro se pierden, y ampliadas se ven borrosas. Dibujadas como
- * SVG heredan el tema, escalan sin pérdida y pesan bytes en vez de kilobytes.
- * El logotipo de cada tienda se conserva reconocible: es la marca la que
- * identifica el destino.
+ * ── WHY THEY ARE DRAWN AND NOT EMBEDDED AS IMAGES ────────────────────────
+ * The official badges are distributed as PNGs with a fixed black background.
+ * On an almost-black canvas they get lost, and scaled up they look blurry.
+ * Drawn as SVG they inherit the theme, scale losslessly and weigh bytes
+ * instead of kilobytes. Each store's logo stays recognisable: it is the brand
+ * that identifies the destination.
  *
- * El texto va en el `<title>` accesible del enlace, no dentro del SVG, para
- * que un lector de pantalla anuncie "App Store · Se abre en una pestaña nueva"
- * y no la palabra suelta.
+ * The text goes in the link's accessible `<title>`, not inside the SVG, so a
+ * screen reader announces "App Store · Opens in a new tab" and not the bare
+ * word.
  */
 
-const insignia =
+const badge =
   'group press inline-flex h-[3.25rem] items-center gap-3 rounded-(--radius-structural) border border-line-control ' +
   'bg-surface-2 px-4 transition-colors duration-(--duration-fast) hover:border-line-strong hover:bg-surface-3'
 
-const rotulo = 'flex flex-col leading-none'
-const rotuloSuperior = 'font-mono text-[0.5625rem] uppercase tracking-[0.12em] text-ink-3'
-const rotuloInferior = 'mt-1 font-display text-[1.0625rem] font-semibold tracking-tight text-ink'
+const label = 'flex flex-col leading-none'
+const labelTop = 'font-mono text-[0.5625rem] uppercase tracking-[0.12em] text-ink-3'
+const labelBottom = 'mt-1 font-display text-[1.0625rem] font-semibold tracking-tight text-ink'
 
 export function StoreBadges({ locale, className }: { locale: Locale; className?: string }) {
-  const nuevaPestana = t(a11y.opensInNewTab, locale)
+  const newTab = t(a11y.opensInNewTab, locale)
 
   return (
     <div className={className}>
-      {/* `app_store_click` estaba declarado en §31 desde el bloque 10 y no lo
-          emitía nadie: se dejó sin cablear porque no había URLs, y cuando
-          llegaron (bloque 33) quedó sin cerrar. Es la conversión primaria del
-          journey B2C, así que se distingue POR TIENDA y por superficie. */}
+      {/* `app_store_click` had been declared in §31 since block 10 and nobody
+          emitted it: it was left unwired because there were no URLs, and when
+          they arrived (block 33) it was never closed off. It is the primary
+          conversion of the B2C journey, so it is distinguished BY STORE and by
+          surface. */}
       <ul className="flex flex-wrap gap-3">
         <li>
           <TrackClick
@@ -58,9 +59,9 @@ export function StoreBadges({ locale, className }: { locale: Locale; className?:
               href={externalLinks.appStore}
               target="_blank"
               rel="noopener noreferrer"
-              className={insignia}
+              className={badge}
             >
-              {/* Manzana de Apple */}
+              {/* Apple's apple */}
               <svg
                 aria-hidden="true"
                 viewBox="0 0 24 24"
@@ -68,11 +69,11 @@ export function StoreBadges({ locale, className }: { locale: Locale; className?:
               >
                 <path d="M16.36 12.78c.02-2.3 1.88-3.4 1.96-3.45-1.07-1.56-2.73-1.78-3.32-1.8-1.41-.14-2.76.83-3.48.83-.72 0-1.83-.81-3-.79-1.55.02-2.98.9-3.77 2.28-1.61 2.79-.41 6.92 1.15 9.18.76 1.11 1.67 2.35 2.86 2.3 1.15-.04 1.58-.74 2.97-.74 1.39 0 1.78.74 3 .72 1.24-.02 2.02-1.13 2.78-2.24.88-1.28 1.24-2.52 1.26-2.59-.03-.01-2.41-.93-2.43-3.7zM14.1 5.99c.63-.77 1.06-1.83.94-2.9-.91.04-2.02.61-2.67 1.37-.58.68-1.09 1.77-.95 2.81 1.02.08 2.05-.52 2.68-1.28z" />
               </svg>
-              <span className={rotulo}>
-                <span className={rotuloSuperior}>{t(storeBadges.apple, locale)}</span>
-                <span className={rotuloInferior}>App Store</span>
+              <span className={label}>
+                <span className={labelTop}>{t(storeBadges.apple, locale)}</span>
+                <span className={labelBottom}>App Store</span>
               </span>
-              <span className="sr-only"> · {nuevaPestana}</span>
+              <span className="sr-only"> · {newTab}</span>
             </a>
           </TrackClick>
         </li>
@@ -86,11 +87,12 @@ export function StoreBadges({ locale, className }: { locale: Locale; className?:
               href={externalLinks.googlePlay}
               target="_blank"
               rel="noopener noreferrer"
-              className={insignia}
+              className={badge}
             >
-              {/* Triángulo de Google Play. Es la única marca del sitio que
-                conserva sus colores propios: en monocromo deja de ser
-                reconocible, que es justo lo que la insignia tiene que lograr. */}
+              {/* Google Play's triangle. It is the only mark on the site that
+                keeps its own colours: in monochrome it stops being
+                recognisable, which is exactly what the badge has to
+                achieve. */}
               <svg
                 aria-hidden="true"
                 viewBox="0 0 24 24"
@@ -113,11 +115,11 @@ export function StoreBadges({ locale, className }: { locale: Locale; className?:
                   fill="#00E676"
                 />
               </svg>
-              <span className={rotulo}>
-                <span className={rotuloSuperior}>{t(storeBadges.google, locale)}</span>
-                <span className={rotuloInferior}>Google Play</span>
+              <span className={label}>
+                <span className={labelTop}>{t(storeBadges.google, locale)}</span>
+                <span className={labelBottom}>Google Play</span>
               </span>
-              <span className="sr-only"> · {nuevaPestana}</span>
+              <span className="sr-only"> · {newTab}</span>
             </a>
           </TrackClick>
         </li>

@@ -8,76 +8,76 @@ import { cookies as copy } from '~/core/common/domain/consts/copy'
 import { href, routes } from '~/core/common/domain/i18n/routes'
 
 /**
- * AVISO DE COOKIES
- * Ver docs/MASTER-PROJECT-DEFINITION.md §38.
+ * COOKIE NOTICE
+ * See docs/MASTER-PROJECT-DEFINITION.md §38.
  *
- * ── EL CONSENTIMIENTO ES PREVIO, NO POSTERIOR ────────────────────────────
- * Este componente NO es un cartel informativo: es el interruptor. Google Tag
- * Manager se monta desde AQUÍ y solo cuando hay un "sí" guardado. Un aviso que
- * aparece mientras la analítica ya está corriendo no informa de nada — cuenta
- * lo que acaba de pasar sin permiso.
+ * ── CONSENT COMES BEFORE, NOT AFTER ──────────────────────────────────────
+ * This component is NOT an informational banner: it is the switch. Google Tag
+ * Manager is mounted from HERE and only when a stored "yes" exists. A notice
+ * that appears while analytics is already running informs nobody of anything —
+ * it reports what just happened without permission.
  *
- * La Ley 1581 pide autorización **previa, expresa e informada**, y "previa" es
- * la palabra que decide dónde va este `<Script>`.
+ * Law 1581 requires **prior, express and informed** authorisation, and "prior"
+ * is the word that decides where this `<Script>` goes.
  *
- * ── LAS DOS SALIDAS PESAN LO MISMO ───────────────────────────────────────
- * "Rechazar" tiene el mismo tamaño, la misma área táctil y el mismo contraste
- * que "Aceptar". Un botón de rechazo en gris claro o escondido detrás de
- * "configurar" convierte la elección en un trámite, y entonces el
- * consentimiento deja de ser informado.
+ * ── BOTH WAYS OUT CARRY THE SAME WEIGHT ──────────────────────────────────
+ * "Reject" has the same size, the same touch target and the same contrast as
+ * "Accept". A reject button in light grey, or hidden behind "configure", turns
+ * the choice into a formality, and at that point consent stops being informed.
  *
- * ── ES UNA FRANJA, NO UNA TARJETA ────────────────────────────────────────
- * Ocupa el ancho completo abajo, la forma con la que cualquiera reconoce un
- * aviso de cookies sin leerlo. Antes era una tarjeta en la esquina derecha:
- * más discreta, pero indistinguible de las OTRAS DOS piezas que viven en esa
- * misma esquina —el flotante del QR y su versión en barra—, y confundir una
- * pregunta legal con una promoción es lo único que este aviso no puede hacer.
+ * ── IT IS A BAND, NOT A CARD ─────────────────────────────────────────────
+ * It spans the full width at the bottom, the shape anyone recognises as a
+ * cookie notice without reading it. It used to be a card in the right-hand
+ * corner: more discreet, but indistinguishable from the OTHER TWO pieces that
+ * live in that same corner — the QR floater and its bar version — and
+ * mistaking a legal question for a promotion is the one thing this notice
+ * cannot do.
  *
- * El material también cambia: `bg-canvas/85 + backdrop-blur-xl` en lugar de
- * `.glass`, igual que el Header. No es una preferencia, son dos razones:
+ * The material changes too: `bg-canvas/85 + backdrop-blur-xl` instead of
+ * `.glass`, same as the Header. It is not a preference, there are two reasons:
  *
- * · En el sistema, `.glass` con radio es el registro de los paneles que
- *   FLOTAN; una franja a sangre de borde a borde no flota, y el anillo de
- *   `.glass::before` le dibujaría una línea clara pegada a los bordes de la
- *   pantalla, que se lee como un fallo de render y no como un contorno.
+ * · In the system, `.glass` with a radius is the register of panels that
+ *   FLOAT; a full-bleed band edge to edge does not float, and the
+ *   `.glass::before` ring would draw it a light line hugging the edges of the
+ *   screen, which reads as a rendering glitch and not as an outline.
  *
- * · Es MÁS opaco que el vidrio (85% de `canvas` frente al 68% de `surface-2`),
- *   y aquí eso importa más que la gracia visual: debajo del texto puede pasar
- *   cualquier cosa, y un texto legal ilegible no informa.
+ * · It is MORE opaque than the glass (85% of `canvas` against 68% of
+ *   `surface-2`), and here that matters more than visual charm: anything at
+ *   all can pass underneath the text, and illegible legal text informs nobody.
  *
- * ── NO ES UN DIÁLOGO MODAL ───────────────────────────────────────────────
- * No atrapa el foco ni bloquea el scroll: se puede leer el sitio y la política
- * antes de decidir, que es justo lo que hace que la decisión sea informada.
- * Sí es una `region` anunciada, y el foco entra en ella al aparecer para que
- * quien navega con teclado no tenga que buscarla.
+ * ── IT IS NOT A MODAL DIALOG ─────────────────────────────────────────────
+ * It does not trap focus or block scrolling: the site and the policy can be
+ * read before deciding, which is exactly what makes the decision informed. It
+ * is an announced `region`, and focus moves into it on appearance so keyboard
+ * users do not have to hunt for it.
  *
- * ── POR QUÉ NO HAY `<noscript>` ──────────────────────────────────────────
- * El contenedor traía un iframe de respaldo para navegadores sin JavaScript.
- * Se retiró: sin JavaScript tampoco hay forma de dar ni retirar el
- * consentimiento, así que ese iframe rastrearía a quien no puede decir que no.
+ * ── WHY THERE IS NO `<noscript>` ─────────────────────────────────────────
+ * The container used to carry a fallback iframe for browsers without
+ * JavaScript. It was removed: without JavaScript there is also no way to give
+ * or withdraw consent, so that iframe would track precisely those who cannot
+ * say no.
  */
 
 const STORAGE_KEY = 'voltop:cookies'
 
 /**
- * Contenedor de Google Tag Manager.
+ * Google Tag Manager container.
  *
- * Configurable con el valor de producción como defecto, por la misma razón que
- * `SITE_URL`: un despliegue de staging que dispare el contenedor de producción
- * ensucia la analítica real con tráfico de pruebas, y eso no se puede
- * deshacer una vez enviado.
+ * Configurable with the production value as the default, for the same reason
+ * as `SITE_URL`: a staging deployment firing the production container dirties
+ * the real analytics with test traffic, and that cannot be undone once sent.
  *
- * No es un secreto —un ID de contenedor viaja en el HTML de cualquier sitio
- * que lo use— así que va versionado. Ver `.env.example`.
+ * It is not a secret — a container ID travels in the HTML of any site that
+ * uses it — so it is versioned. See `.env.example`.
  */
 const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID ?? 'GTM-WJ5S2LBF'
 type Decision = 'aceptado' | 'rechazado' | null
 
 export function CookieConsent({ locale }: { locale: Locale }) {
   const [decision, setDecision] = useState<Decision>(null)
-  /* `null` mientras no se ha leído el almacenamiento. Sin este tercer estado
-     el aviso parpadearía en cada carga para quien ya decidió. */
-  const [read, setLeido] = useState(false)
+  /* `null` until storage has been read. Without this third state the notice
+     would flash on every load for anyone who already decided. */
+  const [read, setRead] = useState(false)
 
   useEffect(() => {
     const id = requestAnimationFrame(() => {
@@ -85,10 +85,10 @@ export function CookieConsent({ locale }: { locale: Locale }) {
         const v = localStorage.getItem(STORAGE_KEY)
         if (v === 'aceptado' || v === 'rechazado') setDecision(v)
       } catch {
-        /* Sin almacenamiento no se recuerda la decisión, pero tampoco se
-           carga nada: el estado por defecto es "no". */
+        /* With no storage the decision is not remembered, but nothing is
+           loaded either: the default state is "no". */
       }
-      setLeido(true)
+      setRead(true)
     })
     return () => cancelAnimationFrame(id)
   }, [])
@@ -98,7 +98,7 @@ export function CookieConsent({ locale }: { locale: Locale }) {
     try {
       localStorage.setItem(STORAGE_KEY, v)
     } catch {
-      /* ídem */
+      /* same as above */
     }
   }
 
@@ -123,18 +123,18 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <div
           role="region"
           aria-label={t(copy.title, locale)}
-          /* `z-(--z-overlay)`: por encima del flotante de la app, que también
-             vive abajo. La decisión va primero. */
+          /* `z-(--z-overlay)`: above the app floater, which also lives at the
+             bottom. The decision comes first. */
           className="fixed inset-x-0 bottom-0 z-(--z-overlay) border-t border-line bg-canvas/85 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl"
         >
-          {/* Mismo riel que el Header: contenedor `content` y el gutter del
-              sistema. Una franja a sangre cuyo texto no arranca donde arranca
-              el del sitio se delata como pieza pegada. */}
+          {/* Same rail as the Header: `content` container and the system
+              gutter. A full-bleed band whose text does not start where the
+              site's text starts gives itself away as a bolted-on piece. */}
           <div className="mx-auto flex w-full max-w-(--container-content) flex-col gap-4 px-(--spacing-gutter) py-4 md:flex-row md:items-center md:justify-between md:gap-10 md:py-5">
             <div className="min-w-0">
-              {/* `text-body` y no `display-s`: en una franja de una fila, un
-                  titular de tamaño display la engorda y grita más que la
-                  pregunta que hace. El peso lo da la negrita. */}
+              {/* `text-body` rather than `display-s`: in a single-row band, a
+                  display-sized headline fattens it up and shouts louder than
+                  the question it is asking. The weight comes from the bold. */}
               <p className="font-display text-body font-semibold text-ink">
                 {t(copy.title, locale)}
               </p>
@@ -142,14 +142,14 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             </div>
 
             <div className="flex flex-col gap-3 md:shrink-0 md:flex-row md:items-center md:gap-4">
-              {/* Mismo tamaño, misma área, mismo contraste. Ver cabecera.
-                  En móvil van a mitades EXACTAS, y por eso es una rejilla y no
-                  un `flex-1`: con `flex-1` cada botón crece desde su propio
-                  ancho de contenido y "Rechazar" se quedaba 2px más grande que
-                  "Aceptar" —medido: 165 contra 163—. Dos columnas de `1fr` son
-                  iguales por construcción, no por aproximación, y la igualdad
-                  de las dos salidas es aquí un requisito, no una simetría
-                  bonita. */}
+              {/* Same size, same area, same contrast. See the file header.
+                  On mobile they take EXACT halves, and that is why it is a
+                  grid and not a `flex-1`: with `flex-1` each button grows from
+                  its own content width and "Reject" ended up 2px larger than
+                  "Accept" — measured: 165 against 163. Two `1fr` columns are
+                  equal by construction, not by approximation, and here the
+                  equality of the two ways out is a requirement, not a pretty
+                  symmetry. */}
               <div className="grid grid-cols-2 gap-3 md:flex md:items-center">
                 <button
                   type="button"

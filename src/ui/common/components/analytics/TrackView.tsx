@@ -4,21 +4,22 @@ import { useEffect, useRef } from 'react'
 import { track, type EventName, type EventProps } from '~/core/common/infrastructure/analytics'
 
 /**
- * Emite un evento cuando su contenido ENTRA EN VISTA, una sola vez.
+ * Emits an event when its content COMES INTO VIEW, exactly once.
  *
- * Existe porque el plan de medición (§31) declaraba diecisiete eventos y seis no
- * se emitían nunca: `ciudad_vista`, `caso_visto`, `impacto_visto` y compañía.
- * Todos son eventos de VISTA sobre páginas que son Server Components, así que
- * hacían falta islas de cliente mínimas.
+ * It exists because the measurement plan (§31) declared seventeen events and
+ * six of them never fired: `ciudad_vista`, `caso_visto`, `impacto_visto` and
+ * company. All of them are VIEW events on pages that are Server Components, so
+ * minimal client islands were needed.
  *
- * No renderiza nada propio: envuelve. `once` de verdad — un contador que se
- * dispara cada vez que el bloque cruza el viewport no mide interés, mide scroll.
+ * It renders nothing of its own: it wraps. Genuinely `once` — a counter that
+ * fires every time the block crosses the viewport does not measure interest,
+ * it measures scrolling.
  */
 export function TrackView({
   event,
   props,
   children,
-  /** `0.5` = medio bloque visible. Para páginas completas, `0`. */
+  /** `0.5` = half the block visible. For whole pages, `0`. */
   threshold = 0.5,
 }: {
   event: EventName
@@ -33,8 +34,8 @@ export function TrackView({
     const el = ref.current
     if (!el || sent.current) return
 
-    /* Sin IntersectionObserver el evento se emite igual: perder la medición es
-       peor que medirla sin umbral. */
+    /* Without IntersectionObserver the event is emitted anyway: losing the
+       measurement is worse than measuring it with no threshold. */
     if (typeof IntersectionObserver === 'undefined') {
       sent.current = true
       track(event, props)

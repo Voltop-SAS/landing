@@ -5,62 +5,62 @@ import { motion, useScroll, useTransform, useReducedMotion } from 'motion/react'
 import { cn } from '@ui/common/lib/cn'
 
 /**
- * FLOW · el material se desplaza dentro de un marco que no se mueve.
+ * FLOW · the material moves inside a frame that stays put.
  *
- * ── HOY NO LA USA NADIE, Y NO ES UN OLVIDO ────────────────────────────────
- * Es una de las cuatro primitivas del lenguaje de movimiento (ver
- * `lib/motion.ts`) y a fecha 2026-09-04 no tiene un solo consumidor. Las dos
- * piezas que la llevaban se fueron por decisiones de producto, no porque la
- * primitiva fallara:
+ * ── NOBODY USES IT TODAY, AND THAT IS NOT AN OVERSIGHT ────────────────────
+ * It is one of the four primitives of the motion language (see
+ * `@ui/common/lib/motion`) and as of 2026-09-04 it has not a single consumer.
+ * The two pieces that carried it left for product reasons, not because the
+ * primitive failed:
  *
- * · El beat 3 tenía una fotografía de suelo con FLOW. La referencia visual
- *   pidió fondo sólido y la fotografía salió con ella.
- * · El render del cargador que la sustituyó NO puede llevarla: va en
- *   `contain`, y esta primitiva recorta por diseño. Ver la nota de abajo.
+ * · Beat 3 had a floor photograph with FLOW. The visual reference called for a
+ *   solid background and the photograph left with it.
+ * · The charger render that replaced it CANNOT carry it: it is served as
+ *   `contain`, and this primitive crops by design. See the note below.
  *
- * Se conserva por eso: el vocabulario la declara, la decisión sigue vigente y
- * el día que entre una fotografía de fondo a sangre —en cualquier beat— es la
- * pieza que le da profundidad. Borrarla sería borrar una decisión aprobada
- * porque hoy no hay material donde aplicarla.
+ * That is why it is kept: the vocabulary declares it, the decision still
+ * stands, and the day a full-bleed background photograph arrives — in any beat
+ * — this is the piece that gives it depth. Deleting it would be deleting an
+ * approved decision just because there is no material to apply it to today.
  *
- * Es la primitiva de la que sale la PROFUNDIDAD (ver `lib/motion.ts`). Sin
- * ella, una fotografía de fondo es un papel pintado: está detrás, pero no hay
- * nada que diga que está *más lejos*. Con ella, el marco pertenece a la página
- * y la imagen pertenece a otro plano.
+ * It is the primitive DEPTH comes from (see `@ui/common/lib/motion`). Without
+ * it, a background photograph is wallpaper: it is behind, but nothing says it
+ * is *further away*. With it, the frame belongs to the page and the image
+ * belongs to another plane.
  *
- * ── POR QUÉ LA IMAGEN ES MÁS ALTA QUE SU MARCO ────────────────────────────
- * El envoltorio interior mide un 124% del marco y va absoluto. Ese sobrante es
- * lo que permite desplazarlo sin que asome el fondo por arriba o por abajo: el
- * recorrido es de ±6% de su propia altura —un 7.4% del marco— contra un 12% de
- * holgura a cada lado. Sin ese margen, el efecto termina enseñando el borde,
- * que es el fallo clásico de los parallax hechos a ojo.
+ * ── WHY THE IMAGE IS TALLER THAN ITS FRAME ────────────────────────────────
+ * The inner wrapper measures 124% of the frame and is absolutely positioned.
+ * That excess is what allows it to be moved without the background showing at
+ * the top or bottom: the travel is ±6% of its own height — 7.4% of the frame —
+ * against 12% of slack on each side. Without that margin the effect ends up
+ * showing the edge, which is the classic failure of parallax done by eye.
  *
- * ── SOLO MATERIAL QUE SE RECORTA (`cover`), NUNCA UN OBJETO AISLADO ───────
- * Esta primitiva RECORTA por definición: el marco clipa un interior más alto.
- * Con material de fondo eso es justo lo que se busca. Con un objeto aislado
- * servido en `contain` —un render de producto, un logotipo— es lo contrario:
- * se probó con el render del cargador del beat 3 y se comió 135px de equipo
- * por arriba y por abajo. Un objeto recortado deja de ser el retrato de un
- * objeto. Si el material va en `contain`, esta primitiva no aplica.
+ * ── ONLY MATERIAL THAT CROPS (`cover`), NEVER AN ISOLATED OBJECT ──────────
+ * This primitive CROPS by definition: the frame clips a taller interior. With
+ * background material that is exactly what you want. With an isolated object
+ * served as `contain` — a product render, a logo — it is the opposite: it was
+ * tried with the beat 3 charger render and ate 135px of equipment top and
+ * bottom. A cropped object stops being the portrait of an object. If the
+ * material is served as `contain`, this primitive does not apply.
  *
- * ── SOLO MATERIAL, NUNCA TEXTO ────────────────────────────────────────────
- * Es una regla del sistema, no una preferencia de este componente. Un titular
- * que hace parallax se lee como plantilla; y un dato que se mueve mientras se
- * intenta leer deja de ser un dato y pasa a ser un efecto.
+ * ── ONLY MATERIAL, NEVER TEXT ─────────────────────────────────────────────
+ * This is a system rule, not a preference of this component. A headline doing
+ * parallax reads as a template; and a piece of data that moves while you are
+ * trying to read it stops being data and becomes an effect.
  *
- * ── QUÉ SE ANIMA ──────────────────────────────────────────────────────────
- * Solo `transform`. El desplazamiento se escribe en porcentaje para que el
- * recorrido sea proporcional a la pieza y no un número de píxeles que se
- * queda corto en pantallas grandes y largo en pequeñas.
+ * ── WHAT IS ANIMATED ──────────────────────────────────────────────────────
+ * Only `transform`. The offset is written as a percentage so the travel is
+ * proportional to the piece rather than a pixel count that falls short on
+ * large screens and runs long on small ones.
  *
- * Con `prefers-reduced-motion` el recorrido es 0: el material se queda quieto
- * y la composición no cambia — el marco, el recorte y el encuadre son los
- * mismos, así que no hay ninguna versión "degradada" que mirar.
+ * Under `prefers-reduced-motion` the travel is 0: the material stays still and
+ * the composition does not change — the frame, the crop and the framing are
+ * the same, so there is no "degraded" version to look at.
  */
 export function Flow({
   children,
   className,
-  /** Recorrido en porcentaje de la altura del material. Ver el cálculo arriba. */
+  /** Travel as a percentage of the material's height. See the maths above. */
   amount = 6,
 }: {
   children: React.ReactNode
@@ -70,10 +70,10 @@ export function Flow({
   const ref = useRef<HTMLDivElement>(null)
   const reduce = useReducedMotion()
 
-  /* `start end` → `end start`: el recorrido cubre desde que la pieza asoma por
-     abajo hasta que sale por arriba. Medir contra el viewport y no contra la
-     propia sección es lo que hace que el desplazamiento sea constante aunque
-     la sección sea más alta o más baja que la pantalla. */
+  /* `start end` → `end start`: the travel spans from the piece appearing at
+     the bottom to it leaving at the top. Measuring against the viewport rather
+     than against the section itself is what keeps the offset constant whether
+     the section is taller or shorter than the screen. */
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] })
   const y = useTransform(
     scrollYProgress,

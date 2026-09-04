@@ -15,33 +15,34 @@ import { cn } from '@ui/common/lib/cn'
 
 /**
  * HEADER
- * Ver docs/MASTER-PROJECT-DEFINITION.md §15.
+ * See docs/MASTER-PROJECT-DEFINITION.md §15.
  *
- * - UN solo CTA global, CONTEXTUAL por ruta. En /red no hay CTA: el usuario ya
- *   está en la herramienta. En /empresas muta a conversión comercial.
- * - Menú móvil a pantalla completa con cierre por Escape, foco atrapado,
- *   bloqueo de scroll y objetivos táctiles ≥44px (§23).
+ * - ONE single global CTA, CONTEXTUAL per route. On /red there is no CTA: the
+ *   user is already in the tool. On /empresas it turns into a commercial
+ *   conversion.
+ * - Full-screen mobile menu with Escape to close, trapped focus, scroll lock
+ *   and touch targets ≥44px (§23).
  *
- * EL PANEL MÓVIL VIVE FUERA DEL <header>, NO DENTRO. No es una preferencia de
- * estilo: `backdrop-filter` (el `backdrop-blur` que el header aplica al hacer
- * scroll o al abrirse) convierte al header en BLOQUE CONTENEDOR de sus
- * descendientes `position: fixed`. Con el panel dentro, `top-16 bottom-0` se
- * resolvía contra los 65px del header en lugar del viewport y el panel
- * colapsaba a 1px de alto: el menú abría, bloqueaba el scroll y movía el foco
- * a enlaces invisibles. Como hermano del header, `fixed` vuelve a medirse
- * contra el viewport.
+ * THE MOBILE PANEL LIVES OUTSIDE THE <header>, NOT INSIDE IT. This is not a
+ * style preference: `backdrop-filter` (the `backdrop-blur` the header applies
+ * on scroll or when open) turns the header into the CONTAINING BLOCK for its
+ * `position: fixed` descendants. With the panel inside, `top-16 bottom-0`
+ * resolved against the header's 65px instead of the viewport and the panel
+ * collapsed to 1px tall: the menu opened, locked scrolling and moved focus to
+ * invisible links. As a sibling of the header, `fixed` measures against the
+ * viewport again.
  *
- * El apilado se declara con los tokens `--z-header` / `--z-overlay` en lugar de
- * `z-50` a mano en los dos sitios, que es lo que impedía razonar sobre el
- * orden de pintado.
+ * Stacking is declared with the `--z-header` / `--z-overlay` tokens instead of
+ * a hand-written `z-50` in both places, which is what made the paint order
+ * impossible to reason about.
  */
 
 export function Header({ locale }: { locale: Locale }) {
   const pathname = usePathname()
   const [scrolled, setScrolled] = useState(false)
   /**
-   * El menú se abre "para una ruta". Al navegar cambia `pathname` y el menú se
-   * cierra por derivación, sin efecto ni renders en cascada.
+   * The menu opens "for a route". Navigating changes `pathname` and the menu
+   * closes by derivation, with no effect and no cascading renders.
    */
   const [openedFor, setOpenedFor] = useState<string | null>(null)
   const open = openedFor === pathname
@@ -49,7 +50,7 @@ export function Header({ locale }: { locale: Locale }) {
   const panelRef = useRef<HTMLDivElement>(null)
   const toggleRef = useRef<HTMLButtonElement>(null)
 
-  /* Contexto de ruta → CTA contextual */
+  /* Route context → contextual CTA */
   const path = stripLocale(pathname) || '/'
   const context = path.startsWith(routes.red)
     ? 'red'
@@ -69,20 +70,21 @@ export function Header({ locale }: { locale: Locale }) {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  /* Bloqueo de scroll, Escape y foco atrapado mientras el menú está abierto */
+  /* Scroll lock, Escape and trapped focus while the menu is open */
   useEffect(() => {
     if (!open) return
     lockScroll()
 
-    /* El botón de cerrar vive FUERA del panel —está en la barra, y ahí debe
-       seguir— pero es el control de cierre visible. Recorriendo solo el panel,
-       Tab daba vueltas entre los 7 enlaces y nunca llegaba a él: visible e
-       inoperable con teclado. Se añade al final del recorrido. */
+    /* The close button lives OUTSIDE the panel — it is in the bar, and that is
+       where it belongs — but it is the visible closing control. Cycling
+       through the panel alone, Tab went round the 7 links and never reached
+       it: visible and inoperable by keyboard. It is appended to the end of the
+       cycle. */
     const panel = panelRef.current
-    const delPanel = panel
+    const fromPanel = panel
       ? Array.from(panel.querySelectorAll<HTMLElement>('a[href], button:not([disabled])'))
       : []
-    const focusables = toggleRef.current ? [...delPanel, toggleRef.current] : delPanel
+    const focusables = toggleRef.current ? [...fromPanel, toggleRef.current] : fromPanel
     focusables[0]?.focus()
 
     const onKeyDown = (e: KeyboardEvent) => {
@@ -93,20 +95,20 @@ export function Header({ locale }: { locale: Locale }) {
       }
       if (e.key !== 'Tab' || focusables.length === 0) return
 
-      /* Recorrido POR ÍNDICE, no por extremos.
-         El botón de cerrar está en la barra, o sea ANTES del panel en el DOM,
-         y el orden de tabulación sigue el DOM: al llegar al último enlace del
-         panel, Tab saltaba fuera y nunca lo alcanzaba. Con extremos no bastaba
-         —solo cerraba el ciclo del último al primero—; hay que mover el foco
-         explícitamente en cada paso para que el orden LÓGICO mande sobre el
-         orden del documento. */
+      /* Cycling BY INDEX, not by endpoints.
+         The close button is in the bar, that is, BEFORE the panel in the DOM,
+         and tab order follows the DOM: on reaching the panel's last link, Tab
+         jumped outside and never got to it. Handling the endpoints was not
+         enough — that only closes the loop from last to first; focus has to be
+         moved explicitly at every step so the LOGICAL order wins over the
+         document order. */
       const i = focusables.indexOf(document.activeElement as HTMLElement)
       if (i === -1) return
       e.preventDefault()
-      const siguiente = e.shiftKey
+      const next = e.shiftKey
         ? (i - 1 + focusables.length) % focusables.length
         : (i + 1) % focusables.length
-      focusables[siguiente].focus()
+      focusables[next].focus()
     }
 
     document.addEventListener('keydown', onKeyDown)
@@ -132,10 +134,11 @@ export function Header({ locale }: { locale: Locale }) {
         <div className="mx-auto flex h-16 w-full max-w-(--container-content) items-center justify-between px-(--spacing-gutter) md:h-20">
           <Link
             href={href(locale, routes.home)}
-            /* `shrink-0`: el logo es un lockup de proporción fija, y dejarlo
-               encoger lo deformaba o lo pegaba al menú. Que ceda el espacio
-               otro elemento, no la marca. El `gap` anterior sobraba desde que
-               el archivo oficial trae símbolo y logotipo en una sola pieza. */
+            /* `shrink-0`: the logo is a fixed-ratio lockup, and letting it
+               shrink either deformed it or pushed it against the menu. Let
+               some other element give up the space, not the brand. The
+               previous `gap` became redundant once the official file started
+               carrying symbol and wordmark as a single piece. */
             className="flex shrink-0 items-center py-2"
             aria-label={t(a11y.goHome, locale)}
           >
@@ -143,12 +146,12 @@ export function Header({ locale }: { locale: Locale }) {
           </Link>
 
           <nav
-            /* `gap-6` entre `md` y `lg`, `gap-9` a partir de ahí. En la franja
-               de ~768–820px el reparto quedaba en unos 4px de holgura: logo,
-               cuatro entradas, selector e CTA no caben con 36px de separación,
-               y el flex comprimía el ENLACE DEL LOGO hasta pegarlo al menú.
-               Recuperar 36px de separación resuelve el aprieto sin tocar
-               tamaños de texto ni ocultar nada. */
+            /* `gap-6` between `md` and `lg`, `gap-9` from there on. In the
+               ~768–820px band the layout was left with about 4px of slack:
+               logo, four entries, language switch and CTA do not fit with 36px
+               of separation, and flex compressed THE LOGO LINK until it
+               touched the menu. Reclaiming 36px of separation resolves the
+               squeeze without touching text sizes or hiding anything. */
             className="hidden items-center gap-6 nav:flex lg:gap-9"
             aria-label={t(a11y.mainNav, locale)}
           >
@@ -168,13 +171,14 @@ export function Header({ locale }: { locale: Locale }) {
           </nav>
 
           <div className="flex items-center gap-2 md:gap-3">
-            {/* El selector de idioma sale del header móvil y baja al menú. Es un
-                control de baja frecuencia que ocupaba 88px del espacio más
-                valioso de la pantalla, y ese espacio lo necesita el CTA. */}
-            {/* "¿Necesitas ayuda?" antes del selector: es un enlace de
-                RESCATE, no una acción, así que se dice en texto y sin borde
-                para que no compita con el CTA que tiene al lado. Lleva al FAQ,
-                que es donde están las respuestas. */}
+            {/* The language switch leaves the mobile header and moves down
+                into the menu. It is a low-frequency control that took up 88px
+                of the most valuable space on screen, and the CTA needs that
+                space. */}
+            {/* "Need help?" before the switch: it is a RESCUE link, not an
+                action, so it is set as plain text with no border to keep it
+                from competing with the CTA next to it. It leads to the FAQ,
+                which is where the answers are. */}
             <Link
               href={href(locale, helpLink.href)}
               className="hidden min-h-11 items-center text-body-s text-ink-2 transition-colors hover:text-ink nav:inline-flex"
@@ -187,10 +191,10 @@ export function Header({ locale }: { locale: Locale }) {
             </div>
 
             {cta && (
-              /* Visible desde `xs` (480px). Por debajo no caben logo + CTA +
-                 hamburguesa sin apretar, así que ahí el CTA vive en el menú
-                 —que ahora funciona—. Primer uso real del token
-                 `--breakpoint-xs`, que estaba definido y sin usar. */
+              /* Visible from `xs` (480px). Below that, logo + CTA + hamburger
+                 do not fit without cramping, so down there the CTA lives in
+                 the menu — which now works. First real use of the
+                 `--breakpoint-xs` token, which was defined and unused. */
               <div className="hidden xs:block">
                 <Button
                   variant="secondary"
@@ -212,7 +216,7 @@ export function Header({ locale }: { locale: Locale }) {
               className="press grid size-11 place-items-center rounded-(--radius-structural) border border-line-control text-ink nav:hidden"
               aria-label={open ? t(a11y.closeMenu, locale) : t(a11y.openMenu, locale)}
               aria-expanded={open}
-              aria-controls="menu-movil"
+              aria-controls="mobile-menu"
               onClick={() => setOpen(!open)}
             >
               <span
@@ -243,12 +247,12 @@ export function Header({ locale }: { locale: Locale }) {
         </div>
       </header>
 
-      {/* Menú móvil — overlay a pantalla completa, HERMANO del header (ver
-          cabecera del archivo: dentro del header, el backdrop-filter lo
-          colapsaba a 1px de alto). */}
+      {/* Mobile menu — full-screen overlay, SIBLING of the header (see the
+          file header: inside the header, backdrop-filter collapsed it to 1px
+          tall). */}
       {open && (
         <div
-          id="menu-movil"
+          id="mobile-menu"
           ref={panelRef}
           className="fixed inset-x-0 bottom-0 top-16 z-(--z-overlay) flex flex-col overflow-y-auto border-t border-line bg-canvas nav:hidden"
         >
@@ -266,8 +270,9 @@ export function Header({ locale }: { locale: Locale }) {
                 {t(item.label, locale)}
               </Link>
             ))}
-            {/* En móvil la ayuda entra en la lista: no hay sitio en la barra y
-                esconderla en un menú que no la lista sería peor que no tenerla. */}
+            {/* On mobile, help joins the list: there is no room in the bar,
+                and hiding it in a menu that does not list it would be worse
+                than not having it at all. */}
             <Link
               href={href(locale, helpLink.href)}
               className="border-b border-line py-5 font-display text-display-m text-ink-2"
@@ -278,9 +283,9 @@ export function Header({ locale }: { locale: Locale }) {
 
           <div className="mt-auto flex flex-col gap-8 px-(--spacing-gutter) pb-10 pt-8">
             {cta && (
-              /* Aquí SÍ es primario: dentro del menú no compite con ninguna
-                 acción de la página, así que es la única con gradiente en la
-                 vista (§12, disciplina del gradiente). */
+              /* Here it IS primary: inside the menu it competes with no other
+                 action on the page, so it is the only gradient in the view
+                 (§12, gradient discipline). */
               <Button
                 variant="primary"
                 size="l"
@@ -295,8 +300,8 @@ export function Header({ locale }: { locale: Locale }) {
               </Button>
             )}
             <div className="self-start">
-              {/* Abre hacia ARRIBA: en el menú móvil el selector está al fondo
-                  del panel y hacia abajo quedaría fuera de la pantalla. */}
+              {/* Opens UPWARDS: in the mobile menu the switch sits at the
+                  bottom of the panel and downwards would fall off screen. */}
               <LangSwitch
                 locale={locale}
                 placement="up"
@@ -309,7 +314,7 @@ export function Header({ locale }: { locale: Locale }) {
   )
 }
 
-/** Evento del plan de medición para el CTA global (§31). */
+/** Measurement plan event for the global CTA (§31). */
 function trackCta(context: string) {
   track(context === 'empresas' ? 'cta_b2b_click' : 'cta_descargar_app_click', {
     ubicacion: 'header',

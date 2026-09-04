@@ -5,14 +5,15 @@ import type { StationStatus } from '~/core/red/domain/entities/Station'
 import type { Metric } from '~/core/common/domain/entities/Metric'
 
 /**
- * PRIMITIVAS DE DATO
- * El tratamiento técnico de los datos (mono + hairlines + precisión) es el
- * lenguaje visual más propio de Voltop. Se sistematiza aquí en lugar de
- * repetirse suelto por los componentes.
+ * DATA PRIMITIVES
+ * The technical treatment of data (mono + hairlines + precision) is Voltop's
+ * most distinctive visual language. It is systematised here instead of being
+ * scattered loose across the components.
  */
 
 /* ------------------------------------------------------------------ */
-/* Estado de estación — colores desde tokens semánticos, sin literales */
+/* Station status — colours from semantic tokens, no literals          */
+/* The keys stay in Spanish: they are stored data values (see AGENTS.md) */
 /* ------------------------------------------------------------------ */
 
 const statusTone: Record<StationStatus, string> = {
@@ -48,19 +49,20 @@ export function StatusBadge({
 }
 
 /* ------------------------------------------------------------------ */
-/* Especificación técnica                                              */
+/* Technical specification                                             */
 /* ------------------------------------------------------------------ */
 
 /**
- * `tone` distingue CIFRA de TEXTO, y no es cosmético.
+ * `tone` distinguishes FIGURE from TEXT, and it is not cosmetic.
  *
- * Todos los valores se pintaban a `display-s` (24px). Con cuatro columnas eso
- * hacía que "Lunes a domingo, 6:00–22:00" envolviera en tres líneas, estirara
- * la fila a 150px y dejara los otros tres valores flotando en vertical: la
- * cuadrícula perdía el aire de ficha técnica que justifica el componente.
+ * Every value used to be painted at `display-s` (24px). With four columns that
+ * made "Lunes a domingo, 6:00–22:00" wrap onto three lines, stretched the row
+ * to 150px and left the other three values floating vertically: the grid lost
+ * the spec-sheet feel that justifies the component.
  *
- * Una potencia y un número de puntos SON el dato y merecen escala de display.
- * Un horario o una lista de conectores son texto y se leen mejor en cuerpo.
+ * A power rating and a number of points ARE the data and deserve display
+ * scale. Opening hours or a list of connectors are text and read better at
+ * body size.
  */
 type SpecTone = 'number' | 'text'
 
@@ -98,16 +100,16 @@ export function SpecList({
 }
 
 /* ------------------------------------------------------------------ */
-/* Métricas                                                            */
+/* Metrics                                                             */
 /* ------------------------------------------------------------------ */
 
 /**
- * Muestra métricas SOLO si están validadas. Nunca inventa un número ni pinta
- * un placeholder con aspecto de cifra (§33: la economía de placeholders es
- * parte de la credibilidad).
+ * Shows metrics ONLY if they are validated. It never invents a number and
+ * never paints a placeholder that looks like a figure (§33: placeholder
+ * economy is part of credibility).
  *
- * Si ninguna está validada, devuelve `null` y la página muestra en su lugar
- * el estado honesto que le corresponda.
+ * If none are validated it returns `null`, and the page shows whichever honest
+ * state belongs there instead.
  */
 export function MetricRow({
   metrics,
@@ -140,8 +142,8 @@ export function MetricRow({
 }
 
 /**
- * Etiqueta de dato provisional. El texto cumple AA (10.15:1) y el borde pasa a
- * `warn/50` para cumplir 1.4.11: a `warn/40` daba 2.52:1, por debajo de 3:1.
+ * Provisional data tag. The text meets AA (10.15:1) and the border moves to
+ * `warn/50` to meet 1.4.11: at `warn/40` it gave 2.52:1, below 3:1.
  */
 export function PendingTag({ children }: { children: React.ReactNode }) {
   return (

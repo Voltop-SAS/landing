@@ -9,34 +9,35 @@ import { externalLinks, soporteEmail } from '~/core/common/domain/consts/links'
 
 /**
  * FOOTER · Server Component
- * Ver docs/MASTER-PROJECT-DEFINITION.md §15.
+ * See docs/MASTER-PROJECT-DEFINITION.md §15.
  *
- * Tres columnas con destinos REALES. Se eliminaron:
- * - el bloque de métricas (duplicaba las de la página),
- * - los enlaces que apuntaban al mismo destino con etiquetas distintas,
- * - los enlaces `#` sin destino,
- * - los iconos de redes sociales no interactivos.
+ * Three columns with REAL destinations. Removed:
+ * - the metrics block (it duplicated the page's own),
+ * - links pointing at the same destination under different labels,
+ * - `#` links with no destination,
+ * - non-interactive social media icons.
  *
- * Un enlace sin destino real no se publica. App, ayuda, legal y redes se
+ * A link without a real destination is not published. App, help, legal and
+ * social links are
  */
 export function Footer({ locale }: { locale: Locale }) {
   const year = new Date().getFullYear()
 
   return (
-    /* `pb` extra en móvil: al llegar al fondo del documento no queda scroll
-       para apartar la barra flotante, así que tapaba de forma permanente los
-       enlaces legales. Reservar el espacio es la única solución real —
-       esconderla ahí abajo la quitaría justo donde más se decide.
+    /* Extra `pb` on mobile: at the bottom of the document there is no scroll
+       left to move the floating bar out of the way, so it permanently covered
+       the legal links. Reserving the space is the only real fix — hiding the
+       bar down there would remove it exactly where most decisions are made.
 
-       El valor se recalculó cuando la barra pasó a dos filas: mide 126px a
-       390px y 145px a 320px, más 12px de separación del borde. Con el 5.5rem
-       anterior —dimensionado para la barra de una fila, 70px— los enlaces
-       legales acababan a 707px y la barra empezaba a 706: quedaban A UN PÍXEL,
-       y cualquier idioma más largo los metía debajo. Ahora son 11rem (176px),
-       que cubre el peor caso con margen.
+       The value was recalculated when the bar went to two rows: it measures
+       126px at 390px and 145px at 320px, plus 12px of separation from the
+       edge. With the previous 5.5rem — sized for the single-row bar, 70px —
+       the legal links ended at 707px and the bar started at 706: ONE PIXEL
+       apart, and any longer language pushed them underneath. It is now 11rem
+       (176px), which covers the worst case with room to spare.
 
-       Desaparece en `lg`, donde el flotante es una tarjeta en la esquina y no
-       cruza el pie. */
+       It disappears at `lg`, where the floater is a card in the corner and
+       does not cross the footer. */
     <footer className="border-t border-line bg-surface-1 pb-[calc(11rem+env(safe-area-inset-bottom))] lg:pb-0">
       <Container className="py-(--spacing-section-tight)">
         <div className="grid gap-10 md:grid-cols-[1.5fr_repeat(3,1fr)] md:gap-8">
@@ -49,12 +50,12 @@ export function Footer({ locale }: { locale: Locale }) {
               <Logo />
             </Link>
             <p className="mt-4 max-w-xs text-body-s text-ink-3">{t(brand.tagline, locale)}</p>
-            {/* El correo de soporte, visible y en texto. Está declarado en la
-                Política de Tratamiento de Datos como dato de contacto de
-                VOLTOP S.A.S., así que es el canal oficial y merece estar donde
-                se busca: el footer. Se muestra COMPLETO en lugar de esconderlo
-                tras un "Contáctanos", porque un correo que se puede copiar de
-                un vistazo ahorra un clic y un formulario. */}
+            {/* The support email, visible and as text. It is declared in the
+                Data Processing Policy as VOLTOP S.A.S.'s contact detail, so it
+                is the official channel and deserves to be where people look
+                for it: the footer. It is shown IN FULL rather than hidden
+                behind a "Contact us", because an email you can copy at a
+                glance saves a click and a form. */}
             <a
               href={externalLinks.soporte}
               className="mt-5 inline-flex min-h-11 items-center font-mono text-mono text-ink-2 transition-colors hover:text-brand"
@@ -70,10 +71,10 @@ export function Footer({ locale }: { locale: Locale }) {
           >
             {footer.columns.map((col) => (
               <div key={col.title.es}>
-                {/* Etiqueta, no encabezado. Como `<h2>` de 12px entraba en el
-                    outline del documento al mismo nivel que los `h2` de
-                    contenido y los enanizaba. La navegación del pie ya se
-                    anuncia por el `aria-label` del `<nav>`. */}
+                {/* A label, not a heading. As a 12px `<h2>` it entered the
+                    document outline at the same level as the content `h2`s and
+                    dwarfed them. The footer navigation is already announced by
+                    the `<nav>`'s `aria-label`. */}
                 <p className="font-mono text-mono uppercase tracking-wider text-ink-3">
                   {t(col.title, locale)}
                 </p>

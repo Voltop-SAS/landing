@@ -6,26 +6,26 @@ import type { Post } from '~/core/common/infrastructure/data-access'
 import { cn } from '@ui/common/lib/cn'
 
 /**
- * ENVOLTORIO DE UNA ENTRADA · enlaza solo si hay dónde ir.
+ * POST WRAPPER · links only if there is somewhere to go.
  *
- * §15: un enlace sin destino real no se publica. Una apertura son dos líneas
- * que se leen en la propia fila; enlazarla a una página con el mismo texto
- * sería un enlace que no lleva a nada nuevo.
+ * §15: a link without a real destination is not published. An opening is two
+ * lines that are read in the row itself; linking it to a page with the same
+ * text would be a link that leads to nothing new.
  *
- * La regla se aplicaba en TRES sitios —el registro, la lista compacta de las
- * fichas y el beat de la Home—, cada uno con su propia copia del ternario y de
- * la clase `group`. Tres copias de una regla son tres sitios donde puede
- * divergir: basta que alguien añada una condición en una y no en las otras
- * para que la misma entrada enlace en una superficie y no en la vecina.
+ * The rule was applied in THREE places — the log, the compact list on station
+ * pages and the Home page beat — each with its own copy of the ternary and of
+ * the `group` class. Three copies of a rule are three places where it can
+ * diverge: it only takes someone adding a condition in one and not the others
+ * for the same post to link on one surface and not on its neighbour.
  *
- * Lo que NO unifica es el aspecto. Las tres listas son deliberadamente
- * distintas —§36.11: dos superficies vecinas no repiten estructura— y por eso
- * cada una sigue trayendo su propia rejilla en `className`. Aquí solo vive la
- * decisión de si esto es un enlace o no lo es.
+ * What it does NOT unify is the appearance. The three lists are deliberately
+ * different — §36.11: two neighbouring surfaces do not repeat structure — and
+ * that is why each still brings its own grid in `className`. All that lives
+ * here is the decision of whether this is a link or not.
  *
- * `group` se añade únicamente en la rama enlazada: los `group-hover` de los
- * hijos no deben responder cuando no hay nada que abrir. Lo mismo vale para
- * `press`: una fila que no lleva a ninguna parte no debe acusar el toque.
+ * `group` is added only on the linked branch: the children's `group-hover`
+ * should not respond when there is nothing to open. The same goes for `press`:
+ * a row that leads nowhere should not acknowledge the tap.
  */
 export function PostLink({
   post,

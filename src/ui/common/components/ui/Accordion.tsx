@@ -12,32 +12,34 @@ export type AccordionItem = {
 }
 
 /**
- * ACORDEÓN · patrón `disclosure`, no `tabs`.
+ * ACCORDION · `disclosure` pattern, not `tabs`.
  *
- * §23 exige "ARIA completa o ninguna". El patrón disclosure es un botón con
- * `aria-expanded` que controla una región — nada más. No lleva `role="tab"`,
- * ni navegación por flechas, ni `aria-multiselectable`: eso es el patrón
- * TABS, y montarlo a medias degrada más que no poner ARIA. Un `<button>`
- * nativo ya trae foco, Enter y Espacio sin escribir una línea de teclado.
+ * §23 demands "complete ARIA or none". The disclosure pattern is a button with
+ * `aria-expanded` controlling a region — nothing more. It carries no
+ * `role="tab"`, no arrow-key navigation and no `aria-multiselectable`: that is
+ * the TABS pattern, and building it halfway degrades things more than adding
+ * no ARIA at all. A native `<button>` already brings focus, Enter and Space
+ * without a single line of keyboard code.
  *
- * ── Varias abiertas a la vez ──────────────────────────────────────────────
- * Deliberado. En un FAQ, cerrar la anterior al abrir la siguiente mueve el
- * texto que la persona está leyendo. Comparar dos respuestas es un caso real
- * (potencia y compatibilidad se leen juntas); el acordeón exclusivo lo impide
- * a cambio de nada.
+ * ── Several open at once ──────────────────────────────────────────────────
+ * Deliberate. In a FAQ, closing the previous one when opening the next moves
+ * the text the person is reading. Comparing two answers is a real case (power
+ * and compatibility are read together); an exclusive accordion prevents it in
+ * exchange for nothing.
  *
- * ── Por qué el panel no usa `hidden` ──────────────────────────────────────
- * La altura se anima con `grid-rows: 0fr → 1fr`, que es la única forma de
- * transicionar a altura automática sin medir en JS. Eso obliga a dejar el
- * contenido en el DOM, así que cerrado se marca `inert`: sale del árbol de
- * accesibilidad Y del orden de tabulación. Sin él, un lector de pantalla
- * leería las cinco respuestas seguidas y Tab caería en enlaces invisibles.
+ * ── Why the panel does not use `hidden` ───────────────────────────────────
+ * The height is animated with `grid-rows: 0fr → 1fr`, which is the only way to
+ * transition to automatic height without measuring in JS. That forces the
+ * content to stay in the DOM, so when closed it is marked `inert`: it leaves
+ * the accessibility tree AND the tab order. Without it, a screen reader would
+ * read the five answers one after another and Tab would land on invisible
+ * links.
  */
-/** Un solo sitio para el enlace de salida: interno y externo solo difieren
-    en la flecha y en el aviso de pestaña nueva. */
-/* `min-h-11`: sin ella estos enlaces medían 16.8px de alto, por debajo de los
-   24px de WCAG 2.5.8, y no son enlaces en línea dentro de una frase, así que
-   no les vale la excepción. `Footer` y `PostsInline` ya lo hacían. */
+/** A single place for the outgoing link: internal and external differ only in
+    the arrow and in the new-tab warning. */
+/* `min-h-11`: without it these links measured 16.8px tall, below WCAG 2.5.8's
+   24px, and they are not inline links inside a sentence, so the exception does
+   not cover them. `Footer` and `PostsInline` were already doing this. */
 const link =
   'group inline-flex min-h-11 items-center gap-2 font-mono text-mono text-brand transition-colors hover:text-ink'
 
@@ -46,8 +48,8 @@ const arrow = 'transition-transform duration-(--duration-fast) ease-(--ease-over
 export function Accordion({
   items,
   className,
-  /** Texto de "se abre en pestaña nueva". Llega por prop: este componente es
-      UI genérica y §24 le prohíbe contener copy literal. */
+  /** "Opens in a new tab" text. It arrives as a prop: this component is
+      generic UI and §24 forbids it from holding literal copy. */
   newTabLabel,
 }: {
   items: AccordionItem[]
@@ -55,10 +57,10 @@ export function Accordion({
   newTabLabel: string
 }) {
   const uid = useId()
-  const [openItems, setAbiertas] = useState<Set<string>>(new Set())
+  const [openItems, setOpenItems] = useState<Set<string>>(new Set())
 
   const toggle = (id: string) =>
-    setAbiertas((prev) => {
+    setOpenItems((prev) => {
       const next = new Set(prev)
       if (!next.delete(id)) next.add(id)
       return next
@@ -68,7 +70,7 @@ export function Accordion({
     <ul className={cn('border-t border-line', className)}>
       {items.map((item) => {
         const isOpen = openItems.has(item.id)
-        const buttonId = `${uid}-${item.id}-boton`
+        const buttonId = `${uid}-${item.id}-button`
         const panelId = `${uid}-${item.id}-panel`
 
         return (
@@ -88,8 +90,8 @@ export function Accordion({
                 <span className="font-display text-display-s font-semibold text-ink transition-colors group-hover:text-brand">
                   {item.question}
                 </span>
-                {/* Cruz que se vuelve raya: la barra vertical rota 90°. Solo
-                    `transform`, que es lo que §29 permite animar. */}
+                {/* A cross that becomes a dash: the vertical bar rotates 90°.
+                    Only `transform`, which is what §29 allows animating. */}
                 <span
                   aria-hidden="true"
                   className="relative mt-1.5 grid size-6 shrink-0 place-items-center text-ink-3 transition-colors group-hover:text-brand"
@@ -117,11 +119,11 @@ export function Accordion({
                   role="region"
                   aria-labelledby={buttonId}
                   inert={!isOpen}
-                  /* El margen derecho solo existe para librar la columna del
-                     +/−, y esa columna solo compite con el texto en pantallas
-                     donde caben en la misma línea. En móvil la respuesta va
-                     debajo del botón: ahí el padding no libraba nada y robaba
-                     40px a una medida de línea que ya iba justa. */
+                  /* The right margin only exists to clear the +/− column, and
+                     that column only competes with the text on screens where
+                     they fit on the same line. On mobile the answer goes below
+                     the button: there the padding cleared nothing and stole
+                     40px from a line measure that was already tight. */
                   className="pb-7 md:pr-10"
                 >
                   <p className="measure-narrow text-body text-ink-2">{item.answer}</p>
@@ -129,15 +131,15 @@ export function Accordion({
                     <ul className="mt-4 flex flex-wrap items-center gap-x-6 gap-y-2">
                       {item.links.map((l) =>
                         l.external ? (
-                          /* Externo: pestaña nueva anunciada (WCAG 3.2.5) y la
-                             MISMA flecha que el enlace interno, movida en
-                             diagonal al pasar el cursor. Es lo que hace
-                             `Button`, y así "esto te saca del sitio" se dice de
-                             una sola forma en todo el sitio.
+                          /* External: new tab announced (WCAG 3.2.5) and the
+                             SAME arrow as the internal link, moved diagonally
+                             on hover. It is what `Button` does, so "this takes
+                             you off the site" is said one single way across
+                             the whole site.
 
-                             Probé antes con el glifo ↗ y no servía: en esta
-                             mono sale más pequeño y fino que la →, desparejado
-                             justo al lado de ella. */
+                             The ↗ glyph was tried first and did not work: in
+                             this mono it comes out smaller and thinner than
+                             the →, mismatched right next to it. */
                           <li key={l.href}>
                             <a
                               href={l.href}

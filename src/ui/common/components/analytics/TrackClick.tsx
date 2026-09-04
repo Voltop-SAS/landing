@@ -3,21 +3,22 @@
 import { track, type EventName, type EventProps } from '~/core/common/infrastructure/analytics'
 
 /**
- * Emite un evento cuando se hace clic en lo que envuelve.
+ * Emits an event when whatever it wraps is clicked.
  *
- * Existe por la misma razón que `TrackView`: el plan de medición (§31) declara
- * eventos que solo pueden dispararse en cliente, pero casi todas las páginas
- * son Server Components y `Button` también lo es — pasarle un `onClick` desde
- * el servidor no es posible.
+ * It exists for the same reason as `TrackView`: the measurement plan (§31)
+ * declares events that can only fire on the client, but almost every page is a
+ * Server Component and so is `Button` — passing it an `onClick` from the
+ * server is not possible.
  *
- * Envolver en lugar de convertir mantiene `Button` en el servidor: la isla de
- * cliente es este `<span>`, no el botón ni la página. El clic del enlace de
- * dentro burbujea hasta aquí, así que no hace falta tocar el componente
- * envuelto ni duplicar su marcado.
+ * Wrapping instead of converting keeps `Button` on the server: the client
+ * island is this `<span>`, not the button and not the page. The click on the
+ * link inside bubbles up to here, so there is no need to touch the wrapped
+ * component or duplicate its markup.
  *
- * `display: contents` — el envoltorio NO existe para el layout. Sin eso, meter
- * un `<span>` alrededor de un botón rompería cualquier `flex` o `grid` del
- * padre, que es un precio absurdo por una métrica.
+ * `display: contents` — the wrapper does NOT exist as far as layout is
+ * concerned. Without it, putting a `<span>` around a button would break any
+ * `flex` or `grid` on the parent, which is an absurd price to pay for a
+ * metric.
  */
 export function TrackClick({
   event,
