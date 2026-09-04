@@ -162,14 +162,28 @@ export const home = {
 
   /* BEAT 7 · CIERRE — asimétrico, dos audiencias. Intensidad: Alta */
   close: {
-    title: { es: "Conecta con la red", en: "Connect to the network", pt: "Conecte-se à rede", } satisfies Localized,
+    /* El titular deja de describir la acción —"Conecta con la red"— y pasa a
+       PREGUNTAR. En un cierre con dos caminos, una pregunta es lo que hace que
+       el usuario se reconozca en uno de los dos; una afirmación deja la
+       elección implícita y hay que deducirla de las etiquetas. */
+    title: {
+      es: "¿Cómo quieres conectarte con Voltop?",
+      en: "How do you want to connect with Voltop?",
+      pt: "Como você quer se conectar com a Voltop?",
+    } satisfies Localized,
     b2c: {
-      label: { es: "Conduzco eléctrico", en: "I drive electric", pt: "Dirijo um elétrico", } satisfies Localized,
-      body: { es: "Encuentra dónde cargar en la red Voltop.", en: "Find where to charge across the Voltop network.", pt: "Encontre onde carregar em toda a rede Voltop.", } satisfies Localized,
+      /* Las dos etiquetas pasan a primera persona y al mismo largo: "conduzco
+         un carro eléctrico" / "represento una empresa". Antes una tenía dos
+         palabras y la otra seis, y en dos columnas simétricas eso se lee como
+         que una opción pesa más que la otra. */
+      label: { es: "Conduzco un carro eléctrico", en: "I drive an electric car", pt: "Eu dirijo um carro elétrico", } satisfies Localized,
+      /* Nombra las dos ciudades, igual que el lead del beat 3: es la segunda y
+         última frase del sitio que se queda obsoleta al abrir una tercera. */
+      body: { es: "Encuentra estaciones de carga Voltop en Bogotá y Medellín.", en: "Find Voltop charging stations in Bogotá and Medellín.", pt: "Encontre estações de carregamento Voltop em Bogotá e Medellín.", } satisfies Localized,
     },
     b2b: {
-      label: { es: "Represento una empresa o un espacio", en: "I represent a company or a space", pt: "Represento uma empresa ou um espaço", } satisfies Localized,
-      body: { es: "Cuéntanos tu caso y te proponemos una solución.", en: "Tell us your case and we'll propose a solution.", pt: "Conte o seu caso e propomos uma solução.", } satisfies Localized,
+      label: { es: "Represento una empresa", en: "I represent a company", pt: "Represento uma empresa", } satisfies Localized,
+      body: { es: "Conoce nuestras soluciones de carga para empresas, flotas y espacios comerciales.", en: "See our charging solutions for companies, fleets and commercial spaces.", pt: "Conheça nossas soluções de carregamento para empresas, frotas e espaços comerciais.", } satisfies Localized,
     },
   },
 
@@ -207,25 +221,16 @@ export const home = {
    * la ficha de estación. Ni cifras ni rangos.
    */
   app: {
-    eyebrow: { es: "Cómo se carga", en: "How charging works", pt: "Como carregar", } satisfies Localized,
+    eyebrow: { es: "Cómo cargar", en: "How to charge", pt: "Como carregar", } satisfies Localized,
     title: {
-      es: "Cargar empieza en tu teléfono",
-      en: "Charging starts on your phone",
-      pt: "Carregar começa no seu celular",
+      es: "Cargar tu carro eléctrico es así de fácil",
+      en: "Charging your electric car is this easy",
+      pt: "Carregar seu carro elétrico é assim tão fácil",
     } satisfies Localized,
-    /**
-     * El lead decía, en una frase, exactamente lo que ahora dicen los cuatro
-     * pasos. Repetido justo encima, no informaba: adelantaba.
-     *
-     * Ahora hace un trabajo que los pasos no pueden hacer — decirle a quien
-     * nunca ha cargado un carro eléctrico que esto es TODO, que no hay un
-     * trámite escondido detrás. Es la respuesta a "¿es difícil?", que es la
-     * pregunta real antes de leer ningún paso.
-     */
     lead: {
-      es: "Si nunca has cargado un carro eléctrico, esto es todo lo que pasa.",
-      en: "Never charged an electric car before? This is all there is to it.",
-      pt: "Se você nunca carregou um carro elétrico, é só isto o que acontece.",
+      es: "Encuentra una estación Voltop, escanea el código QR y empieza a cargar desde la app.",
+      en: "Find a Voltop station, scan the QR code and start charging from the app.",
+      pt: "Encontre uma estação Voltop, escaneie o código QR e comece a carregar pelo app.",
     } satisfies Localized,
     /**
      * Cuatro pasos, en el orden en que ocurren. El rótulo es un verbo: lo que
@@ -235,42 +240,36 @@ export const home = {
       {
         label: { es: "Encuentra", en: "Find", pt: "Encontre" } satisfies Localized,
         body: {
-          es: "Mira en el mapa dónde hay estaciones y cuáles están libres.",
-          en: "Check the map to see where the stations are and which ones are free.",
-          pt: "Veja no mapa onde há estações e quais estão livres.",
+          es: "Consulta nuestra red y encuentra una estación disponible.",
+          en: "Browse our network and find an available station.",
+          pt: "Consulte nossa rede e encontre uma estação disponível.",
         } satisfies Localized,
       },
       {
         label: { es: "Escanea", en: "Scan", pt: "Escaneie" } satisfies Localized,
         body: {
-          es: "Activas el cargador con el código QR de la estación. Sin tarjeta y sin membresía.",
-          en: "You start the charger with the station's QR code. No card, no membership.",
-          pt: "Você ativa o carregador com o código QR da estação. Sem cartão e sem assinatura.",
+          es: "Escanea el código QR del cargador desde la app Voltop para iniciar.",
+          en: "Scan the charger's QR code from the Voltop app to get started.",
+          pt: "Escaneie o código QR do carregador pelo app Voltop para iniciar.",
         } satisfies Localized,
       },
       {
         label: { es: "Carga", en: "Charge", pt: "Carregue" } satisfies Localized,
         body: {
-          es: "Ves la tarifa antes de empezar y sigues la sesión desde el teléfono.",
-          en: "You see the price before you start and follow the session from your phone.",
-          pt: "Você vê a tarifa antes de começar e acompanha a sessão pelo celular.",
+          es: "Inicia la carga y sigue tu sesión desde el celular.",
+          en: "Start charging and follow your session from your phone.",
+          pt: "Inicie o carregamento e acompanhe sua sessão pelo celular.",
         } satisfies Localized,
       },
       {
         label: { es: "Paga", en: "Pay", pt: "Pague" } satisfies Localized,
         body: {
-          es: "Al terminar, pagas desde la app con el método que tengas registrado.",
-          en: "When it's done, you pay in the app with the method you already have saved.",
-          pt: "Ao terminar, você paga pelo app com o método que já tiver cadastrado.",
+          es: "Al finalizar, paga desde la app con tu método de pago registrado.",
+          en: "When you're done, pay in the app with your registered payment method.",
+          pt: "Ao finalizar, pague pelo app com seu método de pagamento cadastrado.",
         } satisfies Localized,
       },
     ],
-    /** Salida a la red para quien quiere ver dónde cargar antes de descargar nada. */
-    seeNetwork: {
-      es: "Mira dónde puedes cargar",
-      en: "See where you can charge",
-      pt: "Veja onde você pode carregar",
-    } satisfies Localized,
     qrLabel: {
       es: "Escanea para descargar",
       en: "Scan to download",

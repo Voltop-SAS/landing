@@ -136,11 +136,18 @@ export default async function PostPage({ params }: Props) {
       <Section space="none" className="pb-24 md:pb-32">
         <Container width="narrow">
           {post.cover && (
+            /* `controls` cuando la portada es un VÍDEO. Sin él, `VideoMedia` lo
+               trata como material de fondo: silenciado, en bucle y sin barra
+               —así que la pieza de Wake se veía sin audio y sin forma de
+               ponerlo—. Un vídeo que es el sujeto de la entrada se decide ver,
+               y para eso hace falta poder darle play, buscar y oírlo.
+               Una fotografía de portada no cambia: la prop no le aplica. */
             <Media
               asset={post.cover}
               lang={lang}
               aspect="16/9"
               corner
+              controls={post.cover.kind === "video"}
               sizes="(min-width: 768px) 46rem, 100vw"
               priority
             />

@@ -2,6 +2,7 @@ import Image from "next/image";
 import { t, type Locale } from "@/lib/i18n/config";
 import { href, routes } from "@/lib/i18n/routes";
 import { home } from "@/content/copy/home";
+import { actions } from "@/content/copy/common";
 import { Section, Container, Eyebrow } from "@/components/ui/layout";
 import { StoreBadges } from "@/components/ui/StoreBadges";
 import { Button } from "@/components/ui/Button";
@@ -54,7 +55,7 @@ export function AppDownload({ lang }: { lang: Locale }) {
       <Container>
         <div className="grid gap-12 md:grid-cols-[1fr_auto] md:items-center md:gap-16">
           <div>
-            <Eyebrow>{t(c.eyebrow, lang)}</Eyebrow>
+            <Eyebrow tone="brand">{t(c.eyebrow, lang)}</Eyebrow>
             <h2
               id="app-title"
               className="mt-4 max-w-[16ch] font-display text-display-l font-semibold text-balance text-ink"
@@ -99,10 +100,15 @@ export function AppDownload({ lang }: { lang: Locale }) {
 
             {/* Salida a la red: "¿dónde puedo cargar?" se responde en /red y no
                 exige descargar nada antes. Va como enlace y no como botón para
-                no competir con las insignias, que son la acción de este beat. */}
+                no competir con las insignias, que son la acción de este beat.
+
+                Reutiliza `actions.findCharger`, el mismo rótulo que el Hero y
+                el cierre: los tres llevan a /red, y tener una tercera clave con
+                el mismo texto solo multiplica los sitios donde puede divergir.
+                La clave propia `home.app.seeNetwork` se retiró por eso. */}
             <div className="mt-7">
               <Button variant="link" arrow href={href(lang, routes.red)}>
-                {t(c.seeNetwork, lang)}
+                {t(actions.findCharger, lang)}
               </Button>
             </div>
 

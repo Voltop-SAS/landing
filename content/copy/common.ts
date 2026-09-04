@@ -137,7 +137,7 @@ export const actions = {
      ANTETÍTULO del beat 4, y un botón que repite el rótulo de su propia
      sección no dice a dónde lleva. */
   businessSolutions: { es: "Conoce nuestras soluciones", en: "See our solutions", pt: "Conheça nossas soluções", } satisfies Localized,
-  talkToTeam: { es: "Hablar con el equipo", en: "Talk to the team", pt: "Falar com o time", } satisfies Localized,
+  talkToTeam: { es: "Habla con nuestro equipo", en: "Talk to our team", pt: "Fale com nosso time", } satisfies Localized,
   /* "Conoce" y no "Ver": invita a entrar en la ficha, no a mirar una foto. En
      inglés se queda en "See this station" a propósito — "get to know" suena
      forzado en un botón y "discover" es lenguaje de folleto. Se traduce la

@@ -332,7 +332,19 @@ export const media = {
    * el punto más brillante de la sección y se lleva la mirada por delante de
    * la cita, que es lo que se está intentando que se lea.
    *
-   * ── EL DE HERBERT PERICO LLEGÓ EL 2026-09-04, CON DOS DESVÍOS ────────────
+   * ── LOS DOS NO COMPARTEN TAMAÑO, Y ES DELIBERADO ─────────────────────────
+   * El de Helbert Perico es una MINIATURA de 96px en la fila de atribución: es
+   * un testimonio, y lo que acredita es quién lo dijo. El de Bruno Ocampo
+   * ocupa media columna en 2/3 vertical: es su visión, y ahí la persona pesa
+   * tanto como sus palabras. Mismo tratamiento de marco —radio estructural,
+   * hairline— y escalas opuestas, porque las funciones son opuestas.
+   *
+   * QUÉ HACE FALTA para el del fundador: retrato vertical 2/3, de medio cuerpo
+   * o tres cuartos, fondo neutro y oscuro. A 458px de ancho ya no es una
+   * miniatura: el fondo se ve, y un fondo claro a ese tamaño sí compite con la
+   * cita que tiene al lado.
+   *
+   * ── EL DE HELBERT PERICO LLEGÓ EL 2026-09-04, CON DOS DESVÍOS ────────────
    * En 1/1 y 2048px, lo cual encajó sin tocar nada. Pero el encuadre es de
    * MEDIO CUERPO —sentado, con las manos sobre la mesa— y el fondo es CLARO.
    *
@@ -351,9 +363,9 @@ export const media = {
     src: "/retrato-herbert-perico.jpg",
     poster: null,
     alt: {
-      es: "Retrato de Herbert Perico, de la Universidad EAN",
-      en: "Portrait of Herbert Perico, from EAN University",
-      pt: "Retrato de Herbert Perico, da Universidade EAN",
+      es: "Retrato de Helbert Perico, de la Universidad EAN",
+      en: "Portrait of Helbert Perico, from EAN University",
+      pt: "Retrato de Helbert Perico, da Universidade EAN",
     },
     role: {
       es: "Atribución del beat 5. Pone cara al testimonio que sostiene la prueba institucional.",
@@ -367,7 +379,7 @@ export const media = {
   retratoFundador: {
     id: "retrato-fundador",
     kind: "photo",
-    src: null,
+    src: "/retrato-bruno-ocampo.png",
     poster: null,
     alt: {
       es: "Retrato de Bruno Ocampo, fundador y CEO de Voltop",
@@ -375,12 +387,12 @@ export const media = {
       pt: "Retrato de Bruno Ocampo, fundador e CEO da Voltop",
     },
     role: {
-      es: "Atribución del beat 7. Presenta a quien habla ANTES de la cita: es su visión, no un testimonio de cliente.",
+      es: "Protagonista del beat 7, a media columna. Presenta a quien habla ANTES de la cita: es su visión, no un testimonio de cliente, así que la persona pesa tanto como sus palabras.",
       en: "Beat 7 attribution. Introduces the speaker BEFORE the quote: it's his vision, not a client testimonial.",
       pt: "Atribuição do beat 7. Apresenta quem fala ANTES da citação: é a visão dele, não um depoimento de cliente.",
     },
-    aspect: "1/1",
-    availability: "a-producir",
+    aspect: "2/3",
+    availability: "entregado",
   },
 
   /**

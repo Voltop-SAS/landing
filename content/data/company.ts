@@ -205,7 +205,7 @@ export const cases: Case[] = [
       en: "With Voltop we offer our community reliable EV charging, with an operation that works every day.",
       pt: "Com a Voltop oferecemos carregamento elétrico confiável à nossa comunidade, com uma operação que funciona todos os dias.",
     },
-    author: "Herbert Perico",
+    author: "Helbert Perico",
     role: { es: "Universidad EAN", en: "EAN University", pt: "Universidade EAN", },
     stationSlug: "universidad-ean",
     featured: true,
@@ -233,7 +233,7 @@ export type Testimonial = {
 export const testimonials: Testimonial[] = [
   {
     quote: { es: "La operación de nuestras estaciones ha sido impecable y confiable.", en: "Running our stations has been flawless and reliable.", pt: "A operação das nossas estações tem sido impecável e confiável.", },
-    author: "Herbert Perico",
+    author: "Helbert Perico",
     role: { es: "Universidad EAN", en: "EAN University", pt: "Universidade EAN", },
     organization: "Universidad EAN",
     photo: null,
@@ -258,9 +258,14 @@ export const founder: Person = {
   /* Texto entregado por Camilo el 2026-09-02 en respuesta a la propuesta
      alternativa. Sustituye a la versión anterior, que podía firmarla
      cualquier empresa de energía. */
+  /* Actualizada el 2026-09-04. El cambio está en la primera frase: "Creemos
+     que Colombia puede liderar" pasa a "Colombia tiene el potencial de
+     liderar". Deja de ser una creencia de la empresa y pasa a ser una
+     afirmación sobre el país — más firme y menos autorreferencial, que en la
+     cita del fundador es la diferencia entre una opinión y una tesis. */
   quote: {
-    es: "Creemos que Colombia puede liderar la transición hacia la movilidad eléctrica en América Latina. En Voltop estamos construyendo la infraestructura para hacerlo posible: una red confiable, escalable y cada vez más presente en el país. Lo que construimos hoy definirá cómo nos moveremos mañana.",
-    en: "We believe Colombia can lead Latin America's shift to electric mobility. At Voltop we're building the infrastructure to make it possible: a reliable, scalable network with a growing presence across the country. What we build today will define how we move tomorrow.",
-    pt: "Acreditamos que a Colômbia pode liderar a transição para a mobilidade elétrica na América Latina. Na Voltop estamos construindo a infraestrutura para tornar isso possível: uma rede confiável, escalável e cada vez mais presente no país. O que construímos hoje vai definir como nos moveremos amanhã.",
+    es: "Colombia tiene el potencial de liderar la movilidad eléctrica en América Latina. En Voltop estamos construyendo la infraestructura para hacerlo posible: una red confiable, escalable y cada vez más presente en el país. Lo que construimos hoy definirá cómo nos moveremos mañana.",
+    en: "Colombia has the potential to lead electric mobility in Latin America. At Voltop we're building the infrastructure to make it possible: a reliable, scalable network with a growing presence across the country. What we build today will define how we move tomorrow.",
+    pt: "A Colômbia tem o potencial de liderar a mobilidade elétrica na América Latina. Na Voltop estamos construindo a infraestrutura para tornar isso possível: uma rede confiável, escalável e cada vez mais presente no país. O que construímos hoje vai definir como nos moveremos amanhã.",
   },
 };

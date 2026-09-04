@@ -65,7 +65,15 @@ export function PostBody({ blocks, lang }: { blocks: PostBlock[]; lang: Locale }
           case "media":
             return (
               <figure key={i} className="my-4">
-                <Media asset={block.asset} lang={lang} corner sizes="(min-width: 768px) 46rem, 100vw" />
+                {/* Mismo criterio que la portada: un vídeo dentro del cuerpo de una
+                    entrada es una pieza que se ve, no un fondo. */}
+                <Media
+                  asset={block.asset}
+                  lang={lang}
+                  corner
+                  controls={block.asset.kind === "video"}
+                  sizes="(min-width: 768px) 46rem, 100vw"
+                />
                 {/* El rótulo se DERIVA del asset —tipo y duración— en lugar de
                     escribirse. Un "VIDEO · 1:05" a mano se queda desfasado el
                     día que se recorte la pieza y nadie lo nota. */}

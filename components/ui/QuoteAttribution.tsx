@@ -27,10 +27,22 @@ import { cn } from "@/lib/cn";
  * aquí el hueco es una superficie callada y lo que falta se declara donde
  * corresponde: en el registro de `content/data/media.ts`.
  *
+ * ── `sizes` CUENTA EL ZOOM, NO LA CAJA ────────────────────────────────────
+ * Con `sizes="96px"` la foto se veía PIXELADA, y el motivo es que `sizes` es
+ * la promesa que se le hace al optimizador. Declarando 96px, Next servía 256px
+ * de ancho; el `focus` amplía 1.75×, así que de esos 256 solo se ve 1/1.75
+ * —unos 146— estirados a 336 píxeles de dispositivo en una pantalla 2×. Eso es
+ * un aumento de 2.3× sobre el original servido: el recorte se ve mal aunque el
+ * archivo tenga 2048px.
+ *
+ * `sizes` declara ahora el ancho REAL que hay que cubrir: caja × zoom × DPR.
+ * Sigue siendo una imagen diminuta —decenas de KB en AVIF— y deja de haber
+ * ampliación.
+ *
  * ── EL REENCUADRE ESTÁ EN CSS, NO EN EL ARCHIVO ───────────────────────────
  * `focus` amplía y ancla la imagen dentro de su caja. Existe porque los
  * retratos no siempre llegan con el encuadre corto que pide una miniatura: el
- * de Herbert Perico llegó de medio cuerpo, y a 96px eso deja la cara en unos
+ * de Helbert Perico llegó de medio cuerpo, y a 96px eso deja la cara en unos
  * 35px, donde no se reconoce a nadie.
  *
  * Se hace por CSS y no editando el archivo a propósito: el original se
@@ -74,7 +86,9 @@ export function QuoteAttribution({
             src={asset.src}
             alt={t(asset.alt, lang)}
             fill
-            sizes="96px"
+            /* Ver la nota de arriba: cubre 96px de caja × 1.75 de zoom × 2 de
+               densidad, con margen. */
+            sizes="512px"
             className={cn("object-cover", focus)}
           />
         )}

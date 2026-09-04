@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { t, type Locale } from "@/lib/i18n/config";
 import { href, routes } from "@/lib/i18n/routes";
 import { home } from "@/content/copy/home";
@@ -6,7 +7,6 @@ import { media } from "@/content/data/media";
 import { getFounder } from "@/lib/data";
 import { Section, Container, Eyebrow } from "@/components/ui/layout";
 import { Media } from "@/components/ui/Media";
-import { QuoteAttribution } from "@/components/ui/QuoteAttribution";
 import { Button } from "@/components/ui/Button";
 import { Reveal } from "@/components/ui/Reveal";
 import { FilmStage } from "@/components/ui/FilmStage";
@@ -26,24 +26,56 @@ export function VisionQuote({ lang }: { lang: Locale }) {
 
   return (
     <Section id="vision" space="loose" ariaLabelledby="vision-title">
-      {/* Columna estrecha colgada del riel (antes flotaba centrada a 380px,
-          un tercer borde izquierdo distinto en la misma página). */}
-      <Container width="narrow">
-        <Reveal>
-          <Eyebrow>{t(home.vision.eyebrow, lang)}</Eyebrow>
+      {/* ── DOS COLUMNAS: LA PERSONA Y SUS PALABRAS ──────────────────────
+          Este beat era una columna estrecha con el retrato reducido a una
+          miniatura de 96px en la fila de atribución. Ahora el retrato ocupa
+          media columna en vertical, y el cambio no es de tamaño sino de
+          función: en el beat 5 la foto ACREDITA un testimonio —quién lo dijo—
+          mientras aquí la persona ES el tema. Es la visión del fundador en
+          primera persona; su cara pesa tanto como el texto.
 
-          {/* La atribución va ANTES de la cita, al contrario que en el beat 5.
-              Esto no es un testimonio de cliente: es la visión del fundador en
-              primera persona y 300 caracteres, y saber quién habla cambia cómo
-              se leen. La unidad —retrato, nombre, cargo— es la misma que allí;
-              lo que cambia es su sitio. Ver `QuoteAttribution`. */}
-          <QuoteAttribution
-            className="mt-7"
-            asset={media.retratoFundador}
-            lang={lang}
-            name={founder.name}
-            role={t(founder.role, lang)}
-          />
+          Las dos secciones de cita siguen perteneciendo al mismo sistema: el
+          mismo marco, el mismo radio estructural, el mismo hairline. Lo que
+          las separa es la escala, y la separa a propósito.
+
+          `items-center` alinea el texto contra el centro del retrato en lugar
+          de colgar los dos de arriba: con alturas distintas es lo único que
+          los lee como una unidad. */}
+      <Container>
+        <div className="grid items-center gap-10 lg:grid-cols-[2fr_3fr] lg:gap-14">
+          {/* EL RETRATO. Mismo lenguaje de superficie que las tarjetas de
+              ciudad. Pendiente de entrega: hasta que llegue es una superficie
+              callada —sin rótulo, como el resto de los huecos de este tamaño—
+              y el archivo entra con `object-cover` sin tocar el layout. */}
+          {/* Acotado al apilarse. Sin tope, a 768px la columna única le daba
+              los 702px de ancho y el 2/3 lo convertía en 1053px de alto: un
+              hueco de mil píxeles que hacía crecer la sección a 2060. Con
+              `max-w-sm` queda en 384×576 y centrado, que es una presencia
+              fuerte sin ser un muro. Desde `lg` manda la rejilla. */}
+          <div className="relative mx-auto aspect-[2/3] w-full max-w-sm overflow-hidden rounded-(--radius-structural) border border-line bg-surface-1 lg:mx-0 lg:max-w-none">
+            {media.retratoFundador.src && (
+              <Image
+                src={media.retratoFundador.src}
+                alt={t(media.retratoFundador.alt, lang)}
+                fill
+                sizes="(min-width: 1024px) 40vw, 90vw"
+                className="object-cover"
+              />
+            )}
+          </div>
+
+        <Reveal>
+          <Eyebrow tone="brand">{t(home.vision.eyebrow, lang)}</Eyebrow>
+
+          {/* Nombre y cargo ANTES de la cita. Con el retrato al lado, quién
+              habla ya está dicho visualmente; ponerlo en texto aquí lo nombra
+              antes de que empiecen 280 caracteres en primera persona, que es
+              cuando sirve saberlo. En el beat 5 va después, porque allí el
+              testimonio se acredita, no se presenta. */}
+          <p className="mt-5 text-body-s">
+            <span className="font-medium text-ink">{founder.name}</span>
+            <span className="text-ink-3"> · {t(founder.role, lang)}</span>
+          </p>
 
           {/* ── LA CITA, A ESCALA ──────────────────────────────────────────
               Estaba en `display-m md:display-l`: 52px a 1440 para casi 300
@@ -67,6 +99,7 @@ export function VisionQuote({ lang }: { lang: Locale }) {
             </Button>
           </div>
         </Reveal>
+        </div>
       </Container>
 
       <Container width="wide" className="mt-16">

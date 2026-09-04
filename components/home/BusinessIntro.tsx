@@ -28,7 +28,7 @@ export function BusinessIntro({ lang }: { lang: Locale }) {
           descuadre accidental que tenía el resto del sitio. */}
       <Container width="narrow" align="center" className="text-center">
         <Reveal>
-          <SectionHeading id="empresas-title" kicker={t(home.business.eyebrow, lang)}>
+          <SectionHeading id="empresas-title" kicker={t(home.business.eyebrow, lang)} kickerTone="brand">
             {t(home.business.title, lang)}
           </SectionHeading>
           <p className="mx-auto mt-6 max-w-[46ch] text-body-l text-ink-2">{t(home.business.lead, lang)}</p>

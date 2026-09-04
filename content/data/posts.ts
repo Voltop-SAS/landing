@@ -158,16 +158,15 @@ export const posts: Post[] = [
     stationSlug: "wake",
     citySlug: "medellin",
     featured: true,
+    /* El cuerpo abría con un bloque `media` que era EL MISMO asset que la
+       portada, así que la entrada mostraba el vídeo dos veces seguidas. Se
+       retiró el bloque y no la portada: la portada es además la imagen de los
+       metadatos y la del índice del registro.
+       
+       Con él se fue su pie de foto, "Así vivimos la apertura de Wake, nuestra
+       nueva estación de carga rápida en Medellín", y no se echa de menos:
+       repetía el titular de la propia entrada dos centímetros más abajo. */
     body: [
-      {
-        kind: "media",
-        asset: media.aperturaWake,
-        caption: {
-          es: "Así vivimos la apertura de Wake, nuestra nueva estación de carga rápida en Medellín.",
-          en: "How we experienced the opening of Wake, our new fast-charging station in Medellín.",
-          pt: "Como vivemos a abertura do Wake, nossa nova estação de carregamento rápido em Medellín.",
-        },
-      },
       {
         kind: "subtitulo",
         text: { es: "80 kW para cargar más rápido", en: "80 kW to charge faster", pt: "80 kW para carregar mais rápido", },

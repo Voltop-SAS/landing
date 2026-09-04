@@ -39,7 +39,7 @@ export async function NetworkNews({ lang }: { lang: Locale }) {
     <Section id="novedades" space="tight" className="border-t border-line" ariaLabelledby="novedades-home">
       <Container>
         <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-          <SectionHeading id="novedades-home" size="m" kicker={t(novedadesInline.home.eyebrow, lang)}>
+          <SectionHeading id="novedades-home" size="m" kicker={t(novedadesInline.home.eyebrow, lang)} kickerTone="brand">
             {t(novedadesInline.home.title, lang)}
           </SectionHeading>
           <div className="md:pb-1">

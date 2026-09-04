@@ -206,6 +206,23 @@ const headingSizes = {
   s: "text-display-s",
 } as const;
 
+/**
+ * ── EL TONO DEL ANTETÍTULO ES UNA REGLA, NO UN VALOR POR DEFECTO ──────────
+ * `muted` es el valor por omisión, y eso había producido una incoherencia
+ * visible: en la Home cuatro beats declaraban `brand` y tres se habían quedado
+ * en gris sin que nadie lo decidiera.
+ *
+ * La regla, fijada el 2026-09-04:
+ *
+ * · En la HOME el antetítulo va en `brand`. Es el registro narrativo: los ocho
+ *   beats son una secuencia y el acento verde es lo que los encadena.
+ * · En las páginas INTERNAS va en `muted`. Ahí el antetítulo rotula secciones
+ *   de documentación —capacidades, criterios, FAQ— y un acento de marca por
+ *   sección lo convertiría en textura.
+ *
+ * La única excepción es la evidencia de `/empresas`, que es narrativa dentro de
+ * una interna y lo declara explícitamente.
+ */
 export function SectionHeading({
   children,
   id,

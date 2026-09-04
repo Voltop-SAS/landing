@@ -2207,3 +2207,54 @@ Los 298 KB del JPEG llegan al navegador como **7 KB en AVIF**, medido en red.
 ### Evidencia
 
 `lint`, `tsc` y build limpios · el beat 5 servido verificado línea a línea en el orden pedido: antetítulo, titular, cita, nombre, cargo, CTA · cita medida a 1440, 768, 390 y 320px en 4/4/7/8 líneas sin desbordes · retrato 96×96 en los cuatro anchos · 27 combinaciones de ruta × viewport sin problemas · `prefers-reduced-motion` intacto.
+
+---
+
+## Bloque 56 · Copy de los beats 7, 8 y 9, retratos, y dos correcciones — 2026-09-04
+
+### El nombre es HELBERT
+
+Corregido en los dos registros donde aparecía —el caso y el testimonio— y en las notas del código. La pregunta llevaba dos rondas abierta.
+
+### El tono del antetítulo era una omisión, no una decisión
+
+En la Home cuatro beats declaraban `brand` y **tres se habían quedado en gris sin que nadie lo decidiera**: `muted` es el valor por defecto de `SectionHeading` y se colaba por omisión. En las páginas internas, en cambio, todas son grises.
+
+La regla queda fijada y escrita en la primitiva: **en la Home el antetítulo va en `brand`** —los ocho beats son una secuencia y el acento verde es lo que los encadena— y **en las internas en `muted`**, donde rotula documentación y un acento por sección lo convertiría en textura. Se ajustaron los tres beats que faltaban.
+
+### Bruno Ocampo: de miniatura a protagonista
+
+El beat 7 era una columna estrecha con el retrato reducido a 96px en la fila de atribución. Ahora es una composición a dos columnas con el retrato en 2/3 vertical a media columna —435×653 a 1440—, y el cambio no es de tamaño sino de función: en el beat 5 la foto **acredita** un testimonio; aquí la persona **es** el tema.
+
+Las dos secciones siguen en el mismo sistema —mismo marco, mismo radio, mismo hairline— y se separan en escala a propósito.
+
+El orden del beat pasa a ser antetítulo → nombre y cargo → cita → CTA: con el retrato al lado, nombrar a quien habla antes de 280 caracteres en primera persona es cuando sirve saberlo.
+
+Y la primera frase de la cita cambia: "Creemos que Colombia puede liderar" → "Colombia tiene el potencial de liderar". Deja de ser una creencia de la empresa y pasa a ser una afirmación sobre el país.
+
+**Acotado al apilarse:** sin tope, a 768px la columna única daba al retrato 702px de ancho y el 2/3 lo convertía en **1053px de alto**, con la sección creciendo a 2060. Con `max-w-sm` queda en 384×576 y centrado.
+
+### La foto de Helbert se veía pixelada, y era culpa de `sizes`
+
+`sizes` es la promesa que se le hace al optimizador. Declarando `96px`, Next servía 256px de ancho; el reencuadre amplía 1.75×, así que de esos 256 solo se veían ~146 estirados a 336 píxeles de dispositivo en pantalla 2×: **un aumento de 2.3×** sobre lo servido, aunque el archivo tenga 2048px.
+
+`sizes` declara ahora el ancho real a cubrir —caja × zoom × densidad—. Sigue siendo una imagen de decenas de KB y deja de haber ampliación.
+
+### Beats 8 y 9: copy nuevo
+
+Los cuatro pasos, el titular y el párrafo del beat 8; y el cierre del 9, cuyo titular deja de describir la acción y pasa a **preguntar**: en un cierre con dos caminos, una pregunta es lo que hace que el usuario se reconozca en uno.
+
+Dos ajustes que salieron de eso:
+
+- Las etiquetas del cierre pasan a primera persona y al **mismo largo**. Antes una tenía dos palabras y la otra seis, y en dos columnas simétricas eso se lee como que una opción pesa más.
+- El CTA del beat 8 reutiliza `actions.findCharger` en lugar de su propia clave con el mismo texto: los tres CTA que llevan a `/red` comparten rótulo, y tener una tercera clave idéntica solo multiplica los sitios donde puede divergir.
+
+### La entrada de Wake: vídeo duplicado y sin audio
+
+El `cover` del post y el primer bloque de su cuerpo eran **el mismo asset**, así que la entrada mostraba el vídeo dos veces seguidas. Solo le pasaba a esta entrada: no era un patrón. Se retiró el bloque y no la portada, que es además la imagen de los metadatos y la del índice.
+
+Y el vídeo **no tenía audio** por una razón de fondo: se renderizaba sin `controls`, así que `VideoMedia` lo trataba como material de fondo —silenciado, en bucle y sin barra—. Un vídeo que es el sujeto de la entrada se decide ver, y para eso hace falta poder darle play y oírlo. Ahora la portada y los bloques del cuerpo pasan `controls` cuando el asset es vídeo; una fotografía no cambia.
+
+### Evidencia
+
+`lint`, `tsc` y build limpios · los cuatro beats verificados en el HTML servido, línea a línea y en el orden pedido · el vídeo de la entrada: **un solo `<video>`, con `controls` y sin `muted`** · retratos servidos en 43 KB y 25 KB en AVIF · 27 combinaciones de ruta × viewport sin problemas · `prefers-reduced-motion` intacto.
