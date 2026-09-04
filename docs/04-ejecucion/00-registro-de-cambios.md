@@ -1965,3 +1965,57 @@ El pie ya reservaba 5.5rem para la barra de una fila. Con la barra a dos filas �
 ### Evidencia
 
 `lint`, `tsc` y build limpios · comportamiento verificado en `/es` y `/es/red` en escritorio y en `/es`, `/es/novedades` en móvil y a 320px: oculto al cargar, aparece tras la primera sección, **nunca se esconde a mitad**, oculto de vuelta arriba · sin texto cortado en ningún ancho · icono presente en las dos piezas · 27 combinaciones de ruta × viewport sin problemas · `prefers-reduced-motion` intacto.
+
+---
+
+## Bloque 50 · Beat 3 rediseñado contra referencia, y homologado — 2026-09-04
+
+**Por qué:** el beat de la red se rediseñó contra una referencia visual concreta que pasa a ser la fuente de verdad de su composición. Después se homologó pieza por pieza con el resto del sitio, porque fidelidad a un mockup y coherencia con un sistema no son lo mismo y aquí había que conseguir las dos.
+
+### Lo que el muestreo del mockup evitó
+
+Antes de decidir nada se muestrearon los píxeles de la referencia. Corrigió dos lecturas equivocadas y ahorró dos errores:
+
+- **El titular PARECÍA de dos tonos** —la segunda línea se veía gris—. Medido, el píxel más claro de las dos líneas es idéntico (253,253,253): era el antialias del mockup a ese tamaño. Un tono, no dos, y ninguna necesidad de partir el copy en dos campos.
+- **El contador de Medellín aparece en cian y el de Bogotá en gris.** No son dos estilos: es la misma tarjeta en hover.
+
+Todos los colores del mockup mapean a tokens que ya existían —antetítulo a `brand`, párrafo a `ink-2`, etiquetas a `ink-3`, bordes a `line`—, así que no hizo falta inventar ninguno.
+
+Y una tercera medida decidió el tamaño del titular: la altura de mayúscula de la referencia equivale a **~38px para su columna**, y `display-l` da 52px a 1440. Con 52px partía en TRES líneas y la referencia tiene DOS. `display-m` (36px) es el token que produce ese ritmo.
+
+### La composición
+
+Izquierda 52% para el contenido; derecha 48% de **aire reservado** para el render del cargador. La derecha no es un contenedor de imagen: sin fondo, sin borde, sin etiqueta y sin contenido, para que la sección se lea como una composición editorial y no como "bloque de texto | caja de foto". El sitio del render está marcado en el código con `data-charger-visual` y las tres instrucciones de sustitución.
+
+Fondo sólido `canvas`. **Sale la fotografía de suelo y con ella el FLOW** que el bloque 47 le había puesto: la referencia pide fondo plano. El escalonado de las tarjetas se conserva, y cuando llegue el render **es él quien debe llevar FLOW** — un objeto grande y vertical dentro de un marco fijo es exactamente el caso de esa primitiva.
+
+### Las dos fotos de ciudad no existen, y eso se declara
+
+`ciudadBogota` y `ciudadMedellin` quedan registradas en `media.ts` con su función narrativa y lo que hace falta producir (§33). La composición está completa —proporciones, velo de legibilidad, nombre, contador, botón circular— y el archivo entra con `object-cover` sin tocar una línea de layout. Con `fill`, además, el hueco se reduce a una insignia en una esquina: sin él imprimía su descripción completa encima del nombre de la ciudad.
+
+### La homologación
+
+Cinco piezas se alinearon con patrones que el sitio ya tenía, aunque la referencia sugiriera otra cosa:
+
+| Pieza | Se ajustó a |
+|---|---|
+| Antetítulo + titular | `SectionHeading`, la primitiva del sistema, en lugar de un `h2` a mano |
+| Contador de estaciones | `font-mono text-mono`, el registro con el que todo el sitio escribe un recuento — ver las tarjetas de `/red` |
+| Acento de hover | El **nombre** pasa a `brand`, como en `/red`. En la referencia el acento está en el contador; dos acentos por tarjeta se leen como un parpadeo |
+| Rejilla de métricas | `gap-px` sobre `bg-line`, la técnica de hairlines del sitio, en lugar de `divide-x` |
+| Microcopy junto al CTA | Mono en versales, como el pie de foto del beat 2. Esa ranura ya tenía registro decidido |
+
+### Una adición al sistema, dicha
+
+`Button` gana la variante **`light`** —relleno claro, texto oscuro— porque la referencia la pide explícitamente y ninguna de las cuatro existentes se le parece. No usa `brand-gradient`, así que no consume la única acción con gradiente que §12 permite por vista, y el texto usa `on-brand` en lugar de un negro suelto para que siga siendo una decisión del sistema.
+
+### Ajustes que salieron de medir, no de mirar
+
+- Las tarjetas se **apilan por debajo de `sm`**: a 390px en dos columnas cada una queda en 164px, el contador parte en dos líneas y el botón circular se come un tercio del ancho. Apiladas disponen de 341px.
+- Los **valores de las métricas nunca se parten** (`whitespace-nowrap`): "22–80 / kW" y "GB-T · CCS1 · / CCS2" son las dos formas de que un dato deje de leerse como un dato. La etiqueta sí puede caer a dos líneas en los anchos más justos.
+- `grow` en las celdas: sin él quedaba una franja vacía de ~20px contra el borde derecho con el hairline asomando.
+- `tracking-[0.14em]` literal → `tracking-wider`: además de estar fuera de los tokens, era lo que forzaba el reparto.
+
+### Evidencia
+
+`lint`, `tsc` y build limpios · medido a 1440, 1280, 768, 390 y 320px: fondo `rgb(10,15,26)`, **cero overflow en todos**, titular en dos líneas, métricas en una sola fila desde 768 hacia arriba y apiladas por debajo, CTA `rgb(230,233,238)` sobre `rgb(10,15,26)` — 15.7:1 · 27 combinaciones de ruta × viewport sin problemas · `prefers-reduced-motion` intacto.

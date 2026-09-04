@@ -100,12 +100,20 @@ export const home = {
 
   /* BEAT 3 · RED — índice ancho, lenguaje de ficha técnica. Intensidad: Media */
   network: {
-    eyebrow: { es: "La red", en: "The network", pt: "A rede", } satisfies Localized,
-    title: { es: "Ya está en la calle", en: "Already on the road", pt: "Já nas ruas", } satisfies Localized,
+    eyebrow: { es: "Nuestra red", en: "Our network", pt: "Nossa rede", } satisfies Localized,
+    title: {
+      es: "Encuentra dónde cargar tu carro eléctrico",
+      en: "Find where to charge your electric car",
+      pt: "Encontre onde carregar seu carro elétrico",
+    } satisfies Localized,
     lead: {
-      es: "Estaciones en operación en puntos donde la gente ya se detiene: universidades, hoteles, centros comerciales y corredores de salida.",
-      en: "Stations live in places where people already stop: universities, hotels, shopping centers and exit corridors.",
-      pt: "Estações em operação em lugares onde as pessoas já param: universidades, hotéis, shoppings e corredores de saída.",
+      /* Nombra las dos ciudades a mano, y eso hay que saberlo: es la ÚNICA
+         frase del sitio que se queda obsoleta al abrir una tercera. El resto
+         de esta sección se calcula desde el dataset. Cuando llegue la tercera
+         ciudad, esta línea es la que hay que tocar. */
+      es: "Consulta las estaciones de carga Voltop disponibles en Bogotá y Medellín.",
+      en: "See the Voltop charging stations available in Bogotá and Medellín.",
+      pt: "Veja as estações de carregamento Voltop disponíveis em Bogotá e Medellín.",
     } satisfies Localized,
     /* Etiquetas de los agregados. Las CIFRAS no están aquí: se calculan desde
        el dataset en `getNetworkSummary`, porque una cifra escrita a mano deja
@@ -116,6 +124,14 @@ export const home = {
       connectors: { es: "Conectores", en: "Connectors", pt: "Conectores" } satisfies Localized,
     },
     live: { es: "en operación", en: "live", pt: "em operação" } satisfies Localized,
+    /* Microcopy junto al CTA. No es una promesa con fecha —§19 no admite
+       titulares que el producto no cumpla— sino el estado de una red que
+       crece: dice que esto no está terminado sin comprometer un plazo. */
+    moreCities: {
+      es: "Más ciudades en camino",
+      en: "More cities on the way",
+      pt: "Mais cidades em breve",
+    } satisfies Localized,
   },
 
   /* BEAT 4 · EMPRESAS — columna estrecha, respiración. Intensidad: Media-baja */

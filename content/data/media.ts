@@ -265,6 +265,61 @@ export const media = {
   },
 
   /**
+   * CIUDADES · BEAT 3.
+   *
+   * Las dos tarjetas de cobertura tienen la fotografía como elemento
+   * dominante: es lo que convierte "Bogotá · 2 estaciones" en un sitio real al
+   * que se puede ir. Sin ella la tarjeta es una etiqueta con un número.
+   *
+   * Ninguna de las dos está entregada, así que la composición se construye
+   * con el hueco declarado (§33): las proporciones, el velo de legibilidad, el
+   * nombre, el contador y el botón circular ya están en su sitio, y el archivo
+   * entra con `object-cover` sin tocar una línea de layout.
+   *
+   * QUÉ HACE FALTA: una vista reconocible de cada ciudad en 16/9 horizontal,
+   * con la zona inferior izquierda despejada —ahí caen el nombre y el
+   * contador— y la inferior derecha también, donde va el botón. Al atardecer o
+   * de noche, para que no rompa el registro oscuro del sitio.
+   */
+  ciudadBogota: {
+    id: "ciudad-bogota",
+    kind: "photo",
+    src: null,
+    poster: null,
+    alt: {
+      es: "Vista de Bogotá, ciudad donde Voltop tiene estaciones de carga en operación",
+      en: "View of Bogotá, a city where Voltop has charging stations in service",
+      pt: "Vista de Bogotá, cidade onde a Voltop tem estações de carregamento em operação",
+    },
+    role: {
+      es: "Tarjeta de cobertura del beat 3. Da lugar real a la cifra de estaciones de Bogotá.",
+      en: "Beat 3 coverage card. Gives a real place to Bogotá's station count.",
+      pt: "Cartão de cobertura do beat 3. Dá um lugar real à contagem de estações de Bogotá.",
+    },
+    aspect: "16/9",
+    availability: "a-producir",
+  },
+
+  ciudadMedellin: {
+    id: "ciudad-medellin",
+    kind: "photo",
+    src: null,
+    poster: null,
+    alt: {
+      es: "Vista de Medellín, ciudad donde Voltop tiene estaciones de carga en operación",
+      en: "View of Medellín, a city where Voltop has charging stations in service",
+      pt: "Vista de Medellín, cidade onde a Voltop tem estações de carregamento em operação",
+    },
+    role: {
+      es: "Tarjeta de cobertura del beat 3. Da lugar real a la cifra de estaciones de Medellín.",
+      en: "Beat 3 coverage card. Gives a real place to Medellín's station count.",
+      pt: "Cartão de cobertura do beat 3. Dá um lugar real à contagem de estações de Medellín.",
+    },
+    aspect: "16/9",
+    availability: "a-producir",
+  },
+
+  /**
    * PELÍCULA DE MARCA · entregada el 2026-09-02 (`Video Home.mov`, 377 MB).
    *
    * ── NO ES MATERIAL DE FONDO, Y ESO DECIDE CÓMO SE INTEGRA ────────────────

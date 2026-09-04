@@ -132,7 +132,7 @@ export const actions = {
      dos llevan a `/red` y emiten el mismo evento. En el cierre, además, deja
      de repetir palabra por palabra el texto que tiene justo encima. */
   findCharger: { es: "Encuentra una estación", en: "Find a station", pt: "Encontre uma estação", } satisfies Localized,
-  seeNetwork: { es: "Ver la red completa", en: "See the full network", pt: "Ver a rede completa", } satisfies Localized,
+  seeNetwork: { es: "Explora la red completa", en: "Explore the full network", pt: "Explore a rede completa", } satisfies Localized,
   businessSolutions: { es: "Soluciones para empresas", en: "Business solutions", pt: "Soluções para empresas", } satisfies Localized,
   talkToTeam: { es: "Hablar con el equipo", en: "Talk to the team", pt: "Falar com o time", } satisfies Localized,
   /* "Conoce" y no "Ver": invita a entrar en la ficha, no a mirar una foto. En

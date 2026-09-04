@@ -16,7 +16,7 @@ import { cn } from "@/lib/cn";
  * - Navegación interna SIEMPRE con next/link (§26).
  */
 
-type Variant = "primary" | "secondary" | "ghost" | "link";
+type Variant = "primary" | "secondary" | "ghost" | "link" | "light";
 type Size = "l" | "m" | "s";
 type Shape = "pill" | "structural";
 
@@ -78,6 +78,19 @@ const variants: Record<Variant, string> = {
   secondary: "bg-surface-2 text-ink border border-line-control hover:bg-surface-3",
   ghost: "text-ink border border-line-control hover:border-line-strong hover:bg-surface-1",
   link: "text-ink-2 hover:text-ink px-0 min-h-11",
+  /**
+   * `light` — relleno claro con texto oscuro.
+   *
+   * Entró con el rediseño del beat 3, cuya referencia visual lo pide de forma
+   * explícita. Se muestreó el mockup antes de decidirlo: el relleno es blanco
+   * y el texto oscuro, no una variante de las que ya había.
+   *
+   * NO usa `brand-gradient`, así que no consume la única acción con gradiente
+   * que §12 permite por vista. Y usa `on-brand` para el texto —el mismo tono
+   * oscuro que ya se usa sobre los colores de marca— en lugar de un negro
+   * suelto, para que siga siendo una decisión del sistema y no de un botón.
+   */
+  light: "bg-ink text-on-brand font-semibold hover:bg-white",
 };
 
 function Inner({
