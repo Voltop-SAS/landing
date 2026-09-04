@@ -72,11 +72,3 @@ function dispatch({ event, props }: QueuedEvent): void {
 export function track(event: EventName, props: EventProps = {}): void {
   dispatch({ event, props });
 }
-
-/**
- * Handler listo para `onClick`. Evita repetir arrow functions en la UI y
- * mantiene los nombres de evento en un único sitio tipado.
- */
-export function trackClick(event: EventName, props: EventProps = {}) {
-  return () => track(event, props);
-}

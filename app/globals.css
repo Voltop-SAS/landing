@@ -43,7 +43,6 @@
      es el color de acento y `brand-2` el segundo punto del gradiente. */
   --color-brand: #51d9b2;     /* marca · Brand secondary — 10.87:1 sobre canvas */
   --color-brand-2: #0fc7e1;   /* marca · Brand primary   —  9.38:1 sobre canvas */
-  --color-brand-press: #0fc7e1;
   /* Sobre los dos colores de marca el texto tiene que ser OSCURO: el blanco
      da 2.04:1 y el fondo de marca 9.38:1. Medido, no supuesto. */
   --color-on-brand: #0a0f1a;
@@ -225,10 +224,8 @@
    */
   --ease-overshoot: cubic-bezier(0.34, 1.56, 0.64, 1);
 
-  --duration-instant: 120ms;
   --duration-fast: 200ms;
   --duration-base: 320ms;
-  --duration-slow: 600ms;
   --duration-reveal: 700ms;
 }
 

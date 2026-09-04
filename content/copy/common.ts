@@ -447,15 +447,17 @@ export const footer = {
   ],
 
   /**
-   * Enlaces sin destino real NO se publican (§15). La app y los términos y
+   * §15: un enlace sin destino real no se publica. Estos dos lo tienen —los
+   * documentos legales están escritos y publicados—, así que van en el pie.
+   *
+   * Aquí vivía `legalNotice`: "Prototipo · contenido provisional", heredado de
+   * cuando esto era una maqueta. Se retiró el 2026-09-03 porque ya no era
+   * cierto y sí era visible en TODAS las páginas: la marca es la definitiva,
+   * los datos de la red están verificados y los legales están publicados.
+   * Un sitio que se declara provisional en el pie invita a no creerse el resto.
    */
   terms: { es: "Términos y condiciones", en: "Terms and conditions", pt: "Termos e condições", } satisfies Localized,
   privacy: { es: "Tratamiento de datos", en: "Data processing", pt: "Tratamento de dados", } satisfies Localized,
-  legalNotice: {
-    es: "Prototipo · contenido provisional",
-    en: "Prototype · provisional content",
-    pt: "Protótipo · conteúdo provisório",
-  } satisfies Localized,
   rights: { es: "Todos los derechos reservados.", en: "All rights reserved.", pt: "Todos os direitos reservados.", } satisfies Localized,
 };
 

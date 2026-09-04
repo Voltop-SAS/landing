@@ -351,8 +351,3 @@ export const media = {
 } satisfies Record<string, MediaAsset>;
 
 export type MediaKey = keyof typeof media;
-
-/** Un asset está listo cuando tiene archivo. Mientras tanto, la UI muestra su hueco declarado. */
-export function isReady(asset: MediaAsset): boolean {
-  return asset.src !== null;
-}

@@ -40,37 +40,42 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# Skills instaladas desde el ecosistema (3.9 MB / 167 archivos de terceros).
-# Se restauran con `npx skills experimental_install` a partir de
-# skills-lock.json, que SÍ está versionado. Las skills propias del proyecto
-# (.claude/skills/voltop-*) son código fuente y siguen versionadas.
-/.claude/skills/impeccable/
-/.claude/skills/animate/
-/.claude/skills/emil-design-eng/
-/.claude/skills/design-taste-frontend/
-/.claude/skills/design-critique/
-/.claude/skills/information-architect/
-/.claude/skills/accessibility-auditor/
-/.claude/skills/content-copy-designer/
+# Skills instaladas desde el ecosistema. Se restauran con
+# `npx skills experimental_install` a partir de skills-lock.json, que SÍ está
+# versionado. Las skills propias del proyecto (.claude/skills/voltop-*) son
+# código fuente y siguen versionadas.
+#
+# Van en DOS sitios porque el CLI cambió de destino: las viejas se copiaron en
+# `.claude/skills/` (3.9 MB) y las nuevas aterrizan en `.agents/skills/`
+# (19 MB / 374 archivos — 14 MB son los assets de `token-optimizer` y 3.9 MB
+# los datos de `ui-ux-pro-max`), con un ENLACE SIMBÓLICO en `.claude/skills/`.
+#
+# Esos enlaces tampoco se versionan: apuntan a `.agents/`, que está ignorado,
+# así que en otro clon serían 32 enlaces rotos.
+#
+# La regla se invierte a lista blanca en lugar de enumerar una a una las de
+# terceros: se ignora todo lo que cuelgue de `.claude/skills/` y se rescata lo
+# nuestro. Así una skill instalada mañana queda ignorada sin que nadie tenga
+# que acordarse de añadirla aquí — que es exactamente el descuido que dejó 19
+# MB de código ajeno a un `git add .` de distancia.
+/.agents/
+/.claude/skills/*
+!/.claude/skills/voltop-*/
 
 # ── MÁSTERES DE MEDIA ─────────────────────────────────────────────────────
-# 481 MB de originales que viven en `public/` para poder derivar de ellos, y
-# que NUNCA deben entrar en git: un binario de ese tamaño en el árbol es
-# PERMANENTE — quitarlo después exige reescribir la historia del repositorio.
-#
-# Estaban sin trackear y sin ignorar, que es la peor combinación posible: un
-# `git add .` distraído los commitea y ya no hay vuelta atrás.
+# Los 473 MB de originales YA NO viven en el repositorio: están en
+# `~/Voltop-masters-originales/` con su propio LEEME. Las reglas que los
+# ignoraban por nombre (`/public/Hero.png`, `/public/Video Home.mov`…) se
+# retiraron al quedarse sin objeto — una regla que no protege nada solo hace
+# creer que protege algo.
 #
 # Lo que se sirve son las derivadas optimizadas, que sí están versionadas:
 # hero-vehiculo-cargando.jpg, estacion-infraestructura.jpg,
 # estacion-medellin-loop.mp4 y voltop-film.mp4.
 #
-# PENDIENTE: archivar los másteres fuera del repositorio (Drive, S3) y dejar
-# aquí solo un puntero. Mientras tanto, ignorarlos evita el daño irreversible.
-/public/Hero.png
-/public/Hero_Banner.png
-/public/Video Home.mov
-/public/estacion-medellin.mp4
+# SIGUE PENDIENTE subirlos a un almacenamiento compartido: hoy existen en una
+# sola máquina. Y si alguna vez vuelve un máster a `public/`, hay que volver a
+# ignorarlo: `public/` entero SÍ se versiona.
 
 # Scripts de verificación de un solo uso (capturas, contraste, foco). Se
 # escriben, se ejecutan y se tiran: no son código de producto y versionarlos

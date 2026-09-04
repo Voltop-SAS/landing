@@ -98,7 +98,6 @@ export function Footer({ lang }: { lang: Locale }) {
             >
               {t(footer.privacy, lang)}
             </Link>
-            <p className="font-mono">{t(footer.legalNotice, lang)}</p>
           </div>
         </div>
       </Container>

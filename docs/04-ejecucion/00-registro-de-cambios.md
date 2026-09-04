@@ -1799,3 +1799,53 @@ En móvil los botones van en **rejilla de dos columnas, no en `flex-1`**. Con `f
 
 `lint`, `tsc` y build limpios · sin copy nuevo (ninguna cadena añadida ni retirada) · franja `fixed` de ancho completo verificada a 1440 / 768 / 390 / 320px (alto 118 / 138 / 223 / 244), radio 0, foco entrando en la región al aparecer, sin desbordamiento de texto en ninguno · botones **164 = 164** a 390px y **130 = 130** a 320px, altura 44 en los cuatro anchos · flotante: visible tras aceptar cookies → oculto al pulsar la X → **sigue oculto** navegando a `/red` sin recargar → **visible tras recargar** · `localStorage` final: solo `voltop:cookies`, la clave `voltop:app-flotante-cerrado` ya no existe en el código.
 
+---
+
+## Bloque 46 · Auditoría integral y limpieza — 2026-09-03
+
+**Por qué:** el proyecto llevaba muchas iteraciones y convenía sanearlo antes de seguir construyendo. La auditoría buscó lo de siempre —archivos sin uso, componentes muertos, duplicados, assets huérfanos, tokens obsoletos, dependencias sin usar, deuda evidente— y el resultado fue el contrario del esperado: **el código estaba limpio**. Los 38 componentes se usan, los 9 assets de `public/` se referencian, las 5 dependencias se importan, no hay archivos duplicados y no queda ni un `TODO`. Las 30 combinaciones de ruta × viewport pasadas por navegador salieron sin desbordes, sin `img` sin `alt`, sin enlaces sin nombre accesible, sin objetivos táctiles menores de 44px y con un `h1` por página.
+
+Lo que sí sobraba estaba en tres sitios: las skills instaladas, cuatro funciones muertas y un sello heredado.
+
+### Lo retirado
+
+| Qué | Por qué |
+|---|---|
+| `trackClick`, `getCases`, `getPostTypes`, `isReady` | Cero consumidores, verificado símbolo por símbolo. `getPostTypes` alimentaba el filtro de novedades, descartado a conciencia hasta las ~15 entradas |
+| `--color-brand-press`, `--duration-instant`, `--duration-slow` | Tres tokens declarados que no usa nadie |
+| **Poppins 900** | Se cargaba "por si acaso" y ningún componente la usaba: un archivo de fuente que nadie llegaba a ver. El logotipo no la necesita, es un SVG |
+| 4 reglas de `.gitignore` | Protegían másteres que ya viven fuera del repositorio. Una regla que no protege nada hace creer que protege algo |
+| **30 de 47 skills** | Detalle abajo |
+
+### El sello de prototipo
+
+`legalNotice: "Prototipo · contenido provisional"` salía en el pie de **todas** las páginas. Se retiró porque ya no era cierto: la marca es la definitiva, los datos de la red están verificados y los legales están publicados. Un sitio que se declara provisional en el pie invita a no creerse el resto.
+
+### `app.voltop.co` ya funciona
+
+Estaba registrado como bloqueante nº 1 con un 503, y el CTA principal del header apuntando a nada. **Hoy responde**: 307 a `/download` y 200 con una página real de descarga. No hay nada que cambiar en el código —el enlace siempre fue correcto—, pero deja de ser un bloqueante.
+
+### Las skills: de 47 a 17
+
+El riesgo no era el disco: **quince skills genéricas de diseño competían con las siete `voltop-*`**, que son el criterio escrito de este proyecto. Una recomendación genérica que contradice el design system propio lo diluye.
+
+Se conservan las 7 `voltop-*`, las de motion de Emil Kowalski (`emil-design-eng`, `animate`, `review-animations`, `improve-animations`, `apple-design`), `accessibility-auditor`, `skill-creator`, y tres opcionales (`humanizer`, `systematic-debugging`, `brainstorming`).
+
+Se retiraron las redundantes (`ui-ux-pro-max`, `impeccable`, `design-taste-frontend`, `design-critique`, `content-copy-designer`, `information-architect`, el `code-review` de terceros que tapaba al nativo) y las que no aportaban aquí (`token-optimizer` —14 MB y lectura de transcripciones—, `caveman`, `napkin`, `context-mode` —espera un hook inexistente—, `gsd`, `feature-dev` y once de las catorce de superpowers).
+
+De paso: `npx eslint .` fallaba con 21 problemas **del código de las skills**, no del proyecto. `.agents/**` se añadió a los ignores, junto a `.claude/**` que ya estaba.
+
+### Lo que NO se tocó, y por qué
+
+La auditoría propuso dos consolidaciones. **Al leer el código, las dos eran errores:**
+
+- **`Media` / `VideoMedia`** no se pueden fundir: `Media` es Server Component y `VideoMedia` es cliente porque necesita leer `prefers-reduced-motion`. Unirlos mandaría al cliente también la fotografía.
+- **Los cuatro componentes de novedades son cuatro a propósito.** El registro con separadores de año, la lista compacta de las fichas y el beat de la Home tienen estructuras deliberadamente distintas: §36.11 pide que dos superficies vecinas no repitan estructura.
+
+Lo que sí estaba triplicado era **la regla**, no la forma: los tres sitios repetían el ternario `hasPage(post) ? <Link className="group…"> : <div>`. Tres copias de una regla son tres sitios donde puede divergir. Ahora vive en `PostLink` y cada lista sigue trayendo su propia rejilla.
+
+De camino apareció una clase muerta: el enlace del registro llevaba `block` y `grid` a la vez. Ganaba `grid`; `block` no hacía nada.
+
+### Evidencia
+
+`lint`, `tsc` y build limpios · 50 páginas generadas · el refactor verificado **antes y después en el navegador**: alto, número de enlaces y texto **idénticos** en las tres listas y en el pie · geometría de fila confirmada (`display:grid`, `144px 960px` en el registro; `144px 874px 62px` en la Home) · `app.voltop.co` comprobado con `curl` siguiendo la redirección.

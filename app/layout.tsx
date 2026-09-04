@@ -51,18 +51,19 @@ import { brand } from "@/content/copy/common";
  *
  * Es la familia del logotipo, así que los titulares y la marca hablan con la
  * misma voz. Poppins NO es variable en Google Fonts: cada peso es un archivo,
- * y por eso se piden SOLO los dos que el sitio usa —500 y 600, contados en el
- * código— más el 900. Sin declararlos, el navegador sintetiza el semibold
- * engordando el trazo, y en un titular de 80px eso se ve sucio.
+ * y por eso se piden SOLO los dos que el sitio usa, 500 y 600, contados en el
+ * código. Sin declararlos, el navegador sintetiza el semibold engordando el
+ * trazo, y en un titular de 80px eso se ve sucio.
  *
- * El 900 se carga porque es el peso del archivo de marca (`Poppins-Black`) y
- * está disponible para titulares más rotundos. Hoy no lo usa ningún
- * componente: decisión pendiente.
+ * El 900 (`Poppins-Black`, el peso del archivo de marca) SE RETIRÓ: se cargaba
+ * "por si acaso" y ningún componente lo usaba, así que era un archivo de fuente
+ * que nadie llegaba a ver nunca. El logotipo no lo necesita —es un SVG—. Si
+ * algún día se quieren titulares más rotundos, se vuelve a añadir aquí.
  */
 const display = Poppins({
   variable: "--font-display-raw",
   subsets: ["latin"],
-  weight: ["500", "600", "900"],
+  weight: ["500", "600"],
   display: "swap",
 });
 /**

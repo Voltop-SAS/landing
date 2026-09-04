@@ -205,10 +205,6 @@ export function getBusinessSegments() {
   return businessSegments;
 }
 
-export function getCases(): Case[] {
-  return cases;
-}
-
 export function getFeaturedCase(): Case | undefined {
   return cases.find((c) => c.featured);
 }
@@ -309,17 +305,6 @@ export async function getPostsForStation(stationSlug: string): Promise<Post[]> {
 
 export async function getPostsForCity(citySlug: string): Promise<Post[]> {
   return (await getPosts()).filter((p) => p.citySlug === citySlug);
-}
-
-/**
- * Tipos PRESENTES en el registro, en el orden en que aparecen.
- * El filtro se construye desde los datos: un filtro que ofrece una opción sin
- * resultados es un control decorativo, y §12 los prohíbe.
- */
-export async function getPostTypes(): Promise<PostType[]> {
-  const seen: PostType[] = [];
-  for (const p of await getPosts()) if (!seen.includes(p.type)) seen.push(p.type);
-  return seen;
 }
 
 /** Fecha de la entrada más reciente. Alimenta `lastModified` del índice. */

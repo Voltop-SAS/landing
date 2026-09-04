@@ -66,7 +66,7 @@ Cerrado en esta sesión, de un vistazo:
 
 | # | Qué | Nota |
 |---|---|---|
-| 1 | **`app.voltop.co` devuelve 503** | Decisión de Camilo: dejar el enlace como está y esperar al equipo técnico. **Es el CTA principal del header**, así que hoy ese botón no lleva a ninguna parte. Las insignias de tienda sí funcionan |
+| ~~1~~ | ~~`app.voltop.co` devuelve 503~~ **RESUELTO 2026-09-03** | Comprobado: responde 307 → `/download` y sirve una página real de descarga. El CTA del header siempre apuntó bien; ya no hay nada que decidir |
 | 2 | **Cinco assets** (`aperturaEan`, `visionCeo`, `infraestructuraAmplia`, `espacioComercial`, `detalleCarga`) | `/empresas` y `/nosotros` **abren con un hueco declarado**. Aplazado a propósito |
 | 3 | **Máster de la película sin subtítulos quemados + 3 `.vtt`** | Único incumplimiento WCAG AA vivo. Aplazado a propósito |
 | 4 | **Consulta legal sobre el aviso de cookies** | El aviso está montado y funciona. Falta que un abogado confirme que la redacción y el mecanismo bastan |
@@ -85,7 +85,7 @@ Cerrado en esta sesión, de un vistazo:
 |---|---|---|
 | 8 | **El vídeo de Wake es el mismo archivo que la película de la Home** | Se ve en dos sitios: bajo "Visión" con la cita de Bruno, y en la noticia. ¿Se acepta la repetición o se separan las piezas? |
 | 9 | **`voltop-film.mp4` (28 MB) versionado en git** | Funciona. Solo compensa moverlo cuando crezca el catálogo de vídeo |
-| 10 | **Poppins Black (900) está cargada y sin usar** | Es el peso del logotipo. ¿Titulares más rotundos? |
+| ~~10~~ | ~~Poppins Black (900) cargada y sin usar~~ **CERRADO 2026-09-03** | Se retiró en la limpieza: se cargaba sin que ningún componente la usara. Si algún día se quieren titulares más rotundos, se vuelve a añadir en `app/layout.tsx` |
 | 11 | **Formulario por `mailto:`** | Funciona sin servidor, pero pierde a quien no tenga cliente de correo y expone las tres direcciones. Un servicio de formularios lo resuelve y solo cambia una función |
 
 ### Descartado conscientemente
@@ -126,6 +126,21 @@ el scroll programático, y el contraste hay que medirlo sobre el píxel
 compuesto a percentil 99, no sobre el token—. Están en los bloques 12, 17 y 34.
 
 ---
+
+## Después de la limpieza del 2026-09-03
+
+El código quedó auditado entero (ver Bloque 46 del registro). Lo que conviene
+saber al volver:
+
+- **El pie ya no dice "Prototipo · contenido provisional".** Se retiró: era
+  falso y salía en todas las páginas.
+- **Quedan 17 skills, no 47.** Las genéricas de diseño se retiraron porque
+  competían con las siete `voltop-*`, que son el criterio de este proyecto.
+- **`PostLink` es nuevo** y centraliza la regla §15 —enlazar solo si hay
+  destino— que estaba copiada en las tres listas de novedades. Las listas
+  siguen siendo visualmente distintas a propósito.
+- **`Media` y `VideoMedia` no se funden nunca**: uno es servidor, el otro
+  cliente porque lee `prefers-reduced-motion`.
 
 ## Lo siguiente, si hubiera que elegir
 
