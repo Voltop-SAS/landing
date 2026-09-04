@@ -2,14 +2,16 @@
 
 Estado a **2026-09-04**. Este documento existe para que el proyecto pueda
 retomarse desde el repositorio corporativo **sin reconstruir su contexto a
-mano**. Clasifica cada pieza según si viaja con el código, si se reinstala, o si
-depende de algo externo.
+mano**. Clasifica cada pieza según si viaja con el código, si hay que
+instalarla, o si depende de algo externo.
 
 ---
 
 ## A · Viaja con el proyecto
 
-Está dentro del repositorio y llega con el ZIP. No hay que hacer nada.
+Está dentro del repositorio y llega con el ZIP. No hay que hacer nada. Desde el
+2026-09-04 esto **incluye las skills de terceros**, que antes había que
+reinstalar (ver la sección B).
 
 | Pieza | Dónde | Qué es |
 |---|---|---|
@@ -35,19 +37,34 @@ decisiones sean consistentes entre sesiones.
 | `voltop-quality-compliance` | WCAG 2.1 AA, Core Web Vitals, SEO técnico y cumplimiento de datos |
 | `voltop-review-gate` | El gate de calidad: UX → UI → Responsive → A11y → Motion → Performance → QA |
 
-## B · No se versiona, pero se reinstala
+## B · Las 10 skills de terceros — también viajan
 
-Skills de terceros. **No van en el repositorio a propósito** —código ajeno, y
-`.gitignore` las excluye— pero `skills-lock.json` **sí viaja**, así que se
-restauran con un comando.
+**Cambió el 2026-09-04.** Antes se ignoraban y se restauraban con
+`npx skills experimental_install`. Ahora van dentro del repositorio.
 
-```bash
-npx skills experimental_install     # restaura desde skills-lock.json
-```
+El motivo no es técnico: quien clonaba se encontraba el proyecto **sin el
+criterio con el que se construyó**, y tenía que saber que existía un paso extra
+para recuperarlo. Las skills son parte de cómo se trabaja aquí. Pesan 644 KB
+entre las dos carpetas; el argumento del tamaño no aplicaba.
 
-Instaladas al cierre (10): `accessibility-auditor`, `animate`,
-`emil-design-eng`, `apple-design`, `review-animations`, `improve-animations`,
-`skill-creator`, `humanizer`, `systematic-debugging`, `brainstorming`.
+Instaladas (10): `accessibility-auditor`, `animate`, `emil-design-eng`,
+`apple-design`, `review-animations`, `improve-animations`, `skill-creator`,
+`humanizer`, `systematic-debugging`, `brainstorming`.
+
+**Están en dos sitios, y siete son enlaces simbólicos.** El CLI de skills cambió
+de destino a mitad del proyecto: las de terceros viven de verdad en
+`.agents/skills/`, y `.claude/skills/` tiene siete enlaces relativos que apuntan
+allí. Los enlaces se versionan y resuelven bien porque su destino también viaja.
+
+> **En Windows** los enlaces simbólicos de git necesitan `core.symlinks=true` y
+> modo desarrollador activado. Si aparecen como ficheros de texto con una ruta
+> dentro, es eso. En macOS y Linux no hay que configurar nada.
+
+`skills-lock.json` sigue versionado: ya no hace falta para instalar, pero dice
+de qué versión viene cada una y permite actualizarlas con `npx skills update`.
+
+Dos traen licencia de terceros y viaja con su código, que es lo que ambas
+exigen: `skill-creator` (Apache 2.0) y `humanizer` (MIT).
 
 > Se retiraron 30 skills el 2026-09-03. El motivo no era el disco: **quince
 > skills genéricas de diseño competían con las siete `voltop-*`**, que son el

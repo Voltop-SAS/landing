@@ -92,24 +92,27 @@ compilación. Si ves ese error, no es el build: falta copy.
 
 1. Crea la rama de integración desde la base que uses (`main`, `develop`…).
 2. Copia el contenido del ZIP **tal cual**. Ya viene sin `node_modules`, sin
-   `.next`, sin `.env` y sin skills de terceros.
+   `.next` y sin `.env`. **Sí trae las skills y los ficheros de agente**: son
+   parte del proyecto, no configuración personal (ver el punto 4).
 3. **Conserva `.gitignore` como está.** Cada regla que no es obvia está
    comentada en el propio archivo. Las que se pierden si lo sustituyes por la
    plantilla corporativa:
 
    | Regla | Por qué |
    |---|---|
-   | `/.claude/skills/*` **salvo** `!voltop-*/` | Las siete `voltop-*` son código fuente del proyecto; el resto son de terceros y se reinstalan |
-   | `/.agents/` entera | Instalación de terceros, reproducible desde `skills-lock.json` |
    | `.env*` **salvo** `!.env.example` | El ejemplo es el único que debe viajar, y `.env*` se lo traga |
-   | `/.claude/settings.local.json` | Permisos de una máquina concreta: rutas absolutas de un `$HOME` y de un Chrome instalado en un sitio concreto |
-   | `/CLAUDE.md` y `/AGENTS.md` | Los escribe `next dev` en cada arranque; van atados a la versión de Next instalada y se regeneran solos |
+   | `/.claude/settings.local.json` | Permisos de una máquina concreta: rutas absolutas de un `$HOME` y de un Chrome instalado en un sitio concreto. Lo único de `.claude/` que NO viaja |
+   | `/*.mjs` en la raíz | Scripts de verificación de un solo uso |
 
    Aviso al verificar negaciones: **`git check-ignore` devuelve 0 también cuando
    la regla que casa es una negación**, así que un fichero rescatado "parece"
    ignorado. Lo que da la respuesta buena es `git add --dry-run`.
-4. **Conserva `.claude/skills/voltop-*/` y `skills-lock.json`.** Son el criterio
-   del proyecto, no configuración personal. Ver `docs/ENTORNO-Y-SKILLS.md`.
+4. **Conserva `.agents/`, `.claude/skills/` entera y `skills-lock.json`.** Son
+   el criterio con el que se construyó el proyecto, no configuración personal.
+   Siete entradas de `.claude/skills/` son **enlaces simbólicos** a
+   `.agents/skills/`: si los conviertes en copias o borras `.agents/`, se
+   rompen. En Windows hacen falta `core.symlinks=true` y modo desarrollador.
+   Ver `docs/ENTORNO-Y-SKILLS.md`.
 5. Ejecuta los checks del punto 8 **antes** de abrir el PR.
 6. En el PR, indica que es una integración de fidelidad 1:1 y que los cambios de
    UI/UX quedan fuera de alcance.
@@ -196,9 +199,10 @@ hacerlo sin reconstruir el contexto:
 - **`docs/` completo debe seguir en el repositorio.** No es documentación
   histórica: `MASTER-PROJECT-DEFINITION.md` es normativo y el registro de
   cambios es la memoria del proyecto.
-- **`.claude/skills/voltop-*/` debe seguir versionado.**
-- **`skills-lock.json` debe seguir versionado**, o las skills de terceros no se
-  pueden restaurar.
+- **`.agents/` y `.claude/skills/` deben seguir versionadas enteras**, con sus
+  siete enlaces simbólicos intactos.
+- **`skills-lock.json` debe seguir versionado**: dice de qué versión viene cada
+  skill de terceros y es lo que permite actualizarlas.
 - Si cambias scripts, estructura de carpetas o convenciones, **documéntalo en el
   registro de cambios** con el mismo formato: qué cambió, por qué, y con qué se
   validó.
