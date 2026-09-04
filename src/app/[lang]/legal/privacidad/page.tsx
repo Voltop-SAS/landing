@@ -2,9 +2,9 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { isLocale, t, type Locale } from '~/core/common/domain/i18n/config'
 import { routes, alternatesFor } from '~/core/common/domain/i18n/routes'
-import { legal } from '@/content/copy/legal'
-import { legalDocs } from '@/content/data/legal-docs'
-import { LegalDocument } from '@/components/legal/LegalDocument'
+import { legal } from '~/core/legal/domain/consts/copy'
+import { legalDocs } from '~/core/legal/infrastructure/content/legalDocs'
+import { LegalDocument } from '~/core/legal/infrastructure/ui/components/LegalDocument'
 
 type Props = { params: Promise<{ lang: string }> }
 

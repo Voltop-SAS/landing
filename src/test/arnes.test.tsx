@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 import { t, defaultLocale } from '~/core/common/domain/i18n/config'
-import { home } from '@/content/copy/home'
+import { home } from '~/core/home/domain/consts/copy'
 
 describe('arnes de test', () => {
   it('resuelve los alias de tsconfig', () => {

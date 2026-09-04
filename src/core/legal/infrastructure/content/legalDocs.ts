@@ -22,25 +22,8 @@
  * un problema legal.
  */
 
-export type LegalBlock = { tipo: 'parrafo'; texto: string } | { tipo: 'lista'; items: string[] }
+import type { LegalDoc, LegalSection } from '~/core/legal/domain/entities/LegalDoc'
 
-export type LegalSection = {
-  /** Ancla estable: la usa el índice de contenidos. */
-  id: string
-  heading: string
-  body: LegalBlock[]
-}
-
-export type LegalDoc = {
-  titulo: string
-  /** Fecha tal cual la emitió el área legal. */
-  actualizado: string
-  /** ISO, para `<time dateTime>` y para el sitemap. */
-  actualizadoISO: string
-  secciones: LegalSection[]
-}
-
-/** TÉRMINOS Y CONDICIONES DE USO PLATAFORMA, APLICACIÓN, SITIO WEB Y ESTACIONES DE CARGA VOLTOP */
 const termsSections: LegalSection[] = [
   {
     id: 'quienes-somos-y-objeto',

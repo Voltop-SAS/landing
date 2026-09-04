@@ -12,7 +12,7 @@ import {
 import { duration, ease } from '@ui/common/lib/motion'
 import { t, type Locale } from '~/core/common/domain/i18n/config'
 import { href, routes } from '~/core/common/domain/i18n/routes'
-import { home } from '@/content/copy/home'
+import { home } from '~/core/home/domain/consts/copy'
 import { actions } from '~/core/common/domain/consts/copy'
 import { media } from '~/core/common/infrastructure/content/media'
 import { Section, Container, Eyebrow } from '@/components/ui/layout'

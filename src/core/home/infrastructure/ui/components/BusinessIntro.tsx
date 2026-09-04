@@ -1,6 +1,6 @@
 import { t, type Locale } from '~/core/common/domain/i18n/config'
 import { href, routes } from '~/core/common/domain/i18n/routes'
-import { home } from '@/content/copy/home'
+import { home } from '~/core/home/domain/consts/copy'
 import { actions } from '~/core/common/domain/consts/copy'
 import { getBusinessSegments } from '~/core/common/infrastructure/data-access'
 import { Section, Container, SectionHeading } from '@/components/ui/layout'

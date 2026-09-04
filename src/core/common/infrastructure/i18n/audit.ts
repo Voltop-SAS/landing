@@ -41,11 +41,11 @@ import {
 /* El contenido real del sitio. Añadir un módulo de contenido = añadirlo aquí,
    y `assertAllContentRegistered()` se encarga de que no se olvide. */
 import * as copyCommon from '~/core/common/domain/consts/copy'
-import * as copyHome from '@/content/copy/home'
+import * as copyHome from '~/core/home/domain/consts/copy'
 import * as copyRed from '~/core/red/domain/consts/copy'
 import * as copyEmpresas from '~/core/empresas/domain/consts/copy'
 import * as copyNosotros from '~/core/nosotros/domain/consts/copy'
-import * as copyLegal from '@/content/copy/legal'
+import * as copyLegal from '~/core/legal/domain/consts/copy'
 import * as copyNovedades from '~/core/novedades/domain/consts/copy'
 import * as dataStations from '~/core/red/infrastructure/content/stations'
 import * as dataCities from '~/core/red/infrastructure/content/cities'
@@ -55,15 +55,15 @@ import * as dataMedia from '~/core/common/infrastructure/content/media'
 import * as dataPosts from '~/core/novedades/infrastructure/content/posts'
 import * as dataFaq from '~/core/red/infrastructure/content/faq'
 import * as dataLinks from '~/core/common/domain/consts/links'
-import * as dataLegalDocs from '@/content/data/legal-docs'
+import * as dataLegalDocs from '~/core/legal/infrastructure/content/legalDocs'
 
 const SOURCES: Record<string, unknown> = {
   'common/consts/copy': copyCommon,
-  'copy/home': copyHome,
+  'home/consts/copy': copyHome,
   'red/consts/copy': copyRed,
   'empresas/consts/copy': copyEmpresas,
   'nosotros/consts/copy': copyNosotros,
-  'copy/legal': copyLegal,
+  'legal/consts/copy': copyLegal,
   'novedades/consts/copy': copyNovedades,
   'red/content/stations': dataStations,
   'red/content/cities': dataCities,
@@ -75,7 +75,7 @@ const SOURCES: Record<string, unknown> = {
   'common/consts/links': dataLinks,
   /* Español plano a propósito: ver la cabecera del archivo. Aporta 0 nodos
      `Localized` y por eso no altera el recuento de cobertura. */
-  'data/legal-docs': dataLegalDocs,
+  'legal/content/legalDocs': dataLegalDocs,
 }
 
 const isPlainObject = (v: unknown): v is Record<string, unknown> =>
@@ -111,7 +111,7 @@ export type LocaleAudit = {
  * `fs` está disponible: esto corre en Node durante el build, no en el navegador.
  */
 /**
- * Las dos raíces, con TODOS sus segmentos literales.
+ * La raíz, con TODOS sus segmentos literales.
  *
  * No es cosmético: `join(process.cwd(), ...segmentosVariables)` deja a
  * Turbopack sin poder analizar la ruta, y responde trazando el proyecto entero
@@ -119,7 +119,6 @@ export type LocaleAudit = {
  * raíz fija y solo el resto variable, el aviso desaparece.
  */
 const CORE_DIR = join(process.cwd(), 'src', 'core')
-const LEGACY_CONTENT_DIR = join(process.cwd(), 'content')
 
 /** Los `.ts` de un directorio, sin extensión. Ausente = lista vacía. */
 function contentFilesIn(dir: string): string[] {
@@ -154,20 +153,8 @@ function registrableModuleContent(): string[] {
   return keys
 }
 
-/**
- * TRANSITORIO. La ubicación heredada, mientras queden módulos por mudar a
- * `src/core/`. Devuelve vacío en cuanto `content/` no exista, así que el día
- * que se mude el último módulo esta función deja de aportar nada y se borra
- * junto con esta nota.
- */
-function legacyContent(): string[] {
-  return (['copy', 'data'] as const).flatMap((dir) =>
-    contentFilesIn(join(LEGACY_CONTENT_DIR, dir)).map((file) => `${dir}/${file}`),
-  )
-}
-
 function assertAllContentRegistered(): void {
-  const found = [...registrableModuleContent(), ...legacyContent()]
+  const found = registrableModuleContent()
   const unregistered = found.filter((key) => !(key in SOURCES))
   if (unregistered.length === 0) return
 

@@ -1,7 +1,7 @@
 import type { MetadataRoute } from 'next'
 import { publishedLocales, defaultLocale, localeMeta } from '~/core/common/domain/i18n/config'
 import { routes, absoluteUrl } from '~/core/common/domain/i18n/routes'
-import { legalDocs } from '@/content/data/legal-docs'
+import { legalDocs } from '~/core/legal/infrastructure/content/legalDocs'
 import { assertPublishedLocalesComplete } from '~/core/common/infrastructure/i18n/audit'
 import {
   getStations,
