@@ -2304,3 +2304,25 @@ Al navegador llegan en AVIF: 98 KB y 52 KB las fichas en escritorio, 29 y 15 en 
 ### Evidencia
 
 `lint`, `tsc` y build limpios · la entrada verificada a 1440, 390 y 320px: dos `h2` en el orden pedido, cinco párrafos, **un solo `<video>` con controles y sin silenciar**, un CTA, cero invisibles, cero desbordes · las dos fichas con su foto a 1144×490 en escritorio y 341×146 en móvil, cero errores de JS · 27 combinaciones de ruta × viewport sin problemas · `prefers-reduced-motion` intacto.
+
+---
+
+## Bloque 58 · `FilmStage` fuera, y dos huérfanos que quedan anotados — 2026-09-04
+
+`FilmStage` eliminado. Con él se fueron dos comentarios que habrían quedado describiendo un mecanismo inexistente:
+
+- La cabecera del beat 7, que decía que el componente se conservaba "por si la película vuelve". Ahora dice lo correcto: está en el historial de git, y de ahí se recupera. **Y deja constancia de algo que hay que saber: la Home queda con UN momento signature en lugar de dos.** La curva de intensidad aprobada tenía dos picos separados por cinco beats; el segundo lo sostiene ahora el retrato del fundador, que es de otro orden.
+- La regla 2 del flotante de la app, que explicaba cómo `FilmStage` se elevaba por encima de la tarjeta para no robarle los controles al vídeo. Hoy no hay colisión porque no hay vídeo con controles en la Home, pero la regla **se conserva reescrita**: el fallo volverá el día que se ponga un reproductor en cualquier beat, y lo que lo resolvió fue elevar el reproductor, no esconder el flotante.
+
+### Dos huérfanos, y por qué no se borran
+
+Quitar la película dejó sin consumidores a dos piezas. Las dos se conservan, con la razón escrita donde vive cada una:
+
+- **`Flow`**, la primitiva de parallax contenido. No la usa nadie: la fotografía de suelo del beat 3 se fue con el rediseño y el render que la sustituyó no puede llevarla —va en `contain` y esta primitiva recorta por diseño—. Es una de las cuatro primitivas del vocabulario aprobado; borrarla sería borrar una decisión vigente porque hoy no hay material donde aplicarla.
+- **`media.filmVoltop`**. El archivo sigue sirviéndose, pero a través de `aperturaWake`. La entrada se conserva porque documenta la pieza de marca —función narrativa, duración, subtítulos pendientes— y eso no está en `aperturaWake`, que la describe como material de una apertura concreta.
+
+La diferencia con `FilmStage` es que ese era código sin decisión detrás: un componente cuyo único uso desapareció. Estos dos son decisiones sin material.
+
+### Evidencia
+
+`lint`, `tsc` y build limpios · 27 combinaciones de ruta × viewport sin problemas · `prefers-reduced-motion` intacto.

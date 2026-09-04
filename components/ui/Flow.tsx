@@ -7,6 +7,22 @@ import { cn } from "@/lib/cn";
 /**
  * FLOW · el material se desplaza dentro de un marco que no se mueve.
  *
+ * ── HOY NO LA USA NADIE, Y NO ES UN OLVIDO ────────────────────────────────
+ * Es una de las cuatro primitivas del lenguaje de movimiento (ver
+ * `lib/motion.ts`) y a fecha 2026-09-04 no tiene un solo consumidor. Las dos
+ * piezas que la llevaban se fueron por decisiones de producto, no porque la
+ * primitiva fallara:
+ *
+ * · El beat 3 tenía una fotografía de suelo con FLOW. La referencia visual
+ *   pidió fondo sólido y la fotografía salió con ella.
+ * · El render del cargador que la sustituyó NO puede llevarla: va en
+ *   `contain`, y esta primitiva recorta por diseño. Ver la nota de abajo.
+ *
+ * Se conserva por eso: el vocabulario la declara, la decisión sigue vigente y
+ * el día que entre una fotografía de fondo a sangre —en cualquier beat— es la
+ * pieza que le da profundidad. Borrarla sería borrar una decisión aprobada
+ * porque hoy no hay material donde aplicarla.
+ *
  * Es la primitiva de la que sale la PROFUNDIDAD (ver `lib/motion.ts`). Sin
  * ella, una fotografía de fondo es un papel pintado: está detrás, pero no hay
  * nada que diga que está *más lejos*. Con ella, el marco pertenece a la página

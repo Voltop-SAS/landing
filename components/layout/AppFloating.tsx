@@ -37,14 +37,17 @@ import { cn } from "@/lib/cn";
  *    esas zonas tapaban se resolvieron donde tocaba —ver las reglas 2 y 3—, en
  *    lugar de ocultando el componente.
  *
- * 2. NO ROBA LOS CONTROLES DE LA PELÍCULA. La tarjeta de escritorio se solapa
- *    con la barra de reproducción del beat 7, y un clic en silenciar o en
- *    pantalla completa ABRÍA LA TIENDA DE APPS. Un flotante que secuestra un
- *    control ajeno no es intrusivo: es un fallo.
- *    Lo resuelve `FilmStage`, que se eleva por encima de este componente
- *    mientras el puntero está sobre la pieza o mientras se reproduce. Así los
- *    dos coexisten: la película gana cuando la estás usando, y el flotante
- *    sigue visible el resto del tiempo.
+ * 2. NO ROBA LOS CONTROLES DE UN REPRODUCTOR. La tarjeta de escritorio se
+ *    solapaba con la barra de reproducción de la película del beat 7, y un
+ *    clic en silenciar o en pantalla completa ABRÍA LA TIENDA DE APPS. Un
+ *    flotante que secuestra un control ajeno no es intrusivo: es un fallo.
+ *
+ *    La película salió de la Home el 2026-09-04, así que hoy no hay colisión
+ *    —y el mecanismo que la resolvía, `FilmStage`, se fue con ella—. Queda
+ *    escrito porque el fallo volverá el día que se ponga un vídeo con
+ *    controles en cualquier beat: lo que lo resolvió fue elevar el reproductor
+ *    por encima de esta tarjeta mientras el puntero está sobre él o mientras
+ *    se reproduce, no esconder el flotante.
  *
  * 3. NO TAPA EL CTA DEL BEAT 2. Ese beat ancla su contenido al fondo de un
  *    panel FIJADO a pantalla completa, así que la barra móvil le caía encima y

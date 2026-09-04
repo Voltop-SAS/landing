@@ -23,9 +23,15 @@ import { Reveal } from "@/components/ui/Reveal";
  * película se reproducía en dos sitios del sitio. Ahora vive solo en el
  * registro, que es donde tiene contexto.
  *
- * `FilmStage` —el componente que le daba el encuadre y el atenuado al
- * reproducir— queda sin uso. No se borra todavía: si la película vuelve, es
- * la pieza que la sostiene.
+ * Con ella se fue `FilmStage`, el componente que le daba el encuadre al entrar
+ * y atenuaba la página al reproducir. Está en el historial de git: si la
+ * película vuelve, se recupera de ahí en lugar de dejar un componente sin uso
+ * esperando por si acaso.
+ *
+ * La Home queda con UN momento signature —el panel fijado del beat 2— en lugar
+ * de dos. Conviene saberlo: la curva de intensidad que se diseñó tenía dos
+ * picos separados por cinco beats, y ahora el segundo lo sostiene este beat
+ * con el retrato, que es de otro orden.
  *
  * Era el momento mejor resuelto del prototipo anterior: se conserva su registro
  * editorial y se le da el aire que no tenía.

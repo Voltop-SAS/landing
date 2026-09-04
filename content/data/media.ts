@@ -497,6 +497,13 @@ export const media = {
     availability: "entregado",
   },
 
+  /* NO LO RENDERIZA NADIE desde el 2026-09-04, y el archivo sigue en uso.
+     La película salió del beat 7 por decisión de producto; el mismo
+     `/voltop-film.mp4` se sirve a través de `aperturaWake`, la portada de la
+     entrada de Wake. Esta entrada se conserva porque documenta la pieza de
+     marca —su función narrativa, su duración, sus subtítulos pendientes— y esa
+     información no está en `aperturaWake`, que la describe como material de
+     una apertura concreta. */
   filmVoltop: {
     id: "film-voltop",
     kind: "video",
