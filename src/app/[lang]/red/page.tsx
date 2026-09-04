@@ -11,11 +11,17 @@ import {
   getCitiesWithStations,
   getFaq,
 } from '~/core/common/infrastructure/data-access'
-import { Section, Container, Eyebrow, SectionHeading, ProcessList } from '@/components/ui/layout'
-import { Button } from '@/components/ui/Button'
-import { Reveal } from '@/components/ui/Reveal'
+import {
+  Section,
+  Container,
+  Eyebrow,
+  SectionHeading,
+  ProcessList,
+} from '@ui/common/components/ui/layout'
+import { Button } from '@ui/common/components/ui/Button'
+import { Reveal } from '@ui/common/components/ui/Reveal'
 import { StationFinder } from '~/core/red/infrastructure/ui/components/StationFinder'
-import { Accordion } from '@/components/ui/Accordion'
+import { Accordion } from '@ui/common/components/ui/Accordion'
 
 type Props = { params: Promise<{ lang: string }> }
 

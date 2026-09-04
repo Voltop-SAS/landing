@@ -3,9 +3,9 @@ import { href, routes } from '~/core/common/domain/i18n/routes'
 import { home } from '~/core/home/domain/consts/copy'
 import { actions } from '~/core/common/domain/consts/copy'
 import { getBusinessSegments } from '~/core/common/infrastructure/data-access'
-import { Section, Container, SectionHeading } from '@/components/ui/layout'
-import { Button } from '@/components/ui/Button'
-import { Reveal } from '@/components/ui/Reveal'
+import { Section, Container, SectionHeading } from '@ui/common/components/ui/layout'
+import { Button } from '@ui/common/components/ui/Button'
+import { Reveal } from '@ui/common/components/ui/Reveal'
 import { cn } from '@ui/common/lib/cn'
 
 /**

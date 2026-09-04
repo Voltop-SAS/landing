@@ -5,8 +5,14 @@ import { routes, alternatesFor } from '~/core/common/domain/i18n/routes'
 import { empresas } from '~/core/empresas/domain/consts/copy'
 import { media } from '~/core/common/infrastructure/content/media'
 import { getBusinessSegments, getFeaturedCase } from '~/core/common/infrastructure/data-access'
-import { Section, Container, Eyebrow, SectionHeading, ProcessList } from '@/components/ui/layout'
-import { Media } from '@/components/ui/Media'
+import {
+  Section,
+  Container,
+  Eyebrow,
+  SectionHeading,
+  ProcessList,
+} from '@ui/common/components/ui/layout'
+import { Media } from '@ui/common/components/ui/Media'
 import { BusinessFlow } from '~/core/empresas/infrastructure/ui/components/BusinessFlow'
 
 type Props = { params: Promise<{ lang: string }> }

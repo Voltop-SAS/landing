@@ -3,7 +3,7 @@ import { cn } from '@ui/common/lib/cn'
 import { t, type Locale } from '~/core/common/domain/i18n/config'
 import type { MediaAsset } from '~/core/common/domain/entities/Media'
 import { a11y, mediaPlaceholder } from '~/core/common/domain/consts/copy'
-import { VideoMedia } from '@/components/ui/VideoMedia'
+import { VideoMedia } from '@ui/common/components/ui/VideoMedia'
 
 /**
  * MEDIA · punto único de render para fotografía y video narrativo.

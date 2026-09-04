@@ -2,9 +2,9 @@ import Link from 'next/link'
 import { t, type Locale } from '~/core/common/domain/i18n/config'
 import { href, routes } from '~/core/common/domain/i18n/routes'
 import { footer, brand, a11y } from '~/core/common/domain/consts/copy'
-import { Container } from '@/components/ui/layout'
-import { Logo } from '@/components/layout/Logo'
-import { SocialLinks } from '@/components/layout/SocialLinks'
+import { Container } from '@ui/common/components/ui/layout'
+import { Logo } from '@ui/common/components/layout/Logo'
+import { SocialLinks } from '@ui/common/components/layout/SocialLinks'
 import { externalLinks, soporteEmail } from '~/core/common/domain/consts/links'
 
 /**

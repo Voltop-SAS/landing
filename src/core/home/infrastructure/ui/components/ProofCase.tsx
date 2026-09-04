@@ -4,11 +4,11 @@ import { home } from '~/core/home/domain/consts/copy'
 import { actions } from '~/core/common/domain/consts/copy'
 import { media } from '~/core/common/infrastructure/content/media'
 import { getFeaturedCase } from '~/core/common/infrastructure/data-access'
-import { Section, Container, Eyebrow } from '@/components/ui/layout'
-import { Media } from '@/components/ui/Media'
-import { QuoteAttribution } from '@/components/ui/QuoteAttribution'
-import { Button } from '@/components/ui/Button'
-import { TrackView } from '@/components/analytics/TrackView'
+import { Section, Container, Eyebrow } from '@ui/common/components/ui/layout'
+import { Media } from '@ui/common/components/ui/Media'
+import { QuoteAttribution } from '@ui/common/components/ui/QuoteAttribution'
+import { Button } from '@ui/common/components/ui/Button'
+import { TrackView } from '@ui/common/components/analytics/TrackView'
 
 /**
  * BEAT 5 · CASO REAL — Intensidad: Alta · Registro: Impacto

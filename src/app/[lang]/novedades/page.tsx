@@ -5,12 +5,12 @@ import { locales, isLocale, t, type Locale } from '~/core/common/domain/i18n/con
 import { href, routes, alternatesFor } from '~/core/common/domain/i18n/routes'
 import { novedades } from '~/core/novedades/domain/consts/copy'
 import { getPosts, getFeaturedPost, hasPage } from '~/core/common/infrastructure/data-access'
-import { Section, Container, Eyebrow, SectionHeading, Rule } from '@/components/ui/layout'
-import { Media } from '@/components/ui/Media'
-import { Button } from '@/components/ui/Button'
-import { PendingTag } from '@/components/ui/data'
+import { Section, Container, Eyebrow, SectionHeading, Rule } from '@ui/common/components/ui/layout'
+import { Media } from '@ui/common/components/ui/Media'
+import { Button } from '@ui/common/components/ui/Button'
+import { PendingTag } from '@ui/common/components/ui/data'
 import { PostLog } from '~/core/novedades/infrastructure/ui/components/PostLog'
-import { TrackView } from '@/components/analytics/TrackView'
+import { TrackView } from '@ui/common/components/analytics/TrackView'
 import { formatDate } from '@ui/common/lib/dates'
 
 type Props = { params: Promise<{ lang: string }> }

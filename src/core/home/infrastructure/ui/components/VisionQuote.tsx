@@ -5,9 +5,9 @@ import { home } from '~/core/home/domain/consts/copy'
 import { actions } from '~/core/common/domain/consts/copy'
 import { media } from '~/core/common/infrastructure/content/media'
 import { getFounder } from '~/core/common/infrastructure/data-access'
-import { Section, Container, Eyebrow } from '@/components/ui/layout'
-import { Button } from '@/components/ui/Button'
-import { Reveal } from '@/components/ui/Reveal'
+import { Section, Container, Eyebrow } from '@ui/common/components/ui/layout'
+import { Button } from '@ui/common/components/ui/Button'
+import { Reveal } from '@ui/common/components/ui/Reveal'
 
 /**
  * BEAT 6 · VISIÓN — Intensidad: Media-alta · Registro: Silencio · Espacio: loose

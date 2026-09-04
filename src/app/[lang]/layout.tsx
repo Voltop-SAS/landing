@@ -11,11 +11,11 @@ import {
 } from '~/core/common/domain/i18n/config'
 import { absoluteUrl, alternatesFor, routes } from '~/core/common/domain/i18n/routes'
 import { a11y, brand } from '~/core/common/domain/consts/copy'
-import { Header } from '@/components/layout/Header'
-import { Footer } from '@/components/layout/Footer'
-import { SmoothScroll } from '@/components/layout/SmoothScroll'
-import { AppFloating } from '@/components/layout/AppFloating'
-import { CookieConsent } from '@/components/layout/CookieConsent'
+import { Header } from '@ui/common/components/layout/Header'
+import { Footer } from '@ui/common/components/layout/Footer'
+import { SmoothScroll } from '@ui/common/components/layout/SmoothScroll'
+import { AppFloating } from '@ui/common/components/layout/AppFloating'
+import { CookieConsent } from '@ui/common/components/layout/CookieConsent'
 
 /**
  * LAYOUT POR IDIOMA

@@ -1,10 +1,10 @@
 import { defaultLocale, localeMeta, t } from '~/core/common/domain/i18n/config'
 import { href, routes } from '~/core/common/domain/i18n/routes'
 import { states, a11y } from '~/core/common/domain/consts/copy'
-import { Container } from '@/components/ui/layout'
-import { Button } from '@/components/ui/Button'
-import { Header } from '@/components/layout/Header'
-import { Footer } from '@/components/layout/Footer'
+import { Container } from '@ui/common/components/ui/layout'
+import { Button } from '@ui/common/components/ui/Button'
+import { Header } from '@ui/common/components/layout/Header'
+import { Footer } from '@ui/common/components/layout/Footer'
 
 /**
  * PÁGINA NO ENCONTRADA · única del sitio

@@ -16,8 +16,8 @@ import {
   distanceKm,
   type StationSort,
 } from '~/core/common/infrastructure/data-access'
-import { StatusBadge } from '@/components/ui/data'
-import { Button } from '@/components/ui/Button'
+import { StatusBadge } from '@ui/common/components/ui/data'
+import { Button } from '@ui/common/components/ui/Button'
 import { track } from '~/core/common/infrastructure/analytics'
 import { cn } from '@ui/common/lib/cn'
 

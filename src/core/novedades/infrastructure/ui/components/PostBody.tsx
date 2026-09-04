@@ -1,5 +1,5 @@
 import { t, type Locale } from '~/core/common/domain/i18n/config'
-import { Media } from '@/components/ui/Media'
+import { Media } from '@ui/common/components/ui/Media'
 import type { PostBlock } from '~/core/novedades/domain/entities/Post'
 import { novedades } from '~/core/novedades/domain/consts/copy'
 

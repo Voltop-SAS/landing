@@ -17,12 +17,12 @@ import {
   getStation,
   getCity,
 } from '~/core/common/infrastructure/data-access'
-import { Section, Container, Rule } from '@/components/ui/layout'
-import { Media } from '@/components/ui/Media'
-import { Button } from '@/components/ui/Button'
-import { PendingTag } from '@/components/ui/data'
+import { Section, Container, Rule } from '@ui/common/components/ui/layout'
+import { Media } from '@ui/common/components/ui/Media'
+import { Button } from '@ui/common/components/ui/Button'
+import { PendingTag } from '@ui/common/components/ui/data'
 import { PostBody } from '~/core/novedades/infrastructure/ui/components/PostBody'
-import { TrackView } from '@/components/analytics/TrackView'
+import { TrackView } from '@ui/common/components/analytics/TrackView'
 import { formatDate } from '@ui/common/lib/dates'
 
 type Props = { params: Promise<{ lang: string; slug: string }> }

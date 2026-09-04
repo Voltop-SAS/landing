@@ -6,10 +6,10 @@ import { red } from '~/core/red/domain/consts/copy'
 import { actions } from '~/core/common/domain/consts/copy'
 import { media } from '~/core/common/infrastructure/content/media'
 import { getCitiesWithStations } from '~/core/common/infrastructure/data-access'
-import { Section, Container, Eyebrow } from '@/components/ui/layout'
-import { Media } from '@/components/ui/Media'
-import { Button } from '@/components/ui/Button'
-import { TrackClick } from '@/components/analytics/TrackClick'
+import { Section, Container, Eyebrow } from '@ui/common/components/ui/layout'
+import { Media } from '@ui/common/components/ui/Media'
+import { Button } from '@ui/common/components/ui/Button'
+import { TrackClick } from '@ui/common/components/analytics/TrackClick'
 
 /**
  * BEAT 1 · HERO — Intensidad: Alta · Registro: Impacto

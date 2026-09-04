@@ -13,10 +13,10 @@ import {
 } from '~/core/common/infrastructure/data-access'
 import { novedadesInline } from '~/core/novedades/domain/consts/copy'
 import { PostsInline } from '~/core/novedades/infrastructure/ui/components/PostsInline'
-import { Section, Container, Eyebrow, SectionHeading } from '@/components/ui/layout'
-import { StatusBadge } from '@/components/ui/data'
-import { Reveal } from '@/components/ui/Reveal'
-import { TrackView } from '@/components/analytics/TrackView'
+import { Section, Container, Eyebrow, SectionHeading } from '@ui/common/components/ui/layout'
+import { StatusBadge } from '@ui/common/components/ui/data'
+import { Reveal } from '@ui/common/components/ui/Reveal'
+import { TrackView } from '@ui/common/components/analytics/TrackView'
 import { formatPowerKw } from '~/core/red/domain/entities/Station'
 
 type Props = { params: Promise<{ lang: string; ciudad: string }> }

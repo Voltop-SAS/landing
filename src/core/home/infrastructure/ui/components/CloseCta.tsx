@@ -2,9 +2,9 @@ import { t, type Locale } from '~/core/common/domain/i18n/config'
 import { href, routes } from '~/core/common/domain/i18n/routes'
 import { home } from '~/core/home/domain/consts/copy'
 import { actions } from '~/core/common/domain/consts/copy'
-import { Section, Container, SectionHeading } from '@/components/ui/layout'
-import { Button } from '@/components/ui/Button'
-import { TrackClick } from '@/components/analytics/TrackClick'
+import { Section, Container, SectionHeading } from '@ui/common/components/ui/layout'
+import { Button } from '@ui/common/components/ui/Button'
+import { TrackClick } from '@ui/common/components/analytics/TrackClick'
 
 /**
  * BEAT 7 · CIERRE — Intensidad: Alta · Registro: Impacto

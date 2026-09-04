@@ -5,7 +5,7 @@ import { t, type Locale } from '~/core/common/domain/i18n/config'
 import { empresas } from '~/core/empresas/domain/consts/copy'
 import type { BusinessSegment } from '~/core/empresas/domain/entities/BusinessSegment'
 import { track } from '~/core/common/infrastructure/analytics'
-import { SectionHeading } from '@/components/ui/layout'
+import { SectionHeading } from '@ui/common/components/ui/layout'
 import { cn } from '@ui/common/lib/cn'
 
 /**

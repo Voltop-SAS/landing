@@ -3,10 +3,10 @@ import { t, type Locale } from '~/core/common/domain/i18n/config'
 import { href, routes } from '~/core/common/domain/i18n/routes'
 import { home } from '~/core/home/domain/consts/copy'
 import { actions } from '~/core/common/domain/consts/copy'
-import { Section, Container, Eyebrow } from '@/components/ui/layout'
-import { StoreBadges } from '@/components/ui/StoreBadges'
-import { Button } from '@/components/ui/Button'
-import { Reveal } from '@/components/ui/Reveal'
+import { Section, Container, Eyebrow } from '@ui/common/components/ui/layout'
+import { StoreBadges } from '@ui/common/components/ui/StoreBadges'
+import { Button } from '@ui/common/components/ui/Button'
+import { Reveal } from '@ui/common/components/ui/Reveal'
 
 /**
  * BEAT 8 · CÓMO SE CARGA — Intensidad: STANDARD

@@ -1,7 +1,7 @@
 import { t, type Locale } from '~/core/common/domain/i18n/config'
 import { a11y, storeBadges } from '~/core/common/domain/consts/copy'
 import { externalLinks } from '~/core/common/domain/consts/links'
-import { TrackClick } from '@/components/analytics/TrackClick'
+import { TrackClick } from '@ui/common/components/analytics/TrackClick'
 
 /**
  * BADGES DE TIENDA

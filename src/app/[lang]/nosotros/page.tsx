@@ -11,11 +11,11 @@ import {
   getTestimonials,
   getPartners,
 } from '~/core/common/infrastructure/data-access'
-import { Section, Container, Eyebrow, SectionHeading } from '@/components/ui/layout'
-import { MetricRow, PendingTag } from '@/components/ui/data'
-import { Media } from '@/components/ui/Media'
-import { Reveal } from '@/components/ui/Reveal'
-import { TrackView } from '@/components/analytics/TrackView'
+import { Section, Container, Eyebrow, SectionHeading } from '@ui/common/components/ui/layout'
+import { MetricRow, PendingTag } from '@ui/common/components/ui/data'
+import { Media } from '@ui/common/components/ui/Media'
+import { Reveal } from '@ui/common/components/ui/Reveal'
+import { TrackView } from '@ui/common/components/analytics/TrackView'
 
 type Props = { params: Promise<{ lang: string }> }
 

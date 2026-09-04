@@ -2,7 +2,7 @@
 
 import { t, type Locale } from '~/core/common/domain/i18n/config'
 import { actions } from '~/core/common/domain/consts/copy'
-import { Button } from '@/components/ui/Button'
+import { Button } from '@ui/common/components/ui/Button'
 import { track } from '~/core/common/infrastructure/analytics'
 
 /**

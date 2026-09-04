@@ -5,11 +5,11 @@ import { home } from '~/core/home/domain/consts/copy'
 import { actions, units } from '~/core/common/domain/consts/copy'
 import { media } from '~/core/common/infrastructure/content/media'
 import { getCitiesWithStations, getNetworkSummary } from '~/core/common/infrastructure/data-access'
-import { Section, Container, SectionHeading } from '@/components/ui/layout'
-import { Media } from '@/components/ui/Media'
-import { Button } from '@/components/ui/Button'
-import { Reveal } from '@/components/ui/Reveal'
-import { CountUp } from '@/components/ui/CountUp'
+import { Section, Container, SectionHeading } from '@ui/common/components/ui/layout'
+import { Media } from '@ui/common/components/ui/Media'
+import { Button } from '@ui/common/components/ui/Button'
+import { Reveal } from '@ui/common/components/ui/Reveal'
+import { CountUp } from '@ui/common/components/ui/CountUp'
 
 /**
  * BEAT 3 · NUESTRA RED
