@@ -12,8 +12,8 @@ import { localeMeta, type Locale } from '~/core/common/domain/i18n/config'
  * Se formatea con `Intl`, así que cada idioma recibe su convención sin tabla
  * de meses escrita a mano.
  */
-export function formatDate(iso: string, lang: Locale): string {
-  const parts = new Intl.DateTimeFormat(localeMeta[lang].htmlLang, {
+export function formatDate(iso: string, locale: Locale): string {
+  const parts = new Intl.DateTimeFormat(localeMeta[locale].htmlLang, {
     day: 'numeric',
     month: 'short',
     year: 'numeric',

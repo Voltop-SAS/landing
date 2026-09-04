@@ -25,7 +25,7 @@ import { PostBody } from '~/core/novedades/infrastructure/ui/components/PostBody
 import { TrackView } from '@ui/common/components/analytics/TrackView'
 import { formatDate } from '@ui/common/lib/dates'
 
-type Props = { params: Promise<{ lang: string; slug: string }> }
+type Props = { params: Promise<{ locale: string; slug: string }> }
 
 /**
  * /NOVEDADES/[SLUG] · una entrada del registro.
@@ -44,33 +44,33 @@ export const dynamicParams = false
 
 export async function generateStaticParams() {
   const withPage = await getPostsWithPage()
-  return locales.flatMap((lang) => withPage.map((p) => ({ lang, slug: p.slug })))
+  return locales.flatMap((locale) => withPage.map((p) => ({ locale, slug: p.slug })))
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { lang, slug } = await params
-  if (!isLocale(lang)) return {}
+  const { locale, slug } = await params
+  if (!isLocale(locale)) return {}
   const post = await getPost(slug)
   if (!post) return {}
 
   return {
-    title: t(post.title, lang),
-    description: t(post.summary, lang),
-    alternates: alternatesFor(lang, routes.post(post.slug)),
+    title: t(post.title, locale),
+    description: t(post.summary, locale),
+    alternates: alternatesFor(locale, routes.post(post.slug)),
     openGraph: {
       type: 'article',
       publishedTime: post.date,
-      title: t(post.title, lang),
-      description: t(post.summary, lang),
-      url: absoluteUrl(lang, routes.post(post.slug)),
+      title: t(post.title, locale),
+      description: t(post.summary, locale),
+      url: absoluteUrl(locale, routes.post(post.slug)),
     },
   }
 }
 
 export default async function PostPage({ params }: Props) {
-  const { lang: raw, slug } = await params
+  const { locale: raw, slug } = await params
   if (!isLocale(raw)) notFound()
-  const lang = raw as Locale
+  const locale = raw as Locale
 
   const post = await getPost(slug)
   if (!post) notFound()
@@ -88,11 +88,11 @@ export default async function PostPage({ params }: Props) {
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'NewsArticle',
-    headline: t(post.title, lang),
-    description: t(post.summary, lang),
+    headline: t(post.title, locale),
+    description: t(post.summary, locale),
     datePublished: post.date,
-    inLanguage: localeMeta[lang].hreflang,
-    url: absoluteUrl(lang, routes.post(post.slug)),
+    inLanguage: localeMeta[locale].hreflang,
+    url: absoluteUrl(locale, routes.post(post.slug)),
     author: { '@type': 'Organization', name: brand.name, url: SITE_URL },
     publisher: { '@type': 'Organization', name: brand.name, url: SITE_URL },
     ...(post.cover?.src ? { image: `${SITE_URL}${post.cover.src}` } : {}),
@@ -115,22 +115,22 @@ export default async function PostPage({ params }: Props) {
       >
         <Container width="narrow">
           <nav
-            aria-label={t(a11y.breadcrumb, lang)}
+            aria-label={t(a11y.breadcrumb, locale)}
             className="font-mono text-mono text-ink-3"
           >
             <ol className="flex flex-wrap items-center gap-2">
               <li>
                 <Link
-                  href={href(lang, routes.novedades)}
+                  href={href(locale, routes.novedades)}
                   className="inline-flex min-h-11 items-center transition-colors hover:text-ink"
                 >
-                  {t(novedades.eyebrow, lang)}
+                  {t(novedades.eyebrow, locale)}
                 </Link>
               </li>
               <li aria-hidden="true">/</li>
               {/* Plural: aquí el tipo nombra la CATEGORÍA, no esta entrada.
                   Ver la nota de `typesPlural` en el copy. */}
-              <li className="text-ink-2">{t(novedades.typesPlural[post.type], lang)}</li>
+              <li className="text-ink-2">{t(novedades.typesPlural[post.type], locale)}</li>
             </ol>
           </nav>
 
@@ -139,21 +139,21 @@ export default async function PostPage({ params }: Props) {
               dateTime={post.date}
               className="font-mono text-mono uppercase tracking-wider text-ink-2"
             >
-              {formatDate(post.date, lang)}
+              {formatDate(post.date, locale)}
             </time>
             {post.dataStatus === 'placeholder' && (
-              <PendingTag>{t(novedades.provisionalTag, lang)}</PendingTag>
+              <PendingTag>{t(novedades.provisionalTag, locale)}</PendingTag>
             )}
           </div>
 
           <h1 className="mt-5 font-display text-display-xl font-semibold text-balance text-ink">
-            {t(post.title, lang)}
+            {t(post.title, locale)}
           </h1>
-          <p className="mt-6 measure text-body-l text-ink-2">{t(post.summary, lang)}</p>
+          <p className="mt-6 measure text-body-l text-ink-2">{t(post.summary, locale)}</p>
 
           {post.dataStatus === 'placeholder' && (
             <p className="mt-4 measure text-body-s text-ink-3">
-              {t(novedades.provisionalNote, lang)}
+              {t(novedades.provisionalNote, locale)}
             </p>
           )}
         </Container>
@@ -173,7 +173,7 @@ export default async function PostPage({ params }: Props) {
                Una fotografía de portada no cambia: la prop no le aplica. */
             <Media
               asset={post.cover}
-              lang={lang}
+              locale={locale}
               aspect="16/9"
               corner
               controls={post.cover.kind === 'video'}
@@ -184,7 +184,7 @@ export default async function PostPage({ params }: Props) {
 
           <PostBody
             blocks={post.body}
-            lang={lang}
+            locale={locale}
           />
 
           {/* Vuelta al producto: la entrada termina en la red, no en un final ciego. */}
@@ -195,26 +195,26 @@ export default async function PostPage({ params }: Props) {
                 {station && (
                   <div>
                     <p className="font-mono text-mono uppercase tracking-wider text-ink-3">
-                      {t(novedades.related.station, lang)}
+                      {t(novedades.related.station, locale)}
                     </p>
                     <div className="mt-3">
                       <Button
                         variant="secondary"
                         size="s"
                         arrow
-                        href={href(lang, routes.station(station.slug))}
+                        href={href(locale, routes.station(station.slug))}
                       >
-                        {t(novedades.related.stationCta, lang)}
+                        {t(novedades.related.stationCta, locale)}
                       </Button>
                     </div>
                   </div>
                 )}
                 {city && (
                   <Link
-                    href={href(lang, routes.city(city.slug))}
+                    href={href(locale, routes.city(city.slug))}
                     className="inline-flex min-h-11 items-center self-start text-body-s text-ink-2 transition-colors hover:text-ink"
                   >
-                    {t(novedades.related.city, lang)} {city.name} →
+                    {t(novedades.related.city, locale)} {city.name} →
                   </Link>
                 )}
               </div>
@@ -223,10 +223,10 @@ export default async function PostPage({ params }: Props) {
 
           <div className="mt-14">
             <Link
-              href={href(lang, routes.novedades)}
+              href={href(locale, routes.novedades)}
               className="inline-flex min-h-11 items-center font-mono text-mono uppercase tracking-wider text-ink-3 transition-colors hover:text-ink"
             >
-              ← {t(novedades.backToIndex, lang)}
+              ← {t(novedades.backToIndex, locale)}
             </Link>
           </div>
         </Container>

@@ -30,14 +30,14 @@ import { Section, Container } from '@ui/common/components/ui/LayoutPrimitives'
 export function LegalDocument({
   doc,
   titulo,
-  lang,
+  locale,
 }: {
   doc: LegalDoc
   titulo: string
-  lang: Locale
+  locale: Locale
 }) {
   /* El aviso solo aplica donde el documento NO está en el idioma de la página. */
-  const avisoIdioma = lang === defaultLocale ? null : t(legalDoc.spanishOnly, lang)
+  const avisoIdioma = locale === defaultLocale ? null : t(legalDoc.spanishOnly, locale)
 
   const indice = (
     <ol className="space-y-0">
@@ -73,7 +73,7 @@ export function LegalDocument({
       <Container>
         <header className="border-b border-line pb-10">
           <p className="font-mono text-mono uppercase tracking-[0.14em] text-ink-3">
-            {t(legalDoc.eyebrow, lang)}
+            {t(legalDoc.eyebrow, locale)}
           </p>
           <h1 className="mt-5 max-w-[18ch] font-display text-display-xl font-semibold text-balance text-ink">
             {titulo}
@@ -83,8 +83,8 @@ export function LegalDocument({
               updated: 29 de mayo de 2026" en inglés. El texto legal se queda
               en español a propósito; su metadato, no. */}
           <p className="mt-6 font-mono text-mono text-ink-3">
-            {t(legalDoc.updatedLabel, lang)}:{' '}
-            <time dateTime={doc.actualizadoISO}>{formatDate(doc.actualizadoISO, lang)}</time>
+            {t(legalDoc.updatedLabel, locale)}:{' '}
+            <time dateTime={doc.actualizadoISO}>{formatDate(doc.actualizadoISO, locale)}</time>
           </p>
 
           {avisoIdioma ? (
@@ -92,7 +92,7 @@ export function LegalDocument({
                de pantalla leería el documento entero con la fonética del
                idioma equivocado (§23). */
             <p
-              lang={lang}
+              lang={locale}
               className="measure mt-6 border-l-2 border-warn/50 py-1 pl-5 text-body-s text-ink-2"
             >
               {avisoIdioma}
@@ -104,7 +104,7 @@ export function LegalDocument({
           {/* Índice — plegado en estrecho */}
           <details className="group mt-8 border-b border-line pb-6 lg:hidden">
             <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between font-display text-display-s font-semibold text-ink">
-              {t(legalDoc.tocTitle, lang)}
+              {t(legalDoc.tocTitle, locale)}
               <span
                 aria-hidden="true"
                 className="relative grid size-6 place-items-center text-ink-3"
@@ -115,7 +115,7 @@ export function LegalDocument({
             </summary>
             <nav
               className="mt-5"
-              aria-label={t(legalDoc.tocTitle, lang)}
+              aria-label={t(legalDoc.tocTitle, locale)}
             >
               {indice}
             </nav>
@@ -123,11 +123,11 @@ export function LegalDocument({
 
           {/* Índice — fijo en ancho */}
           <nav
-            aria-label={t(legalDoc.tocTitle, lang)}
+            aria-label={t(legalDoc.tocTitle, locale)}
             className="hidden lg:sticky lg:top-28 lg:block lg:max-h-[calc(100dvh-9rem)] lg:w-72 lg:shrink-0 lg:overflow-y-auto lg:pt-12"
           >
             <p className="font-mono text-mono uppercase tracking-[0.14em] text-ink-3">
-              {t(legalDoc.tocTitle, lang)}
+              {t(legalDoc.tocTitle, locale)}
             </p>
             <div className="mt-4">{indice}</div>
           </nav>

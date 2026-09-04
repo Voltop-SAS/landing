@@ -24,7 +24,7 @@ import { Reveal } from '@ui/common/components/ui/Reveal'
 import { TrackView } from '@ui/common/components/analytics/TrackView'
 import { formatPowerKw } from '~/core/red/domain/entities/Station'
 
-type Props = { params: Promise<{ lang: string; ciudad: string }> }
+type Props = { params: Promise<{ locale: string; ciudad: string }> }
 
 /**
  * /RED/[CIUDAD] · cobertura local.
@@ -50,27 +50,27 @@ type Props = { params: Promise<{ lang: string; ciudad: string }> }
 export const dynamicParams = false
 
 export function generateStaticParams() {
-  return locales.flatMap((lang) => getCities().map((c) => ({ lang, ciudad: c.slug })))
+  return locales.flatMap((locale) => getCities().map((c) => ({ locale, ciudad: c.slug })))
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { lang, ciudad } = await params
-  if (!isLocale(lang)) return {}
+  const { locale, ciudad } = await params
+  if (!isLocale(locale)) return {}
   const city = getCity(ciudad)
   if (!city) return {}
 
   const path = routes.city(city.slug)
   return {
-    title: `${t(cityCopy.metaTitlePattern, lang)} ${city.name}`,
-    description: t(city.intro, lang),
-    alternates: alternatesFor(lang, path),
+    title: `${t(cityCopy.metaTitlePattern, locale)} ${city.name}`,
+    description: t(city.intro, locale),
+    alternates: alternatesFor(locale, path),
   }
 }
 
 export default async function CityPage({ params }: Props) {
-  const { lang: raw, ciudad } = await params
+  const { locale: raw, ciudad } = await params
   if (!isLocale(raw)) notFound()
-  const lang = raw as Locale
+  const locale = raw as Locale
 
   const city = getCity(ciudad)
   if (!city) notFound()
@@ -87,16 +87,16 @@ export default async function CityPage({ params }: Props) {
       >
         <Container>
           <nav
-            aria-label={t(a11y.breadcrumb, lang)}
+            aria-label={t(a11y.breadcrumb, locale)}
             className="font-mono text-mono text-ink-3"
           >
             <ol className="flex flex-wrap items-center gap-2">
               <li>
                 <Link
-                  href={href(lang, routes.red)}
+                  href={href(locale, routes.red)}
                   className="inline-flex min-h-11 items-center transition-colors hover:text-ink"
                 >
-                  {t(red.hero.eyebrow, lang)}
+                  {t(red.hero.eyebrow, locale)}
                 </Link>
               </li>
               <li aria-hidden="true">/</li>
@@ -116,11 +116,11 @@ export default async function CityPage({ params }: Props) {
             props={{ ciudad: city.slug }}
             threshold={0}
           />
-          <Eyebrow className="mt-8">{t(cityCopy.eyebrow, lang)}</Eyebrow>
+          <Eyebrow className="mt-8">{t(cityCopy.eyebrow, locale)}</Eyebrow>
           <h1 className="mt-4 font-display text-display-xl font-semibold text-ink">
-            {t(cityCopy.titlePrefix, lang)} {city.name}
+            {t(cityCopy.titlePrefix, locale)} {city.name}
           </h1>
-          <p className="mt-6 measure text-body-l text-ink-2">{t(city.intro, lang)}</p>
+          <p className="mt-6 measure text-body-l text-ink-2">{t(city.intro, locale)}</p>
         </Container>
       </Section>
 
@@ -133,7 +133,7 @@ export default async function CityPage({ params }: Props) {
             id="estaciones-ciudad"
             size="m"
           >
-            {t(cityCopy.stationsHere, lang)}
+            {t(cityCopy.stationsHere, locale)}
           </SectionHeading>
 
           <ul className="mt-8">
@@ -144,22 +144,22 @@ export default async function CityPage({ params }: Props) {
                 index={i}
               >
                 <Link
-                  href={href(lang, routes.station(s.slug))}
+                  href={href(locale, routes.station(s.slug))}
                   className="group grid gap-x-6 gap-y-2 border-b border-line py-6 transition-colors hover:bg-surface-1 lg:grid-cols-[1.6fr_1fr_1fr_auto] lg:items-center"
                 >
                   <div>
                     <h3 className="font-display text-display-s font-semibold text-ink transition-colors group-hover:text-brand">
                       {s.name}
                     </h3>
-                    <p className="mt-0.5 text-body-s text-ink-3">{t(s.address, lang)}</p>
+                    <p className="mt-0.5 text-body-s text-ink-3">{t(s.address, locale)}</p>
                   </div>
                   <p className="font-mono text-mono text-ink-2">
-                    {formatPowerKw(s.powerKw)} · {s.points} {t(units.pointsShort, lang)}
+                    {formatPowerKw(s.powerKw)} · {s.points} {t(units.pointsShort, locale)}
                   </p>
                   <p className="font-mono text-mono text-ink-3">{s.connectors.join(' / ')}</p>
                   <StatusBadge
                     status={s.status}
-                    lang={lang}
+                    locale={locale}
                     className="justify-self-start md:justify-self-end"
                   />
                 </Link>
@@ -173,7 +173,7 @@ export default async function CityPage({ params }: Props) {
         <div className="border-t border-line">
           <PostsInline
             posts={news}
-            lang={lang}
+            locale={locale}
             title={novedadesInline.city.title}
           />
         </div>
@@ -185,12 +185,12 @@ export default async function CityPage({ params }: Props) {
           className="border-t border-line"
         >
           <Container>
-            <SectionHeading size="s">{t(cityCopy.otherCities, lang)}</SectionHeading>
+            <SectionHeading size="s">{t(cityCopy.otherCities, locale)}</SectionHeading>
             <ul className="mt-6 flex flex-wrap gap-3">
               {others.map((c) => (
                 <li key={c.slug}>
                   <Link
-                    href={href(lang, routes.city(c.slug))}
+                    href={href(locale, routes.city(c.slug))}
                     className="inline-flex min-h-11 items-center rounded-(--radius-pill) border border-line-control px-5 text-body-s text-ink-2 transition-colors hover:border-line-strong hover:text-ink"
                   >
                     {c.name}

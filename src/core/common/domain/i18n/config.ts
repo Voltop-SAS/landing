@@ -57,8 +57,8 @@ export const localeStatus: Record<Locale, LocaleStatus> = {
 /** Idiomas que el sitio ofrece de cara al público. */
 export const publishedLocales = locales.filter((l) => localeStatus[l] === 'publicado')
 
-export function isPublished(lang: Locale): boolean {
-  return localeStatus[lang] === 'publicado'
+export function isPublished(locale: Locale): boolean {
+  return localeStatus[locale] === 'publicado'
 }
 
 /* ---------------------------------------------------------------- */
@@ -103,8 +103,8 @@ export type Localized<T = string> = { es: T } & {
  * un idioma en borrador dispararía cientos de avisos por página y enterraría
  * cualquier otro mensaje. Quien lleva la cuenta es la auditoría de build.
  */
-export function t<T>(value: Localized<T>, lang: Locale): T {
-  return value[lang] ?? value[defaultLocale]
+export function t<T>(value: Localized<T>, locale: Locale): T {
+  return value[locale] ?? value[defaultLocale]
 }
 
 /**

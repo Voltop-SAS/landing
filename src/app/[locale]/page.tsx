@@ -17,15 +17,15 @@ import { VisionQuote } from '~/core/home/infrastructure/ui/components/VisionQuot
 import { AppDownload } from '~/core/home/infrastructure/ui/components/AppDownload'
 import { CloseCta } from '~/core/home/infrastructure/ui/components/CloseCta'
 
-type Props = { params: Promise<{ lang: string }> }
+type Props = { params: Promise<{ locale: string }> }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { lang } = await params
-  if (!isLocale(lang)) return {}
+  const { locale } = await params
+  if (!isLocale(locale)) return {}
   return {
-    title: t(home.meta.title, lang),
-    description: t(home.meta.description, lang),
-    alternates: alternatesFor(lang, ''),
+    title: t(home.meta.title, locale),
+    description: t(home.meta.description, locale),
+    alternates: alternatesFor(locale, ''),
   }
 }
 
@@ -50,9 +50,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
  * La Home PRESENTA: ninguna sección resuelve aquí lo que resuelve una interna.
  */
 export default async function HomePage({ params }: Props) {
-  const { lang: raw } = await params
+  const { locale: raw } = await params
   if (!isLocale(raw)) notFound()
-  const lang = raw as Locale
+  const locale = raw as Locale
 
   /* `Organization` vivía solo en /nosotros. §29 lo pide "en el sitio", y la
      Home es la página que un buscador toma como representante de la entidad:
@@ -63,7 +63,7 @@ export default async function HomePage({ params }: Props) {
     '@type': 'Organization',
     name: brand.name,
     url: SITE_URL,
-    description: t(brand.tagline, lang),
+    description: t(brand.tagline, locale),
     legalName: empresa.razonSocial,
     taxID: empresa.nit,
     address: {
@@ -102,18 +102,18 @@ export default async function HomePage({ params }: Props) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }}
       />
-      <Hero lang={lang} />
+      <Hero locale={locale} />
       <InfrastructureSignature
-        lang={lang}
+        locale={locale}
         entradaSlug={aperturaMedellin?.slug}
       />
-      <NetworkIndex lang={lang} />
-      <BusinessIntro lang={lang} />
-      <ProofCase lang={lang} />
-      <NetworkNews lang={lang} />
-      <VisionQuote lang={lang} />
-      <AppDownload lang={lang} />
-      <CloseCta lang={lang} />
+      <NetworkIndex locale={locale} />
+      <BusinessIntro locale={locale} />
+      <ProofCase locale={locale} />
+      <NetworkNews locale={locale} />
+      <VisionQuote locale={locale} />
+      <AppDownload locale={locale} />
+      <CloseCta locale={locale} />
     </>
   )
 }

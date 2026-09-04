@@ -15,7 +15,7 @@ import { TrackClick } from '@ui/common/components/analytics/TrackClick'
  * El usuario no elige un carril antes de entender la propuesta; aquí, al final
  * del recorrido, elegir es exactamente lo que toca (§10).
  */
-export function CloseCta({ lang }: { lang: Locale }) {
+export function CloseCta({ locale }: { locale: Locale }) {
   return (
     <Section
       register="impacto"
@@ -31,14 +31,16 @@ export function CloseCta({ lang }: { lang: Locale }) {
       />
 
       <Container className="relative z-(--z-raised)">
-        <SectionHeading>{t(home.close.title, lang)}</SectionHeading>
+        <SectionHeading>{t(home.close.title, locale)}</SectionHeading>
 
         <div className="mt-12 grid gap-10 md:grid-cols-[1.15fr_1fr] md:gap-0">
           <div className="md:pr-14">
             <p className="font-mono text-mono uppercase tracking-wider text-brand">
-              {t(home.close.b2c.label, lang)}
+              {t(home.close.b2c.label, locale)}
             </p>
-            <p className="mt-4 max-w-[34ch] text-body-l text-ink">{t(home.close.b2c.body, lang)}</p>
+            <p className="mt-4 max-w-[34ch] text-body-l text-ink">
+              {t(home.close.b2c.body, locale)}
+            </p>
             <div className="mt-7">
               <TrackClick
                 event="cta_encontrar_cargador_click"
@@ -48,9 +50,9 @@ export function CloseCta({ lang }: { lang: Locale }) {
                   variant="primary"
                   size="l"
                   arrow
-                  href={href(lang, routes.red)}
+                  href={href(locale, routes.red)}
                 >
-                  {t(actions.findCharger, lang)}
+                  {t(actions.findCharger, locale)}
                 </Button>
               </TrackClick>
             </div>
@@ -58,16 +60,18 @@ export function CloseCta({ lang }: { lang: Locale }) {
 
           <div className="border-t border-line pt-10 md:border-l md:border-t-0 md:pl-14 md:pt-0">
             <p className="font-mono text-mono uppercase tracking-wider text-ink-3">
-              {t(home.close.b2b.label, lang)}
+              {t(home.close.b2b.label, locale)}
             </p>
-            <p className="mt-4 max-w-[34ch] text-body text-ink-2">{t(home.close.b2b.body, lang)}</p>
+            <p className="mt-4 max-w-[34ch] text-body text-ink-2">
+              {t(home.close.b2b.body, locale)}
+            </p>
             <div className="mt-7">
               <Button
                 variant="secondary"
                 arrow
-                href={href(lang, `${routes.empresas}#contacto`)}
+                href={href(locale, `${routes.empresas}#contacto`)}
               >
-                {t(actions.talkToTeam, lang)}
+                {t(actions.talkToTeam, locale)}
               </Button>
             </div>
           </div>

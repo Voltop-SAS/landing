@@ -29,12 +29,12 @@ import { cn } from '@ui/common/lib/cn'
  */
 export function PostLink({
   post,
-  lang,
+  locale,
   className,
   children,
 }: {
   post: Post
-  lang: Locale
+  locale: Locale
   className?: string
   children: React.ReactNode
 }) {
@@ -42,7 +42,7 @@ export function PostLink({
 
   return (
     <Link
-      href={href(lang, routes.post(post.slug))}
+      href={href(locale, routes.post(post.slug))}
       className={cn('group press', className)}
     >
       {children}

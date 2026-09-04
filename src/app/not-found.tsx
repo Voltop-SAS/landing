@@ -19,7 +19,7 @@ import { Footer } from '@ui/common/components/layout/Footer'
  * un enlace roto de terceros.
  *
  * ── POR QUÉ ES LA ÚNICA ───────────────────────────────────────────────────
- * Había también un `app/[lang]/not-found.tsx`, que NUNCA se renderizó: en
+ * Había también un `app/[locale]/not-found.tsx`, que NUNCA se renderizó: en
  * Next 16 un `notFound()` lanzado desde una página no resuelve el boundary
  * anidado en este árbol de rutas, ni con layout raíz. Se eliminó en lugar de
  * dejarlo como archivo decorativo.
@@ -44,17 +44,17 @@ export const metadata = {
 }
 
 export default function NotFound() {
-  const lang = defaultLocale
+  const locale = defaultLocale
 
   return (
-    <div lang={localeMeta[lang].htmlLang}>
+    <div lang={localeMeta[locale].htmlLang}>
       <a
         href="#contenido"
         className="skip-link inline-flex min-h-11 items-center rounded-(--radius-pill) bg-brand px-5 font-medium text-on-brand"
       >
-        {t(a11y.skipToContent, lang)}
+        {t(a11y.skipToContent, locale)}
       </a>
-      <Header lang={lang} />
+      <Header locale={locale} />
 
       <main id="contenido">
         <Container
@@ -63,29 +63,29 @@ export default function NotFound() {
         >
           <p className="font-mono text-mono uppercase tracking-wider text-ink-3">404</p>
           <h1 className="mt-5 font-display text-display-l font-semibold text-balance text-ink">
-            {t(states.notFound.title, lang)}
+            {t(states.notFound.title, locale)}
           </h1>
-          <p className="mt-5 measure text-body-l text-ink-2">{t(states.notFound.body, lang)}</p>
+          <p className="mt-5 measure text-body-l text-ink-2">{t(states.notFound.body, locale)}</p>
 
           <div className="mt-10 flex flex-wrap items-center gap-4">
             <Button
               variant="primary"
               arrow
-              href={href(lang, routes.red)}
+              href={href(locale, routes.red)}
             >
-              {t(states.notFound.action, lang)}
+              {t(states.notFound.action, locale)}
             </Button>
             <Button
               variant="ghost"
-              href={href(lang, routes.home)}
+              href={href(locale, routes.home)}
             >
-              {t(states.notFound.home, lang)}
+              {t(states.notFound.home, locale)}
             </Button>
           </div>
         </Container>
       </main>
 
-      <Footer lang={lang} />
+      <Footer locale={locale} />
     </div>
   )
 }

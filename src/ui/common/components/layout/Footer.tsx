@@ -19,7 +19,7 @@ import { externalLinks, soporteEmail } from '~/core/common/domain/consts/links'
  *
  * Un enlace sin destino real no se publica. App, ayuda, legal y redes se
  */
-export function Footer({ lang }: { lang: Locale }) {
+export function Footer({ locale }: { locale: Locale }) {
   const year = new Date().getFullYear()
 
   return (
@@ -42,13 +42,13 @@ export function Footer({ lang }: { lang: Locale }) {
         <div className="grid gap-10 md:grid-cols-[1.5fr_repeat(3,1fr)] md:gap-8">
           <div>
             <Link
-              href={href(lang, routes.home)}
+              href={href(locale, routes.home)}
               className="inline-flex min-h-11 items-center gap-2.5"
-              aria-label={t(a11y.goHome, lang)}
+              aria-label={t(a11y.goHome, locale)}
             >
               <Logo />
             </Link>
-            <p className="mt-4 max-w-xs text-body-s text-ink-3">{t(brand.tagline, lang)}</p>
+            <p className="mt-4 max-w-xs text-body-s text-ink-3">{t(brand.tagline, locale)}</p>
             {/* El correo de soporte, visible y en texto. Está declarado en la
                 Política de Tratamiento de Datos como dato de contacto de
                 VOLTOP S.A.S., así que es el canal oficial y merece estar donde
@@ -61,12 +61,12 @@ export function Footer({ lang }: { lang: Locale }) {
             >
               {soporteEmail}
             </a>
-            <SocialLinks lang={lang} />
+            <SocialLinks locale={locale} />
           </div>
 
           <nav
             className="contents"
-            aria-label={t(a11y.footerNav, lang)}
+            aria-label={t(a11y.footerNav, locale)}
           >
             {footer.columns.map((col) => (
               <div key={col.title.es}>
@@ -75,16 +75,16 @@ export function Footer({ lang }: { lang: Locale }) {
                     contenido y los enanizaba. La navegación del pie ya se
                     anuncia por el `aria-label` del `<nav>`. */}
                 <p className="font-mono text-mono uppercase tracking-wider text-ink-3">
-                  {t(col.title, lang)}
+                  {t(col.title, locale)}
                 </p>
                 <ul className="mt-4 space-y-1">
                   {col.links.map((link) => (
                     <li key={link.label.es}>
                       <Link
-                        href={href(lang, link.href)}
+                        href={href(locale, link.href)}
                         className="inline-flex min-h-11 items-center text-body-s text-ink-2 transition-colors hover:text-ink"
                       >
-                        {t(link.label, lang)}
+                        {t(link.label, locale)}
                       </Link>
                     </li>
                   ))}
@@ -96,20 +96,20 @@ export function Footer({ lang }: { lang: Locale }) {
 
         <div className="mt-12 flex flex-col gap-3 border-t border-line pt-8 text-caption text-ink-3 sm:flex-row sm:items-center sm:justify-between">
           <p>
-            © {year} {brand.name}. {t(footer.rights, lang)}
+            © {year} {brand.name}. {t(footer.rights, locale)}
           </p>
           <div className="flex flex-wrap items-center gap-x-6">
             <Link
-              href={href(lang, routes.terms)}
+              href={href(locale, routes.terms)}
               className="inline-flex min-h-11 items-center transition-colors hover:text-ink"
             >
-              {t(footer.terms, lang)}
+              {t(footer.terms, locale)}
             </Link>
             <Link
-              href={href(lang, routes.privacy)}
+              href={href(locale, routes.privacy)}
               className="inline-flex min-h-11 items-center transition-colors hover:text-ink"
             >
-              {t(footer.privacy, lang)}
+              {t(footer.privacy, locale)}
             </Link>
           </div>
         </div>

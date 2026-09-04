@@ -25,12 +25,12 @@ import type { MediaAsset } from '~/core/common/domain/entities/Media'
  */
 export function VideoMedia({
   asset,
-  lang,
+  locale,
   className,
   controls = false,
 }: {
   asset: MediaAsset
-  lang: Locale
+  locale: Locale
   className?: string
   /**
    * `true` cuando el material es una PIEZA QUE SE VE, no un fondo.
@@ -71,7 +71,7 @@ export function VideoMedia({
       loop={!controls}
       playsInline
       autoPlay={controls ? undefined : !reduce}
-      aria-label={t(asset.alt, lang)}
+      aria-label={t(asset.alt, locale)}
     >
       {/* El ORDEN importa: el navegador se queda con la PRIMERA fuente cuyo
           `media` case, así que la variante ligera va antes. Sin `media` en la

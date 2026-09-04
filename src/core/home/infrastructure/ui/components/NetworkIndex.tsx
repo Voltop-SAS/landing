@@ -56,22 +56,22 @@ import { CountUp } from '@ui/common/components/ui/CountUp'
  * se añade una estación, y §33 prohíbe inventar cifras: la forma más segura de
  * no inventarlas es no poder escribirlas.
  */
-export function NetworkIndex({ lang }: { lang: Locale }) {
+export function NetworkIndex({ locale }: { locale: Locale }) {
   const resumen = getNetworkSummary()
   const cobertura = getCitiesWithStations()
 
   const cifras: { etiqueta: string; valor: React.ReactNode }[] = [
     /* La única que cuenta es la que ES un número. "22–80 kW" y la lista de
        conectores no son cantidades: animarlas sería movimiento por moverse. */
-    { etiqueta: t(home.network.stats.points, lang), valor: <CountUp value={resumen.puntos} /> },
+    { etiqueta: t(home.network.stats.points, locale), valor: <CountUp value={resumen.puntos} /> },
     {
-      etiqueta: t(home.network.stats.power, lang),
+      etiqueta: t(home.network.stats.power, locale),
       valor:
         resumen.potenciaMin && resumen.potenciaMax
           ? `${resumen.potenciaMin}–${resumen.potenciaMax} kW`
           : '—',
     },
-    { etiqueta: t(home.network.stats.connectors, lang), valor: resumen.conectores.join(' · ') },
+    { etiqueta: t(home.network.stats.connectors, locale), valor: resumen.conectores.join(' · ') },
   ]
 
   /** El asset de cada ciudad, por slug. Ver el bloque CIUDADES en `media.ts`. */
@@ -138,14 +138,14 @@ export function NetworkIndex({ lang }: { lang: Locale }) {
                 produce ese ritmo. */}
             <SectionHeading
               id="red-title"
-              kicker={t(home.network.eyebrow, lang)}
+              kicker={t(home.network.eyebrow, locale)}
               kickerTone="brand"
               size="m"
             >
-              {t(home.network.title, lang)}
+              {t(home.network.title, locale)}
             </SectionHeading>
 
-            <p className="measure mt-6 text-body-l text-ink-2">{t(home.network.lead, lang)}</p>
+            <p className="measure mt-6 text-body-l text-ink-2">{t(home.network.lead, locale)}</p>
 
             {/* ── TARJETAS DE COBERTURA ───────────────────────────────────
                 La fotografía es el elemento dominante y el texto vive DENTRO,
@@ -169,7 +169,7 @@ export function NetworkIndex({ lang }: { lang: Locale }) {
                   level="expressive"
                 >
                   <Link
-                    href={href(lang, routes.city(city.slug))}
+                    href={href(locale, routes.city(city.slug))}
                     className="press group relative block overflow-hidden rounded-(--radius-structural) border border-line transition-[transform,border-color] duration-(--duration-fast) ease-(--ease-standard) hover:-translate-y-1 hover:border-line-strong motion-reduce:hover:translate-y-0"
                   >
                     {/* EL ENCUADRE. La proporción la fija la tarjeta y el
@@ -185,7 +185,7 @@ export function NetworkIndex({ lang }: { lang: Locale }) {
                     <div className="relative aspect-[16/9] w-full">
                       <Media
                         asset={fotoCiudad[city.slug] ?? media.ciudadBogota}
-                        lang={lang}
+                        locale={locale}
                         fill
                         /* Los tres tramos siguen a la rejilla de arriba
                            (`grid-cols-1 sm:grid-cols-2`) dentro de la columna
@@ -233,8 +233,8 @@ export function NetworkIndex({ lang }: { lang: Locale }) {
                             texto corrido rompe ese lenguaje. */}
                         <p className="mt-1.5 font-mono text-mono text-ink-2">
                           <CountUp value={operational} />{' '}
-                          {t(operational === 1 ? units.station : units.stations, lang)}{' '}
-                          {t(home.network.live, lang)}
+                          {t(operational === 1 ? units.station : units.stations, locale)}{' '}
+                          {t(home.network.live, locale)}
                           {operational !== count ? (
                             <span className="text-ink-3"> · {count} total</span>
                           ) : null}
@@ -318,9 +318,9 @@ export function NetworkIndex({ lang }: { lang: Locale }) {
               <Button
                 variant="ghost"
                 arrow
-                href={href(lang, routes.red)}
+                href={href(locale, routes.red)}
               >
-                {t(actions.seeNetwork, lang)}
+                {t(actions.seeNetwork, locale)}
               </Button>
               {/* Mono en versales: es como el sitio escribe una nota al lado
                   de un CTA —ver el pie de foto del beat 2, "NUEVA ESTACIÓN ·
@@ -334,7 +334,7 @@ export function NetworkIndex({ lang }: { lang: Locale }) {
                   chip decorativo sin función. El pie de foto del beat 2 dice lo
                   suyo sin ninguno. */}
               <p className="font-mono text-mono uppercase tracking-wider text-ink-3">
-                {t(home.network.moreCities, lang)}
+                {t(home.network.moreCities, locale)}
               </p>
             </div>
           </div>
@@ -388,7 +388,7 @@ export function NetworkIndex({ lang }: { lang: Locale }) {
           >
             <Media
               asset={media.renderCargador}
-              lang={lang}
+              locale={locale}
               fill
               sizes="(min-width: 1024px) 44vw, 90vw"
               className="h-full w-full"

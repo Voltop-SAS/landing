@@ -10,21 +10,21 @@ import { brand } from '~/core/common/domain/consts/copy'
  * LAYOUT RAÍZ · emite el documento
  *
  * ── POR QUÉ EXISTE ────────────────────────────────────────────────────────
- * Antes el documento lo emitía `app/[lang]/layout.tsx` y no había layout raíz.
+ * Antes el documento lo emitía `app/[locale]/layout.tsx` y no había layout raíz.
  * Es un patrón que Next admite, pero rompe la resolución de los boundaries de
- * `not-found`: CUALQUIER `notFound()` lanzado dentro de `[lang]` —una estación
+ * `not-found`: CUALQUIER `notFound()` lanzado dentro de `[locale]` —una estación
  * inexistente, una ciudad inexistente, un idioma inválido— servía el documento
  * de error interno de Next (`<html id="__next_error__">`, sin `lang`, sin
  * estilos, sin marca) y solo se recuperaba en cliente tras la hidratación.
- * `app/[lang]/not-found.tsx` no se renderizaba nunca. Un crawler veía vacío.
+ * `app/[locale]/not-found.tsx` no se renderizaba nunca. Un crawler veía vacío.
  *
  * ── EL COMPROMISO, EXPLÍCITO ──────────────────────────────────────────────
  * Un layout raíz no recibe `params`, así que `<html lang>` aquí no puede ser
  * dinámico y queda fijo en el idioma por defecto. §28 (decisión confirmada
  * nº14) pedía el `lang` correcto en el HTML SERVIDO, y esto lo relaja.
  *
- * Se compensa donde importa: `[lang]/layout.tsx` marca el idioma real en un
- * `<div lang>` que envuelve todo el contenido. Los lectores de pantalla honran
+ * Se compensa donde importa: `[locale]/layout.tsx` marca el idioma real en un
+ * `<div locale>` que envuelve todo el contenido. Los lectores de pantalla honran
  * el `lang` más cercano al nodo, así que la pronunciación sigue siendo
  * correcta, y para buscadores el idioma lo declaran los `hreflang` y las
  * `alternates` de cada ruta, que ya estaban bien.
@@ -34,7 +34,7 @@ import { brand } from '~/core/common/domain/consts/copy'
  * "añadir un idioma = añadir una entrada".
  * ──────────────────────────────────────────────────────────────────────────
  *
- * Las tipografías se cargan aquí y no en `[lang]`: las variables tienen que
+ * Las tipografías se cargan aquí y no en `[locale]`: las variables tienen que
  * existir en `<html>` también para las páginas que viven fuera del segmento de
  * idioma, como el 404 de raíz.
  * TIPOGRAFÍAS DE MARCA (entregadas 2026-09-02). Ya no hay marcadores de

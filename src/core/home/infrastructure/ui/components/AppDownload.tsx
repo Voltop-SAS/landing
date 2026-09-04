@@ -43,7 +43,7 @@ import { Reveal } from '@ui/common/components/ui/Reveal'
  * un objeto pequeño. Partirlo por el medio dejaría al QR flotando en un vacío
  * y repetiría el split simétrico que §12 prohíbe.
  */
-export function AppDownload({ lang }: { lang: Locale }) {
+export function AppDownload({ locale }: { locale: Locale }) {
   const c = home.app
 
   return (
@@ -55,14 +55,14 @@ export function AppDownload({ lang }: { lang: Locale }) {
       <Container>
         <div className="grid gap-12 md:grid-cols-[1fr_auto] md:items-center md:gap-16">
           <div>
-            <Eyebrow tone="brand">{t(c.eyebrow, lang)}</Eyebrow>
+            <Eyebrow tone="brand">{t(c.eyebrow, locale)}</Eyebrow>
             <h2
               id="app-title"
               className="mt-4 max-w-[16ch] font-display text-display-l font-semibold text-balance text-ink"
             >
-              {t(c.title, lang)}
+              {t(c.title, locale)}
             </h2>
-            <p className="measure-narrow mt-5 text-body-l text-ink-2">{t(c.lead, lang)}</p>
+            <p className="measure-narrow mt-5 text-body-l text-ink-2">{t(c.lead, locale)}</p>
 
             {/* CUATRO PASOS, EN ORDEN. Una lista numerada y no viñetas: el
                 número es información —dice que hay una secuencia y en qué
@@ -86,9 +86,11 @@ export function AppDownload({ lang }: { lang: Locale }) {
                   </span>
                   <span>
                     <span className="font-display text-body font-semibold text-ink">
-                      {t(paso.label, lang)}
+                      {t(paso.label, locale)}
                     </span>
-                    <span className="mt-1 block text-body-s text-ink-2">{t(paso.body, lang)}</span>
+                    <span className="mt-1 block text-body-s text-ink-2">
+                      {t(paso.body, locale)}
+                    </span>
                   </span>
                 </li>
               ))}
@@ -106,14 +108,14 @@ export function AppDownload({ lang }: { lang: Locale }) {
               <Button
                 variant="link"
                 arrow
-                href={href(lang, routes.red)}
+                href={href(locale, routes.red)}
               >
-                {t(actions.findCharger, lang)}
+                {t(actions.findCharger, locale)}
               </Button>
             </div>
 
             <StoreBadges
-              lang={lang}
+              locale={locale}
               className="mt-9"
             />
           </div>
@@ -128,7 +130,7 @@ export function AppDownload({ lang }: { lang: Locale }) {
                 <div className="rounded-[1.125rem] bg-white p-3.5 shadow-[0_10px_28px_-10px_rgb(0_0_0/0.7)]">
                   <Image
                     src="/qr-descargar-app.svg"
-                    alt={t(c.qrAlt, lang)}
+                    alt={t(c.qrAlt, locale)}
                     width={168}
                     height={168}
                     /* SVG de 1.2 KB con geometría exacta: pasarlo por el
@@ -139,7 +141,7 @@ export function AppDownload({ lang }: { lang: Locale }) {
                   />
                 </div>
               </div>
-              <p className="font-mono text-mono text-ink-3">{t(c.qrLabel, lang)}</p>
+              <p className="font-mono text-mono text-ink-3">{t(c.qrLabel, locale)}</p>
             </div>
           </Reveal>
         </div>

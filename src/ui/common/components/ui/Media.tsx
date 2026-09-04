@@ -27,7 +27,7 @@ const aspects: Record<MediaAsset['aspect'], string> = {
 
 export function Media({
   asset,
-  lang,
+  locale,
   className,
   sizes = '100vw',
   priority = false,
@@ -40,7 +40,7 @@ export function Media({
   corner = false,
 }: {
   asset: MediaAsset
-  lang: Locale
+  locale: Locale
   className?: string
   sizes?: string
   priority?: boolean
@@ -129,7 +129,7 @@ export function Media({
         <div className={cn('relative overflow-hidden', fondo, shape, esquina, className)}>
           <Image
             src={asset.src}
-            alt={t(asset.alt, lang)}
+            alt={t(asset.alt, locale)}
             fill
             sizes={sizes}
             priority={priority}
@@ -146,7 +146,7 @@ export function Media({
       <div className={cn('relative overflow-hidden', fondo, shape, esquina, className)}>
         <VideoMedia
           asset={asset}
-          lang={lang}
+          locale={locale}
           controls={controls}
           className={cn(
             'absolute inset-0 h-full w-full',
@@ -161,7 +161,7 @@ export function Media({
   return (
     <MediaPending
       asset={asset}
-      lang={lang}
+      locale={locale}
       fill={fill}
       className={cn(shape, esquina, className)}
     />
@@ -188,26 +188,26 @@ export function Media({
  */
 export function MediaPending({
   asset,
-  lang,
+  locale,
   className,
   fill = false,
 }: {
   asset: MediaAsset
-  lang: Locale
+  locale: Locale
   className?: string
   /** `true` cuando el hueco es el fondo de una composición con contenido encima. */
   fill?: boolean
 }) {
   const kind = asset.kind === 'video' ? mediaPlaceholder.video : mediaPlaceholder.photo
-  const badge = `${t(kind, lang)}${asset.duration ? ` · ${asset.duration}` : ''} · ${t(
+  const badge = `${t(kind, locale)}${asset.duration ? ` · ${asset.duration}` : ''} · ${t(
     mediaPlaceholder.pending,
-    lang,
+    locale,
   )}`
 
   return (
     <div
       role="img"
-      aria-label={`${t(a11y.placeholderMedia, lang)}. ${t(asset.alt, lang)}`}
+      aria-label={`${t(a11y.placeholderMedia, locale)}. ${t(asset.alt, locale)}`}
       className={cn(
         'relative flex overflow-hidden bg-surface-1',
         fill ? 'items-start justify-end p-4 md:p-6' : 'items-end p-5',
@@ -233,7 +233,7 @@ export function MediaPending({
           <span className="inline-flex w-fit items-center border border-line-strong px-2 py-1 font-mono text-[0.6875rem] uppercase tracking-wider text-ink-3">
             {badge}
           </span>
-          <span className="font-mono text-caption text-ink-3">{t(asset.alt, lang)}</span>
+          <span className="font-mono text-caption text-ink-3">{t(asset.alt, locale)}</span>
         </div>
       )}
     </div>

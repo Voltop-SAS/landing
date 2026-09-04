@@ -20,12 +20,12 @@ import { cn } from '@ui/common/lib/cn'
  * El segmento elegido se comunica hacia arriba para prellenar el formulario.
  */
 export function SegmentSelector({
-  lang,
+  locale,
   segments,
   onChange,
   activeKey,
 }: {
-  lang: Locale
+  locale: Locale
   segments: BusinessSegment[]
   activeKey: string
   onChange: (key: string) => void
@@ -75,7 +75,7 @@ export function SegmentSelector({
           entre el control y su contenido es visual, no solo declarada en ARIA. */}
       <div
         role="tablist"
-        aria-label={t(empresas.selector.title, lang)}
+        aria-label={t(empresas.selector.title, locale)}
         onKeyDown={onKeyDown}
         className="-mb-px flex flex-wrap border-b border-line"
       >
@@ -99,7 +99,7 @@ export function SegmentSelector({
                 isActive ? 'text-ink' : 'text-ink-2 hover:text-ink',
               )}
             >
-              {t(s.label, lang)}
+              {t(s.label, locale)}
               <span
                 aria-hidden="true"
                 className={cn(
@@ -125,16 +125,16 @@ export function SegmentSelector({
             size="m"
             measure="max-w-[22ch]"
           >
-            {t(active.headline, lang)}
+            {t(active.headline, locale)}
           </SectionHeading>
-          <p className="mt-5 measure text-body-l text-ink-2">{t(active.proposition, lang)}</p>
+          <p className="mt-5 measure text-body-l text-ink-2">{t(active.proposition, locale)}</p>
 
           <SectionHeading
             as="h3"
             size="s"
             className="mt-12"
           >
-            {t(empresas.selector.benefitsTitle, lang)}
+            {t(empresas.selector.benefitsTitle, locale)}
           </SectionHeading>
           {/* "Qué incluye" es una lista de INCLUSIÓN, no una secuencia: el
               número prometía un orden inexistente. La marca de verificación dice
@@ -161,7 +161,7 @@ export function SegmentSelector({
                     strokeLinejoin="round"
                   />
                 </svg>
-                {t(b, lang)}
+                {t(b, locale)}
               </li>
             ))}
           </ul>

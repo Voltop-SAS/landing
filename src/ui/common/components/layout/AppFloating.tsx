@@ -116,7 +116,7 @@ import { cn } from '@ui/common/lib/cn'
 /** La misma clave que usa `CookieConsent`. Ver la regla 5. */
 const CLAVE_COOKIES = 'voltop:cookies'
 
-export function AppFloating({ lang }: { lang: Locale }) {
+export function AppFloating({ locale }: { locale: Locale }) {
   const c = home.appFloating
   /* `true` de partida: al cargar, la primera sección está a la vista. */
   const [primeraALaVista, setPrimeraALaVista] = useState(true)
@@ -229,9 +229,9 @@ export function AppFloating({ lang }: { lang: Locale }) {
           {icono('size-12')}
 
           <p className="mt-4 font-display text-display-s font-semibold text-balance text-ink">
-            {t(c.title, lang)}
+            {t(c.title, locale)}
           </p>
-          <p className="mt-2 text-body-s text-ink-2">{t(c.body, lang)}</p>
+          <p className="mt-2 text-body-s text-ink-2">{t(c.body, locale)}</p>
         </div>
 
         <a
@@ -257,7 +257,7 @@ export function AppFloating({ lang }: { lang: Locale }) {
             className="block size-28"
           />
           <span className="sr-only">
-            {t(home.app.qrLabel, lang)} · {t(a11y.opensInNewTab, lang)}
+            {t(home.app.qrLabel, locale)} · {t(a11y.opensInNewTab, locale)}
           </span>
         </a>
       </div>
@@ -297,7 +297,7 @@ export function AppFloating({ lang }: { lang: Locale }) {
           {icono('size-10')}
           <div className="order-1 min-w-0 flex-1">
             <p className="truncate font-display text-body font-semibold text-ink">
-              {t(c.titleMobile, lang)}
+              {t(c.titleMobile, locale)}
             </p>
             {/* `line-clamp-2` y no `truncate`: a 320px al texto le quedan
                 164px y esta línea necesita 227, así que cortarla dejaría
@@ -305,7 +305,7 @@ export function AppFloating({ lang }: { lang: Locale }) {
                 el mensaje entero y solo cuesta alto en el ancho más estrecho
                 —de 390px arriba sigue siendo una línea—. El tope de dos evita
                 que un idioma más largo estire la barra sin control. */}
-            <p className="line-clamp-2 text-caption text-ink-2">{t(c.bodyMobile, lang)}</p>
+            <p className="line-clamp-2 text-caption text-ink-2">{t(c.bodyMobile, locale)}</p>
           </div>
           <a
             href={externalLinks.app}
@@ -316,8 +316,8 @@ export function AppFloating({ lang }: { lang: Locale }) {
             }
             className="brand-gradient press order-3 inline-flex h-11 w-full shrink-0 items-center justify-center rounded-(--radius-pill) px-4 text-body-s font-semibold text-on-brand transition-[filter] duration-(--duration-fast) hover:brightness-105 xs:order-2 xs:w-auto"
           >
-            {t(c.open, lang)}
-            <span className="sr-only"> · {t(a11y.opensInNewTab, lang)}</span>
+            {t(c.open, locale)}
+            <span className="sr-only"> · {t(a11y.opensInNewTab, locale)}</span>
           </a>
         </div>
       </div>

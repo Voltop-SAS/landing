@@ -317,7 +317,7 @@ export type StationMetaVars = {
 /**
  * DESCRIPCIÓN SEO DE CADA ESTACIÓN.
  *
- * Vivía como ternario `lang === "es" ? … : …` DENTRO de la página. Un ternario
+ * Vivía como ternario `locale === "es" ? … : …` DENTRO de la página. Un ternario
  * no tiene tercera rama: con un idioma más habría servido la descripción en
  * INGLÉS a todo lo que no fuera español —en silencio y en cada estación del
  * sitio—, que es justo el fallo que la capa de copy existe para impedir

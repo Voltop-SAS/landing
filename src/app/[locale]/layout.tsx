@@ -26,9 +26,9 @@ import { CookieConsent } from '@ui/common/components/layout/CookieConsent'
  *
  * YA NO EMITE EL DOCUMENTO. `<html>` y `<body>` los emite `app/layout.tsx`,
  * porque sin layout raíz Next no resolvía los boundaries de `not-found` y
- * `[lang]/not-found.tsx` no se renderizaba nunca (ver el comentario largo de
+ * `[locale]/not-found.tsx` no se renderizaba nunca (ver el comentario largo de
  * `app/layout.tsx`). El precio es que `<html lang>` queda fijo en el idioma por
- * defecto, y se compensa aquí: el `<div lang>` marca el idioma REAL de todo el
+ * defecto, y se compensa aquí: el `<div locale>` marca el idioma REAL de todo el
  * contenido, que es el nodo que consultan los lectores de pantalla.
  *
  * TAMPOCO RECHAZA EL IDIOMA. Antes llamaba a `notFound()` y eso lanzaba antes
@@ -55,32 +55,35 @@ import { CookieConsent } from '@ui/common/components/layout/CookieConsent'
 export const dynamicParams = false
 
 export function generateStaticParams() {
-  return locales.map((lang) => ({ lang }))
+  return locales.map((locale) => ({ locale }))
 }
 
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ lang: string }>
+  params: Promise<{ locale: string }>
 }): Promise<Metadata> {
-  const { lang } = await params
+  const { locale } = await params
   /* Un idioma inexistente no describe ningún contenido y no debe indexarse. */
-  if (!isLocale(lang)) return { robots: { index: false, follow: true } }
+  if (!isLocale(locale)) return { robots: { index: false, follow: true } }
 
   return {
-    title: { default: `${brand.name} — ${t(brand.tagline, lang)}`, template: `%s · ${brand.name}` },
-    description: t(brand.tagline, lang),
-    alternates: alternatesFor(lang, routes.home),
+    title: {
+      default: `${brand.name} — ${t(brand.tagline, locale)}`,
+      template: `%s · ${brand.name}`,
+    },
+    description: t(brand.tagline, locale),
+    alternates: alternatesFor(locale, routes.home),
     openGraph: {
       type: 'website',
       siteName: brand.name,
-      locale: localeMeta[lang].htmlLang,
-      url: absoluteUrl(lang, ''),
+      locale: localeMeta[locale].htmlLang,
+      url: absoluteUrl(locale, ''),
     },
     /* Un idioma en BORRADOR es navegable —hay que poder revisarlo— pero no
        entra al índice mientras esté incompleto. Se sigue permitiendo seguir
        los enlaces: la versión publicada de cada página sí debe descubrirse. */
-    robots: { index: isPublished(lang), follow: true },
+    robots: { index: isPublished(locale), follow: true },
   }
 }
 
@@ -89,25 +92,25 @@ export default async function LangLayout({
   params,
 }: {
   children: React.ReactNode
-  params: Promise<{ lang: string }>
+  params: Promise<{ locale: string }>
 }) {
-  const { lang: raw } = await params
-  const lang: Locale = isLocale(raw) ? raw : defaultLocale
+  const { locale: raw } = await params
+  const locale: Locale = isLocale(raw) ? raw : defaultLocale
 
   return (
-    <div lang={localeMeta[lang].htmlLang}>
+    <div lang={localeMeta[locale].htmlLang}>
       <a
         href="#contenido"
         className="skip-link inline-flex min-h-11 items-center rounded-(--radius-pill) bg-brand px-5 font-medium text-on-brand"
       >
-        {t(a11y.skipToContent, lang)}
+        {t(a11y.skipToContent, locale)}
       </a>
       <SmoothScroll />
-      <Header lang={lang} />
+      <Header locale={locale} />
       <main id="contenido">{children}</main>
-      <AppFloating lang={lang} />
-      <CookieConsent lang={lang} />
-      <Footer lang={lang} />
+      <AppFloating locale={locale} />
+      <CookieConsent locale={locale} />
+      <Footer locale={locale} />
     </div>
   )
 }

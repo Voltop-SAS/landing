@@ -69,7 +69,7 @@ const VEIL = {
   },
 } as const
 
-export function Hero({ lang }: { lang: Locale }) {
+export function Hero({ locale }: { locale: Locale }) {
   const coverage = getCitiesWithStations()
 
   return (
@@ -96,7 +96,7 @@ export function Hero({ lang }: { lang: Locale }) {
       <div className="absolute inset-0">
         <Media
           asset={media.heroVehiculoCargando}
-          lang={lang}
+          locale={locale}
           fill
           priority
           sizes="100vw"
@@ -168,13 +168,13 @@ export function Hero({ lang }: { lang: Locale }) {
       />
 
       <Container className="relative z-(--z-raised) pb-(--spacing-section-tight) pt-32">
-        <Eyebrow tone="brand">{t(home.hero.eyebrow, lang)}</Eyebrow>
+        <Eyebrow tone="brand">{t(home.hero.eyebrow, locale)}</Eyebrow>
 
         <h1 className="mt-6 max-w-[15ch] font-display text-display-2xl font-semibold text-ink">
-          {t(home.hero.title, lang)}
+          {t(home.hero.title, locale)}
         </h1>
 
-        <p className="mt-7 measure text-body-l text-ink-2">{t(home.hero.lead, lang)}</p>
+        <p className="mt-7 measure text-body-l text-ink-2">{t(home.hero.lead, locale)}</p>
 
         <div className="mt-10">
           {/* El evento estaba declarado en §31 y no lo emitía nadie: el header
@@ -188,9 +188,9 @@ export function Hero({ lang }: { lang: Locale }) {
               variant="primary"
               size="l"
               arrow
-              href={href(lang, routes.red)}
+              href={href(locale, routes.red)}
             >
-              {t(actions.findCharger, lang)}
+              {t(actions.findCharger, locale)}
             </Button>
           </TrackClick>
         </div>
@@ -202,7 +202,7 @@ export function Hero({ lang }: { lang: Locale }) {
           aria-hidden="true"
           className="mt-12 flex items-center gap-2 font-mono text-mono uppercase tracking-wider text-ink-3"
         >
-          {t(home.hero.scrollHint, lang)}
+          {t(home.hero.scrollHint, locale)}
           <svg
             width="12"
             height="12"
@@ -225,7 +225,7 @@ export function Hero({ lang }: { lang: Locale }) {
             No es decoración ni una cifra inventada. */}
         {coverage.length > 0 && (
           <nav
-            aria-label={t(red.cities.title, lang)}
+            aria-label={t(red.cities.title, locale)}
             className="mt-8 border-t border-line-strong pt-6"
           >
             <ul className="flex flex-wrap items-center gap-x-8 gap-y-2">
@@ -233,12 +233,12 @@ export function Hero({ lang }: { lang: Locale }) {
                   "Bogotá" cabía al lado y "Medellín" caía sola a una segunda
                   fila: las dos ciudades quedaban desalineadas entre sí. */}
               <li className="basis-full font-mono text-mono uppercase tracking-wider text-ink-3 sm:basis-auto">
-                {t(red.cities.title, lang)}
+                {t(red.cities.title, locale)}
               </li>
               {coverage.map(({ city }) => (
                 <li key={city.slug}>
                   <Link
-                    href={href(lang, routes.city(city.slug))}
+                    href={href(locale, routes.city(city.slug))}
                     className="inline-flex min-h-11 items-center font-display text-display-s text-ink-2 transition-colors hover:text-brand"
                   >
                     {city.name}

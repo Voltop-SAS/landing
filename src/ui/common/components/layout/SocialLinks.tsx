@@ -70,7 +70,7 @@ const iconos: Record<string, React.ReactNode> = {
   ),
 }
 
-export function SocialLinks({ lang }: { lang: Locale }) {
+export function SocialLinks({ locale }: { locale: Locale }) {
   if (footer.social.length === 0) return null
 
   return (
@@ -96,7 +96,7 @@ export function SocialLinks({ lang }: { lang: Locale }) {
               {iconos[red.name]}
             </svg>
             <span className="sr-only">
-              {red.name} · {t(a11y.opensInNewTab, lang)}
+              {red.name} · {t(a11y.opensInNewTab, locale)}
             </span>
           </a>
         </li>

@@ -98,8 +98,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ]
 
   return entries.flatMap(({ path, priority, lastModified, changeFrequency }) =>
-    publishedLocales.map((lang) => ({
-      url: absoluteUrl(lang, path),
+    publishedLocales.map((locale) => ({
+      url: absoluteUrl(locale, path),
       lastModified,
       changeFrequency,
       priority,

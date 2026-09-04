@@ -36,10 +36,10 @@ type AsLink = Common & {
    * Abre en pestaña nueva Y LO ANUNCIA. Antes solo hacía lo primero: "Cómo
    * llegar" —el CTA principal de la ficha de estación— saltaba a Google Maps
    * sin icono, sin texto y sin aviso a lectores de pantalla (WCAG 3.2.5).
-   * Requiere `lang` para poder decirlo en el idioma de la página.
+   * Requiere `locale` para poder decirlo en el idioma de la página.
    */
   external?: boolean
-  lang?: Locale
+  locale?: Locale
   /** Solo para instrumentación del plan de medición. */
   onClick?: () => void
   type?: never
@@ -170,7 +170,7 @@ export function Button(props: AsLink | AsButton) {
   )
 
   if ('href' in rest && rest.href) {
-    const { href, external, lang, ...anchorRest } = rest as AsLink
+    const { href, external, locale, ...anchorRest } = rest as AsLink
     if (external) {
       return (
         <a
@@ -185,7 +185,7 @@ export function Button(props: AsLink | AsButton) {
             external
           >
             {children}
-            {lang && <span className="sr-only"> ({t(a11y.opensInNewTab, lang)})</span>}
+            {locale && <span className="sr-only"> ({t(a11y.opensInNewTab, locale)})</span>}
           </Inner>
         </a>
       )

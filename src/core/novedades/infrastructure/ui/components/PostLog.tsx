@@ -21,7 +21,7 @@ import type { Post } from '~/core/common/infrastructure/data-access'
  * `map`: así el marcado no depende del orden de evaluación y el separador
  * puede ser hermano de las filas en lugar de anidarse dentro de una.
  */
-export function PostLog({ posts, lang }: { posts: Post[]; lang: Locale }) {
+export function PostLog({ posts, locale }: { posts: Post[]; locale: Locale }) {
   const groups = posts.reduce<{ year: string; entries: Post[] }[]>((acc, post) => {
     const year = yearOf(post.date)
     const last = acc[acc.length - 1]
@@ -60,7 +60,7 @@ export function PostLog({ posts, lang }: { posts: Post[]; lang: Locale }) {
             <LogEntry
               key={post.slug}
               post={post}
-              lang={lang}
+              locale={locale}
             />
           ))}
         </Fragment>

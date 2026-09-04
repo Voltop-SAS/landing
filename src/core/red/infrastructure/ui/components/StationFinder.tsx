@@ -58,7 +58,7 @@ import { cn } from '@ui/common/lib/cn'
  * ──────────────────────────────────────────────────────────────────────────
  */
 
-type Props = { lang: Locale; stations: Station[]; cities: City[] }
+type Props = { locale: Locale; stations: Station[]; cities: City[] }
 
 /**
  * ESCALONES DEL FILTRO DE POTENCIA — derivados del dataset, no escritos.
@@ -165,7 +165,7 @@ function writeCriteria(c: Criteria) {
   window.history.replaceState(null, '', qs ? `?${qs}` : window.location.pathname)
 }
 
-export function StationFinder({ lang, stations, cities }: Props) {
+export function StationFinder({ locale, stations, cities }: Props) {
   const [criteria, setCriteria] = useState<Criteria>(EMPTY)
   const { query, city, connector, minPower, onlyLive, sort } = criteria
 
@@ -280,7 +280,7 @@ export function StationFinder({ lang, stations, cities }: Props) {
             htmlFor={searchId}
             className="block font-mono text-mono uppercase tracking-wider text-ink-3 max-lg:sr-only"
           >
-            {t(red.search.label, lang)}
+            {t(red.search.label, locale)}
           </label>
           <div className="relative lg:mt-3">
             <span
@@ -323,7 +323,7 @@ export function StationFinder({ lang, stations, cities }: Props) {
                   track('red_buscar', { termino: term })
                 }
               }}
-              placeholder={t(red.search.placeholder, lang)}
+              placeholder={t(red.search.placeholder, locale)}
               autoComplete="off"
               className="min-h-12 w-full rounded-(--radius-structural) border border-line-control bg-canvas pl-12 pr-12 text-body-l text-ink outline-none transition-colors placeholder:text-ink-3 focus:border-brand"
             />
@@ -331,7 +331,7 @@ export function StationFinder({ lang, stations, cities }: Props) {
               <button
                 type="button"
                 onClick={() => set('query', '')}
-                aria-label={t(red.search.clear, lang)}
+                aria-label={t(red.search.clear, locale)}
                 className="absolute right-1 top-1/2 grid size-11 -translate-y-1/2 place-items-center text-ink-3 transition-colors hover:text-ink"
               >
                 <svg
@@ -361,7 +361,7 @@ export function StationFinder({ lang, stations, cities }: Props) {
             open={filtersOpen}
             onToggle={() => setFiltersOpen((v) => !v)}
             controls={filtersId}
-            label={t(filtersOpen ? red.filters.toggleHide : red.filters.toggle, lang)}
+            label={t(filtersOpen ? red.filters.toggleHide : red.filters.toggle, locale)}
             count={activeCount}
           />
 
@@ -372,7 +372,7 @@ export function StationFinder({ lang, stations, cities }: Props) {
               htmlFor={sortId}
               className="block font-mono text-mono uppercase tracking-wider text-ink-3 max-lg:sr-only"
             >
-              {t(red.sort.label, lang)}
+              {t(red.sort.label, locale)}
             </label>
             <select
               id={sortId}
@@ -383,12 +383,12 @@ export function StationFinder({ lang, stations, cities }: Props) {
               }}
               className="min-h-11 w-full rounded-(--radius-pill) border border-line-control bg-canvas px-4 pr-9 text-body-s text-ink outline-none transition-colors focus:border-brand lg:mt-3 lg:min-h-12 lg:rounded-(--radius-structural) lg:px-4 lg:pr-10 lg:text-body"
             >
-              <option value="relevance">{t(red.sort.relevance, lang)}</option>
-              <option value="power">{t(red.sort.power, lang)}</option>
-              <option value="status">{t(red.sort.status, lang)}</option>
-              <option value="city">{t(red.sort.city, lang)}</option>
+              <option value="relevance">{t(red.sort.relevance, locale)}</option>
+              <option value="power">{t(red.sort.power, locale)}</option>
+              <option value="status">{t(red.sort.status, locale)}</option>
+              <option value="city">{t(red.sort.city, locale)}</option>
               {geoAvailable && origin && (
-                <option value="distance">{t(red.sort.distance, lang)}</option>
+                <option value="distance">{t(red.sort.distance, locale)}</option>
               )}
             </select>
           </div>
@@ -406,7 +406,7 @@ export function StationFinder({ lang, stations, cities }: Props) {
             filtersOpen ? 'grid' : 'hidden',
           )}
         >
-          <FilterGroup label={t(red.filters.city, lang)}>
+          <FilterGroup label={t(red.filters.city, locale)}>
             <Chip
               active={!city}
               onClick={() => {
@@ -414,7 +414,7 @@ export function StationFinder({ lang, stations, cities }: Props) {
                 onFilter('ciudad', 'todas')
               }}
             >
-              {t(red.filters.all, lang)}
+              {t(red.filters.all, locale)}
             </Chip>
             {cities.map((c) => (
               <Chip
@@ -430,7 +430,7 @@ export function StationFinder({ lang, stations, cities }: Props) {
             ))}
           </FilterGroup>
 
-          <FilterGroup label={t(red.filters.connector, lang)}>
+          <FilterGroup label={t(red.filters.connector, locale)}>
             <Chip
               active={!connector}
               onClick={() => {
@@ -438,7 +438,7 @@ export function StationFinder({ lang, stations, cities }: Props) {
                 onFilter('conector', 'todos')
               }}
             >
-              {t(red.filters.allM, lang)}
+              {t(red.filters.allM, locale)}
             </Chip>
             {connectors.map((c) => (
               <Chip
@@ -457,7 +457,7 @@ export function StationFinder({ lang, stations, cities }: Props) {
           {/* Con un solo escalón el grupo no separa nada, así que no se pinta:
               un filtro que no filtra es un control decorativo (§16). */}
           {escalones.length > 1 && (
-            <FilterGroup label={t(red.filters.power, lang)}>
+            <FilterGroup label={t(red.filters.power, locale)}>
               {escalones.map((p) => (
                 <Chip
                   key={p}
@@ -467,7 +467,7 @@ export function StationFinder({ lang, stations, cities }: Props) {
                     onFilter('potencia', p)
                   }}
                 >
-                  {p === 0 ? t(red.filters.allM, lang) : `${p}+ kW`}
+                  {p === 0 ? t(red.filters.allM, locale) : `${p}+ kW`}
                 </Chip>
               ))}
             </FilterGroup>
@@ -475,7 +475,7 @@ export function StationFinder({ lang, stations, cities }: Props) {
 
           {/* La etiqueta del grupo dice DE QUÉ es; el chip, QUÉ hace. Antes las
               dos decían "Solo en operación". */}
-          <FilterGroup label={t(red.filters.availabilityGroup, lang)}>
+          <FilterGroup label={t(red.filters.availabilityGroup, locale)}>
             <Chip
               active={onlyLive}
               onClick={() => {
@@ -483,14 +483,14 @@ export function StationFinder({ lang, stations, cities }: Props) {
                 onFilter('disponibilidad', !onlyLive)
               }}
             >
-              {t(red.filters.availability, lang)}
+              {t(red.filters.availability, locale)}
             </Chip>
             {geoAvailable && geoState !== 'granted' && (
               <Chip
                 active={false}
                 onClick={locate}
               >
-                {t(geoState === 'locating' ? red.nearby.locating : red.nearby.action, lang)}
+                {t(geoState === 'locating' ? red.nearby.locating : red.nearby.action, locale)}
               </Chip>
             )}
           </FilterGroup>
@@ -502,7 +502,7 @@ export function StationFinder({ lang, stations, cities }: Props) {
           role="status"
           className="mt-4 text-body-s text-ink-2"
         >
-          {t(red.nearby.denied, lang)}
+          {t(red.nearby.denied, locale)}
         </p>
       )}
 
@@ -517,7 +517,7 @@ export function StationFinder({ lang, stations, cities }: Props) {
         >
           {results.length}{' '}
           <span className="text-ink-2">
-            {t(results.length === 1 ? red.filters.resultsOne : red.filters.resultsMany, lang)}
+            {t(results.length === 1 ? red.filters.resultsOne : red.filters.resultsMany, locale)}
           </span>
         </p>
         {hasFilters && (
@@ -526,13 +526,13 @@ export function StationFinder({ lang, stations, cities }: Props) {
             onClick={clearAll}
             className="inline-flex min-h-11 items-center text-body-s text-ink-2 underline underline-offset-4 transition-colors hover:text-ink"
           >
-            {t(red.filters.clear, lang)}
+            {t(red.filters.clear, locale)}
           </button>
         )}
       </div>
 
       {/* El encabezado evita un salto de nivel (h1 → h3) */}
-      <h2 className="sr-only">{t(red.filters.resultsMany, lang)}</h2>
+      <h2 className="sr-only">{t(red.filters.resultsMany, locale)}</h2>
       {results.length > 0 ? (
         <ul>
           {results.map((s) => {
@@ -540,7 +540,7 @@ export function StationFinder({ lang, stations, cities }: Props) {
             return (
               <li key={s.slug}>
                 <Link
-                  href={href(lang, routes.station(s.slug))}
+                  href={href(locale, routes.station(s.slug))}
                   onClick={() => track('estacion_vista', { slug: s.slug, origen: 'buscador' })}
                   /* Cuatro columnas desde `lg`, no desde `md`: a 768px metía
                      cuatro celdas en el ancho de tablet y "En operación"
@@ -554,16 +554,16 @@ export function StationFinder({ lang, stations, cities }: Props) {
                     <p className="mt-0.5 text-body-s text-ink-3">
                       {cityName(s.citySlug)}
                       {km !== null &&
-                        ` · ${km < 10 ? km.toFixed(1) : Math.round(km)} ${t(red.nearby.unit, lang)}`}
+                        ` · ${km < 10 ? km.toFixed(1) : Math.round(km)} ${t(red.nearby.unit, locale)}`}
                     </p>
                   </div>
                   <p className="font-mono text-mono text-ink-2">
-                    {formatPowerKw(s.powerKw)} · {s.points} {t(units.pointsShort, lang)}
+                    {formatPowerKw(s.powerKw)} · {s.points} {t(units.pointsShort, locale)}
                   </p>
                   <p className="font-mono text-mono text-ink-3">{s.connectors.join(' / ')}</p>
                   <StatusBadge
                     status={s.status}
-                    lang={lang}
+                    locale={locale}
                     className="justify-self-start lg:justify-self-end"
                   />
                 </Link>
@@ -574,17 +574,17 @@ export function StationFinder({ lang, stations, cities }: Props) {
       ) : (
         <div className="border-b border-line py-16 text-center">
           <h3 className="font-display text-display-s font-semibold text-ink">
-            {t(states.noResults.title, lang)}
+            {t(states.noResults.title, locale)}
           </h3>
           <p className="mx-auto mt-3 max-w-[46ch] text-body-s text-ink-2">
-            {t(states.noResults.body, lang)}
+            {t(states.noResults.body, locale)}
           </p>
           <div className="mt-7">
             <Button
               variant="ghost"
               onClick={clearAll}
             >
-              {t(states.noResults.action, lang)}
+              {t(states.noResults.action, locale)}
             </Button>
           </div>
         </div>

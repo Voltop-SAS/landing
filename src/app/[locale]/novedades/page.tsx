@@ -19,7 +19,7 @@ import { PostLog } from '~/core/novedades/infrastructure/ui/components/PostLog'
 import { TrackView } from '@ui/common/components/analytics/TrackView'
 import { formatDate } from '@ui/common/lib/dates'
 
-type Props = { params: Promise<{ lang: string }> }
+type Props = { params: Promise<{ locale: string }> }
 
 /**
  * /NOVEDADES · el registro de la red.
@@ -45,24 +45,24 @@ type Props = { params: Promise<{ lang: string }> }
 export const dynamicParams = false
 
 export function generateStaticParams() {
-  return locales.map((lang) => ({ lang }))
+  return locales.map((locale) => ({ locale }))
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { lang } = await params
-  if (!isLocale(lang)) return {}
+  const { locale } = await params
+  if (!isLocale(locale)) return {}
 
   return {
-    title: t(novedades.meta.title, lang),
-    description: t(novedades.meta.description, lang),
-    alternates: alternatesFor(lang, routes.novedades),
+    title: t(novedades.meta.title, locale),
+    description: t(novedades.meta.description, locale),
+    alternates: alternatesFor(locale, routes.novedades),
   }
 }
 
 export default async function NovedadesPage({ params }: Props) {
-  const { lang: raw } = await params
+  const { locale: raw } = await params
   if (!isLocale(raw)) notFound()
-  const lang = raw as Locale
+  const locale = raw as Locale
 
   const posts = await getPosts()
   const featured = await getFeaturedPost()
@@ -84,11 +84,11 @@ export default async function NovedadesPage({ params }: Props) {
         className="pt-32 md:pt-40"
       >
         <Container width="narrow">
-          <Eyebrow>{t(novedades.eyebrow, lang)}</Eyebrow>
+          <Eyebrow>{t(novedades.eyebrow, locale)}</Eyebrow>
           <h1 className="mt-4 font-display text-display-xl font-semibold text-balance text-ink">
-            {t(novedades.title, lang)}
+            {t(novedades.title, locale)}
           </h1>
-          <p className="mt-6 measure text-body-l text-ink-2">{t(novedades.intro, lang)}</p>
+          <p className="mt-6 measure text-body-l text-ink-2">{t(novedades.intro, locale)}</p>
         </Container>
 
         {posts.length > 0 && (
@@ -96,14 +96,14 @@ export default async function NovedadesPage({ params }: Props) {
             <Rule />
             <dl className="flex flex-wrap items-baseline gap-x-10 gap-y-3 pt-5 font-mono text-mono uppercase tracking-wider">
               <div className="flex items-baseline gap-2">
-                <dt className="sr-only">{t(pulseUnit, lang)}</dt>
+                <dt className="sr-only">{t(pulseUnit, locale)}</dt>
                 <dd className="text-ink">
-                  {posts.length} {t(pulseUnit, lang)}
+                  {posts.length} {t(pulseUnit, locale)}
                 </dd>
               </div>
               <div className="flex items-baseline gap-2">
-                <dt className="text-ink-3">{t(novedades.pulse.latest, lang)}</dt>
-                <dd className="text-ink">{formatDate(posts[0].date, lang)}</dd>
+                <dt className="text-ink-3">{t(novedades.pulse.latest, locale)}</dt>
+                <dd className="text-ink">{formatDate(posts[0].date, locale)}</dd>
               </div>
             </dl>
 
@@ -112,9 +112,9 @@ export default async function NovedadesPage({ params }: Props) {
                 letra pequeña después del botón. */}
             {hasProvisional && (
               <div className="mt-5 flex flex-wrap items-center gap-3">
-                <PendingTag>{t(novedades.provisionalTagAll, lang)}</PendingTag>
+                <PendingTag>{t(novedades.provisionalTagAll, locale)}</PendingTag>
                 <p className="measure text-body-s text-ink-3">
-                  {t(novedades.provisionalNoteAll, lang)}
+                  {t(novedades.provisionalNoteAll, locale)}
                 </p>
               </div>
             )}
@@ -129,16 +129,16 @@ export default async function NovedadesPage({ params }: Props) {
               as="h2"
               size="m"
             >
-              {t(novedades.empty.title, lang)}
+              {t(novedades.empty.title, locale)}
             </SectionHeading>
-            <p className="mt-5 measure text-body-l text-ink-2">{t(novedades.empty.body, lang)}</p>
+            <p className="mt-5 measure text-body-l text-ink-2">{t(novedades.empty.body, locale)}</p>
             <div className="mt-10">
               <Button
                 variant="primary"
                 arrow
-                href={href(lang, routes.red)}
+                href={href(locale, routes.red)}
               >
-                {t(novedades.empty.action, lang)}
+                {t(novedades.empty.action, locale)}
               </Button>
             </div>
           </Container>
@@ -153,7 +153,7 @@ export default async function NovedadesPage({ params }: Props) {
                   <figure>
                     <Media
                       asset={featured.cover}
-                      lang={lang}
+                      locale={locale}
                       aspect="21/9"
                       corner
                       sizes="(min-width: 1280px) 76rem, 100vw"
@@ -165,10 +165,10 @@ export default async function NovedadesPage({ params }: Props) {
                     <figcaption className="mt-3 text-body-s text-ink-3">
                       {featured.cover.kind === 'video' && featured.cover.duration && (
                         <span className="mr-3 font-mono text-mono uppercase tracking-wider text-ink-2">
-                          {t(novedades.mediaLabel.video, lang)} · {featured.cover.duration}
+                          {t(novedades.mediaLabel.video, locale)} · {featured.cover.duration}
                         </span>
                       )}
-                      {t(featured.coverCaption ?? featured.cover.alt, lang)}
+                      {t(featured.coverCaption ?? featured.cover.alt, locale)}
                     </figcaption>
                   </figure>
                 )}
@@ -179,10 +179,10 @@ export default async function NovedadesPage({ params }: Props) {
                       dateTime={featured.date}
                       className="font-mono text-mono uppercase tracking-wider text-ink-2"
                     >
-                      {formatDate(featured.date, lang)}
+                      {formatDate(featured.date, locale)}
                     </time>
                     <span className="font-mono text-mono uppercase tracking-wider text-ink-3">
-                      {t(novedades.types[featured.type], lang)}
+                      {t(novedades.types[featured.type], locale)}
                     </span>
                   </div>
 
@@ -190,17 +190,17 @@ export default async function NovedadesPage({ params }: Props) {
                     <h2 className="font-display text-display-m font-semibold text-balance text-ink">
                       {hasPage(featured) ? (
                         <Link
-                          href={href(lang, routes.post(featured.slug))}
+                          href={href(locale, routes.post(featured.slug))}
                           className="transition-colors hover:text-brand"
                         >
-                          {t(featured.title, lang)}
+                          {t(featured.title, locale)}
                         </Link>
                       ) : (
-                        t(featured.title, lang)
+                        t(featured.title, locale)
                       )}
                     </h2>
                     <p className="mt-4 measure text-body-l text-ink-2">
-                      {t(featured.summary, lang)}
+                      {t(featured.summary, locale)}
                     </p>
                     {/* Si la entrada es la apertura de una estación, el CTA
                         lleva A LA ESTACIÓN: es el destino que sirve para algo.
@@ -212,9 +212,9 @@ export default async function NovedadesPage({ params }: Props) {
                           variant="secondary"
                           size="s"
                           arrow
-                          href={href(lang, routes.station(featured.stationSlug))}
+                          href={href(locale, routes.station(featured.stationSlug))}
                         >
-                          {t(novedades.knowStation, lang)}
+                          {t(novedades.knowStation, locale)}
                         </Button>
                       </div>
                     ) : hasPage(featured) ? (
@@ -223,9 +223,9 @@ export default async function NovedadesPage({ params }: Props) {
                           variant="secondary"
                           size="s"
                           arrow
-                          href={href(lang, routes.post(featured.slug))}
+                          href={href(locale, routes.post(featured.slug))}
                         >
-                          {t(novedades.readEntry, lang)}
+                          {t(novedades.readEntry, locale)}
                         </Button>
                       </div>
                     ) : null}
@@ -244,7 +244,7 @@ export default async function NovedadesPage({ params }: Props) {
               <Container>
                 <PostLog
                   posts={rest}
-                  lang={lang}
+                  locale={locale}
                 />
               </Container>
             </Section>

@@ -15,15 +15,15 @@ import {
 import { Media } from '@ui/common/components/ui/Media'
 import { BusinessFlow } from '~/core/empresas/infrastructure/ui/components/BusinessFlow'
 
-type Props = { params: Promise<{ lang: string }> }
+type Props = { params: Promise<{ locale: string }> }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { lang } = await params
-  if (!isLocale(lang)) return {}
+  const { locale } = await params
+  if (!isLocale(locale)) return {}
   return {
-    title: t(empresas.meta.title, lang),
-    description: t(empresas.meta.description, lang),
-    alternates: alternatesFor(lang, routes.empresas),
+    title: t(empresas.meta.title, locale),
+    description: t(empresas.meta.description, locale),
+    alternates: alternatesFor(locale, routes.empresas),
   }
 }
 
@@ -34,9 +34,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
  * /red y de la narrativa de /nosotros): cada interna tiene su propio registro.
  */
 export default async function EmpresasPage({ params }: Props) {
-  const { lang: raw } = await params
+  const { locale: raw } = await params
   if (!isLocale(raw)) notFound()
-  const lang = raw as Locale
+  const locale = raw as Locale
 
   const segments = getBusinessSegments()
   const proofCase = getFeaturedCase() ?? null
@@ -48,11 +48,11 @@ export default async function EmpresasPage({ params }: Props) {
         className="pt-32 md:pt-40"
       >
         <Container>
-          <Eyebrow>{t(empresas.hero.eyebrow, lang)}</Eyebrow>
+          <Eyebrow>{t(empresas.hero.eyebrow, locale)}</Eyebrow>
           <h1 className="mt-5 max-w-[20ch] font-display text-display-xl font-semibold text-ink">
-            {t(empresas.hero.title, lang)}
+            {t(empresas.hero.title, locale)}
           </h1>
-          <p className="mt-7 measure text-body-l text-ink-2">{t(empresas.hero.lead, lang)}</p>
+          <p className="mt-7 measure text-body-l text-ink-2">{t(empresas.hero.lead, locale)}</p>
         </Container>
 
         <Container
@@ -61,7 +61,7 @@ export default async function EmpresasPage({ params }: Props) {
         >
           <Media
             asset={media.espacioComercial}
-            lang={lang}
+            locale={locale}
             corner
             sizes="(min-width: 1600px) 1600px, 100vw"
             aspect="21/9"
@@ -79,13 +79,13 @@ export default async function EmpresasPage({ params }: Props) {
             <div>
               <SectionHeading
                 id="capacidades-title"
-                kicker={t(empresas.capabilities.eyebrow, lang)}
+                kicker={t(empresas.capabilities.eyebrow, locale)}
               >
-                {t(empresas.capabilities.title, lang)}
+                {t(empresas.capabilities.title, locale)}
               </SectionHeading>
             </div>
             <p className="measure-narrow text-body text-ink-2">
-              {t(empresas.capabilities.lead, lang)}
+              {t(empresas.capabilities.lead, locale)}
             </p>
           </div>
 
@@ -94,15 +94,15 @@ export default async function EmpresasPage({ params }: Props) {
             className="mt-12 sm:grid-cols-2 lg:grid-cols-4"
             items={empresas.capabilities.steps.map((s) => ({
               step: s.step,
-              title: t(s.title, lang),
-              body: t(s.body, lang),
+              title: t(s.title, locale),
+              body: t(s.body, locale),
             }))}
           />
         </Container>
       </Section>
 
       <BusinessFlow
-        lang={lang}
+        locale={locale}
         segments={segments}
         proofCase={proofCase}
       />

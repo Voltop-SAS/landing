@@ -83,11 +83,11 @@ async function submitLead(payload: Record<string, FormDataEntryValue>): Promise<
 }
 
 export function LeadForm({
-  lang,
+  locale,
   segmentKey,
   segmentLabel,
 }: {
-  lang: Locale
+  locale: Locale
   segmentKey: string
   segmentLabel: string
 }) {
@@ -119,11 +119,11 @@ export function LeadForm({
     const email = String(data.get('email') ?? '').trim()
     const company = String(data.get('company') ?? '').trim()
 
-    if (name.length < 2) next.name = t(leadForm.fields.name.error, lang)
+    if (name.length < 2) next.name = t(leadForm.fields.name.error, locale)
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email))
-      next.email = t(leadForm.fields.email.error, lang)
-    if (company.length < 2) next.company = t(leadForm.fields.company.error, lang)
-    if (!data.get('consent')) next.consent = t(leadForm.fields.consent.error, lang)
+      next.email = t(leadForm.fields.email.error, locale)
+    if (company.length < 2) next.company = t(leadForm.fields.company.error, locale)
+    if (!data.get('consent')) next.consent = t(leadForm.fields.consent.error, locale)
     return next
   }
 
@@ -178,12 +178,12 @@ export function LeadForm({
         ) : (
           /* Sin destino real no se pinta la marca de verificación: el gradiente
              y el check comunican "hecho", y no está hecho. */
-          <PendingTag>{t(leadForm.successPending.tag, lang)}</PendingTag>
+          <PendingTag>{t(leadForm.successPending.tag, locale)}</PendingTag>
         )}
         <h3 className="mt-6 font-display text-display-m font-semibold text-ink">
-          {t(confirmation.title, lang)}
+          {t(confirmation.title, locale)}
         </h3>
-        <p className="mt-3 measure text-body text-ink-2">{t(confirmation.body, lang)}</p>
+        <p className="mt-3 measure text-body text-ink-2">{t(confirmation.body, locale)}</p>
       </div>
     )
   }
@@ -200,19 +200,19 @@ export function LeadForm({
     >
       <div className="flex flex-wrap items-baseline justify-between gap-3">
         <h3 className="font-display text-display-m font-semibold text-ink">
-          {t(leadForm.title, lang)}
+          {t(leadForm.title, locale)}
         </h3>
         <p className="font-mono text-mono text-ink-3">
-          {t(leadForm.caseLabel, lang)}: <span className="text-ink-2">{segmentLabel}</span>
+          {t(leadForm.caseLabel, locale)}: <span className="text-ink-2">{segmentLabel}</span>
         </p>
       </div>
-      <p className="mt-3 measure text-body-s text-ink-2">{t(leadForm.intro, lang)}</p>
+      <p className="mt-3 measure text-body-s text-ink-2">{t(leadForm.intro, locale)}</p>
 
       {/* Aviso de demo ANTES de pedir el dato. Estaba en mono de 12px debajo
           del botón, donde nadie lo lee antes de escribir su correo. */}
       {DESTINO === 'ninguno' && (
         <p className="mt-6 border-l-2 border-warn/70 bg-warn/8 px-4 py-3 text-body-s text-ink-2">
-          {t(leadForm.demoNotice, lang)}
+          {t(leadForm.demoNotice, locale)}
         </p>
       )}
 
@@ -221,7 +221,7 @@ export function LeadForm({
           role="alert"
           className="mt-6 border-l-2 border-warn bg-warn/10 px-4 py-3 text-body-s text-ink"
         >
-          {t(leadForm.errorSummary, lang)}
+          {t(leadForm.errorSummary, locale)}
         </p>
       )}
 
@@ -230,7 +230,7 @@ export function LeadForm({
           id={fieldId('name')}
           errorId={errorId('name')}
           name="name"
-          label={t(leadForm.fields.name.label, lang)}
+          label={t(leadForm.fields.name.label, locale)}
           autoComplete="name"
           required
           error={errors.name}
@@ -240,8 +240,8 @@ export function LeadForm({
           errorId={errorId('email')}
           name="email"
           type="email"
-          label={t(leadForm.fields.email.label, lang)}
-          hint={t(leadForm.fields.email.hint, lang)}
+          label={t(leadForm.fields.email.label, locale)}
+          hint={t(leadForm.fields.email.hint, locale)}
           autoComplete="email"
           required
           error={errors.email}
@@ -250,7 +250,7 @@ export function LeadForm({
           id={fieldId('company')}
           errorId={errorId('company')}
           name="company"
-          label={t(leadForm.fields.company.label, lang)}
+          label={t(leadForm.fields.company.label, locale)}
           autoComplete="organization"
           required
           error={errors.company}
@@ -260,8 +260,8 @@ export function LeadForm({
           errorId={errorId('phone')}
           name="phone"
           type="tel"
-          label={t(leadForm.fields.phone.label, lang)}
-          optionalLabel={t(leadForm.fields.phone.optional, lang)}
+          label={t(leadForm.fields.phone.label, locale)}
+          optionalLabel={t(leadForm.fields.phone.optional, locale)}
           autoComplete="tel"
         />
 
@@ -270,13 +270,13 @@ export function LeadForm({
             htmlFor={fieldId('message')}
             className="block text-body-s text-ink-2"
           >
-            {t(leadForm.fields.message.label, lang)}
+            {t(leadForm.fields.message.label, locale)}
           </label>
           <textarea
             id={fieldId('message')}
             name="message"
             rows={4}
-            placeholder={t(leadForm.fields.message.placeholder, lang)}
+            placeholder={t(leadForm.fields.message.placeholder, locale)}
             className="mt-2 w-full resize-none rounded-(--radius-structural) border border-line-control bg-canvas px-4 py-3 text-body text-ink outline-none transition-colors placeholder:text-ink-3 focus:border-brand"
           />
         </div>
@@ -303,12 +303,12 @@ export function LeadForm({
               htmlFor={fieldId('consent')}
               className="py-3 text-body-s text-ink-2"
             >
-              {t(leadForm.fields.consent.label, lang)}{' '}
+              {t(leadForm.fields.consent.label, locale)}{' '}
               <Link
-                href={href(lang, routes.privacy)}
+                href={href(locale, routes.privacy)}
                 className="text-ink underline underline-offset-4 transition-colors hover:text-brand"
               >
-                {t(leadForm.fields.consent.policyLink, lang)}
+                {t(leadForm.fields.consent.policyLink, locale)}
               </Link>
             </label>
           </div>
@@ -329,7 +329,7 @@ export function LeadForm({
         />
       </div>
 
-      <p className="mt-6 text-caption text-ink-3">{t(leadForm.requiredLegend, lang)}</p>
+      <p className="mt-6 text-caption text-ink-3">{t(leadForm.requiredLegend, locale)}</p>
 
       <div className="mt-6">
         <Button
@@ -340,7 +340,7 @@ export function LeadForm({
           loading={status === 'loading'}
           className="w-full sm:w-auto"
         >
-          {status === 'loading' ? t(leadForm.submitting, lang) : t(leadForm.submit, lang)}
+          {status === 'loading' ? t(leadForm.submitting, locale) : t(leadForm.submit, locale)}
         </Button>
       </div>
     </form>

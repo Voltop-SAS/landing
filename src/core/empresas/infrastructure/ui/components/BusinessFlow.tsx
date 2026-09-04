@@ -24,11 +24,11 @@ import { LeadForm } from '~/core/empresas/infrastructure/ui/components/LeadForm'
  * segmentación del lead en el CRM.
  */
 export function BusinessFlow({
-  lang,
+  locale,
   segments,
   proofCase,
 }: {
-  lang: Locale
+  locale: Locale
   segments: BusinessSegment[]
   proofCase: Case | null
 }) {
@@ -45,16 +45,16 @@ export function BusinessFlow({
         <Container>
           <SectionHeading
             id="selector-title"
-            kicker={t(empresas.selector.eyebrow, lang)}
+            kicker={t(empresas.selector.eyebrow, locale)}
             measure="max-w-[22ch]"
           >
-            {t(empresas.selector.title, lang)}
+            {t(empresas.selector.title, locale)}
           </SectionHeading>
-          <p className="mt-5 measure text-body-l text-ink-2">{t(empresas.selector.lead, lang)}</p>
+          <p className="mt-5 measure text-body-l text-ink-2">{t(empresas.selector.lead, locale)}</p>
 
           <div className="mt-12">
             <SegmentSelector
-              lang={lang}
+              locale={locale}
               segments={segments}
               activeKey={activeKey}
               onChange={setActiveKey}
@@ -73,10 +73,10 @@ export function BusinessFlow({
           <Container>
             <SectionHeading
               id="evidencia-title"
-              kicker={t(empresas.proof.eyebrow, lang)}
+              kicker={t(empresas.proof.eyebrow, locale)}
               kickerTone="brand"
             >
-              {t(empresas.proof.title, lang)}
+              {t(empresas.proof.title, locale)}
             </SectionHeading>
 
             <div className="mt-12 grid gap-12 lg:grid-cols-[1fr_1fr] lg:gap-16">
@@ -85,34 +85,34 @@ export function BusinessFlow({
                   as="h3"
                   size="s"
                 >
-                  {t(empresas.proof.challengeLabel, lang)}
+                  {t(empresas.proof.challengeLabel, locale)}
                 </SectionHeading>
-                <p className="mt-4 text-body text-ink-2">{t(proofCase.challenge, lang)}</p>
+                <p className="mt-4 text-body text-ink-2">{t(proofCase.challenge, locale)}</p>
 
                 <SectionHeading
                   as="h3"
                   size="s"
                   className="mt-12"
                 >
-                  {t(empresas.proof.solutionLabel, lang)}
+                  {t(empresas.proof.solutionLabel, locale)}
                 </SectionHeading>
-                <p className="mt-4 text-body text-ink-2">{t(proofCase.solution, lang)}</p>
+                <p className="mt-4 text-body text-ink-2">{t(proofCase.solution, locale)}</p>
               </div>
 
               <div className="border-l-0 border-t border-line pt-10 lg:border-l lg:border-t-0 lg:pl-16 lg:pt-0">
                 <blockquote className="font-display text-display-m font-medium text-balance text-ink">
-                  {t(proofCase.quote, lang)}
+                  {t(proofCase.quote, locale)}
                 </blockquote>
                 <p className="mt-6 text-body-s">
                   <span className="text-ink">{proofCase.author}</span>
-                  <span className="text-ink-3"> · {t(proofCase.role, lang)}</span>
+                  <span className="text-ink-3"> · {t(proofCase.role, locale)}</span>
                 </p>
                 {proofCase.stationSlug && (
                   <Link
-                    href={href(lang, routes.station(proofCase.stationSlug))}
+                    href={href(locale, routes.station(proofCase.stationSlug))}
                     className="mt-8 inline-flex min-h-11 items-center gap-2 text-body-s text-ink-2 underline underline-offset-4 transition-colors hover:text-ink"
                   >
-                    {t(empresas.proof.seeStation, lang)}
+                    {t(empresas.proof.seeStation, locale)}
                   </Link>
                 )}
               </div>
@@ -133,9 +133,9 @@ export function BusinessFlow({
             <div>
               <SectionHeading
                 id="contacto-title"
-                kicker={t(empresas.contact.eyebrow, lang)}
+                kicker={t(empresas.contact.eyebrow, locale)}
               >
-                {t(empresas.contact.title, lang)}
+                {t(empresas.contact.title, locale)}
               </SectionHeading>
 
               {/* Esta columna tenía ~600px de vacío al lado de un formulario
@@ -146,7 +146,7 @@ export function BusinessFlow({
                 size="s"
                 className="mt-12"
               >
-                {t(empresas.contact.nextTitle, lang)}
+                {t(empresas.contact.nextTitle, locale)}
               </SectionHeading>
               <ol className="mt-6 space-y-0">
                 {empresas.contact.next.map((n) => (
@@ -163,22 +163,22 @@ export function BusinessFlow({
                       </span>
                       <div>
                         <h4 className="font-display text-display-s font-semibold text-ink">
-                          {t(n.title, lang)}
+                          {t(n.title, locale)}
                         </h4>
-                        <p className="mt-1.5 measure text-body-s text-ink-2">{t(n.body, lang)}</p>
+                        <p className="mt-1.5 measure text-body-s text-ink-2">{t(n.body, locale)}</p>
                       </div>
                     </div>
                   </li>
                 ))}
               </ol>
               <p className="mt-8 text-caption text-ink-3">
-                {t(empresas.contact.privacyNote, lang)}
+                {t(empresas.contact.privacyNote, locale)}
               </p>
             </div>
             <LeadForm
-              lang={lang}
+              locale={locale}
               segmentKey={activeKey}
-              segmentLabel={active ? t(active.label, lang) : ''}
+              segmentLabel={active ? t(active.label, locale) : ''}
             />
           </div>
         </Container>

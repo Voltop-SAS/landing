@@ -25,11 +25,11 @@ import type { Post } from '~/core/common/infrastructure/data-access'
  */
 export function PostsInline({
   posts,
-  lang,
+  locale,
   title,
 }: {
   posts: Post[]
-  lang: Locale
+  locale: Locale
   title: Localized
 }) {
   if (posts.length === 0) return null
@@ -41,7 +41,7 @@ export function PostsInline({
           size="s"
           as="h2"
         >
-          {t(title, lang)}
+          {t(title, locale)}
         </SectionHeading>
 
         <ul className="mt-8 border-t border-line">
@@ -52,17 +52,17 @@ export function PostsInline({
             >
               <PostLink
                 post={post}
-                lang={lang}
+                locale={locale}
                 className="flex min-h-14 flex-col justify-center gap-1 py-4 sm:flex-row sm:items-baseline sm:gap-6"
               >
                 <time
                   dateTime={post.date}
                   className="shrink-0 font-mono text-mono uppercase tracking-wider text-ink-3"
                 >
-                  {formatDate(post.date, lang)}
+                  {formatDate(post.date, locale)}
                 </time>
                 <span className="text-body-s text-ink-2 transition-colors group-hover:text-ink">
-                  {t(post.title, lang)}
+                  {t(post.title, locale)}
                 </span>
               </PostLink>
             </li>
@@ -70,10 +70,10 @@ export function PostsInline({
         </ul>
 
         <Link
-          href={href(lang, routes.novedades)}
+          href={href(locale, routes.novedades)}
           className="mt-6 inline-flex min-h-11 items-center font-mono text-mono uppercase tracking-wider text-ink-3 transition-colors hover:text-ink"
         >
-          {t(novedades.eyebrow, lang)} →
+          {t(novedades.eyebrow, locale)} →
         </Link>
       </Container>
     </Section>

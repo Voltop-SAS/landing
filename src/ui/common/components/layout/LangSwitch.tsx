@@ -48,10 +48,10 @@ import { cn } from '@ui/common/lib/cn'
  * navegar (§23).
  */
 export function LangSwitch({
-  lang,
+  locale,
   placement = 'down',
 }: {
-  lang: Locale
+  locale: Locale
   /**
    * En el menú móvil el selector vive al fondo del panel: abrir hacia abajo
    * lo dejaría fuera de la pantalla.
@@ -112,7 +112,7 @@ export function LangSwitch({
       <button
         ref={buttonRef}
         type="button"
-        aria-label={`${t(a11y.languageSelector, lang)}: ${localeMeta[lang].name}`}
+        aria-label={`${t(a11y.languageSelector, locale)}: ${localeMeta[locale].name}`}
         aria-expanded={open}
         aria-controls="selector-idioma"
         onClick={() => setOpenedFor(open ? null : pathname)}
@@ -122,7 +122,7 @@ export function LangSwitch({
           open ? 'text-ink' : 'text-ink-2 hover:text-ink',
         )}
       >
-        {localeMeta[lang].label}
+        {localeMeta[locale].label}
         <svg
           aria-hidden="true"
           viewBox="0 0 10 6"
@@ -154,7 +154,7 @@ export function LangSwitch({
           )}
         >
           {options.map((code) => {
-            const active = code === lang
+            const active = code === locale
             return (
               <li key={code}>
                 <Link
@@ -165,7 +165,7 @@ export function LangSwitch({
                      portugués se usa. Sin él, la decisión de mantenerlo se
                      tomaría a ciegas. */
                   onClick={() => {
-                    if (!active) track('idioma_cambiado', { de: lang, a: code })
+                    if (!active) track('idioma_cambiado', { de: locale, a: code })
                   }}
                   className={cn(
                     'flex min-h-11 items-center justify-between gap-4 px-4 text-body-s transition-colors',

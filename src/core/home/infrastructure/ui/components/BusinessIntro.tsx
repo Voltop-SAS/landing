@@ -18,7 +18,7 @@ import { cn } from '@ui/common/lib/cn'
  * Antes era un split a dos columnas espejo del beat anterior — exactamente la
  * simetría predecible que el sistema prohíbe (§12).
  */
-export function BusinessIntro({ lang }: { lang: Locale }) {
+export function BusinessIntro({ locale }: { locale: Locale }) {
   const segments = getBusinessSegments()
 
   return (
@@ -38,13 +38,13 @@ export function BusinessIntro({ lang }: { lang: Locale }) {
         <Reveal>
           <SectionHeading
             id="empresas-title"
-            kicker={t(home.business.eyebrow, lang)}
+            kicker={t(home.business.eyebrow, locale)}
             kickerTone="brand"
           >
-            {t(home.business.title, lang)}
+            {t(home.business.title, locale)}
           </SectionHeading>
           <p className="mx-auto mt-6 max-w-[46ch] text-body-l text-ink-2">
-            {t(home.business.lead, lang)}
+            {t(home.business.lead, locale)}
           </p>
         </Reveal>
       </Container>
@@ -67,9 +67,9 @@ export function BusinessIntro({ lang }: { lang: Locale }) {
               )}
             >
               <h3 className="font-display text-display-s font-semibold text-ink">
-                {t(s.label, lang)}
+                {t(s.label, locale)}
               </h3>
-              <p className="mt-2 text-body-s text-ink-2">{t(s.headline, lang)}</p>
+              <p className="mt-2 text-body-s text-ink-2">{t(s.headline, locale)}</p>
             </Reveal>
           ))}
         </ul>
@@ -78,9 +78,9 @@ export function BusinessIntro({ lang }: { lang: Locale }) {
           <Button
             variant="ghost"
             arrow
-            href={href(lang, routes.empresas)}
+            href={href(locale, routes.empresas)}
           >
-            {t(actions.businessSolutions, lang)}
+            {t(actions.businessSolutions, locale)}
           </Button>
         </div>
       </Container>

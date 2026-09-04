@@ -36,7 +36,7 @@ import { cn } from '@ui/common/lib/cn'
  * orden de pintado.
  */
 
-export function Header({ lang }: { lang: Locale }) {
+export function Header({ locale }: { locale: Locale }) {
   const pathname = usePathname()
   const [scrolled, setScrolled] = useState(false)
   /**
@@ -131,13 +131,13 @@ export function Header({ lang }: { lang: Locale }) {
       >
         <div className="mx-auto flex h-16 w-full max-w-(--container-content) items-center justify-between px-(--spacing-gutter) md:h-20">
           <Link
-            href={href(lang, routes.home)}
+            href={href(locale, routes.home)}
             /* `shrink-0`: el logo es un lockup de proporción fija, y dejarlo
                encoger lo deformaba o lo pegaba al menú. Que ceda el espacio
                otro elemento, no la marca. El `gap` anterior sobraba desde que
                el archivo oficial trae símbolo y logotipo en una sola pieza. */
             className="flex shrink-0 items-center py-2"
-            aria-label={t(a11y.goHome, lang)}
+            aria-label={t(a11y.goHome, locale)}
           >
             <Logo />
           </Link>
@@ -150,19 +150,19 @@ export function Header({ lang }: { lang: Locale }) {
                Recuperar 36px de separación resuelve el aprieto sin tocar
                tamaños de texto ni ocultar nada. */
             className="hidden items-center gap-6 nav:flex lg:gap-9"
-            aria-label={t(a11y.mainNav, lang)}
+            aria-label={t(a11y.mainNav, locale)}
           >
             {nav.map((item) => (
               <Link
                 key={item.href}
-                href={href(lang, item.href)}
+                href={href(locale, item.href)}
                 aria-current={isActive(item.href) ? 'page' : undefined}
                 className={cn(
                   'inline-flex min-h-11 items-center text-body-s transition-colors',
                   isActive(item.href) ? 'text-ink' : 'text-ink-2 hover:text-ink',
                 )}
               >
-                {t(item.label, lang)}
+                {t(item.label, locale)}
               </Link>
             ))}
           </nav>
@@ -176,14 +176,14 @@ export function Header({ lang }: { lang: Locale }) {
                 para que no compita con el CTA que tiene al lado. Lleva al FAQ,
                 que es donde están las respuestas. */}
             <Link
-              href={href(lang, helpLink.href)}
+              href={href(locale, helpLink.href)}
               className="hidden min-h-11 items-center text-body-s text-ink-2 transition-colors hover:text-ink nav:inline-flex"
             >
-              {t(helpLink.label, lang)}
+              {t(helpLink.label, locale)}
             </Link>
 
             <div className="hidden nav:block">
-              <LangSwitch lang={lang} />
+              <LangSwitch locale={locale} />
             </div>
 
             {cta && (
@@ -196,12 +196,12 @@ export function Header({ lang }: { lang: Locale }) {
                   variant="secondary"
                   size="s"
                   arrow
-                  href={cta.external ? cta.href : href(lang, cta.href)}
+                  href={cta.external ? cta.href : href(locale, cta.href)}
                   external={cta.external}
-                  lang={lang}
+                  locale={locale}
                   onClick={() => trackCta(context)}
                 >
-                  {t(cta.label, lang)}
+                  {t(cta.label, locale)}
                 </Button>
               </div>
             )}
@@ -210,7 +210,7 @@ export function Header({ lang }: { lang: Locale }) {
               ref={toggleRef}
               type="button"
               className="press grid size-11 place-items-center rounded-(--radius-structural) border border-line-control text-ink nav:hidden"
-              aria-label={open ? t(a11y.closeMenu, lang) : t(a11y.openMenu, lang)}
+              aria-label={open ? t(a11y.closeMenu, locale) : t(a11y.openMenu, locale)}
               aria-expanded={open}
               aria-controls="menu-movil"
               onClick={() => setOpen(!open)}
@@ -254,25 +254,25 @@ export function Header({ lang }: { lang: Locale }) {
         >
           <nav
             className="flex flex-col px-(--spacing-gutter) py-4"
-            aria-label={t(a11y.mainNav, lang)}
+            aria-label={t(a11y.mainNav, locale)}
           >
             {nav.map((item) => (
               <Link
                 key={item.href}
-                href={href(lang, item.href)}
+                href={href(locale, item.href)}
                 aria-current={isActive(item.href) ? 'page' : undefined}
                 className="border-b border-line py-5 font-display text-display-m text-ink"
               >
-                {t(item.label, lang)}
+                {t(item.label, locale)}
               </Link>
             ))}
             {/* En móvil la ayuda entra en la lista: no hay sitio en la barra y
                 esconderla en un menú que no la lista sería peor que no tenerla. */}
             <Link
-              href={href(lang, helpLink.href)}
+              href={href(locale, helpLink.href)}
               className="border-b border-line py-5 font-display text-display-m text-ink-2"
             >
-              {t(helpLink.label, lang)}
+              {t(helpLink.label, locale)}
             </Link>
           </nav>
 
@@ -285,20 +285,20 @@ export function Header({ lang }: { lang: Locale }) {
                 variant="primary"
                 size="l"
                 arrow
-                href={cta.external ? cta.href : href(lang, cta.href)}
+                href={cta.external ? cta.href : href(locale, cta.href)}
                 external={cta.external}
-                lang={lang}
+                locale={locale}
                 className="w-full"
                 onClick={() => trackCta(context)}
               >
-                {t(cta.label, lang)}
+                {t(cta.label, locale)}
               </Button>
             )}
             <div className="self-start">
               {/* Abre hacia ARRIBA: en el menú móvil el selector está al fondo
                   del panel y hacia abajo quedaría fuera de la pantalla. */}
               <LangSwitch
-                lang={lang}
+                locale={locale}
                 placement="up"
               />
             </div>

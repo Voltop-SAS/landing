@@ -6,15 +6,15 @@ import { legalDoc } from '~/core/legal/domain/consts/copy'
 import { legalDocs } from '~/core/legal/infrastructure/content/legalDocs'
 import { LegalDocument } from '~/core/legal/infrastructure/ui/components/LegalDocument'
 
-type Props = { params: Promise<{ lang: string }> }
+type Props = { params: Promise<{ locale: string }> }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { lang } = await params
-  if (!isLocale(lang)) return {}
+  const { locale } = await params
+  if (!isLocale(locale)) return {}
   return {
-    title: t(legalDoc.terms.meta.title, lang),
-    description: t(legalDoc.terms.meta.description, lang),
-    alternates: alternatesFor(lang, routes.terms),
+    title: t(legalDoc.terms.meta.title, locale),
+    description: t(legalDoc.terms.meta.description, locale),
+    alternates: alternatesFor(locale, routes.terms),
   }
 }
 
@@ -25,14 +25,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
  * y ahora lo hay.
  */
 export default async function TermsPage({ params }: Props) {
-  const { lang: raw } = await params
+  const { locale: raw } = await params
   if (!isLocale(raw)) notFound()
-  const lang = raw as Locale
+  const locale = raw as Locale
   return (
     <LegalDocument
       doc={legalDocs.terms}
-      titulo={t(legalDoc.terms.title, lang)}
-      lang={lang}
+      titulo={t(legalDoc.terms.title, locale)}
+      locale={locale}
     />
   )
 }

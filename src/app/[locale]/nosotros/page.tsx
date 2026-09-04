@@ -22,15 +22,15 @@ import { Media } from '@ui/common/components/ui/Media'
 import { Reveal } from '@ui/common/components/ui/Reveal'
 import { TrackView } from '@ui/common/components/analytics/TrackView'
 
-type Props = { params: Promise<{ lang: string }> }
+type Props = { params: Promise<{ locale: string }> }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { lang } = await params
-  if (!isLocale(lang)) return {}
+  const { locale } = await params
+  if (!isLocale(locale)) return {}
   return {
-    title: t(nosotros.meta.title, lang),
-    description: t(nosotros.meta.description, lang),
-    alternates: alternatesFor(lang, routes.nosotros),
+    title: t(nosotros.meta.title, locale),
+    description: t(nosotros.meta.description, locale),
+    alternates: alternatesFor(locale, routes.nosotros),
   }
 }
 
@@ -46,9 +46,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
  * declara honestamente que están en validación (§33).
  */
 export default async function NosotrosPage({ params }: Props) {
-  const { lang: raw } = await params
+  const { locale: raw } = await params
   if (!isLocale(raw)) notFound()
-  const lang = raw as Locale
+  const locale = raw as Locale
 
   const metrics = getMetrics()
   const hasValidated = metrics.some((m) => m.validated && m.value)
@@ -61,7 +61,7 @@ export default async function NosotrosPage({ params }: Props) {
     '@type': 'Organization',
     name: brand.name,
     url: SITE_URL,
-    description: t(brand.tagline, lang),
+    description: t(brand.tagline, locale),
     areaServed: { '@type': 'Country', name: 'Colombia' },
     founder: { '@type': 'Person', name: founder.name },
   }
@@ -79,11 +79,11 @@ export default async function NosotrosPage({ params }: Props) {
         className="pt-32 md:pt-40"
       >
         <Container width="narrow">
-          <Eyebrow>{t(nosotros.hero.eyebrow, lang)}</Eyebrow>
+          <Eyebrow>{t(nosotros.hero.eyebrow, locale)}</Eyebrow>
           <h1 className="mt-5 font-display text-display-xl font-semibold text-balance text-ink">
-            {t(nosotros.hero.title, lang)}
+            {t(nosotros.hero.title, locale)}
           </h1>
-          <p className="mt-7 text-body-l text-ink-2">{t(nosotros.hero.lead, lang)}</p>
+          <p className="mt-7 text-body-l text-ink-2">{t(nosotros.hero.lead, locale)}</p>
         </Container>
       </Section>
 
@@ -95,9 +95,9 @@ export default async function NosotrosPage({ params }: Props) {
         <Container width="narrow">
           <SectionHeading
             id="historia-title"
-            kicker={t(nosotros.story.eyebrow, lang)}
+            kicker={t(nosotros.story.eyebrow, locale)}
           >
-            {t(nosotros.story.title, lang)}
+            {t(nosotros.story.title, locale)}
           </SectionHeading>
           <div className="mt-8 space-y-6">
             {nosotros.story.body.map((p, i) => (
@@ -105,7 +105,7 @@ export default async function NosotrosPage({ params }: Props) {
                 key={i}
                 className="text-body-l text-ink-2"
               >
-                {t(p, lang)}
+                {t(p, locale)}
               </p>
             ))}
           </div>
@@ -116,7 +116,7 @@ export default async function NosotrosPage({ params }: Props) {
       <Container width="wide">
         <Media
           asset={media.infraestructuraAmplia}
-          lang={lang}
+          locale={locale}
           corner
           sizes="(min-width: 1600px) 1600px, 100vw"
           aspect="21/9"
@@ -131,9 +131,9 @@ export default async function NosotrosPage({ params }: Props) {
         <Container>
           <SectionHeading
             id="criterios-title"
-            kicker={t(nosotros.infrastructure.eyebrow, lang)}
+            kicker={t(nosotros.infrastructure.eyebrow, locale)}
           >
-            {t(nosotros.infrastructure.title, lang)}
+            {t(nosotros.infrastructure.title, locale)}
           </SectionHeading>
 
           {/* SIN número: cuatro criterios que no negociamos no son una
@@ -148,9 +148,9 @@ export default async function NosotrosPage({ params }: Props) {
               >
                 <div className="border-t border-line-strong pt-6">
                   <h3 className="font-display text-display-m font-semibold text-balance text-ink">
-                    {t(p.title, lang)}
+                    {t(p.title, locale)}
                   </h3>
-                  <p className="mt-3 measure text-body-s text-ink-2">{t(p.body, lang)}</p>
+                  <p className="mt-3 measure text-body-s text-ink-2">{t(p.body, locale)}</p>
                 </div>
               </Reveal>
             ))}
@@ -172,32 +172,36 @@ export default async function NosotrosPage({ params }: Props) {
           >
             <SectionHeading
               id="impacto-title"
-              kicker={t(nosotros.impact.eyebrow, lang)}
+              kicker={t(nosotros.impact.eyebrow, locale)}
             >
-              {t(nosotros.impact.title, lang)}
+              {t(nosotros.impact.title, locale)}
             </SectionHeading>
           </TrackView>
 
           {hasValidated ? (
             <>
-              <p className="mt-5 measure text-body-l text-ink-2">{t(nosotros.impact.lead, lang)}</p>
+              <p className="mt-5 measure text-body-l text-ink-2">
+                {t(nosotros.impact.lead, locale)}
+              </p>
               <MetricRow
                 metrics={metrics}
-                lang={lang}
+                locale={locale}
                 className="mt-14"
               />
             </>
           ) : (
             <div className="mt-10 max-w-2xl border-l-2 border-warn/50 pl-6">
-              <PendingTag>{t(nosotros.impact.pendingTitle, lang)}</PendingTag>
-              <p className="mt-4 text-body-l text-ink-2">{t(nosotros.impact.pendingBody, lang)}</p>
+              <PendingTag>{t(nosotros.impact.pendingTitle, locale)}</PendingTag>
+              <p className="mt-4 text-body-l text-ink-2">
+                {t(nosotros.impact.pendingBody, locale)}
+              </p>
               <ul className="mt-8 grid gap-x-10 gap-y-3 font-mono text-mono text-ink-3 sm:grid-cols-2">
                 {metrics.map((m) => (
                   <li
                     key={m.key}
                     className="border-t border-line pt-3"
                   >
-                    {t(m.label, lang)}
+                    {t(m.label, locale)}
                     {m.unit ? ` · ${m.unit}` : ''}
                   </li>
                 ))}
@@ -216,9 +220,9 @@ export default async function NosotrosPage({ params }: Props) {
         <Container>
           <SectionHeading
             id="liderazgo-title"
-            kicker={t(nosotros.leadership.eyebrow, lang)}
+            kicker={t(nosotros.leadership.eyebrow, locale)}
           >
-            {t(nosotros.leadership.title, lang)}
+            {t(nosotros.leadership.title, locale)}
           </SectionHeading>
         </Container>
 
@@ -228,12 +232,12 @@ export default async function NosotrosPage({ params }: Props) {
         >
           {founder.quote && (
             <blockquote className="font-display text-display-m font-medium text-balance text-ink">
-              {t(founder.quote, lang)}
+              {t(founder.quote, locale)}
             </blockquote>
           )}
           <p className="mt-6 border-t border-line pt-6 text-body-s">
             <span className="text-ink">{founder.name}</span>
-            <span className="text-ink-3"> · {t(founder.role, lang)}</span>
+            <span className="text-ink-3"> · {t(founder.role, locale)}</span>
           </p>
         </Container>
 
@@ -243,7 +247,7 @@ export default async function NosotrosPage({ params }: Props) {
         >
           <Media
             asset={media.visionCeo}
-            lang={lang}
+            locale={locale}
             corner
             sizes="(min-width: 1600px) 1600px, 100vw"
           />
@@ -259,10 +263,10 @@ export default async function NosotrosPage({ params }: Props) {
         <Container>
           <SectionHeading
             id="confianza-title"
-            kicker={t(nosotros.trust.eyebrow, lang)}
+            kicker={t(nosotros.trust.eyebrow, locale)}
             measure="max-w-[24ch]"
           >
-            {t(nosotros.trust.title, lang)}
+            {t(nosotros.trust.title, locale)}
           </SectionHeading>
 
           <ul className="mt-14 grid gap-x-14 gap-y-12 md:grid-cols-2">
@@ -274,11 +278,11 @@ export default async function NosotrosPage({ params }: Props) {
               >
                 <figure className="border-t border-line pt-6">
                   <blockquote className="font-display text-display-s text-ink">
-                    {t(tm.quote, lang)}
+                    {t(tm.quote, locale)}
                   </blockquote>
                   <figcaption className="mt-5 text-body-s">
                     <span className="text-ink">{tm.author}</span>
-                    <span className="text-ink-3"> · {t(tm.role, lang)}</span>
+                    <span className="text-ink-3"> · {t(tm.role, locale)}</span>
                   </figcaption>
                 </figure>
               </Reveal>
@@ -292,7 +296,7 @@ export default async function NosotrosPage({ params }: Props) {
                 as="h3"
                 size="s"
               >
-                {t(nosotros.trust.partnersTitle, lang)}
+                {t(nosotros.trust.partnersTitle, locale)}
               </SectionHeading>
             </div>
           )}

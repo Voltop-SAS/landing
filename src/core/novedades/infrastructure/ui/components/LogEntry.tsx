@@ -25,7 +25,7 @@ import { cn } from '@ui/common/lib/cn'
  * se consulta `hasPage` para decidir qué se PINTA —el hover del título y el
  * "leer entrada"—, que es otra cosa.
  */
-export function LogEntry({ post, lang }: { post: Post; lang: Locale }) {
+export function LogEntry({ post, locale }: { post: Post; locale: Locale }) {
   const linked = hasPage(post)
 
   const content = (
@@ -35,10 +35,10 @@ export function LogEntry({ post, lang }: { post: Post; lang: Locale }) {
           dateTime={post.date}
           className="font-mono text-mono uppercase tracking-wider text-ink-2"
         >
-          {formatDate(post.date, lang)}
+          {formatDate(post.date, locale)}
         </time>
         <span className="font-mono text-mono uppercase tracking-wider text-ink-3">
-          {t(novedades.types[post.type], lang)}
+          {t(novedades.types[post.type], locale)}
         </span>
       </div>
 
@@ -52,17 +52,17 @@ export function LogEntry({ post, lang }: { post: Post; lang: Locale }) {
             linked && 'transition-colors group-hover:text-brand',
           )}
         >
-          {t(post.title, lang)}
+          {t(post.title, locale)}
         </h3>
 
-        <p className="mt-2 measure text-body-s text-ink-2">{t(post.summary, lang)}</p>
+        <p className="mt-2 measure text-body-s text-ink-2">{t(post.summary, locale)}</p>
 
         {/* La marca de provisional NO va aquí: se declara una sola vez para
             todo el registro (ver `provisionalTag` en el copy). Repetida por
             fila era textura ámbar, no una advertencia. */}
         {linked && (
           <span className="mt-4 inline-flex font-mono text-mono uppercase tracking-wider text-ink-3 transition-colors group-hover:text-ink">
-            {t(novedades.readEntry, lang)} →
+            {t(novedades.readEntry, locale)} →
           </span>
         )}
       </div>
@@ -73,7 +73,7 @@ export function LogEntry({ post, lang }: { post: Post; lang: Locale }) {
     <li className="border-t border-line">
       <PostLink
         post={post}
-        lang={lang}
+        locale={locale}
         className="grid gap-x-10 gap-y-3 py-8 md:grid-cols-[9rem_1fr] md:py-10"
       >
         {content}

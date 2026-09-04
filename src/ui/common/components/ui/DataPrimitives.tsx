@@ -23,11 +23,11 @@ const statusTone: Record<StationStatus, string> = {
 
 export function StatusBadge({
   status,
-  lang,
+  locale,
   className,
 }: {
   status: StationStatus
-  lang: Locale
+  locale: Locale
   className?: string
 }) {
   return (
@@ -42,7 +42,7 @@ export function StatusBadge({
         aria-hidden="true"
         className="size-1.5 rounded-full bg-current"
       />
-      {t(stationStatus[status], lang)}
+      {t(stationStatus[status], locale)}
     </span>
   )
 }
@@ -111,11 +111,11 @@ export function SpecList({
  */
 export function MetricRow({
   metrics,
-  lang,
+  locale,
   className,
 }: {
   metrics: Metric[]
-  lang: Locale
+  locale: Locale
   className?: string
 }) {
   const valid = metrics.filter((m) => m.validated && m.value)
@@ -125,14 +125,14 @@ export function MetricRow({
     <dl className={cn('flex flex-wrap gap-x-12 gap-y-8', className)}>
       {valid.map((m) => (
         <div key={m.key}>
-          <dt className="sr-only">{t(m.label, lang)}</dt>
+          <dt className="sr-only">{t(m.label, locale)}</dt>
           <dd className="font-display text-display-l text-ink">
             {m.value}
             {m.unit && (
               <span className="ml-1 align-top font-mono text-mono text-brand">{m.unit}</span>
             )}
           </dd>
-          <p className="mt-1 text-body-s text-ink-3">{t(m.label, lang)}</p>
+          <p className="mt-1 text-body-s text-ink-3">{t(m.label, locale)}</p>
         </div>
       ))}
     </dl>

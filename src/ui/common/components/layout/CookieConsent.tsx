@@ -73,7 +73,7 @@ const CLAVE = 'voltop:cookies'
 const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID ?? 'GTM-WJ5S2LBF'
 type Decision = 'aceptado' | 'rechazado' | null
 
-export function CookieConsent({ lang }: { lang: Locale }) {
+export function CookieConsent({ locale }: { locale: Locale }) {
   const [decision, setDecision] = useState<Decision>(null)
   /* `null` mientras no se ha leído el almacenamiento. Sin este tercer estado
      el aviso parpadearía en cada carga para quien ya decidió. */
@@ -122,7 +122,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       {visible && (
         <div
           role="region"
-          aria-label={t(copy.title, lang)}
+          aria-label={t(copy.title, locale)}
           /* `z-(--z-overlay)`: por encima del flotante de la app, que también
              vive abajo. La decisión va primero. */
           className="fixed inset-x-0 bottom-0 z-(--z-overlay) border-t border-line bg-canvas/85 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl"
@@ -135,8 +135,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               {/* `text-body` y no `display-s`: en una franja de una fila, un
                   titular de tamaño display la engorda y grita más que la
                   pregunta que hace. El peso lo da la negrita. */}
-              <p className="font-display text-body font-semibold text-ink">{t(copy.title, lang)}</p>
-              <p className="measure mt-1 text-body-s text-ink-2">{t(copy.body, lang)}</p>
+              <p className="font-display text-body font-semibold text-ink">
+                {t(copy.title, locale)}
+              </p>
+              <p className="measure mt-1 text-body-s text-ink-2">{t(copy.body, locale)}</p>
             </div>
 
             <div className="flex flex-col gap-3 md:shrink-0 md:flex-row md:items-center md:gap-4">
@@ -155,21 +157,21 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                   autoFocus
                   className="brand-gradient inline-flex h-11 items-center justify-center rounded-(--radius-pill) px-5 text-body-s font-semibold text-on-brand transition-[filter] duration-(--duration-fast) hover:brightness-105"
                 >
-                  {t(copy.accept, lang)}
+                  {t(copy.accept, locale)}
                 </button>
                 <button
                   type="button"
                   onClick={() => decidir('rechazado')}
                   className="inline-flex h-11 flex-1 items-center justify-center rounded-(--radius-pill) border border-line-control px-5 text-body-s font-semibold text-ink transition-colors duration-(--duration-fast) hover:border-line-strong hover:bg-surface-2"
                 >
-                  {t(copy.reject, lang)}
+                  {t(copy.reject, locale)}
                 </button>
               </div>
               <Link
-                href={href(lang, routes.privacy)}
+                href={href(locale, routes.privacy)}
                 className="inline-flex min-h-11 items-center font-mono text-mono text-ink-3 transition-colors hover:text-brand"
               >
-                {t(copy.policy, lang)}
+                {t(copy.policy, locale)}
               </Link>
             </div>
           </div>

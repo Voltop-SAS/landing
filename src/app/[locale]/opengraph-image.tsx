@@ -7,7 +7,7 @@ import { brand, og } from '~/core/common/domain/consts/copy'
 
 /** Se prerenderiza una imagen por idioma en lugar de generarla por petición. */
 export function generateStaticParams() {
-  return locales.map((lang) => ({ lang }))
+  return locales.map((locale) => ({ locale }))
 }
 
 /**
@@ -32,9 +32,9 @@ export const contentType = 'image/png'
 
 export const alt = 'Voltop — infraestructura de carga para vehículos eléctricos en Colombia'
 
-export default async function OpengraphImage({ params }: { params: Promise<{ lang: string }> }) {
-  const { lang: raw } = await params
-  const lang: Locale = isLocale(raw) ? raw : defaultLocale
+export default async function OpengraphImage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale: raw } = await params
+  const locale: Locale = isLocale(raw) ? raw : defaultLocale
 
   return new ImageResponse(
     <div
@@ -62,7 +62,7 @@ export default async function OpengraphImage({ params }: { params: Promise<{ lan
         <div
           style={{ fontSize: 26, color: '#8b95a8', letterSpacing: 4, textTransform: 'uppercase' }}
         >
-          {t(og.eyebrow, lang)}
+          {t(og.eyebrow, locale)}
         </div>
         <div
           style={{
@@ -75,10 +75,10 @@ export default async function OpengraphImage({ params }: { params: Promise<{ lan
             maxWidth: 940,
           }}
         >
-          {t(og.headline, lang)}
+          {t(og.headline, locale)}
         </div>
         <div style={{ marginTop: 28, fontSize: 30, color: '#a9b3c4', maxWidth: 820 }}>
-          {t(brand.tagline, lang)}
+          {t(brand.tagline, locale)}
         </div>
       </div>
 

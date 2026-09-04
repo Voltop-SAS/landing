@@ -14,15 +14,15 @@ import { track } from '~/core/common/infrastructure/analytics'
  * instrumentar el clic es aislarlo aquí.
  *
  * Se queda deliberadamente pequeño: solo el evento. El aviso de enlace externo
- * y el icono de salida los resuelve `Button` con `external` + `lang`, para que
+ * y el icono de salida los resuelve `Button` con `external` + `locale`, para que
  * todo enlace que salga del sitio se comporte igual (WCAG 3.2.5).
  */
 export function DirectionsButton({
-  lang,
+  locale,
   href,
   slug,
 }: {
-  lang: Locale
+  locale: Locale
   href: string
   slug: string
 }) {
@@ -31,12 +31,12 @@ export function DirectionsButton({
       variant="primary"
       arrow
       external
-      lang={lang}
+      locale={locale}
       href={href}
       className="w-full"
       onClick={() => track('estacion_como_llegar', { slug, destino: 'google-maps' })}
     >
-      {t(actions.getDirections, lang)}
+      {t(actions.getDirections, locale)}
     </Button>
   )
 }

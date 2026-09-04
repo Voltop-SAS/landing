@@ -14,7 +14,7 @@ import { novedades } from '~/core/novedades/domain/consts/copy'
  * Un bloque nuevo se añade al tipo `PostBlock` y a este `switch`: TypeScript
  * señala el caso que falte en lugar de renderizar nada en silencio.
  */
-export function PostBody({ blocks, lang }: { blocks: PostBlock[]; lang: Locale }) {
+export function PostBody({ blocks, locale }: { blocks: PostBlock[]; locale: Locale }) {
   return (
     <div className="mt-12 flex flex-col gap-7">
       {blocks.map((block, i) => {
@@ -25,7 +25,7 @@ export function PostBody({ blocks, lang }: { blocks: PostBlock[]; lang: Locale }
                 key={i}
                 className="measure text-body-l text-ink-2"
               >
-                {t(block.text, lang)}
+                {t(block.text, locale)}
               </p>
             )
 
@@ -37,7 +37,7 @@ export function PostBody({ blocks, lang }: { blocks: PostBlock[]; lang: Locale }
                 key={i}
                 className="mt-6 font-display text-display-s font-semibold text-balance text-ink"
               >
-                {t(block.text, lang)}
+                {t(block.text, locale)}
               </h2>
             )
 
@@ -56,7 +56,7 @@ export function PostBody({ blocks, lang }: { blocks: PostBlock[]; lang: Locale }
                       aria-hidden="true"
                       className="mt-3 h-px w-4 shrink-0 bg-line-strong"
                     />
-                    <span>{t(item, lang)}</span>
+                    <span>{t(item, locale)}</span>
                   </li>
                 ))}
               </ul>
@@ -69,10 +69,10 @@ export function PostBody({ blocks, lang }: { blocks: PostBlock[]; lang: Locale }
                 className="my-4 border-l border-line-strong pl-6"
               >
                 <blockquote className="measure font-display text-display-s font-medium text-balance text-ink">
-                  {t(block.text, lang)}
+                  {t(block.text, locale)}
                 </blockquote>
                 <figcaption className="mt-4 font-mono text-mono uppercase tracking-wider text-ink-3">
-                  {block.author} · {t(block.role, lang)}
+                  {block.author} · {t(block.role, locale)}
                 </figcaption>
               </figure>
             )
@@ -87,7 +87,7 @@ export function PostBody({ blocks, lang }: { blocks: PostBlock[]; lang: Locale }
                     entrada es una pieza que se ve, no un fondo. */}
                 <Media
                   asset={block.asset}
-                  lang={lang}
+                  locale={locale}
                   corner
                   controls={block.asset.kind === 'video'}
                   sizes="(min-width: 768px) 46rem, 100vw"
@@ -98,10 +98,10 @@ export function PostBody({ blocks, lang }: { blocks: PostBlock[]; lang: Locale }
                 <figcaption className="mt-3 text-body-s text-ink-3">
                   {block.asset.kind === 'video' && block.asset.duration && (
                     <span className="mr-3 font-mono text-mono uppercase tracking-wider text-ink-2">
-                      {t(novedades.mediaLabel.video, lang)} · {block.asset.duration}
+                      {t(novedades.mediaLabel.video, locale)} · {block.asset.duration}
                     </span>
                   )}
-                  {t(block.caption ?? block.asset.alt, lang)}
+                  {t(block.caption ?? block.asset.alt, locale)}
                 </figcaption>
               </figure>
             )

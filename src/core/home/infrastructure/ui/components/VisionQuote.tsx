@@ -36,7 +36,7 @@ import { Reveal } from '@ui/common/components/ui/Reveal'
  * Era el momento mejor resuelto del prototipo anterior: se conserva su registro
  * editorial y se le da el aire que no tenía.
  */
-export function VisionQuote({ lang }: { lang: Locale }) {
+export function VisionQuote({ locale }: { locale: Locale }) {
   const founder = getFounder()
   if (!founder.quote) return null
 
@@ -76,7 +76,7 @@ export function VisionQuote({ lang }: { lang: Locale }) {
             {media.retratoFundador.src && (
               <Image
                 src={media.retratoFundador.src}
-                alt={t(media.retratoFundador.alt, lang)}
+                alt={t(media.retratoFundador.alt, locale)}
                 fill
                 sizes="(min-width: 1024px) 40vw, 90vw"
                 className="object-cover"
@@ -85,7 +85,7 @@ export function VisionQuote({ lang }: { lang: Locale }) {
           </div>
 
           <Reveal>
-            <Eyebrow tone="brand">{t(home.vision.eyebrow, lang)}</Eyebrow>
+            <Eyebrow tone="brand">{t(home.vision.eyebrow, locale)}</Eyebrow>
 
             {/* Nombre y cargo ANTES de la cita. Con el retrato al lado, quién
               habla ya está dicho visualmente; ponerlo en texto aquí lo nombra
@@ -94,7 +94,7 @@ export function VisionQuote({ lang }: { lang: Locale }) {
               testimonio se acredita, no se presenta. */}
             <p className="mt-5 text-body-s">
               <span className="font-medium text-ink">{founder.name}</span>
-              <span className="text-ink-3"> · {t(founder.role, lang)}</span>
+              <span className="text-ink-3"> · {t(founder.role, locale)}</span>
             </p>
 
             {/* ── LA CITA, A ESCALA ──────────────────────────────────────────
@@ -110,16 +110,16 @@ export function VisionQuote({ lang }: { lang: Locale }) {
               id="vision-title"
               className="mt-7 font-display text-display-s font-medium text-balance text-ink md:text-display-m"
             >
-              {t(founder.quote, lang)}
+              {t(founder.quote, locale)}
             </blockquote>
 
             <div className="mt-8 border-t border-line pt-6">
               <Button
                 variant="link"
                 arrow
-                href={href(lang, routes.nosotros)}
+                href={href(locale, routes.nosotros)}
               >
-                {t(actions.knowVoltop, lang)}
+                {t(actions.knowVoltop, locale)}
               </Button>
             </div>
           </Reveal>

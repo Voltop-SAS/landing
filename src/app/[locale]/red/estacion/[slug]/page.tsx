@@ -34,7 +34,7 @@ import { DirectionsButton } from '~/core/red/infrastructure/ui/components/Direct
 import { media } from '~/core/common/infrastructure/content/media'
 import { formatPowerKw } from '~/core/red/domain/entities/Station'
 
-type Props = { params: Promise<{ lang: string; slug: string }> }
+type Props = { params: Promise<{ locale: string; slug: string }> }
 
 /**
  * /RED/ESTACION/[SLUG] · ficha de estación.
@@ -59,12 +59,12 @@ type Props = { params: Promise<{ lang: string; slug: string }> }
 export const dynamicParams = false
 
 export function generateStaticParams() {
-  return locales.flatMap((lang) => getStations().map((s) => ({ lang, slug: s.slug })))
+  return locales.flatMap((locale) => getStations().map((s) => ({ locale, slug: s.slug })))
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { lang, slug } = await params
-  if (!isLocale(lang)) return {}
+  const { locale, slug } = await params
+  if (!isLocale(locale)) return {}
   const s = getStation(slug)
   if (!s) return {}
   const city = getCity(s.citySlug)
@@ -74,7 +74,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: `${s.name}${city ? ` · ${city.name}` : ''}`,
     description: t(
       stationMeta.description,
-      lang,
+      locale,
     )({
       /* Sin ciudad resuelta se omite el topónimo en lugar de imprimir
          "undefined" en la descripción que ve el buscador. */
@@ -83,14 +83,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       points: s.points,
       connectors: s.connectors.join(', '),
     }),
-    alternates: alternatesFor(lang, path),
+    alternates: alternatesFor(locale, path),
   }
 }
 
 export default async function StationPage({ params }: Props) {
-  const { lang: raw, slug } = await params
+  const { locale: raw, slug } = await params
   if (!isLocale(raw)) notFound()
-  const lang = raw as Locale
+  const locale = raw as Locale
 
   const s = getStation(slug)
   if (!s) notFound()
@@ -104,21 +104,21 @@ export default async function StationPage({ params }: Props) {
      Es honesto y funciona; cuando lleguen las coordenadas, el enlace mejora solo. */
   const directions = s.geo
     ? `https://www.google.com/maps/dir/?api=1&destination=${s.geo.lat},${s.geo.lng}`
-    : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${s.name}, ${t(s.address, lang)}`)}`
+    : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${s.name}, ${t(s.address, locale)}`)}`
 
   const specs = [
     {
-      label: t(stationCopy.specs.power, lang),
+      label: t(stationCopy.specs.power, locale),
       value: formatPowerKw(s.powerKw),
       tone: 'number' as const,
     },
-    { label: t(stationCopy.specs.points, lang), value: `${s.points}`, tone: 'number' as const },
+    { label: t(stationCopy.specs.points, locale), value: `${s.points}`, tone: 'number' as const },
     {
-      label: t(stationCopy.specs.connectors, lang),
+      label: t(stationCopy.specs.connectors, locale),
       value: s.connectors.join(' · '),
       tone: 'text' as const,
     },
-    { label: t(stationCopy.specs.hours, lang), value: t(s.hours, lang), tone: 'text' as const },
+    { label: t(stationCopy.specs.hours, locale), value: t(s.hours, locale), tone: 'text' as const },
   ]
 
   /* Datos estructurados: cada estación es un activo de búsqueda local (§29). */
@@ -126,21 +126,21 @@ export default async function StationPage({ params }: Props) {
     '@context': 'https://schema.org',
     '@type': 'EVChargingStation',
     name: `${s.name} — Voltop`,
-    url: absoluteUrl(lang, routes.station(s.slug)),
+    url: absoluteUrl(locale, routes.station(s.slug)),
     address: {
       '@type': 'PostalAddress',
-      streetAddress: t(s.address, lang),
+      streetAddress: t(s.address, locale),
       addressLocality: city?.name,
       addressCountry: 'CO',
     },
     ...(s.geo
       ? { geo: { '@type': 'GeoCoordinates', latitude: s.geo.lat, longitude: s.geo.lng } }
       : {}),
-    openingHours: t(s.hours, lang),
+    openingHours: t(s.hours, locale),
     provider: { '@type': 'Organization', name: 'Voltop', url: SITE_URL },
     amenityFeature: s.services.map((sv) => ({
       '@type': 'LocationFeatureSpecification',
-      name: t(sv, lang),
+      name: t(sv, locale),
       value: true,
     })),
   }
@@ -156,8 +156,8 @@ export default async function StationPage({ params }: Props) {
       {
         '@type': 'ListItem',
         position: 1,
-        name: t(red.hero.eyebrow, lang),
-        item: absoluteUrl(lang, routes.red),
+        name: t(red.hero.eyebrow, locale),
+        item: absoluteUrl(locale, routes.red),
       },
       ...(city
         ? [
@@ -165,7 +165,7 @@ export default async function StationPage({ params }: Props) {
               '@type': 'ListItem',
               position: 2,
               name: city.name,
-              item: absoluteUrl(lang, routes.city(city.slug)),
+              item: absoluteUrl(locale, routes.city(city.slug)),
             },
           ]
         : []),
@@ -173,7 +173,7 @@ export default async function StationPage({ params }: Props) {
         '@type': 'ListItem',
         position: city ? 3 : 2,
         name: s.name,
-        item: absoluteUrl(lang, routes.station(s.slug)),
+        item: absoluteUrl(locale, routes.station(s.slug)),
       },
     ],
   }
@@ -211,16 +211,16 @@ export default async function StationPage({ params }: Props) {
       >
         <Container>
           <nav
-            aria-label={t(a11y.breadcrumb, lang)}
+            aria-label={t(a11y.breadcrumb, locale)}
             className="font-mono text-mono text-ink-3"
           >
             <ol className="flex flex-wrap items-center gap-2">
               <li>
                 <Link
-                  href={href(lang, routes.red)}
+                  href={href(locale, routes.red)}
                   className="inline-flex min-h-11 items-center transition-colors hover:text-ink"
                 >
-                  {t(red.hero.eyebrow, lang)}
+                  {t(red.hero.eyebrow, locale)}
                 </Link>
               </li>
               {city && (
@@ -228,7 +228,7 @@ export default async function StationPage({ params }: Props) {
                   <li aria-hidden="true">/</li>
                   <li>
                     <Link
-                      href={href(lang, routes.city(city.slug))}
+                      href={href(locale, routes.city(city.slug))}
                       className="inline-flex min-h-11 items-center transition-colors hover:text-ink"
                     >
                       {city.name}
@@ -246,15 +246,15 @@ export default async function StationPage({ params }: Props) {
             </ol>
           </nav>
 
-          <Eyebrow className="mt-8">{t(stationCopy.eyebrow, lang)}</Eyebrow>
+          <Eyebrow className="mt-8">{t(stationCopy.eyebrow, locale)}</Eyebrow>
           <div className="mt-4 flex flex-wrap items-baseline gap-x-6 gap-y-3">
             <h1 className="font-display text-display-xl font-semibold text-ink">{s.name}</h1>
             <StatusBadge
               status={s.status}
-              lang={lang}
+              locale={locale}
             />
           </div>
-          <p className="mt-4 text-body-l text-ink-2">{t(s.address, lang)}</p>
+          <p className="mt-4 text-body-l text-ink-2">{t(s.address, locale)}</p>
         </Container>
       </Section>
 
@@ -292,7 +292,7 @@ export default async function StationPage({ params }: Props) {
                     },
                   }
             }
-            lang={lang}
+            locale={locale}
             aspect="21/9"
             sizes="(min-width: 1280px) 1240px, 100vw"
             className="w-full"
@@ -304,7 +304,7 @@ export default async function StationPage({ params }: Props) {
         <Container>
           <div className="grid gap-14 lg:grid-cols-[1.7fr_1fr]">
             <div>
-              <SectionHeading size="m">{t(stationCopy.specs.title, lang)}</SectionHeading>
+              <SectionHeading size="m">{t(stationCopy.specs.title, locale)}</SectionHeading>
               {/* 2×2, no 4×1. Cuatro columnas dentro de la columna de contenido
                   dejaban 128px útiles por celda: el horario envolvía en tres
                   líneas a CUALQUIER ancho, incluido 1440. */}
@@ -316,33 +316,33 @@ export default async function StationPage({ params }: Props) {
               <div className="mt-8">
                 <div className="flex flex-wrap items-center gap-4">
                   <p className="font-mono text-mono uppercase tracking-wider text-ink-3">
-                    {t(stationCopy.specs.pricing, lang)}
+                    {t(stationCopy.specs.pricing, locale)}
                   </p>
                   {s.pricing ? (
                     <p className="font-display text-display-s text-ink">
                       {s.pricing.perKwh} {s.pricing.currency}/kWh
                     </p>
                   ) : (
-                    <PendingTag>{t(stationCopy.pendingPricingTag, lang)}</PendingTag>
+                    <PendingTag>{t(stationCopy.pendingPricingTag, locale)}</PendingTag>
                   )}
                 </div>
                 {!s.pricing && (
                   <p className="mt-2 text-caption text-ink-3">
-                    {t(stationCopy.pendingPricing, lang)}
+                    {t(stationCopy.pendingPricing, locale)}
                   </p>
                 )}
               </div>
 
               {s.services.length > 0 && (
                 <div className="mt-14">
-                  <SectionHeading size="s">{t(stationCopy.services, lang)}</SectionHeading>
+                  <SectionHeading size="s">{t(stationCopy.services, locale)}</SectionHeading>
                   <ul className="mt-5 flex flex-wrap gap-2">
                     {s.services.map((sv, i) => (
                       <li
                         key={i}
                         className="rounded-(--radius-pill) border border-line px-4 py-2 text-body-s text-ink-2"
                       >
-                        {t(sv, lang)}
+                        {t(sv, locale)}
                       </li>
                     ))}
                   </ul>
@@ -351,20 +351,20 @@ export default async function StationPage({ params }: Props) {
             </div>
 
             <aside>
-              <SectionHeading size="s">{t(stationCopy.location, lang)}</SectionHeading>
-              <p className="mt-5 text-body-s text-ink-2">{t(s.address, lang)}</p>
+              <SectionHeading size="s">{t(stationCopy.location, locale)}</SectionHeading>
+              <p className="mt-5 text-body-s text-ink-2">{t(s.address, locale)}</p>
               <div className="mt-6 flex flex-col gap-3">
                 {/* `lang` no es decorativo: habilita el aviso de "se abre en
                     una pestaña nueva". Y `estacion_como_llegar` es la conversión
                     final del journey B2C y no se estaba midiendo (§31). */}
                 <DirectionsButton
-                  lang={lang}
+                  locale={locale}
                   href={directions}
                   slug={s.slug}
                 />
               </div>
               {!s.geo && (
-                <p className="mt-4 text-caption text-ink-3">{t(stationCopy.pendingGeo, lang)}</p>
+                <p className="mt-4 text-caption text-ink-3">{t(stationCopy.pendingGeo, locale)}</p>
               )}
             </aside>
           </div>
@@ -375,7 +375,7 @@ export default async function StationPage({ params }: Props) {
         <div className="border-t border-line">
           <PostsInline
             posts={news}
-            lang={lang}
+            locale={locale}
             title={novedadesInline.station.title}
           />
         </div>
@@ -387,19 +387,19 @@ export default async function StationPage({ params }: Props) {
           className="border-t border-line"
         >
           <Container>
-            <SectionHeading size="m">{t(stationCopy.nearby, lang)}</SectionHeading>
+            <SectionHeading size="m">{t(stationCopy.nearby, locale)}</SectionHeading>
             <ul className="mt-8">
               {nearby.map((n) => (
                 <li key={n.slug}>
                   <Link
-                    href={href(lang, routes.station(n.slug))}
+                    href={href(locale, routes.station(n.slug))}
                     className="group flex flex-wrap items-baseline justify-between gap-4 border-b border-line py-5 transition-colors hover:bg-surface-1"
                   >
                     <span className="font-display text-display-s font-semibold text-ink transition-colors group-hover:text-brand">
                       {n.name}
                     </span>
                     <span className="font-mono text-mono text-ink-2">
-                      {formatPowerKw(n.powerKw)} · {n.points} {t(units.pointsShort, lang)}
+                      {formatPowerKw(n.powerKw)} · {n.points} {t(units.pointsShort, locale)}
                     </span>
                   </Link>
                 </li>
@@ -409,9 +409,9 @@ export default async function StationPage({ params }: Props) {
               <Button
                 variant="link"
                 arrow
-                href={href(lang, routes.red)}
+                href={href(locale, routes.red)}
               >
-                {t(actions.backToNetwork, lang)}
+                {t(actions.backToNetwork, locale)}
               </Button>
             </div>
           </Container>

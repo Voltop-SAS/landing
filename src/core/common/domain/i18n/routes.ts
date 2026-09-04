@@ -28,8 +28,8 @@ export const routes = {
 } as const
 
 /** Antepone el idioma a una ruta canónica. `path` debe empezar por "/" o ser "". */
-export function href(lang: Locale, path: string): string {
-  return `/${lang}${path}`
+export function href(locale: Locale, path: string): string {
+  return `/${locale}${path}`
 }
 
 /**
@@ -70,8 +70,8 @@ export function switchLocalePath(pathname: string, next: Locale): string {
  */
 export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://voltop.co'
 
-export function absoluteUrl(lang: Locale, path: string): string {
-  return `${SITE_URL}${href(lang, path)}`
+export function absoluteUrl(locale: Locale, path: string): string {
+  return `${SITE_URL}${href(locale, path)}`
 }
 
 /**
@@ -85,9 +85,9 @@ export function absoluteUrl(lang: Locale, path: string): string {
  * `x-default` apunta al idioma por defecto: es la versión que se sirve a quien
  * no encaja en ninguna de las declaradas.
  */
-export function alternatesFor(lang: Locale, path: string) {
+export function alternatesFor(locale: Locale, path: string) {
   return {
-    canonical: absoluteUrl(lang, path),
+    canonical: absoluteUrl(locale, path),
     /* Solo idiomas PUBLICADOS. Un `hreflang` es una invitación a indexar:
        anunciar un idioma en borrador lo metería en resultados de búsqueda
        precisamente mientras está a medias. */

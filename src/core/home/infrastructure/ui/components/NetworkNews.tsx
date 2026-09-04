@@ -31,7 +31,7 @@ import { Reveal } from '@ui/common/components/ui/Reveal'
  * media: la Home presenta, las internas profundizan. Y sin entradas no se
  * renderiza, en lugar de dejar un titular sobre un hueco.
  */
-export async function NetworkNews({ lang }: { lang: Locale }) {
+export async function NetworkNews({ locale }: { locale: Locale }) {
   const posts = await getLatestPosts(3)
   if (posts.length === 0) return null
 
@@ -47,18 +47,18 @@ export async function NetworkNews({ lang }: { lang: Locale }) {
           <SectionHeading
             id="novedades-home"
             size="m"
-            kicker={t(novedadesInline.home.eyebrow, lang)}
+            kicker={t(novedadesInline.home.eyebrow, locale)}
             kickerTone="brand"
           >
-            {t(novedadesInline.home.title, lang)}
+            {t(novedadesInline.home.title, locale)}
           </SectionHeading>
           <div className="md:pb-1">
             <Button
               variant="link"
               arrow
-              href={href(lang, routes.novedades)}
+              href={href(locale, routes.novedades)}
             >
-              {t(novedadesInline.home.action, lang)}
+              {t(novedadesInline.home.action, locale)}
             </Button>
           </div>
         </div>
@@ -73,20 +73,20 @@ export async function NetworkNews({ lang }: { lang: Locale }) {
             >
               <PostLink
                 post={post}
-                lang={lang}
+                locale={locale}
                 className="grid items-baseline gap-x-8 gap-y-2 py-6 md:grid-cols-[9rem_1fr_auto]"
               >
                 <time
                   dateTime={post.date}
                   className="shrink-0 font-mono text-mono uppercase tracking-wider text-ink-3"
                 >
-                  {formatDate(post.date, lang)}
+                  {formatDate(post.date, locale)}
                 </time>
                 <span className="font-display text-display-s font-semibold text-ink transition-colors group-hover:text-brand">
-                  {t(post.title, lang)}
+                  {t(post.title, locale)}
                 </span>
                 <span className="font-mono text-mono uppercase tracking-wider text-ink-3 md:justify-self-end">
-                  {t(novedades.types[post.type], lang)}
+                  {t(novedades.types[post.type], locale)}
                 </span>
               </PostLink>
             </Reveal>

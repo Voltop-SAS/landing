@@ -23,15 +23,15 @@ import { Reveal } from '@ui/common/components/ui/Reveal'
 import { StationFinder } from '~/core/red/infrastructure/ui/components/StationFinder'
 import { Accordion } from '@ui/common/components/ui/Accordion'
 
-type Props = { params: Promise<{ lang: string }> }
+type Props = { params: Promise<{ locale: string }> }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { lang } = await params
-  if (!isLocale(lang)) return {}
+  const { locale } = await params
+  if (!isLocale(locale)) return {}
   return {
-    title: t(red.meta.title, lang),
-    description: t(red.meta.description, lang),
-    alternates: alternatesFor(lang, routes.red),
+    title: t(red.meta.title, locale),
+    description: t(red.meta.description, locale),
+    alternates: alternatesFor(locale, routes.red),
   }
 }
 
@@ -46,9 +46,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
  * y un titular es un contrato (§19).
  */
 export default async function RedPage({ params }: Props) {
-  const { lang: raw } = await params
+  const { locale: raw } = await params
   if (!isLocale(raw)) notFound()
-  const lang = raw as Locale
+  const locale = raw as Locale
 
   const stations = getStations()
   const cities = getCities()
@@ -68,8 +68,8 @@ export default async function RedPage({ params }: Props) {
     '@type': 'FAQPage',
     mainEntity: preguntas.map((p) => ({
       '@type': 'Question',
-      name: t(p.question, lang),
-      acceptedAnswer: { '@type': 'Answer', text: t(p.answer, lang) },
+      name: t(p.question, locale),
+      acceptedAnswer: { '@type': 'Answer', text: t(p.answer, locale) },
     })),
   }
 
@@ -88,13 +88,13 @@ export default async function RedPage({ params }: Props) {
         className="pb-5 pt-24 md:pb-6 md:pt-32"
       >
         <Container>
-          <Eyebrow>{t(red.hero.eyebrow, lang)}</Eyebrow>
+          <Eyebrow>{t(red.hero.eyebrow, locale)}</Eyebrow>
           <div className="mt-3 flex flex-col gap-3 md:mt-4 md:flex-row md:items-baseline md:justify-between md:gap-8">
             <h1 className="font-display text-display-xl font-semibold text-ink">
-              {t(red.hero.title, lang)}
+              {t(red.hero.title, locale)}
             </h1>
             <p className="measure-narrow text-body text-ink-2 md:shrink-0 md:pt-2">
-              {t(red.hero.lead, lang)}
+              {t(red.hero.lead, locale)}
             </p>
           </div>
         </Container>
@@ -106,11 +106,11 @@ export default async function RedPage({ params }: Props) {
       >
         <Container>
           <StationFinder
-            lang={lang}
+            locale={locale}
             stations={stations}
             cities={cities}
           />
-          <p className="mt-6 font-mono text-mono text-ink-3">{t(states.pendingRealtime, lang)}</p>
+          <p className="mt-6 font-mono text-mono text-ink-3">{t(states.pendingRealtime, locale)}</p>
         </Container>
       </Section>
 
@@ -123,8 +123,8 @@ export default async function RedPage({ params }: Props) {
       >
         <Container>
           <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-            <SectionHeading id="ciudades-title">{t(red.cities.title, lang)}</SectionHeading>
-            <p className="measure-narrow text-body text-ink-2">{t(red.cities.lead, lang)}</p>
+            <SectionHeading id="ciudades-title">{t(red.cities.title, locale)}</SectionHeading>
+            <p className="measure-narrow text-body text-ink-2">{t(red.cities.lead, locale)}</p>
           </div>
 
           <ul className="mt-10 grid gap-px border border-line bg-line sm:grid-cols-2">
@@ -136,7 +136,7 @@ export default async function RedPage({ params }: Props) {
                 className="bg-canvas"
               >
                 <Link
-                  href={href(lang, routes.city(city.slug))}
+                  href={href(locale, routes.city(city.slug))}
                   className="group flex h-full flex-col p-7 transition-colors hover:bg-surface-1"
                 >
                   <div className="flex items-baseline justify-between gap-4">
@@ -145,9 +145,9 @@ export default async function RedPage({ params }: Props) {
                     </h3>
                     <span className="font-mono text-mono text-ink-3">{city.region}</span>
                   </div>
-                  <p className="mt-3 measure text-body-s text-ink-2">{t(city.intro, lang)}</p>
+                  <p className="mt-3 measure text-body-s text-ink-2">{t(city.intro, locale)}</p>
                   <p className="mt-6 font-mono text-mono text-ink-3">
-                    {operational}/{count} {t(units.stations, lang)}
+                    {operational}/{count} {t(units.stations, locale)}
                   </p>
                 </Link>
               </Reveal>
@@ -165,10 +165,10 @@ export default async function RedPage({ params }: Props) {
         <Container>
           <SectionHeading
             id="como-title"
-            kicker={t(red.howToCharge.eyebrow, lang)}
+            kicker={t(red.howToCharge.eyebrow, locale)}
             measure="max-w-[20ch]"
           >
-            {t(red.howToCharge.title, lang)}
+            {t(red.howToCharge.title, locale)}
           </SectionHeading>
 
           {/* SÍ es una secuencia: el número informa y es el ancla visual. */}
@@ -176,8 +176,8 @@ export default async function RedPage({ params }: Props) {
             className="mt-12 md:grid-cols-3"
             items={red.howToCharge.steps.map((s) => ({
               step: s.step,
-              title: t(s.title, lang),
-              body: t(s.body, lang),
+              title: t(s.title, locale),
+              body: t(s.body, locale),
             }))}
           />
         </Container>
@@ -205,22 +205,22 @@ export default async function RedPage({ params }: Props) {
         >
           <SectionHeading
             id="faq-title"
-            kicker={t(red.faq.eyebrow, lang)}
+            kicker={t(red.faq.eyebrow, locale)}
           >
-            {t(red.faq.title, lang)}
+            {t(red.faq.title, locale)}
           </SectionHeading>
           <Accordion
             className="mt-10"
-            newTabLabel={t(a11y.opensInNewTab, lang)}
+            newTabLabel={t(a11y.opensInNewTab, locale)}
             items={preguntas.map((p) => ({
               id: p.id,
-              question: t(p.question, lang),
-              answer: t(p.answer, lang),
+              question: t(p.question, locale),
+              answer: t(p.answer, locale),
               links: p.links?.map((l) => ({
-                label: t(l.label, lang),
+                label: t(l.label, locale),
                 // Un href externo ya está completo: prefijarlo con el idioma
                 // lo convertiría en `/es/https://…`.
-                href: l.external ? l.href : href(lang, l.href),
+                href: l.external ? l.href : href(locale, l.href),
                 external: l.external,
               })),
             }))}
@@ -236,16 +236,18 @@ export default async function RedPage({ params }: Props) {
         <Container>
           <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
             <div>
-              <SectionHeading size="m">{t(red.hostHandoff.title, lang)}</SectionHeading>
-              <p className="mt-2 measure text-body-s text-ink-2">{t(red.hostHandoff.body, lang)}</p>
+              <SectionHeading size="m">{t(red.hostHandoff.title, locale)}</SectionHeading>
+              <p className="mt-2 measure text-body-s text-ink-2">
+                {t(red.hostHandoff.body, locale)}
+              </p>
             </div>
             <Button
               variant="ghost"
               arrow
-              href={href(lang, routes.empresas)}
+              href={href(locale, routes.empresas)}
               className="shrink-0"
             >
-              {t(actions.hostStation, lang)}
+              {t(actions.hostStation, locale)}
             </Button>
           </div>
         </Container>

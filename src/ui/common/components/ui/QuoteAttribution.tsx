@@ -59,14 +59,14 @@ import { cn } from '@ui/common/lib/cn'
  */
 export function QuoteAttribution({
   asset,
-  lang,
+  locale,
   name,
   role,
   focus,
   className,
 }: {
   asset: MediaAsset
-  lang: Locale
+  locale: Locale
   name: string
   /** Ya traducido por quien llama: el cargo vive en la colección, no aquí. */
   role: string
@@ -84,7 +84,7 @@ export function QuoteAttribution({
         {asset.src && (
           <Image
             src={asset.src}
-            alt={t(asset.alt, lang)}
+            alt={t(asset.alt, locale)}
             fill
             /* Ver la nota de arriba: cubre 96px de caja × 1.75 de zoom × 2 de
                densidad, con margen. */

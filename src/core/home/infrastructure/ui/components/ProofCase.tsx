@@ -19,7 +19,7 @@ import { TrackView } from '@ui/common/components/analytics/TrackView'
  * y a marca. Antes convivía con tres "XX" gigantes que dominaban la pantalla;
  * las métricas se movieron a /nosotros, donde el impacto es el tema (§33).
  */
-export function ProofCase({ lang }: { lang: Locale }) {
+export function ProofCase({ locale }: { locale: Locale }) {
   const featured = getFeaturedCase()
   if (!featured) return null
 
@@ -34,7 +34,7 @@ export function ProofCase({ lang }: { lang: Locale }) {
       <div className="absolute inset-0">
         <Media
           asset={media.aperturaEan}
-          lang={lang}
+          locale={locale}
           fill
           sizes="100vw"
           className="h-full"
@@ -51,12 +51,12 @@ export function ProofCase({ lang }: { lang: Locale }) {
 
       <Container className="relative z-(--z-raised) py-(--spacing-section-loose)">
         <div className="flex flex-col gap-4 md:flex-row md:items-baseline md:gap-8">
-          <Eyebrow tone="brand">{t(home.proof.eyebrow, lang)}</Eyebrow>
+          <Eyebrow tone="brand">{t(home.proof.eyebrow, locale)}</Eyebrow>
           <h2
             id="caso-title"
             className="font-display text-display-s font-semibold text-ink"
           >
-            {t(home.proof.title, lang)}
+            {t(home.proof.title, locale)}
           </h2>
         </div>
 
@@ -75,7 +75,7 @@ export function ProofCase({ lang }: { lang: Locale }) {
           props={{ caso: featured.slug }}
         >
           <blockquote className="mt-12 max-w-[28ch] font-display text-display-l font-medium text-balance text-ink">
-            {t(featured.quote, lang)}
+            {t(featured.quote, locale)}
           </blockquote>
         </TrackView>
 
@@ -89,9 +89,9 @@ export function ProofCase({ lang }: { lang: Locale }) {
               rostro sin tocar el archivo — ver `QuoteAttribution`. */}
           <QuoteAttribution
             asset={media.retratoTestimonioEan}
-            lang={lang}
+            locale={locale}
             name={featured.author}
-            role={t(featured.role, lang)}
+            role={t(featured.role, locale)}
             focus="scale-[1.75] origin-[50%_14%]"
           />
           {featured.stationSlug && (
@@ -99,9 +99,9 @@ export function ProofCase({ lang }: { lang: Locale }) {
               <Button
                 variant="link"
                 arrow
-                href={href(lang, routes.station(featured.stationSlug))}
+                href={href(locale, routes.station(featured.stationSlug))}
               >
-                {t(actions.seeStation, lang)}
+                {t(actions.seeStation, locale)}
               </Button>
             </div>
           )}
