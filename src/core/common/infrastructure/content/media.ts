@@ -202,7 +202,7 @@ export const media = {
   },
 
   /**
-   * BEAT 2 · SIGNATURE MOMENT. It fills the slot the `estacionMedellin` video
+   * BEAT 2 · SIGNATURE MOMENT. It fills the slot the `stationMedellin` video
    * used to hold; that video is still undelivered and is kept in this registry,
    * so when it arrives the section can go back to it by changing one line.
    *
@@ -435,7 +435,7 @@ export const media = {
   /**
    * WAKE OPENING.
    *
-   * THE SAME FILE as `filmVoltop` — it is the 1:05 piece delivered as "Video
+   * THE SAME FILE as `voltopFilm` — it is the 1:05 piece delivered as "Video
    * Home". It is registered separately because an asset is identified by its
    * NARRATIVE FUNCTION, not by its path: here it documents one specific
    * opening, there it closes the Home page. Different `alt` and `role` because
@@ -466,10 +466,10 @@ export const media = {
 
   /* NOTHING RENDERS THIS since 2026-09-04, and the file is still in use. The
      film left beat 7 by a product decision; the same `/voltop-film.mp4` is
-     served through `aperturaWake`, the cover of the Wake entry. This entry is
+     served through `wakeOpening`, the cover of the Wake entry. This entry is
      kept because it documents the brand piece — its narrative function, its
      duration, its outstanding subtitles — and that information is not in
-     `aperturaWake`, which describes it as material for one specific opening. */
+     `wakeOpening`, which describes it as material for one specific opening. */
   voltopFilm: {
     id: 'film-voltop',
     kind: 'video',

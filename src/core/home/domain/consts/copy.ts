@@ -111,7 +111,7 @@ export const home = {
       en: 'We put our charging stations in universities, hotels and shopping centres so you can charge your electric vehicle while you get on with your day.',
       pt: 'Instalamos nossas estações de carregamento em universidades, hotéis e shoppings para que você possa carregar seu veículo elétrico enquanto segue com o seu dia.',
     } satisfies Localized,
-    /** The video arrives under the `estacionMedellin` key of the media registry. */
+    /** The video arrives under the `stationMedellin` key of the media registry. */
     caption: {
       es: 'Nueva estación · Medellín',
       en: 'New station · Medellín',

@@ -16,7 +16,7 @@ import { Reveal } from '@ui/common/components/ui/Reveal'
  * credits it; here the person and the text sit at the same level.
  *
  * ── THE FILM LEFT THIS BEAT ───────────────────────────────────────────────
- * This beat used to close with `filmVoltop` in a wide 16/9 band, and it was
+ * This beat used to close with `voltopFilm` in a wide 16/9 band, and it was
  * the home page's second signature moment. It was withdrawn on 2026-09-04 by
  * a product decision, and in passing that resolves something noted as pending:
  * that file is THE SAME one as the cover of the Wake entry, so the same film
