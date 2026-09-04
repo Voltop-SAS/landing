@@ -125,17 +125,17 @@ function contentFilesIn(dir: string): string[] {
  * whole new module that nobody registered also trips it, not just a stray file
  * inside a module already known.
  */
-function registrableModuleContent(): string[] {
-  if (!existsSync(CORE_DIR)) return []
+function registrableModuleContent(root: string = CORE_DIR): string[] {
+  if (!existsSync(root)) return []
 
   const keys: string[] = []
-  for (const entry of readdirSync(CORE_DIR, { withFileTypes: true })) {
+  for (const entry of readdirSync(root, { withFileTypes: true })) {
     if (!entry.isDirectory()) continue
     const mod = entry.name
-    for (const file of contentFilesIn(join(CORE_DIR, mod, 'domain', 'consts'))) {
+    for (const file of contentFilesIn(join(root, mod, 'domain', 'consts'))) {
       keys.push(`${mod}/consts/${file}`)
     }
-    for (const file of contentFilesIn(join(CORE_DIR, mod, 'infrastructure', 'content'))) {
+    for (const file of contentFilesIn(join(root, mod, 'infrastructure', 'content'))) {
       keys.push(`${mod}/content/${file}`)
     }
   }
@@ -156,9 +156,42 @@ function registrableModuleContent(): string[] {
  * build instead of vanishing from the count in silence. `fs` is available:
  * this runs in Node during the build, not in the browser.
  */
-function assertAllContentRegistered(): void {
-  const found = registrableModuleContent()
-  const unregistered = found.filter((key) => !(key in SOURCES))
+/**
+ * The reconciliation itself, as a pure function of two lists so it can be
+ * tested without touching disk.
+ */
+export function unregisteredKeys(found: string[], sources: Record<string, unknown>): string[] {
+  return found.filter((key) => !(key in sources))
+}
+
+export function assertAllContentRegistered(root: string = CORE_DIR): void {
+  const found = registrableModuleContent(root)
+
+  /**
+   * A FLOOR, because an empty scan and a fully registered project are
+   * indistinguishable from the outside.
+   *
+   * Every early return in this file yields `[]` when a directory is missing,
+   * and `[]` produces zero unregistered keys, which reads as success. So a
+   * process started from the wrong working directory — `CORE_DIR` is resolved
+   * from `process.cwd()` — would sail past this guard while the audit covered
+   * nothing at all. That is the shape of the original failure this whole
+   * mechanism exists to prevent: an audit reporting completeness over content
+   * it was not looking at.
+   *
+   * Zero content files is not a valid state of this project, so it breaks too.
+   */
+  if (found.length === 0) {
+    throw new Error(
+      `\n[i18n] The language audit found no content at all under ${root}.\n` +
+        `      Either the scan is looking in the wrong place —it resolves from\n` +
+        `      process.cwd()— or the modules moved. Not a single file registered\n` +
+        `      is indistinguishable from everything being registered, so this\n` +
+        `      breaks rather than reporting success.\n`,
+    )
+  }
+
+  const unregistered = unregisteredKeys(found, SOURCES)
   if (unregistered.length === 0) return
 
   throw new Error(
