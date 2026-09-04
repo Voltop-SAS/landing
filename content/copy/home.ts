@@ -151,14 +151,19 @@ export const home = {
    * responde "qué tiene"; un paso responde "qué me va a pasar", que es la
    * pregunta real de quien nunca ha cargado un carro eléctrico.
    *
-   * ── LO QUE NO SE DICE, Y POR QUÉ ─────────────────────────────────────────
-   * El MÉTODO DE PAGO no aparece en ningún sitio: ni en los legales, ni en el
-   * dataset, ni en el copy existente. Así que no se nombra. El paso 4 dice
-   * dónde queda el cobro —eso sí está confirmado— y no cómo se paga.
+   * ── EL CUARTO PASO ES PAGAR ──────────────────────────────────────────────
+   * Confirmado por producto el 2026-09-03: el pago se hace desde la app con el
+   * método que el usuario tenga registrado. El paso lo dice así y no sigue.
    *
-   * La TARIFA tampoco: lo único confirmado es que se ve en la app antes de
-   * iniciar la carga, que es exactamente lo que dice el paso 3 y lo que ya
-   * decía la ficha de estación. Ni cifras ni rangos.
+   * Deliberadamente NO se explica la mecánica —medio de pago guardado,
+   * pasarela, preautorización, cuándo se cobra exactamente—. Quien lee esto
+   * está decidiendo si cargar es fácil, no auditando el flujo de cobro; cada
+   * frase de más ahí convierte una respuesta tranquilizadora en un contrato
+   * que hay que leer.
+   *
+   * La TARIFA sí sigue sin cifra: lo único confirmado es que se ve en la app
+   * antes de iniciar la carga, que es lo que dice el paso 3 y lo que ya decía
+   * la ficha de estación. Ni cifras ni rangos.
    */
   app: {
     eyebrow: { es: "Cómo se carga", en: "How charging works", pt: "Como carregar", } satisfies Localized,
@@ -211,11 +216,11 @@ export const home = {
         } satisfies Localized,
       },
       {
-        label: { es: "Listo", en: "Done", pt: "Pronto" } satisfies Localized,
+        label: { es: "Paga", en: "Pay", pt: "Pague" } satisfies Localized,
         body: {
-          es: "Al terminar, la sesión y su cobro quedan en tu historial.",
-          en: "When it's over, the session and its charge stay in your history.",
-          pt: "Ao terminar, a sessão e a cobrança ficam no seu histórico.",
+          es: "Al terminar, pagas desde la app con el método que tengas registrado.",
+          en: "When it's done, you pay in the app with the method you already have saved.",
+          pt: "Ao terminar, você paga pelo app com o método que já tiver cadastrado.",
         } satisfies Localized,
       },
     ],

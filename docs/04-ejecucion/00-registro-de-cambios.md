@@ -1898,3 +1898,23 @@ No era un fallo nuevo: el mecanismo venía de antes. Pero es contenido que desap
 ### Evidencia
 
 `lint`, `tsc` y build limpios · 50 páginas · **27 combinaciones de ruta × viewport sin un solo problema**: cero invisibles, cero desbordes, un `h1` por página, cero `img` sin `alt`, cero errores de JS · `prefers-reduced-motion`: 0 invisibles, 0 `clip-path`, 0 `transform`, sección signature colapsada a 557px · **60 fps sostenidos y cero fotogramas largos** en escritorio, en móvil con CPU ×4 y en móvil con CPU ×6 · FLOW y la expansión de la película verificados por sus valores reales en el DOM.
+
+---
+
+## Bloque 48 · El cuarto paso es pagar — 2026-09-03
+
+Producto confirmó lo que faltaba: el pago se hace desde la app con el método
+que el usuario tenga registrado. El paso 4 pasa de "Listo" a **"Paga"** y lo
+dice en una línea.
+
+Deliberadamente **no** se explica la mecánica —medio guardado, pasarela,
+preautorización, cuándo se cobra—. Quien lee ese bloque está decidiendo si
+cargar es fácil, no auditando el flujo de cobro: cada frase de más convierte
+una respuesta tranquilizadora en un contrato que hay que leer.
+
+La tarifa sigue sin cifra. Lo único confirmado es que se ve en la app antes de
+iniciar la carga, que es lo que ya dice el paso 3.
+
+**Evidencia:** `lint`, `tsc` y build limpios · los cuatro pasos verificados a
+1440, 768, 390 y 320px sin desbordes de texto ni de página · 27 combinaciones
+de ruta × viewport sin problemas · `prefers-reduced-motion` intacto.
