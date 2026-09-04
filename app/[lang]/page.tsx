@@ -5,6 +5,7 @@ import { alternatesFor, SITE_URL } from "@/lib/i18n/routes";
 import { home } from "@/content/copy/home";
 import { brand, footer, empresa } from "@/content/copy/common";
 import { soporteEmail } from "@/content/data/links";
+import { getPostsForCity, hasPage } from "@/lib/data";
 
 import { Hero } from "@/components/home/Hero";
 import { InfrastructureSignature } from "@/components/home/InfrastructureSignature";
@@ -80,11 +81,26 @@ export default async function HomePage({ params }: Props) {
     sameAs: footer.social.map((r) => r.url),
   };
 
+  /**
+   * El CTA del beat 2 lleva a la entrada que cuenta la apertura de esa
+   * estación, no a su ficha: lo que hay que contar ahí es el hecho —abrió,
+   * cuándo, con qué— y eso vive en el registro.
+   *
+   * Se DERIVA del dataset en lugar de escribirse a mano. El enlace anterior
+   * llevaba el slug incrustado en el componente y apuntaba a
+   * `san-fernando-plaza`, una estación retirada del dataset: era un 404 y
+   * nadie se había enterado. Ahora, si la entrada se renombra o pierde su
+   * cuerpo, el botón desaparece en lugar de romperse.
+   */
+  const aperturaMedellin = (await getPostsForCity("medellin")).find(
+    (p) => p.type === "apertura" && hasPage(p),
+  );
+
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }} />
       <Hero lang={lang} />
-      <InfrastructureSignature lang={lang} />
+      <InfrastructureSignature lang={lang} entradaSlug={aperturaMedellin?.slug} />
       <NetworkIndex lang={lang} />
       <BusinessIntro lang={lang} />
       <ProofCase lang={lang} />

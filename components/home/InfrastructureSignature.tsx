@@ -45,7 +45,23 @@ import { Button } from "@/components/ui/Button";
  * sola vez: una vez visible, el texto no vuelve a ocultarse (§21). El scroll
  * largo ya no necesita relleno — se acortó a lo que dura la revelación.
  */
-export function InfrastructureSignature({ lang }: { lang: Locale }) {
+export function InfrastructureSignature({
+  lang,
+  entradaSlug,
+}: {
+  lang: Locale;
+  /**
+   * Entrada del registro que cuenta la apertura de ESTA estación. La resuelve
+   * la página desde `lib/data`, porque este componente es de cliente y no
+   * puede consultar datos.
+   *
+   * Llega opcional a propósito: sin entrada, el CTA no se pinta. El enlace
+   * anterior escribía el slug a mano —`san-fernando-plaza`, una estación que
+   * se retiró del dataset— y llevaba a un 404 desde entonces sin que nadie se
+   * enterara. Un botón que desaparece se nota; uno que va a ninguna parte, no.
+   */
+  entradaSlug?: string;
+}) {
   const reduce = useReducedMotion();
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
@@ -226,7 +242,12 @@ export function InfrastructureSignature({ lang }: { lang: Locale }) {
         <Container className="relative z-(--z-raised) py-(--spacing-section-tight)">
           <motion.div {...phase(0)}>
             <Eyebrow tone="brand">{t(home.infrastructure.eyebrow, lang)}</Eyebrow>
-            <h2 className="mt-5 max-w-[18ch] font-display text-display-xl font-semibold text-ink">
+            {/* `text-balance` reparte el largo de las líneas. Lo que evita
+                que el pronombre quede huérfano tras el punto es el ESPACIO
+                DURO del propio copy —ver la nota de `title` en home.ts—:
+                equilibrar no sabe dónde acaba una frase. Las dos cosas se
+                complementan y ninguna sustituye a la otra. */}
+            <h2 className="mt-5 max-w-[18ch] font-display text-display-xl font-semibold text-balance text-ink">
               {t(home.infrastructure.title, lang)}
             </h2>
           </motion.div>
@@ -234,9 +255,11 @@ export function InfrastructureSignature({ lang }: { lang: Locale }) {
           <motion.div {...phase(0.18)}>
             <p className="mt-6 measure text-body-l text-ink-2">{t(home.infrastructure.lead, lang)}</p>
             <div className="mt-9 flex flex-wrap items-center gap-x-6 gap-y-3">
-              <Button variant="ghost" arrow href={href(lang, routes.station("san-fernando-plaza"))}>
-                {t(actions.seeStation, lang)}
-              </Button>
+              {entradaSlug && (
+                <Button variant="ghost" arrow href={href(lang, routes.post(entradaSlug))}>
+                  {t(actions.seeStation, lang)}
+                </Button>
+              )}
               <span className="font-mono text-mono uppercase tracking-wider text-ink-3">
                 {t(home.infrastructure.caption, lang)}
               </span>

@@ -135,7 +135,12 @@ export const actions = {
   seeNetwork: { es: "Ver la red completa", en: "See the full network", pt: "Ver a rede completa", } satisfies Localized,
   businessSolutions: { es: "Soluciones para empresas", en: "Business solutions", pt: "Soluções para empresas", } satisfies Localized,
   talkToTeam: { es: "Hablar con el equipo", en: "Talk to the team", pt: "Falar com o time", } satisfies Localized,
-  seeStation: { es: "Ver esta estación", en: "See this station", pt: "Ver esta estação", } satisfies Localized,
+  /* "Conoce" y no "Ver": invita a entrar en la ficha, no a mirar una foto. En
+     inglés se queda en "See this station" a propósito — "get to know" suena
+     forzado en un botón y "discover" es lenguaje de folleto. Se traduce la
+     intención, no la palabra. Lo usan el beat 2 y el caso, y los dos abren una
+     ficha de estación: una acción, un rótulo. */
+  seeStation: { es: "Conoce esta estación", en: "See this station", pt: "Conheça esta estação", } satisfies Localized,
   getDirections: { es: "Cómo llegar", en: "Get directions", pt: "Como chegar", } satisfies Localized,
   knowVoltop: { es: "Conoce Voltop", en: "About Voltop", pt: "Conheça a Voltop", } satisfies Localized,
   backToNetwork: { es: "Volver a la red", en: "Back to the network", pt: "Voltar para a rede", } satisfies Localized,

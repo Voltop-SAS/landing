@@ -49,7 +49,7 @@ export const home = {
 
   /* BEAT 2 · MEDELLÍN — sticky con scroll-scrub. Intensidad: MUY ALTA */
   infrastructure: {
-    eyebrow: { es: "Infraestructura real", en: "Real infrastructure", pt: "Infraestrutura real", } satisfies Localized,
+    eyebrow: { es: "Estaciones Voltop", en: "Voltop stations", pt: "Estações Voltop", } satisfies Localized,
     /* INTENCIÓN: resolver la objeción de fondo del conductor —"cargar me va a
        robar tiempo y me va a dejar tirado en un sitio incómodo"— explicando
        POR QUÉ elegimos dónde construir.
@@ -62,15 +62,37 @@ export const home = {
        La versión nueva sí tiene trabajo: nombra el beneficio real de nuestra
        estrategia de ubicación —la carga ocurre dentro de tiempo que ya ibas a
        gastar— sin prometer velocidad, que con 22–80 kW no podemos prometer. */
-    title: { es: "Cargas mientras haces otra cosa", en: "You charge while you do something else", pt: "Você carrega enquanto faz outra coisa", } satisfies Localized,
+    /* Dos frases y no una: la primera dice lo que hace el carro, la segunda lo
+       que hace la persona. El punto en medio es el que carga el mensaje —lo que
+       importa no es la carga, es que tu día no se detiene—.
+       
+       OJO, EL ESPACIO TRAS EL PRONOMBRE ES DURO (U+00A0). Sin él, el titular
+       partía como "Tu carro carga. Tú / sigues con tu día." en 1440, 1280,
+       1024, 768 y 390px: el pronombre quedaba huérfano al final de la primera
+       línea, separado de su verbo y justo después de un punto, que es el único
+       sitio donde el ojo espera parar.
+       
+       `text-balance` NO lo arregla y conviene dejarlo escrito: equilibra el
+       LARGO de las líneas, y "Tu carro carga. Tú" contra "sigues con tu día."
+       ya está perfectamente equilibrado —18 caracteres cada una—. El problema
+       no es métrico sino semántico, y un algoritmo de reparto no sabe dónde
+       acaba una frase. El espacio duro sí: ata el pronombre a su verbo y
+       empuja el corte al punto.
+       
+       Se aplica en los tres idiomas porque los tres tienen el mismo riesgo con
+       su pronombre. */
+    title: {
+      es: "Tu carro carga. Tú sigues con tu día.",
+      en: "Your car charges. You get on with your day.",
+      pt: "Seu carro carrega. Você segue com o seu dia.",
+    } satisfies Localized,
     lead: {
-      /* "Potencia suficiente para que la parada sea corta" era una promesa de
-         tiempo. Con puntos de 22 kW no se sostiene, y §19 no admite titulares
-         que el producto no cumple. Lo que sí es cierto y sí diferencia es
-         DÓNDE están. */
-      es: "Elegimos universidades, hoteles y centros comerciales: sitios donde ya te ibas a quedar un rato. Con acceso, cubierta, luz y servicios, para que la espera no sea una espera.",
-      en: "We pick universities, hotels and shopping centres — places where you were already going to stay a while. With access, shelter, lighting and amenities, so the wait doesn't feel like one.",
-      pt: "Escolhemos universidades, hotéis e shoppings: lugares onde você já ia ficar um tempo. Com acesso, cobertura, luz e comodidades, para que a espera não pareça espera.",
+      /* Nunca promete tiempo de carga: con puntos de 22 kW no se sostiene, y
+         §19 no admite titulares que el producto no cumpla. Lo que sí es cierto
+         y sí diferencia es DÓNDE están las estaciones. */
+      es: "Ubicamos nuestras estaciones de carga en universidades, hoteles y centros comerciales para que puedas cargar tu vehículo eléctrico mientras continúas con tu día.",
+      en: "We put our charging stations in universities, hotels and shopping centres so you can charge your electric vehicle while you get on with your day.",
+      pt: "Instalamos nossas estações de carregamento em universidades, hotéis e shoppings para que você possa carregar seu veículo elétrico enquanto segue com o seu dia.",
     } satisfies Localized,
     /** El video llega en la clave `estacionMedellin` del registro de media. */
     caption: { es: "Nueva estación · Medellín", en: "New station · Medellín", pt: "Nova estação · Medellín", } satisfies Localized,
