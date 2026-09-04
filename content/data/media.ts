@@ -331,11 +331,24 @@ export const media = {
    * estudio: en un sitio dark-first, un recorte claro de 96px se convierte en
    * el punto más brillante de la sección y se lleva la mirada por delante de
    * la cita, que es lo que se está intentando que se lea.
+   *
+   * ── EL DE HERBERT PERICO LLEGÓ EL 2026-09-04, CON DOS DESVÍOS ────────────
+   * En 1/1 y 2048px, lo cual encajó sin tocar nada. Pero el encuadre es de
+   * MEDIO CUERPO —sentado, con las manos sobre la mesa— y el fondo es CLARO.
+   *
+   * El encuadre se resuelve en `QuoteAttribution` con un reencuadre por CSS:
+   * a 96px, una foto de medio cuerpo deja la cara en unos 35px y no se
+   * reconoce a nadie. El zoom recorta hacia la cara sin tocar el archivo, así
+   * que el día que llegue un encuadre corto basta con quitarlo.
+   *
+   * El fondo claro no se corrige: atenuar la cara de una persona para que
+   * "encaje" con el registro oscuro es peor que el problema que arregla. Si
+   * alguna vez se produce una versión con fondo oscuro, entra aquí sin más.
    */
   retratoTestimonioEan: {
     id: "retrato-testimonio-ean",
     kind: "photo",
-    src: null,
+    src: "/retrato-herbert-perico.jpg",
     poster: null,
     alt: {
       es: "Retrato de Herbert Perico, de la Universidad EAN",
@@ -348,7 +361,7 @@ export const media = {
       pt: "Atribuição do beat 5. Dá um rosto ao depoimento que sustenta a prova institucional.",
     },
     aspect: "1/1",
-    availability: "a-producir",
+    availability: "entregado",
   },
 
   retratoFundador: {

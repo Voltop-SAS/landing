@@ -27,6 +27,18 @@ import { cn } from "@/lib/cn";
  * aquí el hueco es una superficie callada y lo que falta se declara donde
  * corresponde: en el registro de `content/data/media.ts`.
  *
+ * ── EL REENCUADRE ESTÁ EN CSS, NO EN EL ARCHIVO ───────────────────────────
+ * `focus` amplía y ancla la imagen dentro de su caja. Existe porque los
+ * retratos no siempre llegan con el encuadre corto que pide una miniatura: el
+ * de Herbert Perico llegó de medio cuerpo, y a 96px eso deja la cara en unos
+ * 35px, donde no se reconoce a nadie.
+ *
+ * Se hace por CSS y no editando el archivo a propósito: el original se
+ * conserva intacto —sirve para otros usos y a otros tamaños— y el día que
+ * llegue un encuadre corto basta con no pasar `focus`. Recortar el archivo
+ * habría hecho lo contrario: una decisión de esta miniatura, irreversible,
+ * grabada en el asset.
+ *
  * ── POR QUÉ CUADRADO Y NO REDONDO ─────────────────────────────────────────
  * El avatar circular es EL patrón genérico, y §12 pide justificar cualquier
  * radio por defecto. El cuadrado con el radio estructural es el mismo lenguaje
@@ -38,6 +50,7 @@ export function QuoteAttribution({
   lang,
   name,
   role,
+  focus,
   className,
 }: {
   asset: MediaAsset;
@@ -45,6 +58,12 @@ export function QuoteAttribution({
   name: string;
   /** Ya traducido por quien llama: el cargo vive en la colección, no aquí. */
   role: string;
+  /**
+   * Reencuadre por CSS para retratos que no llegan cortos. Ver la cabecera.
+   * Se pasa como clases de escala y origen para que el valor viva en el
+   * componente que conoce el asset, no aquí.
+   */
+  focus?: string;
   className?: string;
 }) {
   return (
@@ -56,7 +75,7 @@ export function QuoteAttribution({
             alt={t(asset.alt, lang)}
             fill
             sizes="96px"
-            className="object-cover"
+            className={cn("object-cover", focus)}
           />
         )}
       </div>

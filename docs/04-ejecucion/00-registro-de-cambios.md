@@ -2175,3 +2175,35 @@ Y el hueco NO lleva rótulo, a diferencia del resto: en 96px el rótulo de `Medi
 ### Evidencia
 
 `lint`, `tsc` y build limpios · beat 3 medido a 1024, 1100, 1280, 1440 y 1680px: márgenes simétricos y objeto a la altura exacta del texto · las dos rutas de ciudad verificadas en escritorio y móvil · citas medidas a 1440, 768, 390 y 320px: 4/4/5/8 líneas en el beat 5 y 8/7/10/13 en el beat 7, sin desbordes · 27 combinaciones de ruta × viewport sin problemas · `prefers-reduced-motion` intacto.
+
+---
+
+## Bloque 55 · La cita del beat 5, y su retrato — 2026-09-04
+
+### La cita, actualizada
+
+Copy nuevo, con dos cambios que son de fondo y no de estilo:
+
+- **El verbo pasa de pasado a presente**: "Voltop nos permitió ofrecer" → "Con Voltop ofrecemos". En pasado sonaba a un proyecto que ocurrió; en presente dice que la estación está funcionando ahora, que es exactamente la duda que este beat existe para resolver.
+- **"Una operación impecable" → "una operación que funciona todos los días".** "Impecable" es un superlativo que no se puede comprobar y que §19 no admite. "Funciona todos los días" es una afirmación concreta que el cliente puede sostener.
+
+El resto ya coincidía: antetítulo, titular, nombre, cargo y CTA no se tocaron. Y el nombre queda confirmado como **Herbert** por el propio texto entregado — la duda que quedaba abierta se cierra.
+
+Hay una segunda cita de Herbert Perico en `/nosotros`, de la colección `testimonials`, que es un registro distinto y **no se cambió**.
+
+### El retrato: llegó en 1/1 y con dos desvíos
+
+En 2048×2048 exacto, así que encajó en el hueco declarado sin tocar el layout. Pero:
+
+- **Encuadre de medio cuerpo** —sentado, manos sobre la mesa—, no de hombros hacia arriba. A 96px eso deja la cara en unos 35px, donde no se reconoce a nadie.
+- **Fondo claro**, no oscuro como pedía la especificación.
+
+El encuadre se resuelve con un **reencuadre por CSS** (`focus`, una escala con origen alto) y no editando el archivo: el original se conserva intacto —sirve a otros usos y otros tamaños— y el día que llegue un encuadre corto basta con no pasar `focus`. Recortar el archivo habría grabado en el asset una decisión de esta miniatura, irreversible.
+
+El fondo claro **no se corrige**: atenuar la cara de una persona para que "encaje" con el registro oscuro es peor que el problema que arregla. Queda anotado en el registro por si algún día se produce una versión con fondo oscuro.
+
+Los 298 KB del JPEG llegan al navegador como **7 KB en AVIF**, medido en red.
+
+### Evidencia
+
+`lint`, `tsc` y build limpios · el beat 5 servido verificado línea a línea en el orden pedido: antetítulo, titular, cita, nombre, cargo, CTA · cita medida a 1440, 768, 390 y 320px en 4/4/7/8 líneas sin desbordes · retrato 96×96 en los cuatro anchos · 27 combinaciones de ruta × viewport sin problemas · `prefers-reduced-motion` intacto.

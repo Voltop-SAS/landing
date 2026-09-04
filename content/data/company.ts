@@ -189,10 +189,21 @@ export const cases: Case[] = [
       pt: "A Voltop projetou, instalou e opera a estação do campus, com múltiplos pontos e conectores que atendem aos veículos de estudantes, professores e visitantes.",
     },
     results: [],
+    /* Actualizada el 2026-09-04. Dos cambios de fondo, no de estilo:
+       
+       El verbo pasa de PASADO a PRESENTE —"nos permitió" → "ofrecemos"—, y eso
+       cambia lo que la cita prueba: en pasado sonaba a un proyecto que ocurrió;
+       en presente dice que la estación está funcionando ahora, que es
+       exactamente la duda que este beat existe para resolver.
+       
+       Y "una operación impecable" pasa a "una operación que funciona todos los
+       días". "Impecable" es un superlativo que no se puede comprobar y que
+       §19 no admite; "funciona todos los días" es una afirmación concreta que
+       el cliente puede sostener. */
     quote: {
-      es: "Voltop nos permitió ofrecer carga eléctrica confiable a nuestra comunidad, con una operación impecable.",
-      en: "Voltop let us offer reliable EV charging to our community, with flawless operation.",
-      pt: "A Voltop nos permitiu oferecer carregamento elétrico confiável à nossa comunidade, com operação impecável.",
+      es: "Con Voltop ofrecemos carga eléctrica confiable a nuestra comunidad, con una operación que funciona todos los días.",
+      en: "With Voltop we offer our community reliable EV charging, with an operation that works every day.",
+      pt: "Com a Voltop oferecemos carregamento elétrico confiável à nossa comunidade, com uma operação que funciona todos os dias.",
     },
     author: "Herbert Perico",
     role: { es: "Universidad EAN", en: "EAN University", pt: "Universidade EAN", },

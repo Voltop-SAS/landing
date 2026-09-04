@@ -63,11 +63,15 @@ export function ProofCase({ lang }: { lang: Locale }) {
             beat 7 la misma unidad va antes, por la razón contraria. Ver
             `QuoteAttribution`. */}
         <footer className="mt-10 flex flex-wrap items-center gap-x-10 gap-y-6 border-t border-line-strong pt-8">
+          {/* `focus`: el retrato llegó de medio cuerpo y a 96px la cara
+              quedaba en ~35px. El zoom con origen alto recorta hacia el
+              rostro sin tocar el archivo — ver `QuoteAttribution`. */}
           <QuoteAttribution
             asset={media.retratoTestimonioEan}
             lang={lang}
             name={featured.author}
             role={t(featured.role, lang)}
+            focus="scale-[1.75] origin-[50%_14%]"
           />
           {featured.stationSlug && (
             <div className="md:ml-auto">
