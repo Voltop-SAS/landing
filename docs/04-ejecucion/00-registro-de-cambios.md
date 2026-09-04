@@ -2387,3 +2387,46 @@ En `ENTORNO-Y-SKILLS.md` se rescataron además **cinco reglas de trabajo que viv
 ### Evidencia
 
 Clon limpio → `npm ci` (314 paquetes) → lint 0 · tipos 0 · build con las 42 páginas indexables · **0 vulnerabilidades** · i18n **453/453 en los tres idiomas** · 27 combinaciones de ruta × viewport sin problemas · **110 combinaciones** (5 rutas × 22 anchos de 320 a 1920) con **0px de desborde** y cero texto realmente recortado —los avisos del detector son `sr-only`, `max-lg:sr-only` y contenedores con `overflow-hidden` declarado, verificado nodo a nodo— · 42 rutas rastreadas navegando, todas 200 y con `h1`, `title`, `description`, canonical y 3 alternates · sitemap de 42 URLs, coincidencia exacta · cero errores de JS · contraste peor 7.52:1 · **60 fps** hasta con la CPU ralentizada ×6 · formulario B2B completo de punta a punta: valida, compone el correo a los tres destinatarios y mueve el foco a la confirmación.
+
+---
+
+## Bloque 60 · La integración con el repositorio corporativo — 2026-09-04
+
+`Voltop-SAS/landing` no era un repositorio vacío esperando esto: es la landing viva, Next 15.1.6, con `src/`, i18n en `messages/`, shadcn, y **infraestructura de despliegue que funciona** —`cicd_gcp.yml` construye la imagen, la sube a Artifact Registry y despliega en GKE con secretos desde Doppler, más dos workflows a AWS ECR—.
+
+### El PR contra `staging` no se podía crear tal cual
+
+Las dos historias **no comparten ningún commit**. GitHub no abre un PR entre historias sin ancestro común: dice "There isn't anything to compare" y no ofrece el botón.
+
+Así que hay dos ramas, y hacen cosas distintas:
+
+- **`rediseno-web`** — nuestra historia completa, los 60 bloques del registro incluidos. Es la trazabilidad: el `git blame` que lleva de cada línea a la decisión que la puso. No se mergea, se conserva.
+- **`integracion/rediseno-web`** — sale de `staging`, así que **sí** tiene ancestro común y produce un PR mergeable.
+
+### Lo que NO se borró de staging, y por qué
+
+La tentación era volcar nuestro árbol entero encima. Eso habría borrado el CI/CD, el `Dockerfile` y el `docker-compose.yml`, y **staging habría dejado de desplegarse** — un fallo que no se ve en el diff, solo después de mergear.
+
+Se conservan intactos: `.github/`, `Dockerfile`, `docker-compose.yml`, `.husky/`, `bin/`, `.dockerignore`, `.editorconfig` y `.prettierrc.json`.
+
+Se retiran con `src/`: `messages/`, `components.json` y su `eslint.config.mjs`, que solo aplicaba la regla de arquitectura hexagonal a `src/**` y se queda sin objeto. También `jest` y los scripts `test`/`tdd`: **el repositorio no tenía ni un solo fichero de test**, y los workflows no los ejecutan.
+
+### Su Dockerfile construye nuestro proyecto sin tocarlo
+
+Verificado sin Docker, reproduciendo sus tres etapas: `npm ci --ignore-scripts` → `npm run build` → un runner con solo `.next`, `next.config.ts`, `public`, `node_modules` y `package.json`.
+
+Importaba porque `--ignore-scripts` puede dejar `sharp` sin binario y tumbar la optimización de imágenes en producción. No pasa: el runner sirve las rutas en 200 y `/_next/image` devuelve **AVIF de 28 KB**.
+
+### Prettier se conserva, pero no reformatea
+
+Su `lint-staged` corre `prettier --write` sobre todo lo que se commitea, y su configuración es la contraria a la nuestra: **sin punto y coma, comillas simples, 80 columnas, un atributo por línea**. Habría reformateado el proyecto entero en el commit de integración.
+
+El reformateo no cambia el comportamiento, pero **destruye el `git blame`**, que es lo que conecta cada línea con el bloque de este registro que la explica. Se conserva la herramienta y su configuración —la convención del equipo es suya— y el commit de integración se hace con `--no-verify`. Si deciden homogeneizar, que sea **un commit propio y solo de formato**.
+
+### Cinco vulnerabilidades que entraron con el instrumental
+
+Añadir `husky`, `lint-staged`, `prettier` y `commitizen` metió **5 vulnerabilidades (2 altas)** en un árbol que estaba a cero. Las cinco venían de `commitizen 4.3.0` —`lodash` y `tmp`— y las cinco se cierran con `4.3.2`, un parche. La herramienta se queda; las vulnerabilidades no.
+
+### Evidencia
+
+En la rama de integración: `npm install` con **0 vulnerabilidades** · lint 0 · tipos 0 · build de 50 páginas · i18n **453/453** en los tres idiomas · las tres etapas del Dockerfile reproducidas, con las 7 rutas comprobadas en 200 y la optimización de imagen devolviendo AVIF.
