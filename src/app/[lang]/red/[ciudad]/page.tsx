@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { locales, isLocale, t, type Locale } from '~/core/common/domain/i18n/config'
 import { href, routes, alternatesFor } from '~/core/common/domain/i18n/routes'
-import { red, city as cityCopy } from '@/content/copy/red'
+import { red, city as cityCopy } from '~/core/red/domain/consts/copy'
 import { units, a11y } from '~/core/common/domain/consts/copy'
 import {
   getCities,
@@ -17,7 +17,7 @@ import { Section, Container, Eyebrow, SectionHeading } from '@/components/ui/lay
 import { StatusBadge } from '@/components/ui/data'
 import { Reveal } from '@/components/ui/Reveal'
 import { TrackView } from '@/components/analytics/TrackView'
-import { formatPowerKw } from '@/content/data/stations'
+import { formatPowerKw } from '~/core/red/domain/entities/Station'
 
 type Props = { params: Promise<{ lang: string; ciudad: string }> }
 

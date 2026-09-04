@@ -57,7 +57,7 @@ export {
   getLatestPostDate,
 } from './posts'
 
-export type { Station } from '@/content/data/stations'
-export type { City } from '@/content/data/cities'
+export type { Station } from '~/core/red/domain/entities/Station'
+export type { City } from '~/core/red/domain/entities/City'
 export type { Metric, Case } from '@/content/data/company'
 export type { Post, PostType } from '@/content/data/posts'

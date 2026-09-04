@@ -4,11 +4,11 @@ import { useEffect, useId, useMemo, useRef, useState } from 'react'
 import Link from 'next/link'
 import { t, type Locale } from '~/core/common/domain/i18n/config'
 import { href, routes } from '~/core/common/domain/i18n/routes'
-import { red } from '@/content/copy/red'
+import { red } from '~/core/red/domain/consts/copy'
 import { states, units } from '~/core/common/domain/consts/copy'
-import type { Station } from '@/content/data/stations'
-import { formatPowerKw } from '@/content/data/stations'
-import type { City } from '@/content/data/cities'
+import type { Station } from '~/core/red/domain/entities/Station'
+import { formatPowerKw } from '~/core/red/domain/entities/Station'
+import type { City } from '~/core/red/domain/entities/City'
 import {
   filterStations,
   sortStations,

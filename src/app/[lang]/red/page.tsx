@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { isLocale, t, type Locale } from '~/core/common/domain/i18n/config'
 import { href, routes, alternatesFor } from '~/core/common/domain/i18n/routes'
-import { red } from '@/content/copy/red'
+import { red } from '~/core/red/domain/consts/copy'
 import { actions, states, units, a11y } from '~/core/common/domain/consts/copy'
 import {
   getStations,
@@ -14,7 +14,7 @@ import {
 import { Section, Container, Eyebrow, SectionHeading, ProcessList } from '@/components/ui/layout'
 import { Button } from '@/components/ui/Button'
 import { Reveal } from '@/components/ui/Reveal'
-import { StationFinder } from '@/components/red/StationFinder'
+import { StationFinder } from '~/core/red/infrastructure/ui/components/StationFinder'
 import { Accordion } from '@/components/ui/Accordion'
 
 type Props = { params: Promise<{ lang: string }> }

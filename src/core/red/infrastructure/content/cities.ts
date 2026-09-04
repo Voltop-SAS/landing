@@ -1,5 +1,3 @@
-import type { Localized } from '~/core/common/domain/i18n/config'
-
 /**
  * COLECCIÓN · Ciudades
  * Ver docs/MASTER-PROJECT-DEFINITION.md §14 y §27.
@@ -11,15 +9,7 @@ import type { Localized } from '~/core/common/domain/i18n/config'
  * Añadir una ciudad = añadir un registro. La ruta /red/[ciudad] se genera sola.
  */
 
-export type City = {
-  slug: string
-  /** Nombre propio: no se traduce. */
-  name: string
-  region: string
-  /** Contexto local. Nunca incluye cifras sin validar. */
-  intro: Localized
-  featured?: boolean
-}
+import type { City } from '~/core/red/domain/entities/City'
 
 export const cities: City[] = [
   {

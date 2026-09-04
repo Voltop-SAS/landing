@@ -9,7 +9,7 @@ import {
   alternatesFor,
   SITE_URL,
 } from '~/core/common/domain/i18n/routes'
-import { red, station as stationCopy, stationMeta } from '@/content/copy/red'
+import { red, station as stationCopy, stationMeta } from '~/core/red/domain/consts/copy'
 import { actions, a11y, units } from '~/core/common/domain/consts/copy'
 import {
   getStations,
@@ -25,9 +25,9 @@ import { Section, Container, Eyebrow, SectionHeading } from '@/components/ui/lay
 import { StatusBadge, SpecList, PendingTag } from '@/components/ui/data'
 import { Media } from '@/components/ui/Media'
 import { Button } from '@/components/ui/Button'
-import { DirectionsButton } from '@/components/red/DirectionsButton'
+import { DirectionsButton } from '~/core/red/infrastructure/ui/components/DirectionsButton'
 import { media } from '~/core/common/infrastructure/content/media'
-import { formatPowerKw } from '@/content/data/stations'
+import { formatPowerKw } from '~/core/red/domain/entities/Station'
 
 type Props = { params: Promise<{ lang: string; slug: string }> }
 

@@ -5,8 +5,9 @@
  * escrita a mano deja de ser verdad en cuanto se añade una estación.
  */
 
-import { stations } from '@/content/data/stations'
-import { cities, type City } from '@/content/data/cities'
+import { stations } from '~/core/red/infrastructure/content/stations'
+import { cities } from '~/core/red/infrastructure/content/cities'
+import type { City } from '~/core/red/domain/entities/City'
 import { getStationsByCity } from './stations'
 
 /**

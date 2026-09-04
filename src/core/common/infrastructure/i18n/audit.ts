@@ -42,34 +42,34 @@ import {
    y `assertAllContentRegistered()` se encarga de que no se olvide. */
 import * as copyCommon from '~/core/common/domain/consts/copy'
 import * as copyHome from '@/content/copy/home'
-import * as copyRed from '@/content/copy/red'
+import * as copyRed from '~/core/red/domain/consts/copy'
 import * as copyEmpresas from '@/content/copy/empresas'
 import * as copyNosotros from '@/content/copy/nosotros'
 import * as copyLegal from '@/content/copy/legal'
 import * as copyNovedades from '@/content/copy/novedades'
-import * as dataStations from '@/content/data/stations'
-import * as dataCities from '@/content/data/cities'
+import * as dataStations from '~/core/red/infrastructure/content/stations'
+import * as dataCities from '~/core/red/infrastructure/content/cities'
 import * as dataCompany from '@/content/data/company'
 import * as dataMedia from '~/core/common/infrastructure/content/media'
 import * as dataPosts from '@/content/data/posts'
-import * as dataFaq from '@/content/data/faq'
+import * as dataFaq from '~/core/red/infrastructure/content/faq'
 import * as dataLinks from '~/core/common/domain/consts/links'
 import * as dataLegalDocs from '@/content/data/legal-docs'
 
 const SOURCES: Record<string, unknown> = {
   'common/consts/copy': copyCommon,
   'copy/home': copyHome,
-  'copy/red': copyRed,
+  'red/consts/copy': copyRed,
   'copy/empresas': copyEmpresas,
   'copy/nosotros': copyNosotros,
   'copy/legal': copyLegal,
   'copy/novedades': copyNovedades,
-  'data/stations': dataStations,
-  'data/cities': dataCities,
+  'red/content/stations': dataStations,
+  'red/content/cities': dataCities,
   'data/company': dataCompany,
   'common/content/media': dataMedia,
   'data/posts': dataPosts,
-  'data/faq': dataFaq,
+  'red/content/faq': dataFaq,
   'common/consts/links': dataLinks,
   /* Español plano a propósito: ver la cabecera del archivo. Aporta 0 nodos
      `Localized` y por eso no altera el recuento de cobertura. */

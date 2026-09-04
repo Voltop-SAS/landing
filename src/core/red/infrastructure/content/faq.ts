@@ -1,4 +1,3 @@
-import type { Localized } from '~/core/common/domain/i18n/config'
 import { routes } from '~/core/common/domain/i18n/routes'
 import { externalLinks } from '~/core/common/domain/consts/links'
 
@@ -31,21 +30,7 @@ import { externalLinks } from '~/core/common/domain/consts/links'
  * no lleva a ninguna parte.
  */
 
-export type FaqItem = {
-  id: string
-  question: Localized
-  answer: Localized
-  /**
-   * Salidas de la respuesta. Es una LISTA porque una pregunta puede tener más
-   * de un camino legítimo —"necesito ayuda" se resuelve por WhatsApp o por
-   * correo, y elegir por el usuario sería peor— pero se mantienen pocas: una
-   * respuesta con cuatro salidas no responde, reparte.
-   *
-   * `external` cambia dos cosas: el href se usa tal cual (sin prefijo de
-   * idioma) y el enlace se abre en pestaña nueva anunciándolo (WCAG 3.2.5).
-   */
-  links?: { label: Localized; href: string; external?: boolean }[]
-}
+import type { FaqItem } from '~/core/red/domain/entities/FaqItem'
 
 export const faq: FaqItem[] = [
   {

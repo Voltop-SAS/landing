@@ -1,7 +1,7 @@
 import { cn } from '@ui/common/lib/cn'
 import { t, type Locale } from '~/core/common/domain/i18n/config'
 import { stationStatus } from '~/core/common/domain/consts/copy'
-import type { StationStatus } from '@/content/data/stations'
+import type { StationStatus } from '~/core/red/domain/entities/Station'
 import type { Metric } from '@/content/data/company'
 
 /**
