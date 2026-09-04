@@ -1,7 +1,7 @@
 import { Fragment } from 'react'
 import { type Locale } from '~/core/common/domain/i18n/config'
 import { yearOf } from '@ui/common/lib/dates'
-import { LogEntry } from '@/components/novedades/LogEntry'
+import { LogEntry } from '~/core/novedades/infrastructure/ui/components/LogEntry'
 import type { Post } from '~/core/common/infrastructure/data-access'
 
 /**

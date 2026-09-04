@@ -18,8 +18,8 @@ import {
   getStationsByCity,
   getPostsForStation,
 } from '~/core/common/infrastructure/data-access'
-import { novedadesInline } from '@/content/copy/novedades'
-import { PostsInline } from '@/components/novedades/PostsInline'
+import { novedadesInline } from '~/core/novedades/domain/consts/copy'
+import { PostsInline } from '~/core/novedades/infrastructure/ui/components/PostsInline'
 import { TrackView } from '@/components/analytics/TrackView'
 import { Section, Container, Eyebrow, SectionHeading } from '@/components/ui/layout'
 import { StatusBadge, SpecList, PendingTag } from '@/components/ui/data'

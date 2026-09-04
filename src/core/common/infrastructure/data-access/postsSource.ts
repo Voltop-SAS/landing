@@ -1,4 +1,5 @@
-import { posts, type Post } from '@/content/data/posts'
+import { posts } from '~/core/novedades/infrastructure/content/posts'
+import type { Post } from '~/core/novedades/domain/entities/Post'
 
 /**
  * ORIGEN DEL REGISTRO · el único punto que cambia al conectar un CMS.

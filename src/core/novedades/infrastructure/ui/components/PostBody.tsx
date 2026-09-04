@@ -1,7 +1,7 @@
 import { t, type Locale } from '~/core/common/domain/i18n/config'
 import { Media } from '@/components/ui/Media'
-import type { PostBlock } from '@/content/data/posts'
-import { novedades } from '@/content/copy/novedades'
+import type { PostBlock } from '~/core/novedades/domain/entities/Post'
+import { novedades } from '~/core/novedades/domain/consts/copy'
 
 /**
  * CUERPO DE UNA ENTRADA · render de bloques tipados.

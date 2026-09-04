@@ -1,6 +1,6 @@
 /** El registro de novedades. */
 
-import { type Post } from '@/content/data/posts'
+import { type Post } from '~/core/novedades/domain/entities/Post'
 import { fetchPosts } from './postsSource'
 
 /**

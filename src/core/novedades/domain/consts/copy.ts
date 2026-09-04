@@ -1,5 +1,5 @@
 import type { Localized } from '~/core/common/domain/i18n/config'
-import type { PostType } from '@/content/data/posts'
+import type { PostType } from '~/core/novedades/domain/entities/Post'
 
 /**
  * COPY · Novedades

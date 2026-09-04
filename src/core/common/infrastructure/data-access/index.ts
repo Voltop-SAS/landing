@@ -60,4 +60,4 @@ export {
 export type { Station } from '~/core/red/domain/entities/Station'
 export type { City } from '~/core/red/domain/entities/City'
 export type { Metric, Case } from '@/content/data/company'
-export type { Post, PostType } from '@/content/data/posts'
+export type { Post, PostType } from '~/core/novedades/domain/entities/Post'

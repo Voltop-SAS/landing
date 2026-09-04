@@ -9,7 +9,7 @@ import {
   alternatesFor,
   SITE_URL,
 } from '~/core/common/domain/i18n/routes'
-import { novedades } from '@/content/copy/novedades'
+import { novedades } from '~/core/novedades/domain/consts/copy'
 import { a11y, brand } from '~/core/common/domain/consts/copy'
 import {
   getPostsWithPage,
@@ -21,7 +21,7 @@ import { Section, Container, Rule } from '@/components/ui/layout'
 import { Media } from '@/components/ui/Media'
 import { Button } from '@/components/ui/Button'
 import { PendingTag } from '@/components/ui/data'
-import { PostBody } from '@/components/novedades/PostBody'
+import { PostBody } from '~/core/novedades/infrastructure/ui/components/PostBody'
 import { TrackView } from '@/components/analytics/TrackView'
 import { formatDate } from '@ui/common/lib/dates'
 

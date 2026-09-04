@@ -46,12 +46,12 @@ import * as copyRed from '~/core/red/domain/consts/copy'
 import * as copyEmpresas from '@/content/copy/empresas'
 import * as copyNosotros from '@/content/copy/nosotros'
 import * as copyLegal from '@/content/copy/legal'
-import * as copyNovedades from '@/content/copy/novedades'
+import * as copyNovedades from '~/core/novedades/domain/consts/copy'
 import * as dataStations from '~/core/red/infrastructure/content/stations'
 import * as dataCities from '~/core/red/infrastructure/content/cities'
 import * as dataCompany from '@/content/data/company'
 import * as dataMedia from '~/core/common/infrastructure/content/media'
-import * as dataPosts from '@/content/data/posts'
+import * as dataPosts from '~/core/novedades/infrastructure/content/posts'
 import * as dataFaq from '~/core/red/infrastructure/content/faq'
 import * as dataLinks from '~/core/common/domain/consts/links'
 import * as dataLegalDocs from '@/content/data/legal-docs'
@@ -63,12 +63,12 @@ const SOURCES: Record<string, unknown> = {
   'copy/empresas': copyEmpresas,
   'copy/nosotros': copyNosotros,
   'copy/legal': copyLegal,
-  'copy/novedades': copyNovedades,
+  'novedades/consts/copy': copyNovedades,
   'red/content/stations': dataStations,
   'red/content/cities': dataCities,
   'data/company': dataCompany,
   'common/content/media': dataMedia,
-  'data/posts': dataPosts,
+  'novedades/content/posts': dataPosts,
   'red/content/faq': dataFaq,
   'common/consts/links': dataLinks,
   /* Español plano a propósito: ver la cabecera del archivo. Aporta 0 nodos
