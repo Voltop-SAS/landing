@@ -55,8 +55,20 @@ export function switchLocalePath(pathname: string, next: Locale): string {
   return `/${next}${stripLocale(pathname)}`;
 }
 
-/** Rutas absolutas para sitemap, canonical y hreflang. */
-export const SITE_URL = "https://voltop.co";
+/**
+ * Rutas absolutas para sitemap, canonical y hreflang.
+ *
+ * ── CONFIGURABLE, CON EL VALOR DE PRODUCCIÓN COMO DEFECTO ─────────────────
+ * Se lee de `NEXT_PUBLIC_SITE_URL` para que un despliegue de staging o de
+ * previsualización pueda anunciar SU propio dominio: si no se define, el
+ * sitemap, los `canonical` y los `hreflang` de una preview apuntarían a
+ * producción y le dirían a un buscador que el contenido canónico vive en otro
+ * sitio.
+ *
+ * El defecto es el dominio real, así que NO definir la variable deja el
+ * comportamiento exactamente como estaba. Ver `.env.example`.
+ */
+export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://voltop.co";
 
 export function absoluteUrl(lang: Locale, path: string): string {
   return `${SITE_URL}${href(lang, path)}`;

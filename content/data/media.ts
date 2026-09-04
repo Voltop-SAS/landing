@@ -274,7 +274,10 @@ export const media = {
    * que se puede ir. Sin ella la tarjeta es una etiqueta con un número.
    *
    * ENTREGADAS el 2026-09-04, y encajaron sin retocar nada: llegaron en
-   * 1672×941 y 1671×941, que es 16/9 exacto, y las dos son vistas al atardecer
+   * 1672×941 y 1671×941, que es 16/9 exacto. Se convirtieron de PNG a JPEG
+   * para el handoff —2.4 MB cada una contra 0.3—: un PNG es un formato sin
+   * pérdida haciendo un trabajo con pérdida, y su peso en el árbol de git es
+   * permanente. La resolución no cambió, y las dos son vistas al atardecer
    * con la franja inferior en sombra —justo donde caen el nombre y el
    * contador—. La composición no cambió una línea al ponerlas: es lo que se
    * gana declarando el hueco con su forma y su función en lugar de dejar un
@@ -283,7 +286,7 @@ export const media = {
   ciudadBogota: {
     id: "ciudad-bogota",
     kind: "photo",
-    src: "/ciudad-bogota.png",
+    src: "/ciudad-bogota.jpg",
     poster: null,
     alt: {
       es: "Vista de Bogotá, ciudad donde Voltop tiene estaciones de carga en operación",
@@ -302,7 +305,7 @@ export const media = {
   ciudadMedellin: {
     id: "ciudad-medellin",
     kind: "photo",
-    src: "/ciudad-medellin.png",
+    src: "/ciudad-medellin.jpg",
     poster: null,
     alt: {
       es: "Vista de Medellín, ciudad donde Voltop tiene estaciones de carga en operación",

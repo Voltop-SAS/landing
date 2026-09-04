@@ -177,7 +177,22 @@ export function NetworkIndex({ lang }: { lang: Locale }) {
                         asset={fotoCiudad[city.slug] ?? media.ciudadBogota}
                         lang={lang}
                         fill
-                        sizes="(min-width: 1024px) 20rem, 45vw"
+                        /* Los tres tramos siguen a la rejilla de arriba
+                           (`grid-cols-1 sm:grid-cols-2`) dentro de la columna
+                           de 65fr, medidos en el navegador:
+
+                           · <640px  → una columna, la tarjeta ocupa ~87vw
+                           · 640px+  → dos columnas del riel, ~45vw
+                           · 1024px+ → dos columnas dentro del 65fr; la caja
+                                       toca su máximo de 353px a 1280px
+
+                           Declararlo corto no rompe nada visible: el navegador
+                           sirve un archivo más pequeño y lo AMPLÍA. Con el
+                           `45vw` anterior, a 390px la caja real medía 339px y
+                           llegaban 384px de imagen para 678px de píxeles
+                           físicos —0,57×, foto ampliada al 175%—, el mismo
+                           defecto que se vio en el retrato de Helbert. */
+                        sizes="(min-width: 1024px) 23rem, (min-width: 640px) 45vw, 90vw"
                         className="h-full w-full"
                       />
                     </div>

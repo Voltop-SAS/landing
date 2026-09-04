@@ -32,6 +32,10 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+# …pero el TEMPLATE sí se versiona: es la única forma de que quien clone sepa
+# qué variables existen. Sin esta excepción, `.env*` se lo tragaba también y el
+# handoff llegaba sin la referencia de configuración.
+!.env.example
 
 # vercel
 .vercel
@@ -62,6 +66,12 @@ next-env.d.ts
 /.claude/skills/*
 !/.claude/skills/voltop-*/
 
+# Permisos de la máquina de quien trabaja, no del proyecto: rutas absolutas de
+# un `$HOME` concreto y de un Chrome instalado en un sitio concreto. Para otro
+# desarrollador no significan nada, y es la convención del propio Claude Code
+# (`settings.json` viaja, `settings.local.json` no).
+/.claude/settings.local.json
+
 # ── MÁSTERES DE MEDIA ─────────────────────────────────────────────────────
 # Los 473 MB de originales YA NO viven en el repositorio: están en
 # `~/Voltop-masters-originales/` con su propio LEEME. Las reglas que los
@@ -81,3 +91,12 @@ next-env.d.ts
 # escriben, se ejecutan y se tiran: no son código de producto y versionarlos
 # solo ensucia el árbol.
 /*.mjs
+
+# Los escribe `next dev` en cada arranque (ver
+# `node_modules/next/dist/server/lib/generate-agent-files.js`): son reglas
+# genéricas de Next, no contenido de Voltop, y van atadas a la versión de Next
+# instalada. Versionarlos le daría un diff espurio a quien tenga otra versión;
+# ignorados, se regeneran solos en el primer `npm run dev`. Las reglas propias
+# del proyecto están en `docs/`.
+/CLAUDE.md
+/AGENTS.md

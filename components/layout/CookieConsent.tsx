@@ -58,6 +58,19 @@ import { href, routes } from "@/lib/i18n/routes";
  */
 
 const CLAVE = "voltop:cookies";
+
+/**
+ * Contenedor de Google Tag Manager.
+ *
+ * Configurable con el valor de producción como defecto, por la misma razón que
+ * `SITE_URL`: un despliegue de staging que dispare el contenedor de producción
+ * ensucia la analítica real con tráfico de pruebas, y eso no se puede
+ * deshacer una vez enviado.
+ *
+ * No es un secreto —un ID de contenedor viaja en el HTML de cualquier sitio
+ * que lo use— así que va versionado. Ver `.env.example`.
+ */
+const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID ?? "GTM-WJ5S2LBF";
 type Decision = "aceptado" | "rechazado" | null;
 
 export function CookieConsent({ lang }: { lang: Locale }) {
@@ -99,7 +112,7 @@ export function CookieConsent({ lang }: { lang: Locale }) {
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
 j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-WJ5S2LBF');`}
+})(window,document,'script','dataLayer','${GTM_ID}');`}
         </Script>
       )}
 

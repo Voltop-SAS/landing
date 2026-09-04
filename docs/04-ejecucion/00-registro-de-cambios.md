@@ -2326,3 +2326,64 @@ La diferencia con `FilmStage` es que ese era código sin decisión detrás: un c
 ### Evidencia
 
 `lint`, `tsc` y build limpios · 27 combinaciones de ruta × viewport sin problemas · `prefers-reduced-motion` intacto.
+
+---
+
+## Bloque 59 · Preparación del traspaso: el proyecto se documenta para irse de esta máquina — 2026-09-04
+
+El objetivo no era mejorar el sitio: era que **otra persona pueda levantarlo, entenderlo y continuarlo sin nadie al lado**. Todo lo que sigue se hizo bajo una sola regla: no rediseñar, no reinterpretar, no simplificar nada que ya estuviera construido y aprobado.
+
+### Lo que NO se borró, y por qué importa
+
+La auditoría de código muerto devolvió **16 exportaciones "sin uso"**. Ninguna se borró: las 16 se usan dentro de su propio archivo, y la herramienta solo miraba importaciones ajenas. `appCta` es el ejemplo: aparece cuatro veces en el fichero que lo define.
+
+Es el resultado que más tiempo costó y el único que valía la pena: **un borrado de una sola de ellas habría roto el build y nadie habría sabido por qué**. Los 17 assets de `public/` están todos referenciados, las 5 dependencias todas en uso, cero TODOs.
+
+### Secretos: no había ninguno, y ahora tampoco puede haberlos
+
+Cero credenciales en el árbol, cero ficheros `.env`. Sí había **dos valores de producción escritos a mano**: la URL del sitio y el contenedor de Google Tag Manager. Ninguno es un secreto —los dos viajan en el HTML de cualquier visita— pero sí son *del entorno*:
+
+> Un despliegue de pruebas que dispare `GTM-WJ5S2LBF` ensucia la analítica real con tráfico falso, y eso no se deshace una vez enviado.
+
+Los dos pasan a `process.env` **con el valor de producción como defecto**, así que nada cambia si nadie configura nada. Se documentan en un `.env.example` nuevo.
+
+**Trampa que casi se lleva el fichero por delante:** `.gitignore` tenía `.env*`, que se traga `.env.example` — justo el único que debe viajar. Se añadió la negación `!.env.example`. Y una advertencia para quien lo revise: `git check-ignore` devuelve **0 también cuando la que casa es una regla de negación**, así que con ese comando el fichero "parece" ignorado aunque no lo esté. Lo que da la respuesta buena es `git add --dry-run`.
+
+### Seis vulnerabilidades altas, cero
+
+`npm audit` encontró 6 de severidad alta. Tres se cerraron sin tocar código; las otras tres pedían subir Next de 16.2.11 a 16.3.4.
+
+Una subida de framework en la última fase antes de entregar es exactamente donde se rompe algo en silencio, así que **se probó en un clon aislado antes de tocar el proyecto**: lint, tipos y build limpios, y las 27 combinaciones de ruta × viewport con **métricas idénticas** —altura de página 6939, sección fijada 557, los mismos números que antes—. Solo entonces se aplicó.
+
+### Peso: 9.7 MB que no hacían falta
+
+Cuatro imágenes iban en PNG haciendo un trabajo de JPEG, o al doble de la resolución que el navegador llega a pedir.
+
+| | Antes | Después |
+|---|---|---|
+| Bogotá | 2.4 MB | **271 KB** |
+| Medellín | 2.4 MB | **309 KB** |
+| Render del cargador | 4.5 MB | **1.7 MB** |
+| Logo de la app | 657 KB | **140 KB** |
+
+Los dos con transparencia siguen en PNG y **conservan su canal alfa** —el render se recorta sobre el fondo, convertirlo a JPEG le habría puesto una caja negra detrás—.
+
+### La regresión final encontró algo real
+
+Y no era de la limpieza: llevaba ahí desde que se pusieron las fotos de ciudad. Las tarjetas del beat 3 declaraban `sizes="… 45vw"`, pero **a 390px la tarjeta va a una sola columna y ocupa el 87% de la pantalla**. El navegador pedía la mitad de imagen de la que necesitaba y la ampliaba: **0.57×, la foto estirada al 175%**.
+
+Es el mismo defecto que se vio a ojo en el retrato de Helbert, y aquí no se veía porque una foto de ciudad desenfocada no se delata como una cara desenfocada.
+
+Se declararon los tres tramos que la rejilla tiene de verdad. Barridas las **9 imágenes del sitio en 9 rutas × 3 anchos a DPR 2**, ninguna queda por debajo de 1×. Antes, dos.
+
+### Cinco documentos que antes eran conocimiento de una sola cabeza
+
+`README.md` para arrancar · `docs/HANDOFF.md` para quien recibe · `ARQUITECTURA-Y-ESPECIFICACIONES.md` para lo construido · `MOTION.md` para el vocabulario de movimiento · `ENTORNO-Y-SKILLS.md` para lo que hay que reinstalar.
+
+El más importante es la lista de **"decisiones que parecen fallos"**: el Hero que no anima, la sección de 170vh que se queda fija, el pie con 11rem de relleno, `.glass` sin `position`, los huecos FOTO·PENDIENTE. Sin esa lista, quien reciba el proyecto va a "arreglar" cinco cosas que están bien.
+
+En `ENTORNO-Y-SKILLS.md` se rescataron además **cinco reglas de trabajo que vivían fuera del repositorio**, en la memoria local del agente. Se habrían perdido enteras al cambiar de máquina.
+
+### Evidencia
+
+Clon limpio → `npm ci` (314 paquetes) → lint 0 · tipos 0 · build con las 42 páginas indexables · **0 vulnerabilidades** · i18n **453/453 en los tres idiomas** · 27 combinaciones de ruta × viewport sin problemas · **110 combinaciones** (5 rutas × 22 anchos de 320 a 1920) con **0px de desborde** y cero texto realmente recortado —los avisos del detector son `sr-only`, `max-lg:sr-only` y contenedores con `overflow-hidden` declarado, verificado nodo a nodo— · 42 rutas rastreadas navegando, todas 200 y con `h1`, `title`, `description`, canonical y 3 alternates · sitemap de 42 URLs, coincidencia exacta · cero errores de JS · contraste peor 7.52:1 · **60 fps** hasta con la CPU ralentizada ×6 · formulario B2B completo de punta a punta: valida, compone el correo a los tres destinatarios y mueve el foco a la confirmación.

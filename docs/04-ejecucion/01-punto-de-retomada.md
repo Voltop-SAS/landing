@@ -1,18 +1,22 @@
 # Punto de retomada
 
-> Actualizado: 2026-09-02 · Rama `auditoria/fases-0-3` · Último commit `e021195`
-> Estado: **build, lint y tipos limpios · 50 páginas · ES 428 · EN 428 · PT 428**
+> Actualizado: 2026-09-04 · Rama `auditoria/fases-0-3`
+> Estado: **build, lint y tipos limpios · 42 páginas indexables · ES 453 · EN 453 · PT 453 · 0 vulnerabilidades**
 
 Este documento existe para poder cerrar la sesión y volver sin releer nada. El
-*porqué* de cada decisión está en `00-registro-de-cambios.md`, bloques 1 a 44.
+*porqué* de cada decisión está en `00-registro-de-cambios.md`, bloques 1 a 59.
 La norma sigue siendo `MASTER-PROJECT-DEFINITION.md`, ahora en **v1.2**.
+
+**Si vienes de fuera del proyecto, no empieces por aquí:** empieza por
+`README.md` para levantarlo y por `docs/HANDOFF.md`, que trae la lista de
+decisiones que parecen fallos y no lo son. Este documento asume contexto.
 
 ---
 
 ## Cómo levantar el proyecto
 
 ```bash
-cd /Users/siendo_kam/voltop-web-redesign
+cd <ruta-del-proyecto>
 npm run dev                       # → http://localhost:3000 · para TRABAJAR
 npm run build && npm start        # → http://localhost:3000 · para VERIFICAR
 ```
@@ -53,10 +57,10 @@ Cerrado en esta sesión, de un vistazo:
 | Datos de la red | 3 estaciones reales · 35 puntos · 22–80 kW · coordenadas y direcciones |
 | App | Insignias a su tienda · QR verificado · flotante en escritorio y móvil |
 | Legal | Términos y política publicados e indexables · aviso de cookies que **bloquea** la analítica hasta el consentimiento |
-| Medición | Google Tag Manager `GTM-WJ5S2LBF` · los 17 eventos del plan con emisor |
+| Medición | Google Tag Manager `GTM-WJ5S2LBF` (configurable, ver `.env.example`) · los 17 eventos del plan con emisor |
 | Formulario B2B | Conectado por correo a los tres destinatarios |
 | Novedades | 3 entradas · la de Wake con vídeo, cuerpo y CTA |
-| Accesibilidad | 48 combinaciones sin desbordes · contraste medido sobre píxel compuesto · reduced-motion sin elementos invisibles |
+| Accesibilidad | 110 combinaciones sin desbordes · contraste peor 7.52:1 sobre píxel compuesto · reduced-motion sin elementos invisibles |
 
 ---
 
@@ -116,7 +120,7 @@ use sin `fixed`/`absolute` añade `relative` en el marcado.
 que el carácter medio. Si se cambia la tipografía, **hay que volver a medir**:
 la proporción es propiedad de la fuente.
 
-**Los másteres viven fuera del repositorio**, en `~/Voltop-masters-originales/`
+**Los másteres viven fuera del repositorio**, en `~/Voltop-masters-originales/` (fuera del repositorio, ver el handoff)
 con su propio LEEME. Están en `.gitignore`. Siguen pendientes de subir a un
 almacenamiento compartido: hoy están en una sola máquina.
 
