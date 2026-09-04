@@ -19,15 +19,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 /**
- * Política de tratamiento de datos — texto íntegro emitido por el área legal.
+ * Data processing policy — the full text issued by the legal team.
  *
- * Existe porque el consentimiento del formulario de leads enlaza aquí: una
- * autorización informada exige que el titular pueda LEER la política (§38).
- * Hasta el 2026-09-02 esta página mostraba un aviso de "texto legal pendiente"
- * y se servía con `noindex`; con el documento entregado, ambas cosas se
- * retiran. El andamiaje (`legal.privacy.pending*`, `requiredContents`) se
- * conserva en `content/copy/legal.ts` porque describe lo que el documento
- * debía cubrir y sirve de lista de verificación.
+ * It exists because the lead form's consent links here: informed authorisation
+ * requires that the data subject can READ the policy (§38). Until 2026-09-02
+ * this page showed a "legal text pending" notice and was served with `noindex`;
+ * with the document delivered, both are removed. The scaffolding
+ * (`legal.privacy.pending*`, `requiredContents`) is kept in the legal module's
+ * copy because it describes what the document had to cover and serves as a
+ * checklist.
  */
 export default async function PrivacyPage({ params }: Props) {
   const { locale: raw } = await params

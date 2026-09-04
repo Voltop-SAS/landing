@@ -4,21 +4,22 @@ import { motion, useReducedMotion } from 'motion/react'
 import { duration, ease } from '@ui/common/lib/motion'
 
 /**
- * TRANSICIÓN ENTRE PÁGINAS.
+ * PAGE-TO-PAGE TRANSITION.
  *
- * `template.tsx` se remonta en cada navegación, a diferencia de `layout.tsx`.
- * Ahora que la navegación es de cliente (antes cada clic recargaba el
- * documento), la continuidad entre páginas es posible: una entrada breve y
- * sobria que evita el corte seco.
+ * `template.tsx` remounts on every navigation, unlike `layout.tsx`. Now that
+ * navigation happens on the client (every click used to reload the document),
+ * continuity between pages is possible: a brief, restrained entrance that
+ * avoids the hard cut.
  *
- * Deliberadamente mínima — solo `transform`, y anulada con
- * `prefers-reduced-motion` (§21). No es un efecto: es continuidad espacial.
+ * Deliberately minimal — `transform` only, and cancelled under
+ * `prefers-reduced-motion` (§21). It is not an effect: it is spatial
+ * continuity.
  *
- * SIN `opacity` A PROPÓSITO. Motion serializa el estado inicial como estilo en
- * línea, así que un `initial={{ opacity: 0 }}` aquí significaba servir la
- * PÁGINA COMPLETA invisible: si el JS fallaba no había sitio, y el elemento
- * LCP (el titular del hero) arrancaba a opacidad 0 y castigaba la métrica.
- * Animar solo el desplazamiento conserva la continuidad sin ese riesgo.
+ * NO `opacity`, ON PURPOSE. Motion serialises the initial state as an inline
+ * style, so an `initial={{ opacity: 0 }}` here meant serving the ENTIRE PAGE
+ * invisible: if the JS failed there was no site, and the LCP element (the hero
+ * headline) started at opacity 0 and hurt the metric. Animating only the
+ * displacement keeps the continuity without that risk.
  */
 export default function Template({ children }: { children: React.ReactNode }) {
   const reduce = useReducedMotion()

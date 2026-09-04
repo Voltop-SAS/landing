@@ -28,16 +28,17 @@ import { formatDate } from '@ui/common/lib/dates'
 type Props = { params: Promise<{ locale: string; slug: string }> }
 
 /**
- * /NOVEDADES/[SLUG] · una entrada del registro.
+ * /NOVEDADES/[SLUG] · one entry from the log.
  *
- * SOLO EXISTE PARA ENTRADAS CON CUERPO. `getPostsWithPage()` filtra las que
- * tienen `body` vacío, así que una apertura de dos líneas no genera una página
- * delgada que repita el texto del índice — ni compite con él en búsqueda.
- * Ver la cabecera de `content/data/posts.ts`.
+ * IT ONLY EXISTS FOR ENTRIES WITH A BODY. `getPostsWithPage()` filters out
+ * those with an empty `body`, so a two-line opening does not generate a thin
+ * page repeating the index's text — nor compete with it in search. See the
+ * header of the news content file.
  *
- * El pie devuelve al producto: la estación o la ciudad de las que habla la
- * entrada. Es donde paga la referencia del modelo y donde un lector que llegó
- * desde prensa o desde una búsqueda entra a la red en lugar de salirse.
+ * The footer returns to the product: the station or the city the entry talks
+ * about. That is where the model's reference pays off, and where a reader who
+ * arrived from the press or from a search enters the network instead of
+ * leaving.
  */
 
 export const dynamicParams = false
@@ -79,11 +80,11 @@ export default async function PostPage({ params }: Props) {
   const city = post.citySlug ? getCity(post.citySlug) : undefined
 
   /**
-   * Datos estructurados de artículo (§29).
+   * Article structured data (§29).
    *
-   * `image` se emite SOLO si el archivo existe de verdad. Declarar una imagen
-   * que no se ha entregado sería prometerle al buscador algo que la página no
-   * sirve — la misma falta que inventar una métrica.
+   * `image` is emitted ONLY if the file genuinely exists. Declaring an image
+   * that has not been delivered would promise the search engine something the
+   * page does not serve — the same offence as inventing a metric.
    */
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -128,8 +129,8 @@ export default async function PostPage({ params }: Props) {
                 </Link>
               </li>
               <li aria-hidden="true">/</li>
-              {/* Plural: aquí el tipo nombra la CATEGORÍA, no esta entrada.
-                  Ver la nota de `typesPlural` en el copy. */}
+              {/* Plural: here the type names the CATEGORY, not this entry. See
+                  the `typesPlural` note in the copy. */}
               <li className="text-ink-2">{t(novedades.typesPlural[post.type], locale)}</li>
             </ol>
           </nav>
@@ -165,11 +166,12 @@ export default async function PostPage({ params }: Props) {
       >
         <Container width="narrow">
           {post.cover && (
-            /* `controls` cuando la portada es un VÍDEO. Sin él, `VideoMedia` lo
-               trata como material de fondo: silenciado, en bucle y sin barra
-               —así que la pieza de Wake se veía sin audio y sin forma de
-               ponerlo—. Un vídeo que es el sujeto de la entrada se decide ver,
-               y para eso hace falta poder darle play, buscar y oírlo.
+            /* `controls` when the cover is a VIDEO. Without it, `VideoMedia`
+               treats it as background material: muted, looping and with no
+               bar — so the Wake piece played with no audio and no way to turn
+               it on. A video that is the subject of the entry is something you
+               decide to watch, and for that you need to be able to play it,
+               seek and hear it.
                Una fotografía de portada no cambia: la prop no le aplica. */
             <Media
               asset={post.cover}
@@ -187,7 +189,7 @@ export default async function PostPage({ params }: Props) {
             locale={locale}
           />
 
-          {/* Vuelta al producto: la entrada termina en la red, no en un final ciego. */}
+          {/* Back to the product: the entry ends in the network, not in a dead end. */}
           {(station || city) && (
             <>
               <Rule className="mt-16" />

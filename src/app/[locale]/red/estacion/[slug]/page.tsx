@@ -43,18 +43,19 @@ type Props = { params: Promise<{ locale: string; slug: string }> }
  * página, su metadata y sus datos estructurados. Cero trabajo manual (§30).
  */
 /**
- * PARAMS CERRADOS. `notFound()` lanzado desde una página no resuelve ningún
- * boundary en Next 16 con este árbol de rutas: sirve un documento de error con
- * el body VACÍO y el 404 con marca solo aparece tras hidratar, así que un
- * crawler ve una página en blanco.
+ * CLOSED PARAMS. A `notFound()` thrown from a page resolves no boundary at all
+ * in Next 16 with this route tree: it serves an error document with an EMPTY
+ * body, and the branded 404 only appears after hydration, so a crawler sees a
+ * blank page.
  *
- * Con `dynamicParams = false` el rechazo lo hace el ROUTER: un slug que no está
- * en `generateStaticParams` devuelve 404 antes de renderizar nada, y ese 404 sí
- * usa `app/not-found.tsx`. Es además lo correcto para rutas generadas desde
- * datos: un slug inexistente no debe renderizarse bajo demanda.
+ * With `dynamicParams = false` the rejection happens in the ROUTER: a slug that
+ * is not in `generateStaticParams` returns 404 before rendering anything, and
+ * that 404 does use `src/app/not-found.tsx`. It is also the right thing for
+ * routes generated from data: a slug that does not exist should not render on
+ * demand.
  *
- * No cuesta flexibilidad: el sitio ya es estático por completo y cualquier
- * cambio en el dataset exige un build.
+ * It costs no flexibility: the site is already fully static and any change to
+ * the dataset requires a build.
  */
 export const dynamicParams = false
 
@@ -96,12 +97,13 @@ export default async function StationPage({ params }: Props) {
   if (!s) notFound()
   const city = getCity(s.citySlug)
   const nearby = getStationsByCity(s.citySlug).filter((n) => n.slug !== s.slug)
-  /* Re-superficie del registro: la apertura de ESTA estación aparece aquí sola,
-     por referencia. Sin entradas, `PostsInline` no renderiza nada. */
+  /* Log re-surfacing: THIS station's opening shows up here on its own, by
+     reference. With no entries, `PostsInline` renders nothing. */
   const news = await getPostsForStation(s.slug)
 
-  /* Sin coordenadas confirmadas, "cómo llegar" abre una búsqueda por dirección.
-     Es honesto y funciona; cuando lleguen las coordenadas, el enlace mejora solo. */
+  /* Without confirmed coordinates, "get directions" opens a search by address.
+     That is honest and it works; once the coordinates arrive, the link improves
+     on its own. */
   const directions = s.geo
     ? `https://www.google.com/maps/dir/?api=1&destination=${s.geo.lat},${s.geo.lng}`
     : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${s.name}, ${t(s.address, locale)}`)}`
@@ -145,10 +147,10 @@ export default async function StationPage({ params }: Props) {
     })),
   }
 
-  /* §29 pide `BreadcrumbList` en rutas profundas y era el único de los tres
-     tipos de datos estructurados sin cumplir. Las migas VISUALES ya existían
-     justo debajo; esto es la misma jerarquía dicha para el buscador, y va en
-     el mismo orden para que no puedan divergir. */
+  /* §29 asks for `BreadcrumbList` on deep routes, and it was the only one of
+     the three structured-data types not yet satisfied. The VISUAL breadcrumbs
+     already existed just below; this is the same hierarchy stated for the
+     search engine, and it goes in the same order so the two cannot diverge. */
   const breadcrumbJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
@@ -189,10 +191,10 @@ export default async function StationPage({ params }: Props) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
 
-      {/* `estacion_vista` era la ÚNICA vista del plan de medición (§31) sin
-          emisor, y es el final del embudo B2C: sin ella el paso más importante
-          quedaba ciego. `threshold={0}` porque aquí lo que se mide es la
-          PÁGINA, no que un bloque cruce el viewport. */}
+      {/* `estacion_vista` was the ONLY view in the measurement plan (§31) with
+          nothing emitting it, and it is the end of the B2C funnel: without it
+          the most important step was blind. `threshold={0}` because what is
+          measured here is the PAGE, not a block crossing the viewport. */}
       <TrackView
         event="estacion_vista"
         threshold={0}
@@ -266,15 +268,17 @@ export default async function StationPage({ params }: Props) {
         className="pb-(--spacing-section-tight)"
       >
         <Container>
-          {/* `Media`, NO `MediaPending`.
-              Usaba el componente de hueco directamente, así que el día que
-              lleguen las fotos esta ficha seguiría mostrando el rectángulo gris
-              y nadie se enteraría. `Media` cae al hueco por sí solo cuando no
-              hay archivo, y muestra la foto en cuanto exista.
+          {/* `Media`, NOT `MediaPending`.
+              This used the placeholder component directly, so the day the
+              photos arrive this page would still be showing the grey rectangle
+              and nobody would notice. `Media` falls back to the placeholder on
+              its own when there is no file, and shows the photo as soon as one
+              exists.
 
-              Y mira PRIMERO la foto propia de la estación: `station.media.photos`
-              existía en el modelo desde el principio y no lo leía nadie. Solo
-              si no hay, recurre al asset genérico de detalle de carga. */}
+              And it looks FIRST at the station's own photo:
+              `station.media.photos` had been in the model from the start and
+              nobody read it. Only if there is none does it fall back to the
+              generic charging-detail asset. */}
           <Media
             asset={
               s.media.photos[0]

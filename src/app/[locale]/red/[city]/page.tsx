@@ -34,18 +34,19 @@ type Props = { params: Promise<{ locale: string; city: string }> }
  * Añadir una ciudad al dataset genera esta ruta automáticamente.
  */
 /**
- * PARAMS CERRADOS. `notFound()` lanzado desde una página no resuelve ningún
- * boundary en Next 16 con este árbol de rutas: sirve un documento de error con
- * el body VACÍO y el 404 con marca solo aparece tras hidratar, así que un
- * crawler ve una página en blanco.
+ * CLOSED PARAMS. A `notFound()` thrown from a page resolves no boundary at all
+ * in Next 16 with this route tree: it serves an error document with an EMPTY
+ * body, and the branded 404 only appears after hydration, so a crawler sees a
+ * blank page.
  *
- * Con `dynamicParams = false` el rechazo lo hace el ROUTER: un slug que no está
- * en `generateStaticParams` devuelve 404 antes de renderizar nada, y ese 404 sí
- * usa `app/not-found.tsx`. Es además lo correcto para rutas generadas desde
- * datos: un slug inexistente no debe renderizarse bajo demanda.
+ * With `dynamicParams = false` the rejection happens in the ROUTER: a slug that
+ * is not in `generateStaticParams` returns 404 before rendering anything, and
+ * that 404 does use `src/app/not-found.tsx`. It is also the right thing for
+ * routes generated from data: a slug that does not exist should not render on
+ * demand.
  *
- * No cuesta flexibilidad: el sitio ya es estático por completo y cualquier
- * cambio en el dataset exige un build.
+ * It costs no flexibility: the site is already fully static and any change to
+ * the dataset requires a build.
  */
 export const dynamicParams = false
 

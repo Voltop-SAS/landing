@@ -7,58 +7,60 @@ import { SITE_URL } from '~/core/common/domain/i18n/routes'
 import { brand } from '~/core/common/domain/consts/copy'
 
 /**
- * LAYOUT RAÍZ · emite el documento
+ * ROOT LAYOUT · emits the document
  *
- * ── POR QUÉ EXISTE ────────────────────────────────────────────────────────
- * Antes el documento lo emitía `app/[locale]/layout.tsx` y no había layout raíz.
- * Es un patrón que Next admite, pero rompe la resolución de los boundaries de
- * `not-found`: CUALQUIER `notFound()` lanzado dentro de `[locale]` —una estación
- * inexistente, una ciudad inexistente, un idioma inválido— servía el documento
- * de error interno de Next (`<html id="__next_error__">`, sin `lang`, sin
- * estilos, sin marca) y solo se recuperaba en cliente tras la hidratación.
- * `app/[locale]/not-found.tsx` no se renderizaba nunca. Un crawler veía vacío.
+ * ── WHY IT EXISTS ─────────────────────────────────────────────────────────
+ * The document used to be emitted by `src/app/[locale]/layout.tsx`, with no
+ * root layout at all. Next allows that pattern, but it breaks the resolution of
+ * `not-found` boundaries: ANY `notFound()` thrown inside `[locale]` — a station
+ * that does not exist, a city that does not exist, an invalid language — served
+ * Next's internal error document (`<html id="__next_error__">`, no `lang`, no
+ * styles, no brand) and only recovered on the client after hydration.
+ * `src/app/[locale]/not-found.tsx` never rendered at all. A crawler saw an empty
+ * page.
  *
- * ── EL COMPROMISO, EXPLÍCITO ──────────────────────────────────────────────
- * Un layout raíz no recibe `params`, así que `<html lang>` aquí no puede ser
- * dinámico y queda fijo en el idioma por defecto. §28 (decisión confirmada
- * nº14) pedía el `lang` correcto en el HTML SERVIDO, y esto lo relaja.
+ * ── THE TRADE-OFF, STATED ─────────────────────────────────────────────────
+ * A root layout receives no `params`, so `<html lang>` here cannot be dynamic
+ * and stays fixed at the default language. §28 (confirmed decision nº14) asked
+ * for the correct `lang` in the SERVED HTML, and this relaxes that.
  *
- * Se compensa donde importa: `[locale]/layout.tsx` marca el idioma real en un
- * `<div locale>` que envuelve todo el contenido. Los lectores de pantalla honran
- * el `lang` más cercano al nodo, así que la pronunciación sigue siendo
- * correcta, y para buscadores el idioma lo declaran los `hreflang` y las
- * `alternates` de cada ruta, que ya estaban bien.
+ * It is compensated where it matters: `[locale]/layout.tsx` marks the real
+ * language on a `<div lang>` that wraps all the content. Screen readers honour
+ * the nearest `lang` to the node, so pronunciation is still correct, and for
+ * search engines the language is declared by each route's `hreflang` and
+ * `alternates`, which were already right.
  *
- * La alternativa sin compromiso —dos raíces reales, `(es)/` y `(en)/`— exigía
- * duplicar el árbol de rutas completo y habría matado la escalabilidad de
- * "añadir un idioma = añadir una entrada".
+ * The alternative with no trade-off — two real roots, `(es)/` and `(en)/` —
+ * required duplicating the entire route tree and would have killed the
+ * "add a language = add one entry" scalability.
  * ──────────────────────────────────────────────────────────────────────────
  *
- * Las tipografías se cargan aquí y no en `[locale]`: las variables tienen que
- * existir en `<html>` también para las páginas que viven fuera del segmento de
- * idioma, como el 404 de raíz.
- * TIPOGRAFÍAS DE MARCA (entregadas 2026-09-02). Ya no hay marcadores de
- * posición: Space Grotesk e Inter salieron del proyecto.
- * - Poppins → titulares. La familia del logotipo.
- * - Manrope → interfaz y texto corrido. Variable.
- * - JetBrains Mono → registro de ficha técnica (etiquetas, cifras,
- *   metadatos). No la define la marca; se conserva porque el sistema usa un
- *   tercer registro monoespaciado que ninguna de las dos anteriores cubre.
+ * The typefaces load here and not in `[locale]`: the variables have to exist on
+ * `<html>` for the pages that live outside the language segment too, such as
+ * the root 404.
+ *
+ * BRAND TYPEFACES (delivered 2026-09-02). There are no placeholders left: Space
+ * Grotesk and Inter are out of the project.
+ * - Poppins → headlines. The logotype's family.
+ * - Manrope → interface and body text. Variable.
+ * - JetBrains Mono → technical-spec register (labels, figures, metadata). The
+ *   brand does not define it; it is kept because the system uses a third,
+ *   monospaced register that neither of the other two covers.
  */
 
 /**
- * POPPINS · titulares.
+ * POPPINS · headlines.
  *
- * Es la familia del logotipo, así que los titulares y la marca hablan con la
- * misma voz. Poppins NO es variable en Google Fonts: cada peso es un archivo,
- * y por eso se piden SOLO los dos que el sitio usa, 500 y 600, contados en el
- * código. Sin declararlos, el navegador sintetiza el semibold engordando el
- * trazo, y en un titular de 80px eso se ve sucio.
+ * It is the logotype's family, so headlines and brand speak with the same
+ * voice. Poppins is NOT variable on Google Fonts: each weight is its own file,
+ * which is why ONLY the two the site actually uses are requested, 500 and 600,
+ * counted in the code. Without declaring them the browser synthesises the
+ * semibold by fattening the stroke, and at an 80px headline that looks dirty.
  *
- * El 900 (`Poppins-Black`, el peso del archivo de marca) SE RETIRÓ: se cargaba
- * "por si acaso" y ningún componente lo usaba, así que era un archivo de fuente
- * que nadie llegaba a ver nunca. El logotipo no lo necesita —es un SVG—. Si
- * algún día se quieren titulares más rotundos, se vuelve a añadir aquí.
+ * The 900 (`Poppins-Black`, the weight in the brand file) WAS REMOVED: it was
+ * loaded "just in case" and no component used it, so it was a font file nobody
+ * ever saw. The logotype does not need it — it is an SVG. If more emphatic
+ * headlines are ever wanted, it comes back here.
  */
 const display = Poppins({
   variable: '--font-display-raw',
@@ -67,15 +69,15 @@ const display = Poppins({
   display: 'swap',
 })
 /**
- * MANROPE · interfaz y texto corrido.
+ * MANROPE · interface and body text.
  *
- * Es VARIABLE, así que un solo archivo cubre todo el rango de pesos: pesa
- * menos que los tres archivos sueltos que haría falta cargar con una familia
- * estática, y permite cualquier peso intermedio sin pedir nada más.
+ * It is VARIABLE, so a single file covers the whole weight range: it weighs
+ * less than the three separate files a static family would need, and it allows
+ * any intermediate weight without requesting anything more.
  *
- * Se carga desde Google Fonts y no desde el `.ttf` del sistema: `next/font`
- * la sirve desde nuestro propio dominio, ya subconjuntada a latino y en woff2
- * —una fracción del peso del TrueType— y sin la petición a un tercero.
+ * It loads from Google Fonts rather than from the system `.ttf`: `next/font`
+ * serves it from our own domain, already subset to Latin and in woff2 — a
+ * fraction of the TrueType's weight — and with no request to a third party.
  */
 const sans = Manrope({
   variable: '--font-sans-raw',

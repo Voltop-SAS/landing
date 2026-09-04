@@ -18,39 +18,41 @@ import { AppFloating } from '@ui/common/components/layout/AppFloating'
 import { CookieConsent } from '@ui/common/components/layout/CookieConsent'
 
 /**
- * LAYOUT POR IDIOMA
- * Ver docs/MASTER-PROJECT-DEFINITION.md §28.
+ * PER-LANGUAGE LAYOUT
+ * See docs/MASTER-PROJECT-DEFINITION.md §28.
  *
- * El idioma sigue viviendo en la URL: ambas versiones son estáticas e
- * indexables y el `hreflang` de cada ruta es correcto.
+ * The language still lives in the URL: every version is static and indexable,
+ * and each route's `hreflang` is correct.
  *
- * YA NO EMITE EL DOCUMENTO. `<html>` y `<body>` los emite `app/layout.tsx`,
- * porque sin layout raíz Next no resolvía los boundaries de `not-found` y
- * `[locale]/not-found.tsx` no se renderizaba nunca (ver el comentario largo de
- * `app/layout.tsx`). El precio es que `<html lang>` queda fijo en el idioma por
- * defecto, y se compensa aquí: el `<div locale>` marca el idioma REAL de todo el
- * contenido, que es el nodo que consultan los lectores de pantalla.
+ * IT NO LONGER EMITS THE DOCUMENT. `<html>` and `<body>` come from
+ * `src/app/layout.tsx`, because without a root layout Next did not resolve the
+ * `not-found` boundaries and `[locale]/not-found.tsx` never rendered (see the
+ * long comment in `src/app/layout.tsx`). The price is that `<html lang>` stays
+ * fixed at the default language, and it is compensated here: the `<div lang>`
+ * marks the REAL language of all the content, which is the node screen readers
+ * consult.
  *
- * TAMPOCO RECHAZA EL IDIOMA. Antes llamaba a `notFound()` y eso lanzaba antes
- * de que existiera el documento. El rechazo lo hace la PÁGINA —todas conservan
- * su guarda `isLocale`—, así que el 404 aterriza dentro de este layout, con
- * header, footer y navegación de salida. La metadata de abajo marca `noindex`
- * para un idioma inválido.
+ * IT DOES NOT REJECT THE LANGUAGE EITHER. It used to call `notFound()`, and
+ * that threw before the document existed. Rejection is done by the PAGE — they
+ * all keep their `isLocale` guard — so the 404 lands inside this layout, with
+ * header, footer and a way out. The metadata below marks `noindex` for an
+ * invalid language.
  */
 
 /**
- * PARAMS CERRADOS. `notFound()` lanzado desde una página no resuelve ningún
- * boundary en Next 16 con este árbol de rutas: sirve un documento de error con
- * el body VACÍO y el 404 con marca solo aparece tras hidratar, así que un
- * crawler ve una página en blanco.
+ * CLOSED PARAMS. A `notFound()` thrown from a page resolves no boundary at all
+ * in Next 16 with this route tree: it serves an error document with an EMPTY
+ * body, and the branded 404 only appears after hydration, so a crawler sees a
+ * blank page.
  *
- * Con `dynamicParams = false` el rechazo lo hace el ROUTER: un slug que no está
- * en `generateStaticParams` devuelve 404 antes de renderizar nada, y ese 404 sí
- * usa `app/not-found.tsx`. Es además lo correcto para rutas generadas desde
- * datos: un slug inexistente no debe renderizarse bajo demanda.
+ * With `dynamicParams = false` the rejection happens in the ROUTER: a slug that
+ * is not in `generateStaticParams` returns 404 before rendering anything, and
+ * that 404 does use `src/app/not-found.tsx`. It is also the right thing for
+ * routes generated from data: a slug that does not exist should not render on
+ * demand.
  *
- * No cuesta flexibilidad: el sitio ya es estático por completo y cualquier
- * cambio en el dataset exige un build.
+ * It costs no flexibility: the site is already fully static and any change to
+ * the dataset requires a build.
  */
 export const dynamicParams = false
 
@@ -80,9 +82,9 @@ export async function generateMetadata({
       locale: localeMeta[locale].htmlLang,
       url: absoluteUrl(locale, ''),
     },
-    /* Un idioma en BORRADOR es navegable —hay que poder revisarlo— pero no
-       entra al índice mientras esté incompleto. Se sigue permitiendo seguir
-       los enlaces: la versión publicada de cada página sí debe descubrirse. */
+    /* A DRAFT language is browsable — it has to be reviewable — but it does
+       not enter the index while it is incomplete. Following links is still
+       allowed: the published version of each page does need to be found. */
     robots: { index: isPublished(locale), follow: true },
   }
 }

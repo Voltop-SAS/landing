@@ -35,15 +35,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 /**
- * /NOSOTROS · credibilidad.
+ * /NOSOTROS · credibility.
  *
- * Antes eran tres bloques (métricas + logos + dos testimonios) sin historia,
- * sin criterio de construcción y sin liderazgo. Ahora tiene la profundidad que
- * la arquitectura le exige: historia → cómo construimos → impacto → liderazgo
- * → confianza.
+ * It used to be three blocks (metrics + logos + two testimonials) with no
+ * story, no stated criteria for how we build and no leadership. It now has the
+ * depth the architecture demands of it: story → how we build → impact →
+ * leadership → trust.
  *
- * El bloque de impacto NO inventa cifras: mientras no haya datos validados
- * declara honestamente que están en validación (§33).
+ * The impact block does NOT invent figures: while there is no validated data it
+ * honestly declares that validation is pending (§33).
  */
 export default async function NosotrosPage({ params }: Props) {
   const { locale: raw } = await params
@@ -73,7 +73,7 @@ export default async function NosotrosPage({ params }: Props) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }}
       />
 
-      {/* Apertura narrativa — registro distinto al de /red y /empresas */}
+      {/* Narrative opening — a different register from /red and /empresas */}
       <Section
         space="none"
         className="pt-32 md:pt-40"
@@ -87,7 +87,7 @@ export default async function NosotrosPage({ params }: Props) {
         </Container>
       </Section>
 
-      {/* Historia — columna estrecha, editorial */}
+      {/* Story — narrow column, editorial */}
       <Section
         space="base"
         ariaLabelledby="historia-title"
@@ -112,7 +112,7 @@ export default async function NosotrosPage({ params }: Props) {
         </Container>
       </Section>
 
-      {/* Material real, a sangre — respiración entre bloques de texto */}
+      {/* Real material, full bleed — a breath between blocks of text */}
       <Container width="wide">
         <Media
           asset={media.infraestructuraAmplia}
@@ -123,7 +123,7 @@ export default async function NosotrosPage({ params }: Props) {
         />
       </Container>
 
-      {/* Cómo construimos — cuadrícula estructural */}
+      {/* How we build — structural grid */}
       <Section
         space="base"
         ariaLabelledby="criterios-title"
@@ -136,7 +136,7 @@ export default async function NosotrosPage({ params }: Props) {
             {t(nosotros.infrastructure.title, locale)}
           </SectionHeading>
 
-          {/* SIN número: cuatro criterios que no negociamos no son una
+          {/* NO numbering: four criteria we do not negotiate are not a
               secuencia, y numerarlos sugería un orden que no existe. El ancla
               es el título, no la cifra. */}
           <ul className="mt-12 grid gap-x-14 gap-y-12 md:grid-cols-2">
@@ -158,7 +158,7 @@ export default async function NosotrosPage({ params }: Props) {
         </Container>
       </Section>
 
-      {/* Impacto — honesto mientras no haya cifras validadas */}
+      {/* Impact — honest while there are no validated figures */}
       <Section
         id="impacto"
         space="base"
@@ -211,7 +211,7 @@ export default async function NosotrosPage({ params }: Props) {
         </Container>
       </Section>
 
-      {/* Liderazgo — la voz del fundador, con su material */}
+      {/* Leadership — the founder's voice, with his material */}
       <Section
         id="liderazgo"
         space="base"
@@ -254,7 +254,7 @@ export default async function NosotrosPage({ params }: Props) {
         </Container>
       </Section>
 
-      {/* Confianza — testimonios sin tarjetas */}
+      {/* Trust — testimonials without cards */}
       <Section
         space="base"
         className="border-t border-line"
@@ -289,7 +289,7 @@ export default async function NosotrosPage({ params }: Props) {
             ))}
           </ul>
 
-          {/* La franja de partners se omite mientras no haya logos con permiso (§32) */}
+          {/* The partner strip is omitted while there are no cleared logos (§32) */}
           {partners.length > 0 && (
             <div className="mt-16">
               <SectionHeading

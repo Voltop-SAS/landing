@@ -11,21 +11,21 @@ import {
 } from '~/core/common/infrastructure/data-access'
 
 /**
- * SITEMAP generado desde los datos (§29).
- * Añadir una estación, una ciudad o una entrada del registro la incluye
- * automáticamente, con sus alternativas de idioma. Cero mantenimiento manual.
+ * SITEMAP generated from the data (§29).
+ * Adding a station, a city or a log entry includes it automatically, with its
+ * language alternates. Zero manual maintenance.
  *
- * ── SOBRE `lastModified` ──────────────────────────────────────────────────
- * Antes TODAS las URLs declaraban `new Date()`, así que en cada build el sitio
- * entero afirmaba haber cambiado ese día. Un sitemap que dice "todo cambió
- * hoy" siempre es un sitemap que no dice nada: el buscador aprende a
- * ignorarlo, y con él pierde la señal de lo que sí cambió de verdad.
+ * ── ABOUT `lastModified` ──────────────────────────────────────────────────
+ * EVERY URL used to declare `new Date()`, so on each build the whole site
+ * claimed to have changed that day. A sitemap that says "everything changed
+ * today" every time is a sitemap that says nothing: the search engine learns to
+ * ignore it, and with it loses the signal about what actually did change.
  *
- * Ahora cada URL declara la fecha que puede sostener:
- * - Una entrada del registro, la suya.
- * - El índice de novedades, la de su entrada más reciente.
- * - Las páginas cuyo contenido no tiene fecha propia siguen usando la del
- *   build, que es la única disponible y honesta para ellas.
+ * Now each URL declares the date it can support:
+ * - A log entry, its own.
+ * - The news index, the date of its most recent entry.
+ * - Pages whose content has no date of its own keep using the build date,
+ *   which is the only one available and honest for them.
  */
 type Entry = {
   path: string
@@ -35,9 +35,9 @@ type Entry = {
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  /* El sitemap declara qué idiomas existen de cara al público, así que es su
-     trabajo verificar que ninguno se anuncia a medias. Rompe el build si un
-     idioma publicado tiene huecos. */
+  /* The sitemap declares which languages exist publicly, so it is its job to
+     verify that none is announced half done. It breaks the build if a published
+     language has gaps. */
   assertPublishedLocalesComplete()
 
   const build = new Date()
@@ -51,16 +51,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       path: routes.novedades,
       priority: 0.8,
       lastModified: latestPost ? new Date(latestPost) : build,
-      /* El índice sí cambia a menudo: es lo que justifica que se vuelva a
-         rastrear. Cada entrada, en cambio, no cambia una vez publicada. */
+      /* The index does change often: that is what justifies re-crawling it.
+         Each entry, by contrast, does not change once published. */
       changeFrequency: 'weekly',
     },
     { path: routes.nosotros, priority: 0.7, lastModified: build, changeFrequency: 'monthly' },
-    /* Los legales entran al sitemap desde que tienen texto definitivo, y con
-       SU fecha real de emisión —no la del build—, que es justo lo que la
-       cabecera de este archivo reprocha. Prioridad baja: existen para ser
-       encontrados cuando se buscan, no para competir con las páginas de
-       producto. */
+    /* The legal pages enter the sitemap now that they have final text, and
+       with THEIR real date of issue — not the build's — which is exactly what
+       this file's header complains about. Low priority: they exist to be found
+       when someone looks for them, not to compete with the product pages. */
     {
       path: routes.terms,
       priority: 0.3,
@@ -85,16 +84,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: build,
       changeFrequency: 'monthly' as const,
     })),
-    /* Solo las entradas con página propia: una entrada que vive únicamente en
-       el índice no tiene URL que ofrecer. */
+    /* Only entries with a page of their own: an entry that lives solely in the
+       index has no URL to offer. */
     ...(await getPostsWithPage()).map((p) => ({
       path: routes.post(p.slug),
       priority: 0.6,
       lastModified: new Date(p.date),
       changeFrequency: 'yearly' as const,
     })),
-    /* La política de privacidad se añadirá cuando tenga texto definitivo:
-       hasta entonces está marcada como no indexable. */
   ]
 
   return entries.flatMap(({ path, priority, lastModified, changeFrequency }) =>
@@ -105,11 +102,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority,
       alternates: {
         /**
-         * La clave es el código de BUSCADOR (`localeMeta[l].hreflang`), no el
-         * segmento de URL. Hoy coinciden en los idiomas publicados, así que la
-         * diferencia es invisible; con un idioma regional dejan de coincidir
-         * —URL `/pt`, hreflang `pt-BR`— y el sitemap declararía sobre la misma
-         * URL un idioma distinto del que declara su HTML.
+         * The key is the SEARCH ENGINE code (`localeMeta[l].hreflang`), not the
+         * URL segment. They coincide today for the published languages, so the
+         * difference is invisible; with a regional language they stop
+         * coinciding — URL `/pt`, hreflang `pt-BR` — and the sitemap would
+         * declare, for the same URL, a different language than its HTML does.
          */
         languages: {
           ...Object.fromEntries(

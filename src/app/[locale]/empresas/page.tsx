@@ -28,10 +28,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 /**
- * /EMPRESAS · hub B2B.
+ * /EMPRESAS · the B2B hub.
  *
- * Apertura EDITORIAL con material real (distinta de la apertura funcional de
- * /red y de la narrativa de /nosotros): cada interna tiene su propio registro.
+ * An EDITORIAL opening with real material (different from /red's functional
+ * opening and from /nosotros's narrative one): every inner page has its own
+ * register.
  */
 export default async function EmpresasPage({ params }: Props) {
   const { locale: raw } = await params
@@ -69,7 +70,7 @@ export default async function EmpresasPage({ params }: Props) {
         </Container>
       </Section>
 
-      {/* Capacidades — información antes de pedir que elija */}
+      {/* Capabilities — information before asking anyone to choose */}
       <Section
         space="base"
         ariaLabelledby="capacidades-title"
@@ -89,7 +90,7 @@ export default async function EmpresasPage({ params }: Props) {
             </p>
           </div>
 
-          {/* SÍ es una secuencia: evaluar precede a instalar. */}
+          {/* This one IS a sequence: assessing comes before installing. */}
           <ProcessList
             className="mt-12 sm:grid-cols-2 lg:grid-cols-4"
             items={empresas.capabilities.steps.map((s) => ({

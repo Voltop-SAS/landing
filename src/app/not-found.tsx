@@ -7,39 +7,39 @@ import { Header } from '@ui/common/components/layout/Header'
 import { Footer } from '@ui/common/components/layout/Footer'
 
 /**
- * PÁGINA NO ENCONTRADA · única del sitio
+ * NOT FOUND · the site's only one
  *
- * ── QUÉ ATIENDE ───────────────────────────────────────────────────────────
- * Todo. Una ruta que Next no puede mapear (`/es/ruta-inexistente`), un idioma
- * inválido (`/fr`, `/xyz`), una estación o una ciudad que no está en el
- * dataset. Antes cada uno de esos casos servía el documento de error interno
- * de Next: sin `<html lang>`, sin estilos, sin marca y —lo peor— con el
- * `<body>` VACÍO, así que un crawler veía una página en blanco y el usuario un
- * parpadeo antes de que el JS pintara algo. Lo recibía justo quien llega desde
- * un enlace roto de terceros.
+ * ── WHAT IT HANDLES ───────────────────────────────────────────────────────
+ * Everything. A route Next cannot map (`/es/ruta-inexistente`), an invalid
+ * language (`/fr`, `/xyz`), a station or a city that is not in the dataset.
+ * Each of those cases used to serve Next's internal error document: no
+ * `<html lang>`, no styles, no brand and — worst of all — with an EMPTY
+ * `<body>`, so a crawler saw a blank page and the user saw a flash before the
+ * JS painted anything. The people receiving it were precisely those arriving
+ * from somebody else's broken link.
  *
- * ── POR QUÉ ES LA ÚNICA ───────────────────────────────────────────────────
- * Había también un `app/[locale]/not-found.tsx`, que NUNCA se renderizó: en
- * Next 16 un `notFound()` lanzado desde una página no resuelve el boundary
- * anidado en este árbol de rutas, ni con layout raíz. Se eliminó en lugar de
- * dejarlo como archivo decorativo.
+ * ── WHY IT IS THE ONLY ONE ────────────────────────────────────────────────
+ * There used to be a `src/app/[locale]/not-found.tsx` as well, and it NEVER
+ * rendered: in Next 16 a `notFound()` thrown from a page does not resolve the
+ * nested boundary in this route tree, not even with a root layout. It was
+ * deleted rather than left as a decorative file.
  *
- * Lo que sí funciona es rechazar en el ROUTER: los segmentos generados desde
- * datos declaran `dynamicParams = false`, así que un slug desconocido devuelve
- * 404 antes de renderizar nada y ese 404 aterriza aquí, con contenido real en
- * el HTML servido.
+ * What does work is rejecting at the ROUTER: segments generated from data
+ * declare `dynamicParams = false`, so an unknown slug returns 404 before
+ * rendering anything, and that 404 lands here, with real content in the served
+ * HTML.
  *
- * ── EL IDIOMA ─────────────────────────────────────────────────────────────
- * Monta Header y Footer con el idioma por defecto. En un callejón sin salida no
- * hay `Locale` fiable que deducir —el idioma inválido es a menudo la causa del
- * 404—, y tener la navegación completa vale más que acertar el idioma: quien
- * escribió mal una URL de estación quiere seguir navegando, no solo dos
- * botones (§10, estados accionables).
+ * ── THE LANGUAGE ──────────────────────────────────────────────────────────
+ * It mounts Header and Footer in the default language. In a dead end there is
+ * no reliable `Locale` to infer — an invalid language is often the cause of the
+ * 404 — and having full navigation is worth more than getting the language
+ * right: someone who mistyped a station URL wants to keep browsing, not just
+ * two buttons (§10, actionable states).
  */
 
 export const metadata = {
   title: '404',
-  /* Una ruta inexistente no entra en el índice. */
+  /* A route that does not exist does not go in the index. */
   robots: { index: false, follow: true },
 }
 

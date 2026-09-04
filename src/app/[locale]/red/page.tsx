@@ -36,14 +36,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 /**
- * /RED · superficie de producto (§14).
+ * /RED · a product surface (§14).
  *
- * Apertura FUNCIONAL, no editorial: intro compacta y la herramienta de
- * inmediato. Cada página interna tiene su propia apertura — antes las tres
- * compartían el mismo `PageHero` y se sentían plantilladas.
+ * A FUNCTIONAL opening, not an editorial one: a compact intro and then the tool
+ * straight away. Every inner page has its own opening — the three of them used
+ * to share the same `PageHero` and felt templated.
  *
- * El titular ya no promete "tiempo real": no hay integración de disponibilidad
- * y un titular es un contrato (§19).
+ * The headline no longer promises "real time": there is no availability
+ * integration, and a headline is a contract (§19).
  */
 export default async function RedPage({ params }: Props) {
   const { locale: raw } = await params
@@ -53,20 +53,20 @@ export default async function RedPage({ params }: Props) {
   const stations = getStations()
   const cities = getCities()
   const coverage = getCitiesWithStations()
-  const preguntas = getFaq()
+  const questions = getFaq()
 
-  /* §29 trata cada landing como activo de búsqueda, y este es el más barato
-     que quedaba sin explotar: cinco preguntas escritas, en tres idiomas, con
-     las respuestas exactas que la gente teclea. Sin `FAQPage` no pueden
-     aparecer como resultado enriquecido.
+  /* §29 treats every landing page as a search asset, and this was the cheapest
+     one left untapped: five written questions, in three languages, with the
+     exact answers people type. Without `FAQPage` they cannot appear as a rich
+     result.
 
-     Se genera desde la MISMA colección que pinta el acordeón, así que no
-     pueden divergir: un dato estructurado que no coincide con lo visible es
-     motivo de penalización, no de mejora. */
+     It is generated from the SAME collection that paints the accordion, so the
+     two cannot diverge: structured data that does not match what is visible is
+     grounds for a penalty, not an improvement. */
   const faqJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
-    mainEntity: preguntas.map((p) => ({
+    mainEntity: questions.map((p) => ({
       '@type': 'Question',
       name: t(p.question, locale),
       acceptedAnswer: { '@type': 'Answer', text: t(p.answer, locale) },
@@ -183,16 +183,16 @@ export default async function RedPage({ params }: Props) {
         </Container>
       </Section>
 
-      {/* Preguntas frecuentes — carril estrecho.
+      {/* FAQ — narrow lane.
 
-          Va DESPUÉS de "cómo cargar" y antes del handoff a B2B por el orden en
-          que aparecen las dudas: primero cómo funciona, luego lo que queda sin
-          resolver, y la última pregunta ("¿puedo tener una estación?") entrega
-          el hilo a la sección B2B que sigue.
+          It goes AFTER "how to charge" and before the B2B handoff, following
+          the order in which doubts appear: first how it works, then what is
+          left unresolved, and the last question ("can I have a station?") hands
+          the thread to the B2B section that follows.
 
-          Carril estrecho sobre ancho de contenido: ninguna sección vecina
-          repite estructura (rejilla de ciudades → 3 columnas de proceso →
-          carril → fila única), que es como §12 pide construir el ritmo. */}
+          A narrow lane over content width: no neighbouring section repeats a
+          structure (city grid → 3 process columns → lane → single row), which
+          is how §12 asks for the rhythm to be built. */}
       <Section
         id="preguntas"
         space="base"
@@ -212,14 +212,14 @@ export default async function RedPage({ params }: Props) {
           <Accordion
             className="mt-10"
             newTabLabel={t(a11y.opensInNewTab, locale)}
-            items={preguntas.map((p) => ({
+            items={questions.map((p) => ({
               id: p.id,
               question: t(p.question, locale),
               answer: t(p.answer, locale),
               links: p.links?.map((l) => ({
                 label: t(l.label, locale),
-                // Un href externo ya está completo: prefijarlo con el idioma
-                // lo convertiría en `/es/https://…`.
+                // An external href is already complete: prefixing it with the
+                // language would turn it into `/es/https://…`.
                 href: l.external ? l.href : href(locale, l.href),
                 external: l.external,
               })),

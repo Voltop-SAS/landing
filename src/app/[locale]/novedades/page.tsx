@@ -22,24 +22,24 @@ import { formatDate } from '@ui/common/lib/dates'
 type Props = { params: Promise<{ locale: string }> }
 
 /**
- * /NOVEDADES · el registro de la red.
+ * /NOVEDADES · the network's log.
  *
- * ── RITMO DE LA PÁGINA (§36.11) ───────────────────────────────────────────
- * Tres bloques con estructura deliberadamente distinta:
+ * ── THE PAGE'S RHYTHM (§36.11) ────────────────────────────────────────────
+ * Three blocks with deliberately different structures:
  *
- * 1. APERTURA + PULSO — texto sobre el riel y una línea de datos. Responde en
- *    cinco segundos la única pregunta que trae aquí a un inversionista o a un
- *    periodista: ¿esta compañía se mueve?
- * 2. PORTADA — una entrada a ancho de contenedor con su material. Es el único
- *    elemento con peso editorial de la página.
- * 3. EL REGISTRO — bitácora densa y tipográfica, separada por años.
+ * 1. OPENING + PULSE — text on the rail and one line of figures. In five
+ *    seconds it answers the only question that brings an investor or a
+ *    journalist here: is this company moving?
+ * 2. LEAD ENTRY — one entry at container width with its material. It is the
+ *    only element on the page with editorial weight.
+ * 3. THE LOG — a dense, typographic logbook, separated by year.
  *
- * Ninguna rejilla de tarjetas: ver la cabecera de `LogEntry`.
+ * No card grid anywhere: see the header of `LogEntry`.
  *
- * ── EL PULSO NO ES UNA MÉTRICA INVENTADA ──────────────────────────────────
- * Se calcula del propio dataset —cuántas entradas hay y cuándo fue la última—
- * así que no entra en el cupo de placeholders de §33 ni promete nada que no
- * sea verificable en la misma página.
+ * ── THE PULSE IS NOT AN INVENTED METRIC ───────────────────────────────────
+ * It is computed from the dataset itself — how many entries there are and when
+ * the last one was — so it does not count against §33's placeholder budget and
+ * promises nothing that cannot be verified on the same page.
  */
 
 export const dynamicParams = false
@@ -66,8 +66,8 @@ export default async function NovedadesPage({ params }: Props) {
 
   const posts = await getPosts()
   const featured = await getFeaturedPost()
-  /* La portada no se repite abajo: la misma entrada dos veces en una página
-     no aporta y rompe la lectura cronológica del registro. */
+  /* The lead entry is not repeated below: the same entry twice on one page
+     adds nothing and breaks the log's chronological reading. */
   const rest = posts.filter((p) => p.slug !== featured?.slug)
 
   const pulseUnit = posts.length === 1 ? novedades.pulse.entriesOne : novedades.pulse.entries
@@ -107,9 +107,9 @@ export default async function NovedadesPage({ params }: Props) {
               </div>
             </dl>
 
-            {/* Se declara ANTES de leer, no al pie: el precedente del proyecto
-                es `demoNotice`, que avisa antes de pedir los datos y no en
-                letra pequeña después del botón. */}
+            {/* Declared BEFORE reading, not in a footnote: the project's
+                precedent is `demoNotice`, which warns before asking for the
+                data and not in small print after the button. */}
             {hasProvisional && (
               <div className="mt-5 flex flex-wrap items-center gap-3">
                 <PendingTag>{t(novedades.provisionalTagAll, locale)}</PendingTag>
@@ -159,9 +159,10 @@ export default async function NovedadesPage({ params }: Props) {
                       sizes="(min-width: 1280px) 76rem, 100vw"
                       priority
                     />
-                    {/* Rótulo derivado del asset y pie propio de la portada: el
-                        índice comenta la pieza de otra forma que el detalle,
-                        porque quien lee aquí todavía no ha entrado. */}
+                    {/* A label derived from the asset and a caption of the lead
+                        entry's own: the index comments on the piece differently
+                        than the detail page, because whoever reads here has not
+                        gone in yet. */}
                     <figcaption className="mt-3 text-body-s text-ink-3">
                       {featured.cover.kind === 'video' && featured.cover.duration && (
                         <span className="mr-3 font-mono text-mono uppercase tracking-wider text-ink-2">
@@ -202,10 +203,11 @@ export default async function NovedadesPage({ params }: Props) {
                     <p className="mt-4 measure text-body-l text-ink-2">
                       {t(featured.summary, locale)}
                     </p>
-                    {/* Si la entrada es la apertura de una estación, el CTA
-                        lleva A LA ESTACIÓN: es el destino que sirve para algo.
-                        Si no, lleva a la entrada. El título enlaza siempre al
-                        detalle, así que ninguna de las dos rutas se pierde. */}
+                    {/* If the entry is a station's opening, the CTA goes TO THE
+                        STATION: that is the destination that is good for
+                        something. Otherwise it goes to the entry. The title
+                        always links to the detail page, so neither route is
+                        lost. */}
                     {featured.stationSlug ? (
                       <div className="mt-6">
                         <Button
