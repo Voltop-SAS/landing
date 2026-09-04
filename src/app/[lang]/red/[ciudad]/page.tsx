@@ -5,7 +5,12 @@ import { locales, isLocale, t, type Locale } from '~/core/common/domain/i18n/con
 import { href, routes, alternatesFor } from '~/core/common/domain/i18n/routes'
 import { red, city as cityCopy } from '@/content/copy/red'
 import { units, a11y } from '~/core/common/domain/consts/copy'
-import { getCities, getCity, getStationsByCity, getPostsForCity } from '@/lib/data'
+import {
+  getCities,
+  getCity,
+  getStationsByCity,
+  getPostsForCity,
+} from '~/core/common/infrastructure/data-access'
 import { novedadesInline } from '@/content/copy/novedades'
 import { PostsInline } from '@/components/novedades/PostsInline'
 import { Section, Container, Eyebrow, SectionHeading } from '@/components/ui/layout'

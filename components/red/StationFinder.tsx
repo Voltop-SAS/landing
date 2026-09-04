@@ -15,7 +15,7 @@ import {
   hasCoordinates,
   distanceKm,
   type StationSort,
-} from '@/lib/data'
+} from '~/core/common/infrastructure/data-access'
 import { StatusBadge } from '@/components/ui/data'
 import { Button } from '@/components/ui/Button'
 import { track } from '~/core/common/infrastructure/analytics'

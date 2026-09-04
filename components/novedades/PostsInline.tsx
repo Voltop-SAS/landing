@@ -5,7 +5,7 @@ import { formatDate } from '@ui/common/lib/dates'
 import { novedades } from '@/content/copy/novedades'
 import { Section, Container, SectionHeading } from '@/components/ui/layout'
 import { PostLink } from '@/components/novedades/PostLink'
-import type { Post } from '@/lib/data'
+import type { Post } from '~/core/common/infrastructure/data-access'
 
 /**
  * RE-SUPERFICIE DEL REGISTRO EN OTRO DESTINO.

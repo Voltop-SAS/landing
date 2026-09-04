@@ -1,8 +1,8 @@
 import Link from 'next/link'
 import { type Locale } from '~/core/common/domain/i18n/config'
 import { href, routes } from '~/core/common/domain/i18n/routes'
-import { hasPage } from '@/lib/data'
-import type { Post } from '@/lib/data'
+import { hasPage } from '~/core/common/infrastructure/data-access'
+import type { Post } from '~/core/common/infrastructure/data-access'
 import { cn } from '@ui/common/lib/cn'
 
 /**

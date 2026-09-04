@@ -5,7 +5,7 @@ import { alternatesFor, SITE_URL } from '~/core/common/domain/i18n/routes'
 import { home } from '@/content/copy/home'
 import { brand, footer, empresa } from '~/core/common/domain/consts/copy'
 import { soporteEmail } from '~/core/common/domain/consts/links'
-import { getPostsForCity, hasPage } from '@/lib/data'
+import { getPostsForCity, hasPage } from '~/core/common/infrastructure/data-access'
 
 import { Hero } from '@/components/home/Hero'
 import { InfrastructureSignature } from '@/components/home/InfrastructureSignature'

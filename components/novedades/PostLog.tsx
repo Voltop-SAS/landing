@@ -2,7 +2,7 @@ import { Fragment } from 'react'
 import { type Locale } from '~/core/common/domain/i18n/config'
 import { yearOf } from '@ui/common/lib/dates'
 import { LogEntry } from '@/components/novedades/LogEntry'
-import type { Post } from '@/lib/data'
+import type { Post } from '~/core/common/infrastructure/data-access'
 
 /**
  * EL REGISTRO · lista cronológica con separadores de año.

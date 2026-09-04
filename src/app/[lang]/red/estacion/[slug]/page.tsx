@@ -11,7 +11,13 @@ import {
 } from '~/core/common/domain/i18n/routes'
 import { red, station as stationCopy, stationMeta } from '@/content/copy/red'
 import { actions, a11y, units } from '~/core/common/domain/consts/copy'
-import { getStations, getStation, getCity, getStationsByCity, getPostsForStation } from '@/lib/data'
+import {
+  getStations,
+  getStation,
+  getCity,
+  getStationsByCity,
+  getPostsForStation,
+} from '~/core/common/infrastructure/data-access'
 import { novedadesInline } from '@/content/copy/novedades'
 import { PostsInline } from '@/components/novedades/PostsInline'
 import { TrackView } from '@/components/analytics/TrackView'

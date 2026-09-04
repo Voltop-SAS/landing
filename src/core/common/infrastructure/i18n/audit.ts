@@ -14,7 +14,7 @@
  * idioma y de cuáles carece, con su ruta exacta.
  *
  * ── DÓNDE SE EJECUTA Y POR QUÉ AHÍ ────────────────────────────────────────
- * Lo invoca `app/sitemap.ts`, así que corre en cada `npm run build` sin
+ * Lo invoca `src/app/sitemap.ts`, así que corre en cada `npm run build` sin
  * herramienta nueva ni dependencia nueva — importa para un equipo que no es de
  * desarrollo (§38): una comprobación que hay que acordarse de lanzar es una
  * comprobación que no se lanza.
@@ -255,6 +255,6 @@ export function assertPublishedLocalesComplete(): LocaleAudit {
 
   throw new Error(
     `\n[i18n] Un idioma declarado como PUBLICADO tiene textos sin traducir.\n\n${detail}\n\n` +
-      `  Traduce lo que falta, o marca el idioma como "borrador" en lib/i18n/config.ts.\n`,
+      `  Traduce lo que falta, o marca el idioma como "borrador" en core/common/domain/i18n/config.ts.\n`,
   )
 }

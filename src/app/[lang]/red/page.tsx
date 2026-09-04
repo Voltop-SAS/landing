@@ -5,7 +5,12 @@ import { isLocale, t, type Locale } from '~/core/common/domain/i18n/config'
 import { href, routes, alternatesFor } from '~/core/common/domain/i18n/routes'
 import { red } from '@/content/copy/red'
 import { actions, states, units, a11y } from '~/core/common/domain/consts/copy'
-import { getStations, getCities, getCitiesWithStations, getFaq } from '@/lib/data'
+import {
+  getStations,
+  getCities,
+  getCitiesWithStations,
+  getFaq,
+} from '~/core/common/infrastructure/data-access'
 import { Section, Container, Eyebrow, SectionHeading, ProcessList } from '@/components/ui/layout'
 import { Button } from '@/components/ui/Button'
 import { Reveal } from '@/components/ui/Reveal'

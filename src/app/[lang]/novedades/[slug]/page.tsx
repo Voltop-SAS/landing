@@ -11,7 +11,12 @@ import {
 } from '~/core/common/domain/i18n/routes'
 import { novedades } from '@/content/copy/novedades'
 import { a11y, brand } from '~/core/common/domain/consts/copy'
-import { getPostsWithPage, getPost, getStation, getCity } from '@/lib/data'
+import {
+  getPostsWithPage,
+  getPost,
+  getStation,
+  getCity,
+} from '~/core/common/infrastructure/data-access'
 import { Section, Container, Rule } from '@/components/ui/layout'
 import { Media } from '@/components/ui/Media'
 import { Button } from '@/components/ui/Button'

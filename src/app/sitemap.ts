@@ -3,7 +3,12 @@ import { publishedLocales, defaultLocale, localeMeta } from '~/core/common/domai
 import { routes, absoluteUrl } from '~/core/common/domain/i18n/routes'
 import { legalDocs } from '@/content/data/legal-docs'
 import { assertPublishedLocalesComplete } from '~/core/common/infrastructure/i18n/audit'
-import { getStations, getCities, getPostsWithPage, getLatestPostDate } from '@/lib/data'
+import {
+  getStations,
+  getCities,
+  getPostsWithPage,
+  getLatestPostDate,
+} from '~/core/common/infrastructure/data-access'
 
 /**
  * SITEMAP generado desde los datos (§29).

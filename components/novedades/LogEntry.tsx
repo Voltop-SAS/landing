@@ -2,8 +2,8 @@ import { t, type Locale } from '~/core/common/domain/i18n/config'
 import { formatDate } from '@ui/common/lib/dates'
 import { novedades } from '@/content/copy/novedades'
 import { PostLink } from '@/components/novedades/PostLink'
-import type { Post } from '@/lib/data'
-import { hasPage } from '@/lib/data'
+import type { Post } from '~/core/common/infrastructure/data-access'
+import { hasPage } from '~/core/common/infrastructure/data-access'
 import { cn } from '@ui/common/lib/cn'
 
 /**

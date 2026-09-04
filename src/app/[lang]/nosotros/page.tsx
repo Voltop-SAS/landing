@@ -5,7 +5,12 @@ import { routes, alternatesFor, SITE_URL } from '~/core/common/domain/i18n/route
 import { nosotros } from '@/content/copy/nosotros'
 import { brand } from '~/core/common/domain/consts/copy'
 import { media } from '~/core/common/infrastructure/content/media'
-import { getMetrics, getFounder, getTestimonials, getPartners } from '@/lib/data'
+import {
+  getMetrics,
+  getFounder,
+  getTestimonials,
+  getPartners,
+} from '~/core/common/infrastructure/data-access'
 import { Section, Container, Eyebrow, SectionHeading } from '@/components/ui/layout'
 import { MetricRow, PendingTag } from '@/components/ui/data'
 import { Media } from '@/components/ui/Media'
