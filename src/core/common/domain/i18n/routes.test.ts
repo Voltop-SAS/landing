@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { href, stripLocale, switchLocalePath, absoluteUrl, alternatesFor } from './routes'
-import { locales, defaultLocale, localeMeta } from './config'
+import { locales, publishedLocales, defaultLocale, localeMeta } from './config'
 
 /**
  * `stripLocale` is tested first and in most detail because its regular
@@ -91,5 +91,27 @@ describe('alternatesFor', () => {
 
   it('declares the canonical of the language it was asked about', () => {
     expect(alternatesFor('en', '/red').canonical).toBe(absoluteUrl('en', '/red'))
+  })
+
+  /**
+   * A SURVIVING MUTANT, written down instead of hidden.
+   *
+   * `alternatesFor` deliberately iterates `publishedLocales` and not `locales`:
+   * an `hreflang` is an invitation to index, so announcing a draft language
+   * would push it into search results precisely while it is half translated.
+   *
+   * That guarantee is NOT provable today. All three languages are currently
+   * `publicado`, so `publishedLocales` and `locales` hold the same values and
+   * the two implementations are indistinguishable — swapping one for the other
+   * leaves every test in this file green. Verified by mutation, not assumed.
+   *
+   * The assertion below is therefore the honest one: it pins the coupling, so
+   * that the day a language goes to `borrador` the count stops matching and
+   * this test starts doing the work it cannot do yet. Inflating it until it
+   * looked like proof would be worse than saying it is not.
+   */
+  it('announces exactly the published languages, plus x-default', () => {
+    const { languages } = alternatesFor('es', '/red')
+    expect(Object.keys(languages)).toHaveLength(publishedLocales.length + 1)
   })
 })
