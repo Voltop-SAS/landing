@@ -102,7 +102,14 @@ next-env.d.ts
 # Scripts de verificación de un solo uso (capturas, contraste, foco). Se
 # escriben, se ejecutan y se tiran: no son código de producto y versionarlos
 # solo ensucia el árbol.
+#
+# La excepción NO es cosmética: `eslint.config.mjs` y `postcss.config.mjs`
+# están en la raíz y la regla se los tragaba. Aquí no se notaba —git ignora el
+# `.gitignore` para lo que YA sigue— pero al recrear el árbol en otro
+# repositorio desaparecieron los dos, y sin `postcss.config.mjs` Tailwind no
+# compila. Un fallo que solo aparece en el CI de otro sitio.
 /*.mjs
+!/*.config.mjs
 
 # `CLAUDE.md` y `AGENTS.md` SÍ se versionan (decisión de 2026-09-04). Los
 # escribe `next dev` en cada arranque —ver
