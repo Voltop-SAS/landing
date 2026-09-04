@@ -107,10 +107,24 @@ export function NetworkIndex({ lang }: { lang: Locale }) {
             162 a la derecha: la composición está centrada en el layout como el
             resto de las secciones.
 
-            `min-h` en la rejilla y no en la sección: es la altura que el objeto
-            necesita para llenar 486px de ancho (730px), y de paso `items-center`
-            centra el bloque de texto contra él en lugar de colgarlo arriba. */}
-        <div className="grid items-center gap-14 lg:min-h-[45.625rem] lg:grid-cols-[minmax(0,56fr)_minmax(0,44fr)] lg:gap-10">
+            SIN ALTURA FORZADA. Hubo una versión con `min-h` en la rejilla para
+            que el objeto llenara 486px de ancho, y el precio era que la sección
+            medía 874px con 575 de contenido: **300px de aire que ninguna otra
+            sección del sitio tiene**, y eso era lo que la sacaba del ritmo de
+            la página. La escala del objeto no vale ese precio.
+
+            Ahora la fila mide lo que mide el texto, y el objeto —servido en
+            `contain`— mide exactamente lo mismo de alto. Ese es el vínculo que
+            faltaba: el equipo y el bloque de contenido comparten su span
+            vertical al píxel, arriba y abajo, en lugar de que uno sobresalga
+            del otro. Dos elementos que empiezan y terminan juntos se leen como
+            una composición; uno flotando junto al otro, no.
+
+            El reparto 65/35 sale de ahí: con el contenido más ancho el texto
+            envuelve menos, la fila baja de alto y el objeto se estrecha en
+            proporción. La columna está dimensionada al objeto resultante para
+            que no sobre aire, igual que antes. */}
+        <div className="grid items-stretch gap-14 lg:grid-cols-[minmax(0,65fr)_minmax(0,35fr)] lg:gap-10">
           <div>
             {/* `SectionHeading` y no un antetítulo más un `h2` a mano: es la
                 primitiva del sistema, y con ella la relación antetítulo/título

@@ -319,6 +319,58 @@ export const media = {
   },
 
   /**
+   * RETRATOS DE LAS DOS CITAS · beats 5 y 7.
+   *
+   * Las dos secciones de cita del sitio comparten tratamiento —ver
+   * `QuoteAttribution`— y por eso comparten también forma de asset: cuadrado,
+   * porque es la única proporción que funciona igual en la fila de atribución
+   * del beat 5 y sobre la columna estrecha del beat 7 sin recomponer nada.
+   *
+   * QUÉ HACE FALTA: un retrato en 1/1, encuadre de hombros hacia arriba, con
+   * la persona mirando a cámara y fondo neutro y oscuro. No fondo blanco de
+   * estudio: en un sitio dark-first, un recorte claro de 96px se convierte en
+   * el punto más brillante de la sección y se lleva la mirada por delante de
+   * la cita, que es lo que se está intentando que se lea.
+   */
+  retratoTestimonioEan: {
+    id: "retrato-testimonio-ean",
+    kind: "photo",
+    src: null,
+    poster: null,
+    alt: {
+      es: "Retrato de Herbert Perico, de la Universidad EAN",
+      en: "Portrait of Herbert Perico, from EAN University",
+      pt: "Retrato de Herbert Perico, da Universidade EAN",
+    },
+    role: {
+      es: "Atribución del beat 5. Pone cara al testimonio que sostiene la prueba institucional.",
+      en: "Beat 5 attribution. Puts a face to the testimonial that carries the institutional proof.",
+      pt: "Atribuição do beat 5. Dá um rosto ao depoimento que sustenta a prova institucional.",
+    },
+    aspect: "1/1",
+    availability: "a-producir",
+  },
+
+  retratoFundador: {
+    id: "retrato-fundador",
+    kind: "photo",
+    src: null,
+    poster: null,
+    alt: {
+      es: "Retrato de Bruno Ocampo, fundador y CEO de Voltop",
+      en: "Portrait of Bruno Ocampo, founder and CEO of Voltop",
+      pt: "Retrato de Bruno Ocampo, fundador e CEO da Voltop",
+    },
+    role: {
+      es: "Atribución del beat 7. Presenta a quien habla ANTES de la cita: es su visión, no un testimonio de cliente.",
+      en: "Beat 7 attribution. Introduces the speaker BEFORE the quote: it's his vision, not a client testimonial.",
+      pt: "Atribuição do beat 7. Apresenta quem fala ANTES da citação: é a visão dele, não um depoimento de cliente.",
+    },
+    aspect: "1/1",
+    availability: "a-producir",
+  },
+
+  /**
    * RENDER DEL CARGADOR · entregado el 2026-09-04.
    *
    * Es el sujeto de la mitad derecha del beat 3, y es el único asset del

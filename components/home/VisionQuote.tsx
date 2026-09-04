@@ -6,6 +6,7 @@ import { media } from "@/content/data/media";
 import { getFounder } from "@/lib/data";
 import { Section, Container, Eyebrow } from "@/components/ui/layout";
 import { Media } from "@/components/ui/Media";
+import { QuoteAttribution } from "@/components/ui/QuoteAttribution";
 import { Button } from "@/components/ui/Button";
 import { Reveal } from "@/components/ui/Reveal";
 import { FilmStage } from "@/components/ui/FilmStage";
@@ -30,17 +31,37 @@ export function VisionQuote({ lang }: { lang: Locale }) {
       <Container width="narrow">
         <Reveal>
           <Eyebrow>{t(home.vision.eyebrow, lang)}</Eyebrow>
+
+          {/* La atribución va ANTES de la cita, al contrario que en el beat 5.
+              Esto no es un testimonio de cliente: es la visión del fundador en
+              primera persona y 300 caracteres, y saber quién habla cambia cómo
+              se leen. La unidad —retrato, nombre, cargo— es la misma que allí;
+              lo que cambia es su sitio. Ver `QuoteAttribution`. */}
+          <QuoteAttribution
+            className="mt-7"
+            asset={media.retratoFundador}
+            lang={lang}
+            name={founder.name}
+            role={t(founder.role, lang)}
+          />
+
+          {/* ── LA CITA, A ESCALA ──────────────────────────────────────────
+              Estaba en `display-m md:display-l`: 52px a 1440 para casi 300
+              caracteres, que son diez líneas de tipografía de titular. Con ese
+              cuerpo la cita dejaba de leerse y pasaba a mirarse.
+
+              Baja a `display-s md:display-m` (24 → 36px). El texto largo pide
+              menos cuerpo, no más: la presencia de este beat la da la
+              composición —columna estrecha, retrato, la película debajo— y no
+              el tamaño de la letra. */}
           <blockquote
             id="vision-title"
-            className="mt-6 font-display text-display-m font-medium text-balance text-ink md:text-display-l"
+            className="mt-7 font-display text-display-s font-medium text-balance text-ink md:text-display-m"
           >
             {t(founder.quote, lang)}
           </blockquote>
-          <div className="mt-8 flex flex-wrap items-center justify-between gap-6 border-t border-line pt-6">
-            <p className="text-body-s">
-              <span className="text-ink">{founder.name}</span>
-              <span className="text-ink-3"> · {t(founder.role, lang)}</span>
-            </p>
+
+          <div className="mt-8 border-t border-line pt-6">
             <Button variant="link" arrow href={href(lang, routes.nosotros)}>
               {t(actions.knowVoltop, lang)}
             </Button>

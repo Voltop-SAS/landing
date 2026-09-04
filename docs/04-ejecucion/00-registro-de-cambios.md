@@ -2133,3 +2133,45 @@ En móvil el reparto en dos filas se conserva aunque sobren 56px: es lo que da a
 ### Evidencia
 
 `lint`, `tsc` y build limpios · márgenes del beat 3 medidos a 1024, 1100, 1280, 1440 y 1680px · `/empresas` sirviendo los cuatro rótulos nuevos · flotante verificado en dos rutas y tres anchos: oculto al cargar, aparece tras la primera sección, nunca se esconde a mitad, oculto de vuelta arriba, sin texto cortado en ningún ancho · 27 combinaciones de ruta × viewport sin problemas · `prefers-reduced-motion` intacto.
+
+---
+
+## Bloque 54 · Beat 3 al ritmo de la página, y las dos citas con cara — 2026-09-04
+
+### Beat 3: el problema era el aire, no el centrado
+
+La sección medía **874px con 575 de contenido**: casi 300px de aire que ninguna otra sección tiene, y venían de una altura forzada para dar escala al render. Horizontalmente ya estaba centrada —márgenes 148/161 a 1440— así que centrar no era la respuesta.
+
+Se retiró la altura forzada y el reparto pasó a **65/35**. Ahora la fila mide lo que mide el texto y el objeto, servido en `contain`, mide exactamente lo mismo de alto: **el equipo y el bloque de contenido comparten su span vertical al píxel**. Ese era el vínculo que faltaba — dos elementos que empiezan y terminan juntos se leen como una composición; uno flotando junto al otro, no.
+
+De paso el contenido gana 100px de ancho (618 → 718) y la sección baja a 747px, dentro del ritmo de sus vecinas.
+
+### Navegación de ciudades: ya estaba bien
+
+Verificado de punta a punta y **no hizo falta cambiar nada**: las dos tarjetas enlazan a su ciudad, las dos rutas responden 200, Bogotá lista sus 2 estaciones y Medellín la suya, y las dos páginas son estructuralmente idénticas —4 secciones, cero invisibles, cero desbordes, cero `img` sin `alt`, cero errores de JS, en escritorio y en móvil—.
+
+### Las dos citas: una unidad compartida, dos posiciones
+
+Las dos secciones de cita tenían el mismo problema —un nombre atribuyendo unas palabras, sin persona— y el mismo exceso de escala.
+
+Se creó **`QuoteAttribution`**: retrato cuadrado de 96px con hairline, nombre sobre cargo. Lo que las hace pertenecer al mismo sistema es la unidad; lo que las distingue es **dónde se coloca, y eso lo decide la función**:
+
+- **Beat 5** (prueba del cliente): la atribución va DESPUÉS de la cita. Primero habla el cliente, después se acredita quién lo dijo.
+- **Beat 7** (visión del fundador): va ANTES. No es un testimonio: son 300 caracteres en primera persona, y saber quién habla cambia cómo se leen.
+
+**Escala tipográfica, corregida con números:**
+
+| | Antes | Ahora | Por qué |
+|---|---|---|---|
+| Beat 5 | `display-xl` · 72px en 6 líneas, medida 20ch | `display-l` · **52px en 4 líneas**, medida 28ch | 72px para 103 caracteres en un beat cuyo titular va a 24px son 3× de diferencia: desproporción, no jerarquía |
+| Beat 7 | `display-l` · 52px en 10 líneas | `display-m` · **36px en 8 líneas** | El texto largo pide menos cuerpo, no más. A 52px la cita dejaba de leerse y pasaba a mirarse |
+
+La presencia del beat 7 la da su composición —columna estrecha, retrato, la película debajo—, no el tamaño de la letra.
+
+**Los retratos quedan declarados** en `media.ts` con su función y lo que hay que producir: 1/1, hombros hacia arriba, **fondo neutro y oscuro** — un recorte claro de 96px en un sitio dark-first se convierte en el punto más brillante de la sección y se lleva la mirada por delante de la cita.
+
+Y el hueco NO lleva rótulo, a diferencia del resto: en 96px el rótulo de `MediaPending` mide más que el hueco. Lo que falta se declara en el registro, que es donde sirve.
+
+### Evidencia
+
+`lint`, `tsc` y build limpios · beat 3 medido a 1024, 1100, 1280, 1440 y 1680px: márgenes simétricos y objeto a la altura exacta del texto · las dos rutas de ciudad verificadas en escritorio y móvil · citas medidas a 1440, 768, 390 y 320px: 4/4/5/8 líneas en el beat 5 y 8/7/10/13 en el beat 7, sin desbordes · 27 combinaciones de ruta × viewport sin problemas · `prefers-reduced-motion` intacto.

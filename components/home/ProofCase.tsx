@@ -6,6 +6,7 @@ import { media } from "@/content/data/media";
 import { getFeaturedCase } from "@/lib/data";
 import { Section, Container, Eyebrow } from "@/components/ui/layout";
 import { Media } from "@/components/ui/Media";
+import { QuoteAttribution } from "@/components/ui/QuoteAttribution";
 import { Button } from "@/components/ui/Button";
 import { TrackView } from "@/components/analytics/TrackView";
 
@@ -41,21 +42,39 @@ export function ProofCase({ lang }: { lang: Locale }) {
           </h2>
         </div>
 
+        {/* ── LA CITA, A ESCALA ────────────────────────────────────────
+            Estaba en `display-xl`: 72px a 1440 para 100 caracteres, dentro de
+            una medida de 20ch. Eso son seis líneas de tipografía enorme en un
+            beat cuyo propio titular va a 24px — una diferencia de 3× que no
+            era jerarquía sino desproporción, y rompía el ritmo de la página.
+
+            `display-l` (52px) la mantiene como la voz más alta del beat sin
+            competir con el Hero, que es el único `display-2xl` del sitio. Y la
+            medida se ensancha de 20ch a 28ch: con menos cuerpo, forzar líneas
+            cortas solo multiplica los cortes. */}
         <TrackView event="caso_visto" props={{ caso: featured.slug }}>
-          <blockquote className="mt-12 max-w-[22ch] font-display text-display-xl font-medium text-balance text-ink md:max-w-[20ch]">
+          <blockquote className="mt-12 max-w-[28ch] font-display text-display-l font-medium text-balance text-ink">
             {t(featured.quote, lang)}
           </blockquote>
         </TrackView>
 
-        <footer className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-4 border-t border-line-strong pt-8">
-          <p className="text-body-s">
-            <span className="text-ink">{featured.author}</span>
-            <span className="text-ink-3"> · {t(featured.role, lang)}</span>
-          </p>
+        {/* La atribución va DESPUÉS de la cita: esto es una prueba, así que
+            primero habla el cliente y después se acredita quién lo dijo. En el
+            beat 7 la misma unidad va antes, por la razón contraria. Ver
+            `QuoteAttribution`. */}
+        <footer className="mt-10 flex flex-wrap items-center gap-x-10 gap-y-6 border-t border-line-strong pt-8">
+          <QuoteAttribution
+            asset={media.retratoTestimonioEan}
+            lang={lang}
+            name={featured.author}
+            role={t(featured.role, lang)}
+          />
           {featured.stationSlug && (
-            <Button variant="link" arrow href={href(lang, routes.station(featured.stationSlug))}>
-              {t(actions.seeStation, lang)}
-            </Button>
+            <div className="md:ml-auto">
+              <Button variant="link" arrow href={href(lang, routes.station(featured.stationSlug))}>
+                {t(actions.seeStation, lang)}
+              </Button>
+            </div>
           )}
         </footer>
       </Container>
