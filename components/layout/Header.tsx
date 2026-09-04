@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/Button'
 import { LangSwitch } from '@/components/layout/LangSwitch'
 import { Logo } from '@/components/layout/Logo'
 import { lockScroll, unlockScroll } from '@ui/common/lib/scroll'
-import { track } from '@/lib/analytics'
+import { track } from '~/core/common/infrastructure/analytics'
 import { cn } from '@ui/common/lib/cn'
 
 /**

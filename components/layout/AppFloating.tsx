@@ -8,7 +8,7 @@ import { home } from '@/content/copy/home'
 import { a11y } from '@/content/copy/common'
 import { externalLinks } from '@/content/data/links'
 import { stripLocale, routes } from '~/core/common/domain/i18n/routes'
-import { track } from '@/lib/analytics'
+import { track } from '~/core/common/infrastructure/analytics'
 import { cn } from '@ui/common/lib/cn'
 
 /**

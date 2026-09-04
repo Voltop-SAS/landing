@@ -8,7 +8,7 @@ import { leadForm } from '@/content/copy/common'
 import { leadRecipients } from '@/content/data/links'
 import { Button } from '@/components/ui/Button'
 import { PendingTag } from '@/components/ui/data'
-import { track } from '@/lib/analytics'
+import { track } from '~/core/common/infrastructure/analytics'
 import { cn } from '@ui/common/lib/cn'
 
 /**

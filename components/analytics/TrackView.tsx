@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
-import { track, type EventName, type EventProps } from '@/lib/analytics'
+import { track, type EventName, type EventProps } from '~/core/common/infrastructure/analytics'
 
 /**
  * Emite un evento cuando su contenido ENTRA EN VISTA, una sola vez.

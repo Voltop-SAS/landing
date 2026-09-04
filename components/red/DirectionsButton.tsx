@@ -3,7 +3,7 @@
 import { t, type Locale } from '~/core/common/domain/i18n/config'
 import { actions } from '@/content/copy/common'
 import { Button } from '@/components/ui/Button'
-import { track } from '@/lib/analytics'
+import { track } from '~/core/common/infrastructure/analytics'
 
 /**
  * "CÓMO LLEGAR" · isla de cliente mínima

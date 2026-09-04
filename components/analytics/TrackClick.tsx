@@ -1,6 +1,6 @@
 'use client'
 
-import { track, type EventName, type EventProps } from '@/lib/analytics'
+import { track, type EventName, type EventProps } from '~/core/common/infrastructure/analytics'
 
 /**
  * Emite un evento cuando se hace clic en lo que envuelve.

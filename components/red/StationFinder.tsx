@@ -18,7 +18,7 @@ import {
 } from '@/lib/data'
 import { StatusBadge } from '@/components/ui/data'
 import { Button } from '@/components/ui/Button'
-import { track } from '@/lib/analytics'
+import { track } from '~/core/common/infrastructure/analytics'
 import { cn } from '@ui/common/lib/cn'
 
 /**
