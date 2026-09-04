@@ -1,30 +1,31 @@
 /**
- * AUDITORÍA DE COBERTURA DE IDIOMAS
- * Ver docs/MASTER-PROJECT-DEFINITION.md §28 y §30.
+ * LANGUAGE COVERAGE AUDIT
+ * See docs/MASTER-PROJECT-DEFINITION.md §28 and §30.
  *
- * ── QUÉ PROBLEMA RESUELVE ─────────────────────────────────────────────────
- * El modelo anterior exigía todos los idiomas en el tipo, así que un texto sin
- * traducir era un error de compilación. Esa garantía se pierde al hacer
- * opcionales los idiomas distintos del base (ver `Localized` en `config.ts`), y
- * sin nada que la sustituya el resultado sería el fallo que el proyecto lleva
- * evitando desde el principio: un idioma servido a medias, en silencio.
+ * ── THE PROBLEM IT SOLVES ─────────────────────────────────────────────────
+ * The earlier model required every language in the type, so an untranslated
+ * text was a compile error. That guarantee is lost the moment the non-base
+ * languages become optional (see `Localized` in `../../domain/i18n/config`),
+ * and with nothing to replace it the result would be the exact failure this
+ * project has been avoiding from the start: a language served half done, in
+ * silence.
  *
- * Este módulo la sustituye por algo más útil que un error de tipos: una
- * MEDIDA. Recorre todo el contenido real, cuenta cuántos textos tiene cada
- * idioma y de cuáles carece, con su ruta exacta.
+ * This module replaces it with something more useful than a type error: a
+ * MEASUREMENT. It walks all the real content, counts how many texts each
+ * language has and which ones it lacks, with their exact path.
  *
- * ── DÓNDE SE EJECUTA Y POR QUÉ AHÍ ────────────────────────────────────────
- * Lo invoca `src/app/sitemap.ts`, así que corre en cada `npm run build` sin
- * herramienta nueva ni dependencia nueva — importa para un equipo que no es de
- * desarrollo (§38): una comprobación que hay que acordarse de lanzar es una
- * comprobación que no se lanza.
+ * ── WHERE IT RUNS, AND WHY THERE ──────────────────────────────────────────
+ * `src/app/sitemap.ts` invokes it, so it runs on every `npm run build` with no
+ * new tool and no new dependency — which matters for a team that is not a
+ * development team (§38): a check somebody has to remember to run is a check
+ * that does not get run.
  *
- * El sitio del sitemap no es arbitrario: el sitemap es exactamente la pieza que
- * DECLARA qué idiomas existen de cara al público. Verificar que un idioma está
- * completo antes de anunciarlo es su propio trabajo.
+ * The sitemap is not an arbitrary host either: the sitemap is precisely the
+ * piece that DECLARES which languages exist publicly. Verifying that a
+ * language is complete before announcing it is its own job.
  *
- * Un idioma en BORRADOR puede tener huecos: para eso está el estado.
- * Un idioma PUBLICADO con huecos rompe el build.
+ * A DRAFT language is allowed to have gaps — that is what the status is for.
+ * A PUBLISHED language with gaps breaks the build.
  */
 
 import { existsSync, readdirSync } from 'node:fs'
@@ -38,8 +39,8 @@ import {
   type Locale,
 } from '~/core/common/domain/i18n/config'
 
-/* El contenido real del sitio. Añadir un módulo de contenido = añadirlo aquí,
-   y `assertAllContentRegistered()` se encarga de que no se olvide. */
+/* The site's real content. Adding a content module = adding it here, and
+   `assertAllContentRegistered()` makes sure nobody forgets. */
 import * as copyCommon from '~/core/common/domain/consts/copy'
 import * as copyHome from '~/core/home/domain/consts/copy'
 import * as copyRed from '~/core/red/domain/consts/copy'
@@ -73,8 +74,9 @@ const SOURCES: Record<string, unknown> = {
   'novedades/content/posts': dataPosts,
   'red/content/faq': dataFaq,
   'common/consts/links': dataLinks,
-  /* Español plano a propósito: ver la cabecera del archivo. Aporta 0 nodos
-     `Localized` y por eso no altera el recuento de cobertura. */
+  /* Plain Spanish on purpose — it is legal prose. It contributes 0 `Localized`
+     nodes and therefore does not move the coverage count, which also means the
+     count does not protect this file: only its comments are translated. */
   'legal/content/legalDocs': dataLegalDocs,
 }
 
@@ -82,45 +84,32 @@ const isPlainObject = (v: unknown): v is Record<string, unknown> =>
   typeof v === 'object' && v !== null && !Array.isArray(v)
 
 /**
- * Un texto multiidioma se reconoce por tener el idioma BASE, que es el único
- * obligatorio. La heurística es fiable aquí porque `Localized` siempre lo
- * lleva y ningún otro objeto del contenido usa `es` como clave.
+ * A multi-language text is recognised by having the BASE language, which is the
+ * only required one. The heuristic is reliable here because `Localized` always
+ * carries it and no other object in the content uses `es` as a key.
  */
 const isLocalized = (v: unknown): v is Record<string, unknown> =>
   isPlainObject(v) && Object.prototype.hasOwnProperty.call(v, defaultLocale)
 
 export type LocaleAudit = {
-  /** Textos multiidioma encontrados en todo el contenido. */
+  /** Multi-language texts found across all the content. */
   total: number
   present: Record<Locale, number>
-  /** Rutas exactas de lo que falta, para poder repararlo sin buscarlo. */
+  /** Exact paths of what is missing, so it can be fixed without hunting. */
   missing: Record<Locale, string[]>
 }
 
 /**
- * NADIE SE ACUERDA DE ACTUALIZAR UNA LISTA A MANO.
+ * The root, with ALL its segments literal.
  *
- * La lista de módulos de arriba es exactamente el tipo de registro manual que
- * el proyecto evita en todas partes, y no es hipotético: al crear
- * `copy/novedades` y `data/posts` se olvidaron aquí, y la auditoría siguió
- * dando "332/332 completo" sobre un contenido que ya no cubría. Una auditoría
- * que miente es peor que no tenerla, porque autoriza a publicar.
- *
- * Así que la lista se contrasta contra el disco. Un archivo de contenido sin
- * registrar rompe el build en lugar de desaparecer del conteo en silencio.
- * `fs` está disponible: esto corre en Node durante el build, no en el navegador.
- */
-/**
- * La raíz, con TODOS sus segmentos literales.
- *
- * No es cosmético: `join(process.cwd(), ...segmentosVariables)` deja a
- * Turbopack sin poder analizar la ruta, y responde trazando el proyecto entero
- * ("Dynamic filesystem access causes tracing of the whole project"). Con la
- * raíz fija y solo el resto variable, el aviso desaparece.
+ * This is not cosmetic: `join(process.cwd(), ...variableSegments)` leaves
+ * Turbopack unable to analyse the path, and it responds by tracing the whole
+ * project ("Dynamic filesystem access causes tracing of the whole project").
+ * With the root fixed and only the rest variable, the warning goes away.
  */
 const CORE_DIR = join(process.cwd(), 'src', 'core')
 
-/** Los `.ts` de un directorio, sin extensión. Ausente = lista vacía. */
+/** The `.ts` files in a directory, without extension. Absent = empty list. */
 function contentFilesIn(dir: string): string[] {
   if (!existsSync(dir)) return []
   return readdirSync(dir)
@@ -129,12 +118,12 @@ function contentFilesIn(dir: string): string[] {
 }
 
 /**
- * El contenido en su sitio: `src/core/{módulo}/domain/consts/` para los textos
- * y `src/core/{módulo}/infrastructure/content/` para los datos.
+ * Content in its place: `src/core/{module}/domain/consts/` for the texts and
+ * `src/core/{module}/infrastructure/content/` for the data.
  *
- * Recorrer los MÓDULOS en lugar de dos carpetas fijas amplía la garantía: un
- * módulo nuevo entero que nadie registró también salta, no solo un archivo
- * suelto dentro de uno ya conocido.
+ * Walking the MODULES rather than two fixed folders widens the guarantee: a
+ * whole new module that nobody registered also trips it, not just a stray file
+ * inside a module already known.
  */
 function registrableModuleContent(): string[] {
   if (!existsSync(CORE_DIR)) return []
@@ -153,15 +142,29 @@ function registrableModuleContent(): string[] {
   return keys
 }
 
+/**
+ * NOBODY REMEMBERS TO UPDATE A LIST BY HAND.
+ *
+ * The module list above is exactly the kind of manual registry this project
+ * avoids everywhere else, and the risk is not hypothetical: when
+ * `news/consts/copy` and `news/content/posts` were created they were forgotten
+ * here, and the audit went on reporting "332/332 complete" over content it no
+ * longer covered. An audit that lies is worse than no audit, because it
+ * authorises publishing.
+ *
+ * So the list is checked against disk. An unregistered content file breaks the
+ * build instead of vanishing from the count in silence. `fs` is available:
+ * this runs in Node during the build, not in the browser.
+ */
 function assertAllContentRegistered(): void {
   const found = registrableModuleContent()
   const unregistered = found.filter((key) => !(key in SOURCES))
   if (unregistered.length === 0) return
 
   throw new Error(
-    `\n[i18n] Hay módulos de contenido que la auditoría de idiomas no está revisando:\n` +
+    `\n[i18n] Content modules the language audit is not checking:\n` +
       unregistered.map((k) => `      · ${k}`).join('\n') +
-      `\n\n  Añádelos a SOURCES en core/common/infrastructure/i18n/audit.ts.\n`,
+      `\n\n  Add them to SOURCES in core/common/infrastructure/i18n/audit.ts.\n`,
   )
 }
 
@@ -187,7 +190,7 @@ export function auditLocales(): LocaleAudit {
         if (node[l] !== undefined) present[l] += 1
         else missing[l].push(path)
       }
-      /* No se desciende: sus valores SON las traducciones. */
+      /* Do not descend: its values ARE the translations. */
       return
     }
 
@@ -206,7 +209,14 @@ export function auditLocales(): LocaleAudit {
   return { total, present, missing }
 }
 
-/** Una línea por idioma, legible en la salida del build. */
+/**
+ * One column per language, readable in the build output.
+ *
+ * The status is printed as the stored literal (`publicado` / `borrador`) and
+ * not translated on purpose: what this line reports is the actual value in
+ * `localeStatus`, and showing a different word than the one in the data would
+ * make the log harder to match against the source, not easier.
+ */
 export function formatAudit(audit: LocaleAudit): string {
   const cols = locales.map((l) => {
     const status = localeStatus[l] === 'publicado' ? 'publicado' : 'BORRADOR'
@@ -216,8 +226,8 @@ export function formatAudit(audit: LocaleAudit): string {
 }
 
 /**
- * Rompe el build si un idioma PUBLICADO tiene huecos.
- * Es la línea que impide publicar un idioma a medias.
+ * Breaks the build if a PUBLISHED language has gaps.
+ * This is the line that stops a half-translated language from shipping.
  */
 export function assertPublishedLocalesComplete(): LocaleAudit {
   const audit = auditLocales()
@@ -231,19 +241,19 @@ export function assertPublishedLocalesComplete(): LocaleAudit {
   const detail = incomplete
     .map((l) => {
       const list = audit.missing[l]
-      /* Se muestran las primeras para que el mensaje sea accionable sin
-         volverse ilegible; el conteo dice cuántas quedan. */
+      /* Only the first few are listed, so the message stays actionable
+         without becoming unreadable; the count says how many remain. */
       const sample = list
         .slice(0, 12)
         .map((p) => `      · ${p}`)
         .join('\n')
-      const rest = list.length > 12 ? `\n      … y ${list.length - 12} más` : ''
-      return `  ${localeMeta[l].name} (${localeMeta[l].hreflang}) — faltan ${list.length}:\n${sample}${rest}`
+      const rest = list.length > 12 ? `\n      … and ${list.length - 12} more` : ''
+      return `  ${localeMeta[l].name} (${localeMeta[l].hreflang}) — ${list.length} missing:\n${sample}${rest}`
     })
     .join('\n\n')
 
   throw new Error(
-    `\n[i18n] Un idioma declarado como PUBLICADO tiene textos sin traducir.\n\n${detail}\n\n` +
-      `  Traduce lo que falta, o marca el idioma como "borrador" en core/common/domain/i18n/config.ts.\n`,
+    `\n[i18n] A language declared PUBLISHED has untranslated texts.\n\n${detail}\n\n` +
+      `  Translate what is missing, or mark the language as "borrador" in core/common/domain/i18n/config.ts.\n`,
   )
 }

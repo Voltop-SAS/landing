@@ -1,27 +1,27 @@
 /**
- * i18n · Configuración base
- * Ver docs/MASTER-PROJECT-DEFINITION.md §28.
+ * i18n · Base configuration
+ * See docs/MASTER-PROJECT-DEFINITION.md §28.
  *
- * Modelo: rutas estáticas con prefijo de idioma. No hay estado de cliente: el
- * idioma es la URL. Esto garantiza que (a) el idioma sobrevive a la
- * navegación, (b) el `lang` servido es correcto, y (c) todas las versiones
- * son indexables.
+ * The model is static routes with a language prefix. There is no client state:
+ * the language IS the URL. That guarantees (a) the language survives
+ * navigation, (b) the `lang` we serve is correct, and (c) every version is
+ * indexable.
  *
- * AÑADIR UN IDIOMA = AÑADIR UNA ENTRADA A `locales` Y UNA A `localeMeta`.
- * Nada más debe cambiar. Todo lo que dependa del conjunto de idiomas —el
- * selector, los `hreflang`, el sitemap, el recorte del prefijo en las rutas—
- * se deriva de aquí y nunca se escribe a mano.
+ * ADDING A LANGUAGE = ADDING ONE ENTRY TO `locales` AND ONE TO `localeMeta`.
+ * Nothing else should change. Everything that depends on the set of languages
+ * — the switcher, the `hreflang` tags, the sitemap, stripping the prefix from
+ * routes — is derived from here and never written by hand.
  */
 
 export const locales = ['es', 'en', 'pt'] as const
 export type Locale = (typeof locales)[number]
 
 /**
- * Idioma base. Tipado como el LITERAL `"es"` y no como `Locale`: es lo que
- * permite a TypeScript demostrar que el respaldo de `t()` siempre existe —
- * `Localized` declara `es` como la única clave obligatoria— y lo que hace que
- * `Exclude<Locale, typeof defaultLocale>` resuelva de verdad a los idiomas
- * traducibles. Anotado como `Locale`, ambas cosas se pierden.
+ * The base language. Typed as the LITERAL `"es"` rather than as `Locale`, and
+ * that is what lets TypeScript prove that the fallback in `t()` always exists
+ * — `Localized` declares `es` as its only required key — and what makes
+ * `Exclude<Locale, typeof defaultLocale>` actually resolve to the translatable
+ * languages. Annotate it as `Locale` and both properties are lost.
  */
 export const defaultLocale = 'es' as const satisfies Locale
 
@@ -30,31 +30,35 @@ export function isLocale(value: string): value is Locale {
 }
 
 /* ---------------------------------------------------------------- */
-/* Estado de publicación por idioma                                  */
+/* Publication status per language                                   */
 /* ---------------------------------------------------------------- */
 
 /**
- * Un idioma EXISTE mucho antes de estar listo. Sin este estado, la única forma
- * de trabajar un idioma nuevo era tenerlo todo traducido antes del primer
- * commit —o publicarlo a medias, que es peor.
+ * A language EXISTS long before it is ready. Without this status, the only way
+ * to work on a new language was to have it fully translated before the first
+ * commit — or to ship it half done, which is worse.
  *
- * - `publicado` — entra en el selector, en el sitemap y en los `hreflang`.
- * - `borrador`  — navegable por URL para poder revisarlo, pero fuera del
- *                 selector, fuera del sitemap, sin `hreflang` y con `noindex`.
- *                 Lo que falte cae al idioma por defecto.
+ * - `publicado` — appears in the switcher, the sitemap and the `hreflang` tags.
+ * - `borrador`  — reachable by URL so it can be reviewed, but kept out of the
+ *                 switcher, out of the sitemap, without `hreflang` and marked
+ *                 `noindex`. Anything missing falls back to the default
+ *                 language.
+ *
+ * The two values stay in Spanish because they are stored domain data, not
+ * naming style: see the contract list in AGENTS.md.
  */
 export type LocaleStatus = 'publicado' | 'borrador'
 
 export const localeStatus: Record<Locale, LocaleStatus> = {
   es: 'publicado',
   en: 'publicado',
-  /* Portugués de Brasil. Decisión estratégica orientada a audiencia de
-     inversión. Publicado el 2026-09-01 con cobertura completa verificada por
-     la auditoría de build. */
+  /* Brazilian Portuguese. A strategic decision aimed at an investment
+     audience. Published on 2026-09-01 with full coverage verified by the build
+     audit. */
   pt: 'publicado',
 }
 
-/** Idiomas que el sitio ofrece de cara al público. */
+/** The languages the site offers publicly. */
 export const publishedLocales = locales.filter((l) => localeStatus[l] === 'publicado')
 
 export function isPublished(locale: Locale): boolean {
@@ -62,64 +66,68 @@ export function isPublished(locale: Locale): boolean {
 }
 
 /* ---------------------------------------------------------------- */
-/* Texto multiidioma                                                 */
+/* Multi-language text                                               */
 /* ---------------------------------------------------------------- */
 
 /**
- * Texto en varios idiomas.
+ * Text in several languages.
  *
- * El idioma BASE (español) es obligatorio; los demás son opcionales. Es un
- * cambio deliberado respecto al modelo anterior, que los exigía todos.
+ * The BASE language (Spanish) is required; the rest are optional. That is a
+ * deliberate change from the earlier model, which required all of them.
  *
- * ── POR QUÉ SE RELAJÓ ─────────────────────────────────────────────────────
- * Exigirlos todos tenía una virtud real —ningún idioma caía al español sin que
- * alguien se enterara— y dos costes que solo aparecen a partir del tercero:
+ * ── WHY IT WAS RELAXED ────────────────────────────────────────────────────
+ * Requiring all of them had one real virtue — no language fell back to Spanish
+ * without somebody noticing — and two costs that only show up once there is a
+ * third language:
  *
- * 1. Un idioma nuevo no compila hasta estar traducido al 100%, así que no hay
- *    forma de avanzar por partes ni de revisar nada a medio camino.
- * 2. No admite contenido que legítimamente no existe en todos los idiomas.
- *    Un comunicado sobre una alianza en Bogotá no siempre se traduce al
- *    portugués, y un tipo que lo exige no consigue una traducción: consigue
- *    que alguien pegue el español dentro del campo portugués. Eso es una
- *    caída silenciosa igual, pero además indetectable.
+ * 1. A new language does not compile until it is 100% translated, so there is
+ *    no way to make progress in parts, and nothing can be reviewed halfway.
+ * 2. It does not allow content that legitimately does not exist in every
+ *    language. A statement about a partnership in Bogotá is not always
+ *    translated into Portuguese, and a type that demands it does not get you a
+ *    translation: it gets you somebody pasting the Spanish into the Portuguese
+ *    field. That is still a silent fallback, except now it is undetectable.
  *
- * ── QUÉ SUSTITUYE A LA GARANTÍA ───────────────────────────────────────────
- * La ausencia deja de ser un error de tipos y pasa a ser un dato medido:
- * `lib/i18n/audit.ts` recorre todo el contenido en cada build, reporta la
- * cobertura de cada idioma y **rompe el build si un idioma PUBLICADO tiene
- * huecos**. La garantía es la misma donde importa —nada se publica a medias—
- * y además ahora se puede trabajar.
+ * ── WHAT REPLACES THE GUARANTEE ───────────────────────────────────────────
+ * A missing translation stops being a type error and becomes a measured fact:
+ * `~/core/common/infrastructure/i18n/audit` walks all the content on every
+ * build, reports each language's coverage and **breaks the build if a
+ * PUBLISHED language has gaps**. The guarantee is the same where it matters —
+ * nothing ships half translated — and now the work can actually proceed.
  *
- * Lo que no se traduce (nombres propios, unidades) se modela como string plano.
+ * Anything that is not translated (proper nouns, units) is modelled as a plain
+ * string.
  */
 export type Localized<T = string> = { es: T } & {
   [K in Exclude<Locale, typeof defaultLocale>]?: T
 }
 
 /**
- * Resuelve un texto al idioma activo.
+ * Resolves a text to the active language.
  *
- * Sin traducción, cae al idioma por defecto. NO avisa por consola a propósito:
- * un idioma en borrador dispararía cientos de avisos por página y enterraría
- * cualquier otro mensaje. Quien lleva la cuenta es la auditoría de build.
+ * With no translation it falls back to the default language. It deliberately
+ * does NOT warn to the console: a draft language would fire hundreds of
+ * warnings per page and bury every other message. The build audit is what
+ * keeps count.
  */
 export function t<T>(value: Localized<T>, locale: Locale): T {
   return value[locale] ?? value[defaultLocale]
 }
 
 /**
- * Metadatos de idioma.
+ * Language metadata.
  *
- * - `label`   — rótulo corto del selector (ES · EN).
- * - `name`    — nombre del idioma EN SU PROPIO IDIOMA. Un hablante de
- *               portugués busca "Português", no "Portugués": traducir el
- *               nombre del idioma al idioma que el usuario no entiende es
- *               precisamente lo que rompe un selector.
- * - `htmlLang`— valor del atributo `lang` del documento.
- * - `hreflang`— código que ven los buscadores. Se mantiene SEPARADO de
- *               `htmlLang` porque no siempre coinciden: el español se declara
- *               genérico (`es`) para alcanzar a todo hispanohablante, mientras
- *               el documento se marca `es-CO` por pronunciación y formato.
+ * - `label`   — the switcher's short label (ES · EN).
+ * - `name`    — the language name IN ITS OWN LANGUAGE. A Portuguese speaker
+ *               looks for "Português", not "Portugués": translating a language
+ *               name into a language the reader does not understand is exactly
+ *               what breaks a language switcher.
+ * - `htmlLang`— the value of the document's `lang` attribute.
+ * - `hreflang`— the code search engines see. It is kept SEPARATE from
+ *               `htmlLang` because the two do not always match: Spanish is
+ *               declared generic (`es`) to reach every Spanish speaker, while
+ *               the document is marked `es-CO` for pronunciation and
+ *               formatting.
  */
 export const localeMeta: Record<
   Locale,
@@ -127,8 +135,8 @@ export const localeMeta: Record<
 > = {
   es: { label: 'ES', name: 'Español', htmlLang: 'es-CO', hreflang: 'es' },
   en: { label: 'EN', name: 'English', htmlLang: 'en', hreflang: 'en' },
-  /* URL corta `/pt`, pero `pt-BR` de cara al buscador: no hay versión europea
-     con la que competir, y declarar el genérico `pt` para un texto escrito en
-     brasileño describe mal lo que hay. */
+  /* A short `/pt` URL, but `pt-BR` for search engines: there is no European
+     version to compete with, and declaring the generic `pt` for text written
+     in Brazilian Portuguese describes it poorly. */
   pt: { label: 'PT', name: 'Português', htmlLang: 'pt-BR', hreflang: 'pt-BR' },
 }

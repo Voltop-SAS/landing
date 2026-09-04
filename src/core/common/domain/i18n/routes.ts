@@ -1,19 +1,24 @@
 /**
- * i18n · Rutas localizadas
+ * i18n · Localized routes
  *
- * Los segmentos de URL se mantienen en español en todos los idiomas
- * (/en/red, no /en/network). Decisión abierta O2 del Master Project
- * Definition: localizarlos es deseable pero no bloqueante, y hacerlo
- * más tarde solo requiere cambiar este archivo.
+ * URL segments stay in Spanish across every language (/en/red, not
+ * /en/network). That is open decision O2 of the Master Project Definition:
+ * localizing them is desirable but not blocking, and doing it later only means
+ * changing this file.
  *
- * NADA EN ESTE ARCHIVO ENUMERA LOS IDIOMAS A MANO. Todo se deriva de
- * `locales`, para que añadir un idioma no obligue a buscar por el proyecto
- * dónde estaba escrito el conjunto anterior.
+ * Note the asymmetry, because it is deliberate: the MODULE directories under
+ * `src/core` are English (`network`, `news`, `business`, `about`) while the
+ * public segments they serve are Spanish. The directory is code; the segment is
+ * an indexed URL, and so a contract.
+ *
+ * NOTHING IN THIS FILE LISTS THE LANGUAGES BY HAND. Everything derives from
+ * `locales`, so that adding a language never means hunting through the project
+ * for wherever the previous set was written down.
  */
 
 import { locales, publishedLocales, defaultLocale, localeMeta, type Locale } from './config'
 
-/** Rutas canónicas del sitio, sin prefijo de idioma. */
+/** The site's canonical routes, without a language prefix. */
 export const routes = {
   home: '',
   red: '/red',
@@ -27,46 +32,45 @@ export const routes = {
   station: (slug: string) => `/red/estacion/${slug}`,
 } as const
 
-/** Antepone el idioma a una ruta canónica. `path` debe empezar por "/" o ser "". */
+/** Prefixes a canonical route with the language. `path` must start with "/" or be "". */
 export function href(locale: Locale, path: string): string {
   return `/${locale}${path}`
 }
 
 /**
- * Prefijo de idioma al inicio de una ruta, DERIVADO de `locales`.
+ * The language prefix at the start of a path, DERIVED from `locales`.
  *
- * El `(?=\/|$)` no es cosmético: sin él, `^\/(es|en)` casa también con el
- * comienzo de `/estaciones` y lo recorta a `taciones`. Hoy ninguna ruta del
- * sitio empieza así, pero la expresión estaba escrita a mano en dos archivos
- * distintos y una de las dos copias sí carecía del lookahead.
+ * The `(?=\/|$)` is not cosmetic: without it, `^\/(es|en)` also matches the
+ * start of `/estaciones` and trims it to `taciones`. No route on the site
+ * starts that way today, but the expression used to be written by hand in two
+ * different files and one of the two copies did lack the lookahead.
  */
 const LOCALE_PREFIX = new RegExp(`^/(${locales.join('|')})(?=/|$)`)
 
-/** Quita el prefijo de idioma. Devuelve "" para la home. */
+/** Strips the language prefix. Returns "" for the home page. */
 export function stripLocale(pathname: string): string {
   return pathname.replace(LOCALE_PREFIX, '')
 }
 
 /**
- * Cambia el idioma conservando la ruta actual.
- * `pathname` es la ruta completa incluyendo el prefijo de idioma.
+ * Switches language while keeping the current path.
+ * `pathname` is the full path including the language prefix.
  */
 export function switchLocalePath(pathname: string, next: Locale): string {
   return `/${next}${stripLocale(pathname)}`
 }
 
 /**
- * Rutas absolutas para sitemap, canonical y hreflang.
+ * Absolute URLs for the sitemap, canonical tags and hreflang (§29).
  *
- * ── CONFIGURABLE, CON EL VALOR DE PRODUCCIÓN COMO DEFECTO ─────────────────
- * Se lee de `NEXT_PUBLIC_SITE_URL` para que un despliegue de staging o de
- * previsualización pueda anunciar SU propio dominio: si no se define, el
- * sitemap, los `canonical` y los `hreflang` de una preview apuntarían a
- * producción y le dirían a un buscador que el contenido canónico vive en otro
- * sitio.
+ * ── CONFIGURABLE, WITH THE PRODUCTION VALUE AS THE DEFAULT ────────────────
+ * It reads `NEXT_PUBLIC_SITE_URL` so that a staging or preview deployment can
+ * announce ITS own domain: left undefined, a preview's sitemap, canonicals and
+ * hreflang tags would all point at production and tell a search engine that
+ * the canonical content lives somewhere else.
  *
- * El defecto es el dominio real, así que NO definir la variable deja el
- * comportamiento exactamente como estaba. Ver `.env.example`.
+ * The default is the real domain, so NOT defining the variable leaves the
+ * behaviour exactly as it was. See `.env.example`.
  */
 export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://voltop.co'
 
@@ -75,22 +79,23 @@ export function absoluteUrl(locale: Locale, path: string): string {
 }
 
 /**
- * Canonical + hreflang recíproco de UNA ruta, en TODOS los idiomas (§29).
+ * Canonical plus reciprocal hreflang for ONE route, in EVERY language (§29).
  *
- * Antes cada página escribía `{ es: …, en: … }` a mano en su `generateMetadata`.
- * Eran cuatro copias del mismo objeto y ninguna se enteraría de un idioma
- * nuevo: el tercer idioma habría quedado publicado pero huérfano de hreflang,
- * que es la señal con la que Google decide qué versión sirve a quién.
+ * Each page used to write `{ es: …, en: … }` by hand inside its own
+ * `generateMetadata`. That was four copies of the same object and none of them
+ * would have noticed a new language: the third language would have shipped
+ * published but orphaned of hreflang, which is the signal Google uses to
+ * decide which version it serves to whom.
  *
- * `x-default` apunta al idioma por defecto: es la versión que se sirve a quien
- * no encaja en ninguna de las declaradas.
+ * `x-default` points at the default language: it is the version served to
+ * anyone who matches none of the declared ones.
  */
 export function alternatesFor(locale: Locale, path: string) {
   return {
     canonical: absoluteUrl(locale, path),
-    /* Solo idiomas PUBLICADOS. Un `hreflang` es una invitación a indexar:
-       anunciar un idioma en borrador lo metería en resultados de búsqueda
-       precisamente mientras está a medias. */
+    /* PUBLISHED languages only. An `hreflang` is an invitation to index:
+       announcing a draft language would put it in search results precisely
+       while it is still half done. */
     languages: {
       ...Object.fromEntries(
         publishedLocales.map((l) => [localeMeta[l].hreflang, absoluteUrl(l, path)]),
