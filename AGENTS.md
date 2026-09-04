@@ -35,9 +35,11 @@ are not exceptions you may extend on your own judgement:
 - **Public URL segments** — `/red`, `/empresas`, `/nosotros`, `/novedades`,
   `/legal/privacidad`, `/legal/terminos`, `/red/estacion`. They stay in Spanish
   in every language. Changing one breaks indexed URLs.
-- **Analytics event names** — `ciudad_vista`, `red_buscar`, `lead_form_envio`…
-  They are the measurement plan, and renaming one silently splits a metric in
-  two.
+- **Analytics event names and their property names** — `ciudad_vista`,
+  `red_buscar`, `lead_form_envio`, and the props they carry (`termino`,
+  `origen`, `segmento`…). They are the measurement plan. Both the event and its
+  props land in the analytics dashboard as names someone reads, and renaming
+  one silently splits a metric or a dimension in two.
 - **Query parameters of the station finder** — `ciudad`, `conector`, `orden`.
   They appear in shareable, indexable URLs.
 - **Domain status literals** — `operativa`, `proxima`, `mantenimiento`, and

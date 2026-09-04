@@ -38,10 +38,10 @@ export type AccordionItem = {
 /* `min-h-11`: sin ella estos enlaces medían 16.8px de alto, por debajo de los
    24px de WCAG 2.5.8, y no son enlaces en línea dentro de una frase, así que
    no les vale la excepción. `Footer` y `PostsInline` ya lo hacían. */
-const enlace =
+const link =
   'group inline-flex min-h-11 items-center gap-2 font-mono text-mono text-brand transition-colors hover:text-ink'
 
-const flecha = 'transition-transform duration-(--duration-fast) ease-(--ease-overshoot)'
+const arrow = 'transition-transform duration-(--duration-fast) ease-(--ease-overshoot)'
 
 export function Accordion({
   items,
@@ -55,9 +55,9 @@ export function Accordion({
   newTabLabel: string
 }) {
   const uid = useId()
-  const [abiertas, setAbiertas] = useState<Set<string>>(new Set())
+  const [openItems, setAbiertas] = useState<Set<string>>(new Set())
 
-  const alternar = (id: string) =>
+  const toggle = (id: string) =>
     setAbiertas((prev) => {
       const next = new Set(prev)
       if (!next.delete(id)) next.add(id)
@@ -67,8 +67,8 @@ export function Accordion({
   return (
     <ul className={cn('border-t border-line', className)}>
       {items.map((item) => {
-        const abierta = abiertas.has(item.id)
-        const botonId = `${uid}-${item.id}-boton`
+        const isOpen = openItems.has(item.id)
+        const buttonId = `${uid}-${item.id}-boton`
         const panelId = `${uid}-${item.id}-panel`
 
         return (
@@ -79,10 +79,10 @@ export function Accordion({
             <h3>
               <button
                 type="button"
-                id={botonId}
-                aria-expanded={abierta}
+                id={buttonId}
+                aria-expanded={isOpen}
                 aria-controls={panelId}
-                onClick={() => alternar(item.id)}
+                onClick={() => toggle(item.id)}
                 className="press group flex w-full items-start justify-between gap-6 py-6 text-left transition-colors duration-(--duration-fast) hover:text-brand"
               >
                 <span className="font-display text-display-s font-semibold text-ink transition-colors group-hover:text-brand">
@@ -98,7 +98,7 @@ export function Accordion({
                   <span
                     className={cn(
                       'absolute h-px w-4 bg-current transition-transform duration-(--duration-base) ease-(--ease-out) motion-reduce:transition-none',
-                      abierta ? 'rotate-0' : 'rotate-90',
+                      isOpen ? 'rotate-0' : 'rotate-90',
                     )}
                   />
                 </span>
@@ -108,15 +108,15 @@ export function Accordion({
             <div
               className={cn(
                 'grid transition-[grid-template-rows] duration-(--duration-base) ease-(--ease-out) motion-reduce:transition-none',
-                abierta ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]',
+                isOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]',
               )}
             >
               <div className="overflow-hidden">
                 <div
                   id={panelId}
                   role="region"
-                  aria-labelledby={botonId}
-                  inert={!abierta}
+                  aria-labelledby={buttonId}
+                  inert={!isOpen}
                   /* El margen derecho solo existe para librar la columna del
                      +/−, y esa columna solo compite con el texto en pantallas
                      donde caben en la misma línea. En móvil la respuesta va
@@ -143,14 +143,14 @@ export function Accordion({
                               href={l.href}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className={enlace}
+                              className={link}
                             >
                               {l.label}
                               <span className="sr-only"> · {newTabLabel}</span>
                               <span
                                 aria-hidden="true"
                                 className={
-                                  flecha + ' group-hover:-translate-y-1 group-hover:translate-x-1'
+                                  arrow + ' group-hover:-translate-y-1 group-hover:translate-x-1'
                                 }
                               >
                                 →
@@ -161,12 +161,12 @@ export function Accordion({
                           <li key={l.href}>
                             <Link
                               href={l.href}
-                              className={enlace}
+                              className={link}
                             >
                               {l.label}
                               <span
                                 aria-hidden="true"
-                                className={flecha + ' group-hover:translate-x-1'}
+                                className={arrow + ' group-hover:translate-x-1'}
                               >
                                 →
                               </span>

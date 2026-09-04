@@ -245,7 +245,7 @@ export const media = {
    * gana declarando el hueco con su forma y su función en lugar de dejar un
    * rectángulo gris.
    */
-  ciudadBogota: {
+  cityBogota: {
     id: 'ciudad-bogota',
     kind: 'photo',
     src: '/ciudad-bogota.jpg',
@@ -264,7 +264,7 @@ export const media = {
     availability: 'entregado',
   },
 
-  ciudadMedellin: {
+  cityMedellin: {
     id: 'ciudad-medellin',
     kind: 'photo',
     src: '/ciudad-medellin.jpg',

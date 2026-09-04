@@ -37,7 +37,7 @@ export function LegalDocument({
   locale: Locale
 }) {
   /* El aviso solo aplica donde el documento NO está en el idioma de la página. */
-  const avisoIdioma = locale === defaultLocale ? null : t(legalDoc.spanishOnly, locale)
+  const languageNotice = locale === defaultLocale ? null : t(legalDoc.spanishOnly, locale)
 
   const indice = (
     <ol className="space-y-0">
@@ -87,7 +87,7 @@ export function LegalDocument({
             <time dateTime={doc.actualizadoISO}>{formatDate(doc.actualizadoISO, locale)}</time>
           </p>
 
-          {avisoIdioma ? (
+          {languageNotice ? (
             /* `lang` en el aviso y `lang="es"` en el cuerpo: sin eso un lector
                de pantalla leería el documento entero con la fonética del
                idioma equivocado (§23). */
@@ -95,7 +95,7 @@ export function LegalDocument({
               lang={locale}
               className="measure mt-6 border-l-2 border-warn/50 py-1 pl-5 text-body-s text-ink-2"
             >
-              {avisoIdioma}
+              {languageNotice}
             </p>
           ) : null}
         </header>

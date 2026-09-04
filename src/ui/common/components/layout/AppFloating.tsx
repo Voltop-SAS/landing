@@ -114,25 +114,25 @@ import { cn } from '@ui/common/lib/cn'
  */
 
 /** La misma clave que usa `CookieConsent`. Ver la regla 5. */
-const CLAVE_COOKIES = 'voltop:cookies'
+const COOKIES_KEY = 'voltop:cookies'
 
 export function AppFloating({ locale }: { locale: Locale }) {
   const c = home.appFloating
   /* `true` de partida: al cargar, la primera sección está a la vista. */
-  const [primeraALaVista, setPrimeraALaVista] = useState(true)
+  const [firstInView, setPrimeraALaVista] = useState(true)
   /* `false` de partida: mientras no se sepa, el flotante no aparece. */
-  const [cookiesDecididas, setCookiesDecididas] = useState(false)
+  const [cookiesDecided, setCookiesDecididas] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
 
-  const ruta = stripLocale(usePathname()) || '/'
+  const path = stripLocale(usePathname()) || '/'
 
   /* Regla 1 — se observa la PRIMERA SECCIÓN, no una fracción del viewport.
      Se vuelve a observar al cambiar de ruta: el componente vive en el layout y
      la navegación de cliente no lo remonta, así que sin la dependencia
      seguiría vigilando la sección de la página anterior, ya desmontada. */
   useEffect(() => {
-    const primera = document.querySelector('main section')
-    if (!primera) {
+    const first = document.querySelector('main section')
+    if (!first) {
       /* Sin sección de referencia no hay nada que esperar: se muestra.
          Diferido a un fotograma porque un `setState` síncrono dentro de un
          efecto encadena renders y React lo señala. Aquí no urge: es la rama
@@ -143,34 +143,34 @@ export function AppFloating({ locale }: { locale: Locale }) {
     const io = new IntersectionObserver(([entrada]) => setPrimeraALaVista(entrada.isIntersecting), {
       threshold: 0,
     })
-    io.observe(primera)
+    io.observe(first)
     return () => io.disconnect()
-  }, [ruta])
+  }, [path])
 
   /* Regla 5 — se consulta al montar y se vuelve a consultar, porque la
      decisión puede tomarse con esta misma página abierta y `localStorage` no
      emite eventos dentro de la propia pestaña. */
   useEffect(() => {
-    const leer = () => {
+    const read = () => {
       try {
-        setCookiesDecididas(localStorage.getItem(CLAVE_COOKIES) !== null)
+        setCookiesDecididas(localStorage.getItem(COOKIES_KEY) !== null)
       } catch {
         /* Sin almacenamiento no hay aviso que esperar. */
         setCookiesDecididas(true)
       }
     }
-    const id = requestAnimationFrame(leer)
-    const intervalo = window.setInterval(leer, 1000)
+    const id = requestAnimationFrame(read)
+    const interval = window.setInterval(read, 1000)
     return () => {
       cancelAnimationFrame(id)
-      window.clearInterval(intervalo)
+      window.clearInterval(interval)
     }
   }, [])
 
-  const rutaLoPermite = !ruta.startsWith(routes.empresas) && !ruta.startsWith('/legal')
-  const mostrar = !primeraALaVista && rutaLoPermite && cookiesDecididas
+  const pathAllows = !path.startsWith(routes.empresas) && !path.startsWith('/legal')
+  const show = !firstInView && pathAllows && cookiesDecided
 
-  const transicion =
+  const transition =
     'transition-[opacity,transform] duration-(--duration-base) ease-(--ease-out) motion-reduce:transition-none'
 
   /**
@@ -182,7 +182,7 @@ export function AppFloating({ locale }: { locale: Locale }) {
    * radio del sistema: el PNG ya trae sus esquinas redondeadas y transparentes,
    * y el borde de vidrio se recorta para acompañarlas sin doblarlas.
    */
-  const icono = (tamano: string) => (
+  const icon = (tamano: string) => (
     <span
       aria-hidden="true"
       className={cn(
@@ -203,15 +203,15 @@ export function AppFloating({ locale }: { locale: Locale }) {
   return (
     <div
       ref={ref}
-      aria-hidden={!mostrar}
-      inert={!mostrar}
+      aria-hidden={!show}
+      inert={!show}
     >
       {/* ESCRITORIO — tarjeta con QR */}
       <div
         className={cn(
           'glass glass-strong fixed bottom-6 right-6 z-(--z-header) hidden w-[17.5rem] rounded-(--radius-structural) p-5 lg:block',
-          transicion,
-          mostrar ? 'translate-y-0 opacity-100' : 'pointer-events-none translate-y-3 opacity-0',
+          transition,
+          show ? 'translate-y-0 opacity-100' : 'pointer-events-none translate-y-3 opacity-0',
         )}
       >
         {/* CENTRADO, no alineado a la izquierda.
@@ -226,7 +226,7 @@ export function AppFloating({ locale }: { locale: Locale }) {
             justifica el QR, que es un objeto simétrico y el ancla visual de
             la tarjeta. Sin él, esta pieza iría alineada al riel como el resto. */}
         <div className="flex flex-col items-center text-center">
-          {icono('size-12')}
+          {icon('size-12')}
 
           <p className="mt-4 font-display text-display-s font-semibold text-balance text-ink">
             {t(c.title, locale)}
@@ -267,8 +267,8 @@ export function AppFloating({ locale }: { locale: Locale }) {
         className={cn(
           'glass glass-strong fixed inset-x-3 bottom-3 z-(--z-header) rounded-(--radius-structural) lg:hidden',
           'pb-[env(safe-area-inset-bottom)]',
-          transicion,
-          mostrar ? 'translate-y-0 opacity-100' : 'pointer-events-none translate-y-4 opacity-0',
+          transition,
+          show ? 'translate-y-0 opacity-100' : 'pointer-events-none translate-y-4 opacity-0',
         )}
       >
         {/* El icono va PRIMERO: qué es → qué hace → qué hago. Y queda fuera del
@@ -294,7 +294,7 @@ export function AppFloating({ locale }: { locale: Locale }) {
             reordena con `order` y envuelve con `flex-wrap`. Duplicar el enlace
             duplicaría también el emisor del evento de medición. */}
         <div className="flex flex-wrap items-center gap-3 p-3">
-          {icono('size-10')}
+          {icon('size-10')}
           <div className="order-1 min-w-0 flex-1">
             <p className="truncate font-display text-body font-semibold text-ink">
               {t(c.titleMobile, locale)}

@@ -21,7 +21,7 @@ import { useEffect, useState } from 'react'
  * dejó atrás, y como está fuera de pantalla tampoco hay parpadeo que ver.
  */
 export function useScrolledPast(ref: React.RefObject<HTMLElement | null>) {
-  const [pasado, setPasado] = useState(false)
+  const [passed, setPassed] = useState(false)
 
   useEffect(() => {
     const el = ref.current
@@ -29,8 +29,8 @@ export function useScrolledPast(ref: React.RefObject<HTMLElement | null>) {
     /* `bottom < 0`: el elemento entero quedó por encima del borde superior.
        Lo que está parcialmente visible SÍ lo ve el observador, así que no
        necesita este atajo. */
-    if (el.getBoundingClientRect().bottom < 0) setPasado(true)
+    if (el.getBoundingClientRect().bottom < 0) setPassed(true)
   }, [ref])
 
-  return pasado
+  return passed
 }

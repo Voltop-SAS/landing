@@ -57,27 +57,27 @@ import { CountUp } from '@ui/common/components/ui/CountUp'
  * no inventarlas es no poder escribirlas.
  */
 export function NetworkIndex({ locale }: { locale: Locale }) {
-  const resumen = getNetworkSummary()
+  const summary = getNetworkSummary()
   const cobertura = getCitiesWithStations()
 
-  const cifras: { etiqueta: string; valor: React.ReactNode }[] = [
+  const cifras: { label: string; value: React.ReactNode }[] = [
     /* La única que cuenta es la que ES un número. "22–80 kW" y la lista de
        conectores no son cantidades: animarlas sería movimiento por moverse. */
-    { etiqueta: t(home.network.stats.points, locale), valor: <CountUp value={resumen.puntos} /> },
+    { label: t(home.network.stats.points, locale), value: <CountUp value={summary.points} /> },
     {
-      etiqueta: t(home.network.stats.power, locale),
-      valor:
-        resumen.potenciaMin && resumen.potenciaMax
-          ? `${resumen.potenciaMin}–${resumen.potenciaMax} kW`
+      label: t(home.network.stats.power, locale),
+      value:
+        summary.minPowerKw && summary.maxPowerKw
+          ? `${summary.minPowerKw}–${summary.maxPowerKw} kW`
           : '—',
     },
-    { etiqueta: t(home.network.stats.connectors, locale), valor: resumen.conectores.join(' · ') },
+    { label: t(home.network.stats.connectors, locale), value: summary.connectors.join(' · ') },
   ]
 
   /** El asset de cada ciudad, por slug. Ver el bloque CIUDADES en `media.ts`. */
-  const fotoCiudad: Record<string, typeof media.ciudadBogota | undefined> = {
-    bogota: media.ciudadBogota,
-    medellin: media.ciudadMedellin,
+  const cityPhoto: Record<string, typeof media.cityBogota | undefined> = {
+    bogota: media.cityBogota,
+    medellin: media.cityMedellin,
   }
 
   return (
@@ -184,7 +184,7 @@ export function NetworkIndex({ locale }: { locale: Locale }) {
                         desaparece sola. */}
                     <div className="relative aspect-[16/9] w-full">
                       <Media
-                        asset={fotoCiudad[city.slug] ?? media.ciudadBogota}
+                        asset={cityPhoto[city.slug] ?? media.cityBogota}
                         locale={locale}
                         fill
                         /* Los tres tramos siguen a la rejilla de arriba
@@ -272,7 +272,7 @@ export function NetworkIndex({ locale }: { locale: Locale }) {
             <dl className="mt-3 flex flex-col gap-px overflow-hidden rounded-(--radius-structural) border border-line bg-line sm:flex-row sm:flex-wrap">
               {cifras.map((c) => (
                 <div
-                  key={c.etiqueta}
+                  key={c.label}
                   className="grow bg-canvas px-4 py-4"
                 >
                   {/* `gap-px` sobre `bg-line` en lugar de `divide-x`: es la
@@ -291,7 +291,7 @@ export function NetworkIndex({ locale }: { locale: Locale }) {
                       elemento que forzaba el reparto, y 0.14em literales
                       además estaban fuera de los tokens. */}
                   <dt className="font-mono text-mono uppercase tracking-wider text-ink-3">
-                    {c.etiqueta}
+                    {c.label}
                   </dt>
                   {/* El VALOR no se parte nunca: "22–80 / kW" y
                       "GB/T · CCS1 · / CCS2" son las dos formas de que un dato
@@ -300,7 +300,7 @@ export function NetworkIndex({ locale }: { locale: Locale }) {
                       cifra— y `flex-wrap` deja que una celda entera pase a una
                       segunda fila antes que desbordar. */}
                   <dd className="mt-1.5 whitespace-nowrap font-display text-display-s font-semibold text-ink">
-                    {c.valor}
+                    {c.value}
                   </dd>
                 </div>
               ))}

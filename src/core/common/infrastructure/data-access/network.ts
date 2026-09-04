@@ -19,19 +19,19 @@ import { getStationsByCity } from './stations'
  * Home sola.
  */
 export function getNetworkSummary() {
-  const operativas = stations.filter((s) => s.status === 'operativa')
+  const operational = stations.filter((s) => s.status === 'operativa')
   /* El mínimo de la red es el mínimo de los mínimos y el máximo el de los
      máximos: publicar "80 kW" cuando hay puntos de 22 sería prometer de más. */
-  const minimos = operativas.map((s) => s.powerKw.min)
-  const maximos = operativas.map((s) => s.powerKw.max)
-  const conectores = [...new Set(operativas.flatMap((s) => s.connectors))]
+  const minPowers = operational.map((s) => s.powerKw.min)
+  const maxPowers = operational.map((s) => s.powerKw.max)
+  const connectors = [...new Set(operational.flatMap((s) => s.connectors))]
   return {
-    estaciones: operativas.length,
-    puntos: operativas.reduce((n, s) => n + (s.points ?? 0), 0),
-    ciudades: new Set(operativas.map((s) => s.citySlug)).size,
-    potenciaMin: minimos.length ? Math.min(...minimos) : null,
-    potenciaMax: maximos.length ? Math.max(...maximos) : null,
-    conectores,
+    stations: operational.length,
+    points: operational.reduce((n, s) => n + (s.points ?? 0), 0),
+    cities: new Set(operational.map((s) => s.citySlug)).size,
+    minPowerKw: minPowers.length ? Math.min(...minPowers) : null,
+    maxPowerKw: maxPowers.length ? Math.max(...maxPowers) : null,
+    connectors,
   }
 }
 

@@ -54,7 +54,7 @@ import { Button } from '@ui/common/components/ui/Button'
  */
 export function InfrastructureSignature({
   locale,
-  entradaSlug,
+  postSlug,
 }: {
   locale: Locale
   /**
@@ -67,7 +67,7 @@ export function InfrastructureSignature({
    * se retiró del dataset— y llevaba a un 404 desde entonces sin que nadie se
    * enterara. Un botón que desaparece se nota; uno que va a ninguna parte, no.
    */
-  entradaSlug?: string
+  postSlug?: string
 }) {
   const reduce = useReducedMotion()
   const ref = useRef<HTMLDivElement>(null)
@@ -166,7 +166,7 @@ export function InfrastructureSignature({
    * Ninguna ruta del sitio enlaza hoy a esta ancla, pero la URL es pública.
    */
   const enVista = useInView(ref, { amount: 0.5 })
-  const [forzado, setForzado] = useState(false)
+  const [forced, setForzado] = useState(false)
   useEffect(() => {
     if (!enVista) return
     const id = setTimeout(() => {
@@ -175,7 +175,7 @@ export function InfrastructureSignature({
     return () => clearTimeout(id)
   }, [enVista, scrollYProgress])
 
-  const visible = reduce || abierto || forzado
+  const visible = reduce || abierto || forced
   /**
    * RECALIBRADO al entrar la fotografía real (2026-09-01).
    *
@@ -216,7 +216,7 @@ export function InfrastructureSignature({
     >
       <div className="sticky top-0 flex h-dvh flex-col justify-end overflow-hidden motion-reduce:static motion-reduce:h-auto">
         <motion.div
-          style={{ scale, clipPath: forzado ? 'inset(0% 0% 0% 0%)' : clipPath }}
+          style={{ scale, clipPath: forced ? 'inset(0% 0% 0% 0%)' : clipPath }}
           /* La transición solo actúa en el caso forzado; durante el scroll el
              valor lo escribe motion en cada fotograma y no hay nada que animar. */
           className="absolute inset-0 transition-[clip-path] duration-500 ease-out"
@@ -276,11 +276,11 @@ export function InfrastructureSignature({
               {t(home.infrastructure.lead, locale)}
             </p>
             <div className="mt-9 flex flex-wrap items-center gap-x-6 gap-y-3">
-              {entradaSlug && (
+              {postSlug && (
                 <Button
                   variant="ghost"
                   arrow
-                  href={href(locale, routes.post(entradaSlug))}
+                  href={href(locale, routes.post(postSlug))}
                 >
                   {t(actions.seeStation, locale)}
                 </Button>

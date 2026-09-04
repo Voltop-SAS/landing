@@ -24,7 +24,7 @@ import { Reveal } from '@ui/common/components/ui/Reveal'
 import { TrackView } from '@ui/common/components/analytics/TrackView'
 import { formatPowerKw } from '~/core/red/domain/entities/Station'
 
-type Props = { params: Promise<{ locale: string; ciudad: string }> }
+type Props = { params: Promise<{ locale: string; city: string }> }
 
 /**
  * /RED/[CIUDAD] · cobertura local.
@@ -50,13 +50,13 @@ type Props = { params: Promise<{ locale: string; ciudad: string }> }
 export const dynamicParams = false
 
 export function generateStaticParams() {
-  return locales.flatMap((locale) => getCities().map((c) => ({ locale, ciudad: c.slug })))
+  return locales.flatMap((locale) => getCities().map((c) => ({ locale, city: c.slug })))
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { locale, ciudad } = await params
+  const { locale, city: citySlug } = await params
   if (!isLocale(locale)) return {}
-  const city = getCity(ciudad)
+  const city = getCity(citySlug)
   if (!city) return {}
 
   const path = routes.city(city.slug)
@@ -68,11 +68,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function CityPage({ params }: Props) {
-  const { locale: raw, ciudad } = await params
+  const { locale: raw, city: citySlug } = await params
   if (!isLocale(raw)) notFound()
   const locale = raw as Locale
 
-  const city = getCity(ciudad)
+  const city = getCity(citySlug)
   if (!city) notFound()
 
   const stations = getStationsByCity(city.slug)
@@ -113,7 +113,7 @@ export default async function CityPage({ params }: Props) {
               Umbral 0 porque el evento es "vio la página", no "leyó el bloque". */}
           <TrackView
             event="ciudad_vista"
-            props={{ ciudad: city.slug }}
+            props={{ citySlug: city.slug }}
             threshold={0}
           />
           <Eyebrow className="mt-8">{t(cityCopy.eyebrow, locale)}</Eyebrow>

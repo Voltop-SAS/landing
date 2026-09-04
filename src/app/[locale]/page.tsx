@@ -105,7 +105,7 @@ export default async function HomePage({ params }: Props) {
       <Hero locale={locale} />
       <InfrastructureSignature
         locale={locale}
-        entradaSlug={aperturaMedellin?.slug}
+        postSlug={aperturaMedellin?.slug}
       />
       <NetworkIndex locale={locale} />
       <BusinessIntro locale={locale} />

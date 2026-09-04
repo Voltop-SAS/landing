@@ -58,24 +58,24 @@ export function Reveal({
   /* `HTMLElement` y no `HTMLDivElement`: `as` puede ser div, li o span, y un
      ref tipado al más específico no encaja en los tres. */
   const ref = useRef<HTMLElement>(null)
-  const yaPasado = useScrolledPast(ref)
-  const [compacto, setCompacto] = useState(false)
+  const alreadyPassed = useScrolledPast(ref)
+  const [compact, setCompacto] = useState(false)
   const Motion = motion[as]
 
   /* Se resuelve DESPUÉS de montar: en servidor no hay `matchMedia`, y leerlo
      durante el render rompería la hidratación. */
   useEffect(() => {
     const mq = window.matchMedia('(max-width: 767px)')
-    const leer = () => setCompacto(mq.matches)
-    leer()
-    mq.addEventListener('change', leer)
-    return () => mq.removeEventListener('change', leer)
+    const read = () => setCompacto(mq.matches)
+    read()
+    mq.addEventListener('change', read)
+    return () => mq.removeEventListener('change', read)
   }, [])
 
   /* Ya lo dejó atrás: se muestra y punto. Animar la entrada de algo que está
      fuera de pantalla no lo ve nadie, y esperar a que intersecte —cosa que no
      va a pasar— es lo que lo dejaba invisible. */
-  if (yaPasado) {
+  if (alreadyPassed) {
     return (
       <Motion
         ref={ref as React.Ref<HTMLDivElement & HTMLLIElement & HTMLSpanElement>}
@@ -86,13 +86,13 @@ export function Reveal({
     )
   }
 
-  const efectivo: DepthLevel = compacto && level === 'expressive' ? 'standard' : level
+  const effective: DepthLevel = compact && level === 'expressive' ? 'standard' : level
 
   return (
     <Motion
       ref={ref as React.Ref<HTMLDivElement & HTMLLIElement & HTMLSpanElement>}
       className={className}
-      {...depthMotion(efectivo, Boolean(reduce), index)}
+      {...depthMotion(effective, Boolean(reduce), index)}
     >
       {children}
     </Motion>

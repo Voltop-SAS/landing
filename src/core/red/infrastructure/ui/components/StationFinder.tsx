@@ -73,11 +73,11 @@ type Props = { locale: Locale; stations: Station[]; cities: City[] }
  * estaciones, se ordenan y se antepone el 0 ("todas"). Añadir una estación de
  * 150 kW hace aparecer ese escalón sola; retirarla lo quita.
  */
-function calcularEscalones(stations: Station[]): number[] {
-  const maximos = [...new Set(stations.map((s) => s.powerKw.max))].sort((a, b) => a - b)
+function computeSteps(stations: Station[]): number[] {
+  const maxPowers = [...new Set(stations.map((s) => s.powerKw.max))].sort((a, b) => a - b)
   /* Si todas las estaciones tuvieran la misma potencia, el filtro no separaría
      nada: mejor un solo escalón "todas" que un control que no reduce. */
-  return maximos.length > 1 ? [0, ...maximos] : [0]
+  return maxPowers.length > 1 ? [0, ...maxPowers] : [0]
 }
 
 type Coords = { lat: number; lng: number }
@@ -133,7 +133,7 @@ const EMPTY: Criteria = {
  * el HTML servido siempre trae la lista completa. La cobertura indexable por
  * ciudad ya la dan las rutas `/red/[ciudad]`, que era el motivo SEO original.
  */
-function readCriteria(escalones: number[]): Criteria {
+function readCriteria(steps: number[]): Criteria {
   const p = new URLSearchParams(window.location.search)
   const kw = Number(p.get(PARAM.power))
   const sort = p.get(PARAM.sort)
@@ -141,7 +141,7 @@ function readCriteria(escalones: number[]): Criteria {
     query: p.get(PARAM.q) ?? '',
     city: p.get(PARAM.city) ?? '',
     connector: p.get(PARAM.connector) ?? '',
-    minPower: escalones.includes(kw) ? kw : 0,
+    minPower: steps.includes(kw) ? kw : 0,
     onlyLive: p.get(PARAM.live) === '1',
     /* `distance` no se restaura de la URL: exige permiso de ubicación, y un
        enlace no puede concederlo. */
@@ -212,7 +212,7 @@ export function StationFinder({ locale, stations, cities }: Props) {
   const hasFilters = Boolean(query || city || connector || minPower || onlyLive)
   const activeCount = [city, connector, minPower, onlyLive].filter(Boolean).length
 
-  const escalones = useMemo(() => calcularEscalones(stations), [stations])
+  const steps = useMemo(() => computeSteps(stations), [stations])
 
   /* ── URL → criterio, una sola vez al montar.
      `setState` dentro de un efecto es exactamente lo que la regla
@@ -222,8 +222,8 @@ export function StationFinder({ locale, stations, cities }: Props) {
      asignación, sin cascada. */
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    setCriteria(readCriteria(escalones))
-  }, [escalones])
+    setCriteria(readCriteria(steps))
+  }, [steps])
 
   const results = useMemo(
     () =>
@@ -456,9 +456,9 @@ export function StationFinder({ locale, stations, cities }: Props) {
 
           {/* Con un solo escalón el grupo no separa nada, así que no se pinta:
               un filtro que no filtra es un control decorativo (§16). */}
-          {escalones.length > 1 && (
+          {steps.length > 1 && (
             <FilterGroup label={t(red.filters.power, locale)}>
-              {escalones.map((p) => (
+              {steps.map((p) => (
                 <Chip
                   key={p}
                   active={minPower === p}
