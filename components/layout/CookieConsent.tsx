@@ -26,6 +26,25 @@ import { href, routes } from "@/lib/i18n/routes";
  * "configurar" convierte la elección en un trámite, y entonces el
  * consentimiento deja de ser informado.
  *
+ * ── ES UNA FRANJA, NO UNA TARJETA ────────────────────────────────────────
+ * Ocupa el ancho completo abajo, la forma con la que cualquiera reconoce un
+ * aviso de cookies sin leerlo. Antes era una tarjeta en la esquina derecha:
+ * más discreta, pero indistinguible de las OTRAS DOS piezas que viven en esa
+ * misma esquina —el flotante del QR y su versión en barra—, y confundir una
+ * pregunta legal con una promoción es lo único que este aviso no puede hacer.
+ *
+ * El material también cambia: `bg-canvas/85 + backdrop-blur-xl` en lugar de
+ * `.glass`, igual que el Header. No es una preferencia, son dos razones:
+ *
+ * · En el sistema, `.glass` con radio es el registro de los paneles que
+ *   FLOTAN; una franja a sangre de borde a borde no flota, y el anillo de
+ *   `.glass::before` le dibujaría una línea clara pegada a los bordes de la
+ *   pantalla, que se lee como un fallo de render y no como un contorno.
+ *
+ * · Es MÁS opaco que el vidrio (85% de `canvas` frente al 68% de `surface-2`),
+ *   y aquí eso importa más que la gracia visual: debajo del texto puede pasar
+ *   cualquier cosa, y un texto legal ilegible no informa.
+ *
  * ── NO ES UN DIÁLOGO MODAL ───────────────────────────────────────────────
  * No atrapa el foco ni bloquea el scroll: se puede leer el sitio y la política
  * antes de decidir, que es justo lo que hace que la decisión sea informada.
@@ -90,34 +109,53 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           aria-label={t(copy.title, lang)}
           /* `z-(--z-overlay)`: por encima del flotante de la app, que también
              vive abajo. La decisión va primero. */
-          className="glass fixed inset-x-3 bottom-3 z-(--z-overlay) rounded-(--radius-structural) p-5 pb-[calc(1.25rem+env(safe-area-inset-bottom))] md:inset-x-auto md:right-6 md:max-w-md"
+          className="fixed inset-x-0 bottom-0 z-(--z-overlay) border-t border-line bg-canvas/85 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl"
         >
-          <p className="font-display text-display-s font-semibold text-ink">{t(copy.title, lang)}</p>
-          <p className="measure-narrow mt-2 text-body-s text-ink-2">{t(copy.body, lang)}</p>
+          {/* Mismo riel que el Header: contenedor `content` y el gutter del
+              sistema. Una franja a sangre cuyo texto no arranca donde arranca
+              el del sitio se delata como pieza pegada. */}
+          <div className="mx-auto flex w-full max-w-(--container-content) flex-col gap-4 px-(--spacing-gutter) py-4 md:flex-row md:items-center md:justify-between md:gap-10 md:py-5">
+            <div className="min-w-0">
+              {/* `text-body` y no `display-s`: en una franja de una fila, un
+                  titular de tamaño display la engorda y grita más que la
+                  pregunta que hace. El peso lo da la negrita. */}
+              <p className="font-display text-body font-semibold text-ink">{t(copy.title, lang)}</p>
+              <p className="measure mt-1 text-body-s text-ink-2">{t(copy.body, lang)}</p>
+            </div>
 
-          <div className="mt-5 flex flex-wrap items-center gap-3">
-            {/* Mismo tamaño, misma área, mismo contraste. Ver cabecera. */}
-            <button
-              type="button"
-              onClick={() => decidir("aceptado")}
-              autoFocus
-              className="brand-gradient inline-flex h-11 items-center rounded-(--radius-pill) px-5 text-body-s font-semibold text-on-brand transition-[filter] duration-(--duration-fast) hover:brightness-105"
-            >
-              {t(copy.accept, lang)}
-            </button>
-            <button
-              type="button"
-              onClick={() => decidir("rechazado")}
-              className="inline-flex h-11 items-center rounded-(--radius-pill) border border-line-control px-5 text-body-s font-semibold text-ink transition-colors duration-(--duration-fast) hover:border-line-strong hover:bg-surface-2"
-            >
-              {t(copy.reject, lang)}
-            </button>
-            <Link
-              href={href(lang, routes.privacy)}
-              className="inline-flex min-h-11 items-center font-mono text-mono text-ink-3 transition-colors hover:text-brand"
-            >
-              {t(copy.policy, lang)}
-            </Link>
+            <div className="flex flex-col gap-3 md:shrink-0 md:flex-row md:items-center md:gap-4">
+              {/* Mismo tamaño, misma área, mismo contraste. Ver cabecera.
+                  En móvil van a mitades EXACTAS, y por eso es una rejilla y no
+                  un `flex-1`: con `flex-1` cada botón crece desde su propio
+                  ancho de contenido y "Rechazar" se quedaba 2px más grande que
+                  "Aceptar" —medido: 165 contra 163—. Dos columnas de `1fr` son
+                  iguales por construcción, no por aproximación, y la igualdad
+                  de las dos salidas es aquí un requisito, no una simetría
+                  bonita. */}
+              <div className="grid grid-cols-2 gap-3 md:flex md:items-center">
+                <button
+                  type="button"
+                  onClick={() => decidir("aceptado")}
+                  autoFocus
+                  className="brand-gradient inline-flex h-11 items-center justify-center rounded-(--radius-pill) px-5 text-body-s font-semibold text-on-brand transition-[filter] duration-(--duration-fast) hover:brightness-105"
+                >
+                  {t(copy.accept, lang)}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => decidir("rechazado")}
+                  className="inline-flex h-11 flex-1 items-center justify-center rounded-(--radius-pill) border border-line-control px-5 text-body-s font-semibold text-ink transition-colors duration-(--duration-fast) hover:border-line-strong hover:bg-surface-2"
+                >
+                  {t(copy.reject, lang)}
+                </button>
+              </div>
+              <Link
+                href={href(lang, routes.privacy)}
+                className="inline-flex min-h-11 items-center font-mono text-mono text-ink-3 transition-colors hover:text-brand"
+              >
+                {t(copy.policy, lang)}
+              </Link>
+            </div>
           </div>
         </div>
       )}

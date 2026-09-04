@@ -1753,3 +1753,49 @@ El `<noscript>` lleva `title`: aunque el iframe esté oculto, existe, y sin tít
 ### Evidencia
 
 `lint`, `tsc` y build limpios · `ES 412/412 · EN 412/412 · PT 412/412` · titular en Poppins y cuerpo en Manrope verificados en el render · 42 combinaciones sin desbordamiento · medida de línea 46–66.
+
+---
+
+## Bloque 44 · Aviso de cookies y la apertura de Wake — 2026-09-02
+
+Este bloque se ejecutó y se commiteó (`e021195`) pero **nunca llegó a este
+registro**: montó el aviso de cookies como interruptor real de Google Tag
+Manager —consentimiento previo, Ley 1581— y publicó la apertura de Wake. El
+detalle vive en el mensaje de ese commit. Se anota aquí para que la numeración
+no mienta: un registro con un número que no existe es peor que uno incompleto,
+porque no se nota.
+
+---
+
+## Bloque 45 · El aviso de cookies pasa a franja y el flotante vuelve al recargar — 2026-09-03
+
+**Por qué:** el flotante del QR "había desaparecido" del sitio. No estaba roto —medido página por página, aparecía en la Home, `/red` y `/novedades`, en escritorio y en móvil—: estaba cerrado. La regla que el Bloque 36 celebraba como un arreglo ("se cierra y no vuelve — de verdad", con la decisión en `localStorage`) resultó ser la trampa contraria. Una sola X, a menudo un gesto reflejo para despejar la pantalla, apagaba **para siempre** la conversión primaria del negocio B2C, y sin ninguna forma de recuperarla que no fuera abrir la consola del navegador.
+
+| Cambio | Razón |
+|---|---|
+| El cierre del flotante deja de persistirse | Vuelve en la siguiente carga. Ver el precio abajo |
+| El aviso de cookies pasa de tarjeta en la esquina a franja de ancho completo | La forma con la que un aviso de cookies se reconoce sin leerlo |
+
+### El cierre dura la lectura, no la vida del navegador
+
+Estado en memoria y nada más. El precio hay que decirlo: **a quien lo cerró a propósito se le vuelve a ofrecer al recargar**, que es literalmente lo que la versión anterior de la regla trataba de evitar. Lo que lo compensa es que el cierre sí dura mientras se está leyendo: el componente vive en el layout, que la navegación interna no remonta, así que cerrarlo en la Home lo mantiene oculto al pasar a `/red` o a `/novedades`. **Vuelve con una recarga, no con un clic en el menú** — verificado en el render, no supuesto.
+
+### El aviso de cookies no puede parecer una promoción
+
+Era una tarjeta de vidrio abajo a la derecha: más discreta, pero **indistinguible de las otras dos piezas que viven en esa misma esquina** —el flotante del QR y su versión en barra—. Confundir una pregunta legal con una oferta de descarga es lo único que este aviso no puede hacer, y el parecido era exactamente el que producía la confusión.
+
+Ahora es una franja a sangre anclada abajo, con el material del Header (`bg-canvas/85` + `backdrop-blur-xl`) y no `.glass`. No es preferencia:
+
+- En el sistema, `.glass` **con radio** es el registro de los paneles que flotan. Una franja de borde a borde no flota, y el anillo de `.glass::before` le dibujaría una línea clara pegada a los bordes de la pantalla: se lee como fallo de render, no como contorno.
+- Es **más opaco** que el vidrio (85% de `canvas` frente al 68% de `surface-2`). Debajo del texto puede pasar cualquier cosa, y un texto legal ilegible no informa.
+
+El contenido cuelga del **mismo riel que el Header** (contenedor `content` + gutter del sistema): una franja a sangre cuyo texto no arranca donde arranca el del sitio se delata como pieza pegada. El titular baja de `display-s` a `text-body` con negrita — en una franja de una fila, un titular de tamaño display la engorda y grita más que la pregunta que hace.
+
+### La igualdad de las dos salidas, medida en lugar de supuesta
+
+En móvil los botones van en **rejilla de dos columnas, no en `flex-1`**. Con `flex-1` cada botón crece desde su propio ancho de contenido y "Rechazar" se quedaba **2px más grande** que "Aceptar" (165 contra 163, medido). Dos columnas de `1fr` son iguales por construcción. Aquí la igualdad de las dos opciones es un requisito de §38, no una simetría bonita, así que no se deja en "casi".
+
+### Evidencia
+
+`lint`, `tsc` y build limpios · sin copy nuevo (ninguna cadena añadida ni retirada) · franja `fixed` de ancho completo verificada a 1440 / 768 / 390 / 320px (alto 118 / 138 / 223 / 244), radio 0, foco entrando en la región al aparecer, sin desbordamiento de texto en ninguno · botones **164 = 164** a 390px y **130 = 130** a 320px, altura 44 en los cuatro anchos · flotante: visible tras aceptar cookies → oculto al pulsar la X → **sigue oculto** navegando a `/red` sin recargar → **visible tras recargar** · `localStorage` final: solo `voltop:cookies`, la clave `voltop:app-flotante-cerrado` ya no existe en el código.
+

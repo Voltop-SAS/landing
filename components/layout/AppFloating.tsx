@@ -38,10 +38,20 @@ import { cn } from "@/lib/cn";
  *    Vigilar una lista y no un elemento es además lo que evita que el próximo
  *    bloque a pantalla completa vuelva a chocar sin que nadie se entere.
  *
- * 3. SE CIERRA Y NO VUELVE — DE VERDAD. Con estado en memoria volvía en cuanto
- *    recargabas, que es exactamente la trampa que la regla decía evitar. Ahora
- *    la decisión se guarda en `localStorage`, envuelta en `try/catch` porque en
- *    navegación privada o con las cookies bloqueadas el simple ACCESO lanza.
+ * 3. SE CIERRA HASTA LA SIGUIENTE CARGA, NO PARA SIEMPRE. La X lo retira del
+ *    resto de la visita, pero la decisión NO se guarda: al recargar vuelve.
+ *
+ *    Es una decisión de producto, y conviene decirla con su precio. A favor:
+ *    la descarga de la app es el objetivo de la Home, y una sola X —a menudo
+ *    un gesto reflejo para despejar la pantalla— no debería apagarla el resto
+ *    de la vida del navegador. En contra: a quien lo cerró a propósito se le
+ *    vuelve a ofrecer en la siguiente carga, y eso es exactamente lo que la
+ *    versión anterior de esta regla trataba de evitar.
+ *
+ *    Lo que compensa el precio es que el cierre SÍ dura mientras se está
+ *    leyendo: el componente vive en el layout, que la navegación interna no
+ *    remonta, así que cerrarlo en la Home lo mantiene oculto al pasar a /red o
+ *    a /novedades. Vuelve con una recarga, no con un clic en el menú.
  *
  * 5. ESPERA A QUE SE DECIDA LO DE LAS COOKIES. Los dos son elementos fijos
  *    abajo del todo, así que se taparían. Y el orden no es negociable: primero
@@ -70,7 +80,6 @@ import { cn } from "@/lib/cn";
  * que no queden enlaces alcanzables con Tab dentro de una tarjeta invisible.
  * Solo se animan `opacity` y `transform` (§29).
  */
-const CLAVE_CERRADO = "voltop:app-flotante-cerrado";
 
 /** Zonas donde el flotante estorba. Ver la regla 2 en la cabecera. */
 const ZONAS_MUDAS = ["app-title", "infraestructura", "vision"];
@@ -81,36 +90,15 @@ const CLAVE_COOKIES = "voltop:cookies";
 export function AppFloating({ lang }: { lang: Locale }) {
   const c = home.appFloating;
   const [pasadoElHero, setPasadoElHero] = useState(false);
+  /* Estado en memoria y nada más: es lo que hace que vuelva al recargar.
+     Ver la regla 3 — no es un olvido, es la regla. */
   const [cerrado, setCerrado] = useState(false);
-
-  /* Se lee después de montar, nunca durante el render: en servidor no existe
-     `localStorage`, y leerlo en el estado inicial rompería la hidratación. */
-  useEffect(() => {
-    /* Diferido a un fotograma: `setState` síncrono dentro de un efecto encadena
-       renders y React lo señala. Aquí además no urge — la tarjeta no aparece
-       hasta pasado el Hero, así que nadie ve el fotograma intermedio. */
-    const id = requestAnimationFrame(() => {
-      try {
-        if (localStorage.getItem(CLAVE_CERRADO) === "1") setCerrado(true);
-      } catch {
-        /* Sin almacenamiento el componente funciona igual; solo olvida. */
-      }
-    });
-    return () => cancelAnimationFrame(id);
-  }, []);
-
-  const descartar = () => {
-    setCerrado(true);
-    try {
-      localStorage.setItem(CLAVE_CERRADO, "1");
-    } catch {
-      /* ídem */
-    }
-  };
   const [seccionALaVista, setSeccionALaVista] = useState(false);
   /* `false` de partida: mientras no se sepa, el flotante no aparece. */
   const [cookiesDecididas, setCookiesDecididas] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+
+  const descartar = () => setCerrado(true);
 
   /* Regla 1 — el objetivo es que no coincidan en pantalla, no clavar un píxel. */
   useEffect(() => {

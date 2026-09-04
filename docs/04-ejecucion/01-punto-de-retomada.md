@@ -13,14 +13,29 @@ La norma sigue siendo `MASTER-PROJECT-DEFINITION.md`, ahora en **v1.2**.
 
 ```bash
 cd /Users/siendo_kam/voltop-web-redesign
-npm run build && npm start        # → http://localhost:3000
+npm run dev                       # → http://localhost:3000 · para TRABAJAR
+npm run build && npm start        # → http://localhost:3000 · para VERIFICAR
 ```
 
-Al entrar sale el **aviso de cookies**: es correcto, la analítica no carga
-hasta que se responde.
+`dev` refleja cada guardado al instante; `start` sirve el último build, así que
+un cambio no aparece hasta rehacerlo. Revisa en `dev` y verifica en `start`: el
+build es el único que enseña lo que se publica.
 
-Recargar con **Cmd+Shift+R**. Si algo no se ve, casi siempre es que el build no
-se rehízo: `npm start` sirve el último build, no el código en disco.
+**Los dos no se turnan sin limpiar.** Comparten `.next`, y correr `build` con un
+servidor `dev` de por medio deja ese directorio en un estado que `dev` no
+digiere: **404 en `/es`, `/en` y `/pt`** —todas las rutas de idioma a la vez,
+que es la pista de que no es un fallo del código—. Se arregla con `rm -rf .next`
+y a levantar de nuevo.
+
+Al entrar sale el **aviso de cookies**, una franja abajo: es correcto, la
+analítica no carga hasta que se responde.
+
+El **flotante del QR** aparece pasado el Hero y vuelve en cada recarga. Si no
+aparece: o el aviso de cookies sigue sin responder —el flotante espera a que se
+decida—, o estás sobre una de sus zonas mudas (`#infraestructura`, `#vision`,
+la sección de descarga) o en `/empresas` o un legal, donde se calla a propósito.
+
+Recargar con **Cmd+Shift+R** (el caché del navegador engaña más que el build).
 
 ---
 
