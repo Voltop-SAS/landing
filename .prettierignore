@@ -1,0 +1,7 @@
+# Espeja los `globalIgnores` de eslint.config.mjs por la misma razón que ellos:
+# las skills instaladas son código de terceros. Formatearlas mete ruido ajeno en
+# cada diff y el reformateo se perdería en la siguiente actualización del
+# instalador. Prettier ya lee .gitignore además de este fichero, así que lo
+# generado (.next/, out/, coverage/) no hace falta repetirlo aquí.
+.claude/
+.agents/

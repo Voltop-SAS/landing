@@ -125,3 +125,5 @@ next-env.d.ts
 # bloque reescrito y aparecer como diff. No es un conflicto real —se commitea
 # con el trabajo y ya—. Las reglas PROPIAS del proyecto no están ahí, están en
 # `docs/`.
+
+.nodeterm
