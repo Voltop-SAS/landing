@@ -1,15 +1,17 @@
 import type { Localized } from '../i18n/config'
 
 /**
- * REGISTRO DE MEDIA NARRATIVA
- * Ver docs/MASTER-PROJECT-DEFINITION.md §20, §32 y §33.
+ * NARRATIVE MEDIA · the shape of an asset
+ * See docs/MASTER-PROJECT-DEFINITION.md §20, §32 and §33.
  *
- * Punto ÚNICO de conexión entre la narrativa y los archivos reales.
- * Cuando lleguen los assets, solo cambia este archivo: se rellenan `src` y
- * `poster` y todo el sitio deja de mostrar placeholders automáticamente.
- * Ningún componente referencia una ruta de archivo directamente.
+ * These are the types; the catalogue itself lives in
+ * `~/core/common/infrastructure/content/media`. Together they are the SINGLE
+ * point of connection between the narrative and the real files: when the assets
+ * arrive, only the catalogue changes — `src` and `poster` get filled in and the
+ * whole site stops showing placeholders on its own. No component ever
+ * references a file path directly.
  *
- * `src: null` = asset confirmado como existente pero AÚN NO ENTREGADO.
+ * `src: null` = an asset confirmed to exist but NOT YET DELIVERED.
  */
 
 export type MediaKind = 'video' | 'photo'
@@ -17,31 +19,31 @@ export type MediaKind = 'video' | 'photo'
 export type MediaAsset = {
   id: string
   kind: MediaKind
-  /** Ruta del archivo final. `null` mientras no se haya recibido. */
+  /** Path to the final file. `null` until it has been delivered. */
   src: string | null
   /**
-   * Variante ligera para pantallas pequeñas.
+   * A lighter variant for small screens.
    *
-   * No es una optimización cosmética: el bucle de Medellín está codificado a
-   * 2560×1440 y un teléfono de 390px no puede mostrar ni una sexta parte de
-   * esos píxeles. Servirlo tal cual son 2.9 MB de datos móviles gastados en
-   * resolución invisible.
+   * Not a cosmetic optimisation: the Medellín loop is encoded at 2560×1440 and
+   * a 390px phone cannot display even a sixth of those pixels. Serving it as-is
+   * spends 2.9 MB of mobile data on invisible resolution.
    *
-   * `null` = no hay variante y todos reciben la única que existe.
+   * `null` = there is no variant and everyone gets the only one that exists.
    */
   srcMobile?: string | null
-  /** Frame de portada — crítico para LCP y para el estado sin reproducir. */
+  /** Cover frame — critical for LCP and for the not-yet-playing state. */
   poster: string | null
-  /** Texto alternativo / descripción accesible. Obligatorio siempre. */
+  /** Alternative text / accessible description. Always required. */
   alt: Localized
-  /** Qué hace esta pieza en la narrativa. Guía el diseño y la edición. */
+  /** What this piece does in the narrative. It guides design and editing. */
   role: Localized
-  /** Duración conocida o estimada del material original. */
+  /** Known or estimated duration of the source material. */
   duration?: string
-  /** Relación de aspecto para reservar espacio y evitar CLS. */
-  /* `2/3` entró con el render del cargador: es el retrato moderado que
-     faltaba entre `3/2` horizontal y `9/16`, que es formato de historia. */
+  /** Aspect ratio, used to reserve space and avoid CLS. */
+  /* `2/3` arrived with the charger render: it is the moderate portrait that was
+     missing between landscape `3/2` and `9/16`, which is story format. */
   aspect: '16/9' | '4/3' | '3/2' | '2/3' | '1/1' | '21/9' | '9/16'
-  /** Disponibilidad declarada del material original. */
+  /** Declared availability of the source material. Stored values, kept as they
+   * are: renaming them would be a data migration, not a rename. */
   availability: 'confirmado-no-entregado' | 'a-producir' | 'entregado'
 }

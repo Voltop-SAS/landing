@@ -1,66 +1,66 @@
 /**
- * ENLACES EXTERNOS CANÓNICOS
+ * CANONICAL EXTERNAL LINKS
  *
- * Un solo sitio para las URLs que salen del dominio. Antes vivían repetidas
- * en `faq.ts` y en el header, y una URL repetida es una URL que algún día
- * cambia en un sitio y no en el otro.
+ * One single place for the URLs that leave the domain. They used to live
+ * duplicated across the FAQ content and the header, and a duplicated URL is a
+ * URL that one day changes in one place and not the other.
  *
- * Las redes sociales siguen en `common.ts` porque el footer las recorre como
- * lista con su nombre visible; aquí van las que se enlazan una a una.
+ * Social networks stay in the shared copy file because the footer walks them as
+ * a list with their visible name; the ones linked one by one live here.
  */
 
 export const externalLinks = {
   /**
-   * Descarga de la app.
+   * App download.
    *
-   * PENDIENTE DE VERIFICAR ANTES DEL LANZAMIENTO: al integrarlo (2026-09-02)
-   * devolvía 503 en tres intentos, con user-agent de navegador y por HTTP y
-   * HTTPS, mientras `voltop.co` respondía 200 — el subdominio, no el dominio.
-   * §15 no admite un enlace sin destino real: hay que comprobarlo antes de
-   * publicar el sitio.
+   * STILL TO VERIFY BEFORE LAUNCH: when this was wired up (2026-09-02) it
+   * returned 503 across three attempts, with a browser user-agent and over both
+   * HTTP and HTTPS, while `voltop.co` answered 200 — so the subdomain, not the
+   * domain. §15 does not allow a link with no real destination: this has to be
+   * checked before the site goes live.
    */
   app: 'https://app.voltop.co/',
 
   /**
-   * Fichas directas de cada tienda (entregadas 2026-09-02). Las insignias
-   * apuntan aquí y no al enlace dinámico: cada insignia dice a qué tienda va,
-   * así que mandarlas a un redirector que decide por su cuenta contradice lo
-   * que la propia insignia promete.
+   * Direct store listings (delivered 2026-09-02). The badges point here rather
+   * than at the dynamic link: each badge states which store it goes to, so
+   * sending it to a redirector that decides on its own contradicts what the
+   * badge itself promises.
    *
-   * Apple: se usa la ficha de COLOMBIA (`/co/`), no la de México que venía en
-   * el enlace original. Ambas responden 200, pero el storefront determina
-   * moneda y disponibilidad, y el sitio es colombiano.
+   * Apple: the COLOMBIAN listing (`/co/`) is used, not the Mexican one that came
+   * in the original link. Both answer 200, but the storefront determines
+   * currency and availability, and this is a Colombian site.
    *
-   * Google: sin `pcampaignid`, que es un parámetro de campaña del botón de
-   * compartir y no pertenece a la URL canónica.
+   * Google: without `pcampaignid`, which is a campaign parameter from the share
+   * button and does not belong in the canonical URL.
    */
   appStore: 'https://apps.apple.com/co/app/voltop/id6759729784',
   googlePlay: 'https://play.google.com/store/apps/details?id=co.voltop.charging',
 
   /**
-   * Soporte. El número es de WhatsApp y se atiende vía Freshchat, así que se
-   * enlaza con `wa.me` y NO con `tel:`: un `tel:` lanzaría una llamada
-   * telefónica en lugar de abrir la conversación.
+   * Support. The number is a WhatsApp line answered through Freshchat, so it is
+   * linked with `wa.me` and NOT with `tel:`: a `tel:` would place a phone call
+   * instead of opening the conversation.
    */
   whatsapp: 'https://wa.me/573159864931',
 
   /**
-   * Correo de soporte. Sale de la Política de Tratamiento de Datos, donde
-   * VOLTOP S.A.S. lo declara como su dato de contacto — no de una suposición.
+   * Support email. It comes from the Data Processing Policy, where VOLTOP
+   * S.A.S. declares it as its contact address — not from an assumption.
    */
   soporte: 'mailto:soporte@voltop.co',
 } as const
 
-/** El correo en texto, para mostrarlo además de enlazarlo. */
+/** The address as text, to display alongside the link. */
 export const soporteEmail = 'soporte@voltop.co'
 
 /**
- * Destinatarios de los leads comerciales (definidos el 2026-09-02).
+ * Recipients for commercial leads (agreed 2026-09-02).
  *
- * ADVERTENCIA: publicar direcciones en el HTML las expone a rastreadores de
- * spam. Es el precio de no tener servidor. La solución real es un servicio de
- * formularios —o un alias único tipo `comercial@voltop.co`— y entonces esta
- * lista desaparece del cliente.
+ * WARNING: publishing addresses in the HTML exposes them to spam harvesters.
+ * That is the price of having no server. The real fix is a form service — or a
+ * single alias such as `comercial@voltop.co` — and then this list disappears
+ * from the client entirely.
  */
 export const leadRecipients = [
   'bruno@voltop.co',

@@ -1,21 +1,24 @@
 /**
- * EL PLAN DE MEDICIÓN, COMO TIPO
- * Ver docs/MASTER-PROJECT-DEFINITION.md §31.
+ * THE MEASUREMENT PLAN, AS A TYPE
+ * See docs/MASTER-PROJECT-DEFINITION.md §31.
  *
- * `EventName` no es un detalle de implementación de la herramienta de
- * analítica: es el catálogo cerrado de lo que el producto declara medir, y
- * sobrevive intacto a cambiar de GA4 a Segment o a PostHog. Por eso vive en
- * dominio y no junto al `dispatch` que lo envía. Añadir un evento al plan es
- * añadir una variante aquí, y el compilador se encarga de que nadie emita uno
- * que no esté en la lista.
+ * `EventName` is not an implementation detail of the analytics tool: it is the
+ * closed catalogue of what the product declares it measures, and it survives
+ * intact through a move from GA4 to Segment or PostHog. That is why it lives in
+ * the domain and not next to the `dispatch` that sends it. Adding an event to
+ * the plan means adding a variant here, and the compiler makes sure nobody
+ * emits one that is not on the list.
+ *
+ * The event names themselves stay in Spanish: they are the plan, and renaming
+ * one silently splits a metric in two. See the contract list in AGENTS.md.
  */
 
 export type EventName =
   // B2C
   | 'cta_encontrar_cargador_click'
-  /* El CTA global del header pasó a ser la descarga de la app. Se conserva
-     `cta_encontrar_cargador_click` porque sigue usándose en los CTA de página
-     que llevan a /red; el del header ahora emite este. */
+  /* The header's global CTA became the app download. The older
+     `cta_encontrar_cargador_click` is kept because the in-page CTAs that lead
+     to /red still use it; the header one now emits this instead. */
   | 'cta_descargar_app_click'
   | 'red_buscar'
   | 'red_filtro_aplicado'

@@ -2,32 +2,34 @@ import { posts } from '~/core/novedades/infrastructure/content/posts'
 import type { Post } from '~/core/novedades/domain/entities/Post'
 
 /**
- * ORIGEN DEL REGISTRO · el único punto que cambia al conectar un CMS.
+ * THE LOG'S ORIGIN · the only point that changes when a CMS is connected.
  *
- * ── POR QUÉ EXISTE ESTE ARCHIVO ───────────────────────────────────────────
- * §38 fija la restricción dura del proyecto: el equipo propietario NO es un
- * equipo de desarrollo. Hoy publicar una novedad significa editar un archivo
- * de código, hacer commit y desplegar. Para estaciones —que cambian pocas
- * veces al año— se aguanta. Para un registro con cadencia semanal no, y la
- * sección moriría por fricción operativa, no por falta de contenido.
+ * ── WHY THIS FILE EXISTS ──────────────────────────────────────────────────
+ * §38 states the project's hard constraint: the owning team is NOT a
+ * development team. Today, publishing a news entry means editing a code file,
+ * committing and deploying. For stations — which change a handful of times a
+ * year — that is bearable. For a log with a weekly cadence it is not, and the
+ * section would die of operational friction rather than of a lack of content.
  *
- * ── POR QUÉ EL REGISTRO Y NO TODO ─────────────────────────────────────────
- * Es el piloto deliberado de §2: se conecta UNA colección a un CMS y se deja
- * el resto como datos locales. Bajo riesgo, reversible, y produce la
- * evaluación real de coste, fidelidad y autonomía que §2 pedía —con datos en
- * vez de estimaciones—. Si funciona, migra el resto; si no, se descarta
- * habiendo perdido una colección y no el proyecto.
+ * ── WHY THE LOG AND NOT EVERYTHING ────────────────────────────────────────
+ * This is the deliberate pilot from §2: connect ONE collection to a CMS and
+ * leave the rest as local data. Low risk, reversible, and it produces the real
+ * assessment of cost, fidelity and autonomy that §2 asked for — with data
+ * instead of estimates. If it works, the rest migrates; if it does not, it is
+ * dropped having lost one collection and not the project.
  *
- * ── QUÉ SUSTITUIR Y QUÉ NO ────────────────────────────────────────────────
- * Se sustituye el CUERPO de `fetchPosts`. Nada más.
+ * ── WHAT TO REPLACE AND WHAT NOT TO ───────────────────────────────────────
+ * Replace the BODY of `fetchPosts`. Nothing else.
  *
- * Todo lo que hay por encima —orden cronológico, filtro de publicados,
- * resolución de referencias a estación y ciudad, qué entradas tienen página—
- * vive en `lib/data/index.ts` y NO depende del origen. Un CMS que devuelva
- * registros con la forma de `Post` entra sin tocar una línea de presentación.
+ * Everything layered above it — chronological order, the published filter,
+ * resolving station and city references, which entries have a page — lives in
+ * `~/core/common/infrastructure/data-access` and does NOT depend on the origin.
+ * A CMS returning records shaped like `Post` slots in without touching a line
+ * of presentation.
  *
- * La firma ya es `async` aunque hoy no haga E/S: es lo que evita que conectar
- * el CMS obligue a reescribir cada página que consume el registro.
+ * The signature is already `async` even though it does no I/O today: that is
+ * what stops connecting the CMS from forcing a rewrite of every page that
+ * consumes the log.
  */
 export async function fetchPosts(): Promise<Post[]> {
   return posts

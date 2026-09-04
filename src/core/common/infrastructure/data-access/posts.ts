@@ -1,23 +1,24 @@
-/** El registro de novedades. */
+/** The news log. */
 
 import { type Post } from '~/core/novedades/domain/entities/Post'
 import { fetchPosts } from './postsSource'
 
 /**
- * ── POR QUÉ ESTOS ACCESORES SON `async` Y LOS DEMÁS NO ────────────────────
- * El registro es el piloto de CMS (ver `posts-source.ts`). Su origen va a ser
- * remoto; el de estaciones y ciudades, por ahora no. Pasar SOLO el registro a
- * asíncrono es la asimetría correcta: refleja lo que de verdad va a cambiar.
+ * ── WHY THESE ACCESSORS ARE `async` AND THE REST ARE NOT ──────────────────
+ * The log is the CMS pilot (see `postsSource.ts`). Its origin is going to be
+ * remote; the one for stations and cities, for now, is not. Making ONLY the log
+ * asynchronous is the correct asymmetry: it mirrors what is actually going to
+ * change.
  *
- * Se hace AHORA y no el día de la migración porque es lo único que obligaría a
- * tocar cada página que consume el registro. Hecho hoy, conectar el CMS es
- * cambiar el cuerpo de una función.
+ * It is done NOW and not on migration day because it is the one change that
+ * would force touching every page that consumes the log. Done today,
+ * connecting the CMS is changing the body of one function.
  */
 
 /**
- * El registro, siempre en orden cronológico inverso y solo con lo publicado.
- * Ninguna vista ordena por su cuenta: si el orden se decidiera en cada
- * componente, dos superficies acabarían mostrando el mismo registro distinto.
+ * The log, always in reverse chronological order and published entries only.
+ * No view sorts on its own: if the order were decided in each component, two
+ * surfaces would end up showing the same log differently.
  */
 export async function getPosts(): Promise<Post[]> {
   const all = await fetchPosts()
@@ -29,12 +30,12 @@ export async function getPost(slug: string): Promise<Post | undefined> {
 }
 
 /**
- * Entradas con página propia. Ver la cabecera de `content/data/posts.ts`:
- * `body` vacío significa que la entrada vive solo en el índice, así que no
- * genera ruta, no entra en el sitemap y no se enlaza desde ningún sitio.
+ * Entries that have their own page. See the header of the news content file: an
+ * empty `body` means the entry lives only in the index, so it generates no
+ * route, stays out of the sitemap and is linked from nowhere.
  *
- * Es un PREDICADO PURO sobre una entrada ya cargada, así que sigue siendo
- * síncrono: no consulta el origen y los componentes lo usan durante el render.
+ * It is a PURE PREDICATE over an already-loaded entry, so it stays synchronous:
+ * it does not query the origin and components use it during render.
  */
 export function hasPage(post: Post): boolean {
   return post.body.length > 0
@@ -44,18 +45,17 @@ export async function getPostsWithPage(): Promise<Post[]> {
   return (await getPosts()).filter(hasPage)
 }
 
-/** Portada del registro: la marcada como destacada o, si no hay, la más reciente. */
 /**
- * Entrada de portada del registro.
+ * The log's lead entry.
  *
- * Prefiere la más reciente que TENGA PORTADA con material entregado. No es un
- * capricho de orden: la portada es una franja 21/9 en lo más alto de la
- * página, y sin archivo real se convierte en el rectángulo gris más grande del
- * sitio. Antes bastaba con `featured: true`, y eso ponía en ese sitio a la
- * entrada de la EAN, cuya foto todavía no se ha entregado.
+ * It prefers the most recent one that HAS A COVER with delivered material. That
+ * is not a whim of ordering: the cover is a 21/9 band at the very top of the
+ * page, and with no real file it becomes the largest grey rectangle on the
+ * site. `featured: true` used to be enough, and that put the EAN entry there,
+ * whose photo has not been delivered yet.
  *
- * Si ninguna tiene material, cae a la marcada y luego a la más reciente: el
- * registro sigue funcionando, solo que sin imagen.
+ * If none has material, it falls back to the flagged one and then to the most
+ * recent: the log still works, just without an image.
  */
 export async function getFeaturedPost(): Promise<Post | undefined> {
   const list = await getPosts()
@@ -72,9 +72,9 @@ export async function getLatestPosts(limit: number): Promise<Post[]> {
 }
 
 /**
- * Re-superficie contextual. Es lo que hace que el registro no sea un cajón
- * aparte: una apertura aparece sola en la ficha de su estación y en la página
- * de su ciudad, sin que nadie la coloque a mano en tres sitios.
+ * Contextual re-surfacing. This is what keeps the log from being a drawer off
+ * to one side: an opening shows up on its own station's page and on its city's
+ * page, without anyone placing it by hand in three places.
  */
 export async function getPostsForStation(stationSlug: string): Promise<Post[]> {
   return (await getPosts()).filter((p) => p.stationSlug === stationSlug)
@@ -84,7 +84,7 @@ export async function getPostsForCity(citySlug: string): Promise<Post[]> {
   return (await getPosts()).filter((p) => p.citySlug === citySlug)
 }
 
-/** Fecha de la entrada más reciente. Alimenta `lastModified` del índice. */
+/** Date of the most recent entry. Feeds the index's `lastModified`. */
 export async function getLatestPostDate(): Promise<string | undefined> {
   return (await getPosts())[0]?.date
 }

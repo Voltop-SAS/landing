@@ -1,26 +1,26 @@
 /**
- * Una cifra publicable.
+ * A publishable figure.
  *
- * Vive en `common` y no en `nosotros` porque quien la renderiza es `MetricRow`,
- * un primitivo compartido: si el tipo viviera en un módulo de negocio,
- * `src/ui/common` tendría que importar el dominio de ese módulo para pintar
- * una fila.
+ * It lives in `common` rather than in the "about" module because what renders
+ * it is `MetricRow`, a shared primitive: if the type lived in a business
+ * module, `src/ui/common` would have to import that module's domain just to
+ * draw a row.
  *
- * `validated: false` significa que NO hay cifra real detrás. La UI decide cómo
- * representarlo; nunca la inventa (§33).
+ * `validated: false` means there is NO real figure behind it. The UI decides
+ * how to represent that; it never invents one (§33).
  */
 
 import type { Localized } from '~/core/common/domain/i18n/config'
 
 export type Metric = {
   key: string
-  /** Valor real. `null` mientras no esté validado: no se inventa. */
+  /** The real value. `null` until validated: it is never made up. */
   value: string | null
   unit: string | null
   label: Localized
-  /** Fuente del dato, para trazabilidad cuando se valide. */
+  /** Where the figure comes from, for traceability once validated. */
   source: string | null
   validated: boolean
-  /** Curaduría: cuáles se destacan cuando solo caben dos. */
+  /** Curation: which ones lead when only two fit. */
   featured?: boolean
 }

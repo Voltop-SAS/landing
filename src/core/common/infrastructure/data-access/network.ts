@@ -1,8 +1,9 @@
 /**
- * Agregados de la red, calculados siempre desde el dataset.
+ * NETWORK AGGREGATES, always computed from the dataset.
  *
- * Ninguna de estas cifras se escribe a mano: §33 lo prohíbe, y una cifra
- * escrita a mano deja de ser verdad en cuanto se añade una estación.
+ * None of these figures is ever written by hand: §33 forbids inventing
+ * figures, and a hand-written figure stops being true the moment a station is
+ * added. Adding one record updates the home page on its own.
  */
 
 import { stations } from '~/core/red/infrastructure/content/stations'
@@ -10,18 +11,11 @@ import { cities } from '~/core/red/infrastructure/content/cities'
 import type { City } from '~/core/red/domain/entities/City'
 import { getStationsByCity } from './stations'
 
-/**
- * AGREGADOS DE LA RED, calculados desde el dataset.
- *
- * Ninguna de estas cifras se escribe a mano en ningún sitio: §33 prohíbe
- * inventar cifras, y una cifra escrita a mano es una cifra que deja de ser
- * verdad en cuanto se añade una estación. Añadir un registro actualiza la
- * Home sola.
- */
 export function getNetworkSummary() {
   const operational = stations.filter((s) => s.status === 'operativa')
-  /* El mínimo de la red es el mínimo de los mínimos y el máximo el de los
-     máximos: publicar "80 kW" cuando hay puntos de 22 sería prometer de más. */
+  /* The network minimum is the minimum of the minimums and the maximum the
+     maximum of the maximums: publishing "80 kW" while there are 22 kW points
+     would be promising more than the network delivers. */
   const minPowers = operational.map((s) => s.powerKw.min)
   const maxPowers = operational.map((s) => s.powerKw.max)
   const connectors = [...new Set(operational.flatMap((s) => s.connectors))]
@@ -35,7 +29,7 @@ export function getNetworkSummary() {
   }
 }
 
-/** Ciudades que efectivamente tienen estaciones, con su conteo. */
+/** Cities that actually have stations, with their counts. */
 export function getCitiesWithStations(): { city: City; count: number; operational: number }[] {
   return cities
     .map((city) => {

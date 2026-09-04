@@ -1,4 +1,4 @@
-/** Métricas, segmentos, casos, aliados, testimonios y fundador. */
+/** Metrics, segments, cases, partners, testimonials and founder. */
 
 import { businessSegments, cases } from '~/core/empresas/infrastructure/content/company'
 import {
@@ -11,9 +11,9 @@ import type { Metric } from '~/core/common/domain/entities/Metric'
 import type { Case } from '~/core/empresas/domain/entities/Case'
 
 /**
- * Métricas para mostrar. `validated: false` significa que NO hay cifra real.
- * La UI decide cómo representarlo; nunca inventa un número.
- * Regla de economía: máximo dos provisionales por página (§33).
+ * Metrics to display. `validated: false` means there is NO real figure. The UI
+ * decides how to represent that; it never invents a number.
+ * Rule of economy: at most two provisional figures per page (§33).
  */
 export function getMetrics(opts: { onlyValidated?: boolean; limit?: number } = {}): Metric[] {
   let list = metrics
@@ -30,7 +30,7 @@ export function getFeaturedCase(): Case | undefined {
   return cases.find((c) => c.featured)
 }
 
-/** Vacío mientras no haya logos con permiso de uso: la UI omite la franja. */
+/** Empty until there are logos cleared for use: the UI omits the strip. */
 export function getPartners() {
   return partners
 }

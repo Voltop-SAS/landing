@@ -1,9 +1,9 @@
 /**
- * Estaciones: lectura, filtrado y orden.
+ * Stations: reading, filtering and ordering.
  *
- * El filtrado y el orden viven aquí y no en la vista a propósito: si cada
- * superficie ordenara por su cuenta, dos vistas del mismo dataset acabarían
- * mostrando cosas distintas.
+ * Filtering and ordering live here and not in the view on purpose: if every
+ * surface sorted on its own, two views of the same dataset would end up showing
+ * different things.
  */
 
 import { stations } from '~/core/red/infrastructure/content/stations'
@@ -21,7 +21,7 @@ export function getStationsByCity(citySlug: string): Station[] {
   return stations.filter((s) => s.citySlug === citySlug)
 }
 
-/** Filtros de /red. Toda comparación es tolerante a acentos y mayúsculas. */
+/** Filters for /red. Every comparison ignores accents and case. */
 export type StationFilters = {
   query?: string
   citySlug?: string
@@ -46,8 +46,8 @@ export function filterStations(
     if (f.citySlug && s.citySlug !== f.citySlug) return false
     if (f.connector && !s.connectors.includes(f.connector as Station['connectors'][number]))
       return false
-    /* Se compara contra el MÁXIMO: una estación con puntos de 22 y de 80
-        entra en el filtro "80+", porque efectivamente puedes cargar a 80 ahí. */
+    /* Compared against the MAXIMUM: a station with both 22 kW and 80 kW points
+        passes the "80+" filter, because you genuinely can charge at 80 there. */
     if (f.minPowerKw && s.powerKw.max < f.minPowerKw) return false
     if (f.onlyAvailable && s.status !== 'operativa') return false
     if (f.query) {
@@ -59,18 +59,19 @@ export function filterStations(
   })
 }
 
-/* ---------------------------------- Orden -------------------------------- */
+/* --------------------------------- Ordering ------------------------------- */
 
 /**
- * Criterios de orden del buscador.
+ * The finder's sort criteria.
  *
- * `distance` existe pero SOLO se ofrece en la UI si alguna estación trae
- * coordenadas (ver `hasCoordinates`). No es código muerto: es una rama activada
- * por datos, el mismo patrón que `MetricRow` con las métricas sin validar (§33).
+ * `distance` exists but is ONLY offered in the UI if some station carries
+ * coordinates (see `hasCoordinates`). It is not dead code: it is a branch
+ * switched on by data, the same pattern `MetricRow` uses for unvalidated
+ * metrics (§33).
  */
 export type StationSort = 'relevance' | 'power' | 'status' | 'city' | 'distance'
 
-/** `relevance` = el orden curado del dataset. La curaduría es una decisión. */
+/** `relevance` = the dataset's curated order. Curation is a decision. */
 const statusRank: Record<Station['status'], number> = { operativa: 0, mantenimiento: 1, proxima: 2 }
 
 export function hasCoordinates(list: Station[]): boolean {
@@ -78,8 +79,8 @@ export function hasCoordinates(list: Station[]): boolean {
 }
 
 /**
- * Distancia en línea recta (haversine). No es distancia de ruta y no pretende
- * serlo: sirve para ORDENAR, no para prometer un tiempo de viaje.
+ * Straight-line distance (haversine). It is not routing distance and does not
+ * pretend to be: it exists to ORDER, not to promise a travel time.
  */
 export function distanceKm(
   a: { lat: number; lng: number },
@@ -116,8 +117,8 @@ export function sortStations(
     case 'distance': {
       if (!ctx.origin) return out
       const o = ctx.origin
-      /* Sin coordenadas no se puede comparar: esas estaciones van al final en
-         lugar de aparecer arbitrariamente cerca. */
+      /* With no coordinates there is nothing to compare: those stations go last
+         instead of appearing arbitrarily close. */
       return out.sort((a, b) => {
         const da = a.geo ? distanceKm(o, a.geo) : Infinity
         const db = b.geo ? distanceKm(o, b.geo) : Infinity
