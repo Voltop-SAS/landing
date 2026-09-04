@@ -1,13 +1,23 @@
 /**
- * COLECCIÓN CENTRAL · Estaciones
- * Ver docs/MASTER-PROJECT-DEFINITION.md §27.
+ * CORE COLLECTION · Stations
+ * See docs/MASTER-PROJECT-DEFINITION.md §27.
  *
- * Añadir una estación = añadir un registro. Nunca requiere rediseño ni código.
+ * Adding a station = adding a record. It never requires a redesign or code.
  *
- * ⚠️ DATASET DE EJEMPLO. Las ubicaciones corresponden a estaciones reales de
- * Voltop, pero las especificaciones no están verificadas y las coordenadas no
- * se han recibido. `dataStatus` lo declara explícitamente por registro.
- * Regla del proyecto: no se inventan datos.
+ * ⚠️ SAMPLE DATASET. The locations correspond to real Voltop stations, but the
+ * specifications are not verified and the coordinates have not been received.
+ * `dataStatus` declares this explicitly, record by record.
+ * Project rule: data is never made up.
+ *
+ * ── THE THREE REAL STATIONS ───────────────────────────────────────────────
+ * Data delivered by Camilo on 2026-09-02. There used to be FOUR, two of them
+ * —San Fernando Plaza and Corredor Norte— that do not exist, plus power
+ * ratings that did not match the operation (60, 120 and 150 kW against the
+ * real 22–80). The site was claiming a larger and more powerful network than
+ * the one that exists.
+ *
+ * The two news entries announcing them were withdrawn as well: a published
+ * opening for a station that does not exist is worse than having no log.
  */
 
 import type { Station } from '~/core/red/domain/entities/Station'
@@ -22,8 +32,8 @@ export const stations: Station[] = [
       en: 'Calle 79 #11-45, Bogotá',
       pt: 'Calle 79 #11-45, Bogotá',
     },
-    /* Extraídas de los enlaces de Google Maps entregados el 2026-09-02, no
-       transcritas a ojo desde un mapa. */
+    /* Taken from the Google Maps links delivered on 2026-09-02, not
+       transcribed by eye off a map. */
     geo: { lat: 4.6631495, lng: -74.0599846 },
     connectors: ['GB/T', 'CCS1', 'CCS2'],
     powerKw: { min: 22, max: 80 },

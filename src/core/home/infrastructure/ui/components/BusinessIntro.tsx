@@ -9,14 +9,14 @@ import { Reveal } from '@ui/common/components/ui/Reveal'
 import { cn } from '@ui/common/lib/cn'
 
 /**
- * BEAT 4 · EMPRESAS — Intensidad: Media-baja · Registro: Silencio · Espacio: loose
- * ESTRUCTURA: columna estrecha centrada, mucho aire, sin media.
+ * BEAT 4 · BUSINESS — Intensity: Medium-low · Register: Silence · Space: loose
+ * STRUCTURE: centred narrow column, plenty of air, no media.
  *
- * Es la RESPIRACIÓN de la página: llega después del índice denso del beat 3 y
- * antes del pico visual del beat 5. Su contraste es el ritmo, no la imagen.
+ * It is the page's BREATHING SPACE: it arrives after beat 3's dense index and
+ * before beat 5's visual peak. Its contrast is rhythm, not image.
  *
- * Antes era un split a dos columnas espejo del beat anterior — exactamente la
- * simetría predecible que el sistema prohíbe (§12).
+ * It used to be a two-column split mirroring the previous beat — exactly the
+ * predictable symmetry the system forbids (§12).
  */
 export function BusinessIntro({ locale }: { locale: Locale }) {
   const segments = getBusinessSegments()
@@ -27,9 +27,9 @@ export function BusinessIntro({ locale }: { locale: Locale }) {
       space="loose"
       ariaLabelledby="empresas-title"
     >
-      {/* `align="center"` es explícito: esta composición SÍ está centrada a
-          propósito (§12, contraste compositivo). Al declararlo se distingue del
-          descuadre accidental que tenía el resto del sitio. */}
+      {/* `align="center"` is explicit: this composition IS centred on purpose
+          (§12, compositional contrast). Declaring it distinguishes this from
+          the accidental misalignment the rest of the site used to have. */}
       <Container
         width="narrow"
         align="center"
@@ -49,11 +49,11 @@ export function BusinessIntro({ locale }: { locale: Locale }) {
         </Reveal>
       </Container>
 
-      {/* Los cuatro casos como ritmo tipográfico horizontal, NO como tarjetas.
-          El comentario decía eso y el código pintaba cuatro celdas con borde a
-          los cuatro lados: exactamente las cards que §12 prohíbe. Ahora es una
-          fila de columnas separadas por hairlines verticales, sin caja. Y sin
-          número: cuatro públicos no son una secuencia. */}
+      {/* The four cases as horizontal typographic rhythm, NOT as cards. The
+          comment used to say that while the code rendered four cells bordered
+          on all four sides: exactly the cards §12 forbids. It is now a row of
+          columns separated by vertical hairlines, with no box. And with no
+          number: four audiences are not a sequence. */}
       <Container className="mt-14">
         <ul className="grid grid-cols-2 gap-x-8 gap-y-10 md:grid-cols-4 md:gap-x-0">
           {segments.map((s, i) => (

@@ -1,12 +1,12 @@
 import type { Localized } from '~/core/common/domain/i18n/config'
 
 /**
- * COPY · Red, Ciudad y Estación
+ * COPY · Network, City and Station
  *
- * /red es una SUPERFICIE DE PRODUCTO, no un relato (§14).
- * Su trabajo es encontrar una estación. El titular no promete capacidades
- * que la página no tiene: se eliminó "en tiempo real" porque no hay
- * integración de disponibilidad (§19: un titular es un contrato).
+ * /red is a PRODUCT SURFACE, not a narrative (§14).
+ * Its job is to find a station. The headline does not promise capabilities the
+ * page does not have: "in real time" was removed because there is no
+ * availability integration (§19: a headline is a contract).
  */
 
 export const red = {
@@ -31,14 +31,14 @@ export const red = {
       pt: 'Encontre onde carregar',
     } satisfies Localized,
     lead: {
-      /* Describía la interfaz que el usuario ya está viendo. Ahora mantiene la
-         pista de uso y añade dato concreto: la precisión es lo que suena a
-         compañía técnica. Las cifras son las mismas que calcula
-         `getNetworkSummary`; si divergen, manda el dataset. */
-      /* Sin cifras escritas a mano. El rango de potencia cambia con cada
-         estación que entra, y aquí ya se quedó obsoleto una vez: decía "de 60
-         a 150 kW" cuando la red real va de 22 a 80. Las cifras exactas están
-         en la ficha de cada estación, que se genera desde el dataset. */
+      /* It used to describe the interface the user is already looking at. It
+         now keeps the usage hint and adds a concrete fact: precision is what
+         sounds like a technical company. The figures are the same ones
+         `getNetworkSummary` computes; if they diverge, the dataset wins. */
+      /* No hand-written figures. The power range changes with every station
+         that comes in, and this text already went stale once: it said "from
+         60 to 150 kW" when the real network goes from 22 to 80. The exact
+         figures live on each station's page, generated from the dataset. */
       es: 'Filtra por ciudad, conector y potencia. Cada ficha indica cuántos puntos tiene y a qué potencia cargan.',
       en: 'Filter by city, connector and power. Each station shows how many points it has and at what power they charge.',
       pt: 'Filtre por cidade, conector e potência. Cada ficha indica quantos pontos tem e em que potência carregam.',
@@ -60,10 +60,10 @@ export const red = {
   },
 
   filters: {
-    /** Etiqueta del grupo. El chip de dentro dice qué hace; el grupo, de qué es. */
-    /* Se llamaba "Disponibilidad", que es exactamente la capacidad que esta
-       misma página declara no integrada dos secciones más arriba. El chip de
-       dentro dice "Solo en operación", que es un ESTADO. */
+    /** Group label. The chip inside says what it does; the group, what it is about. */
+    /* This used to be called "Disponibilidad", which is exactly the capability
+       this same page declares as not integrated two sections further up. The
+       chip inside says "Solo en operación", which is a STATUS. */
     availabilityGroup: { es: 'Estado', en: 'Status', pt: 'Status' } satisfies Localized,
     city: { es: 'Ciudad', en: 'City', pt: 'Cidade' } satisfies Localized,
     connector: { es: 'Conector', en: 'Connector', pt: 'Conector' } satisfies Localized,
@@ -82,7 +82,7 @@ export const red = {
     clear: { es: 'Quitar filtros', en: 'Clear filters', pt: 'Limpar filtros' } satisfies Localized,
     resultsOne: { es: 'estación', en: 'station', pt: 'estação' } satisfies Localized,
     resultsMany: { es: 'estaciones', en: 'stations', pt: 'estações' } satisfies Localized,
-    /** Botón que despliega los filtros en móvil. */
+    /** Button that expands the filters on mobile. */
     toggle: { es: 'Filtros', en: 'Filters', pt: 'Filtros' } satisfies Localized,
     toggleHide: {
       es: 'Ocultar filtros',
@@ -93,13 +93,15 @@ export const red = {
   },
 
   /**
-   * ORDEN. Sustituye a la falta de "por distancia" con criterios que el dataset
-   * SÍ puede responder hoy. `distance` solo se ofrece si hay coordenadas.
+   * SORTING. It makes up for the missing "by distance" with criteria the
+   * dataset CAN answer today. `distance` is only offered if there are
+   * coordinates.
    */
   sort: {
     label: { es: 'Ordenar por', en: 'Sort by', pt: 'Ordenar por' } satisfies Localized,
-    /* "Recomendadas" implica personalización o un motor de recomendación que
-       no existe: `lib/data` documenta que es el orden curado del dataset (§19). */
+    /* "Recomendadas" implies personalisation or a recommendation engine that
+       does not exist: the data-access layer documents this as the dataset's
+       curated order (§19). */
     relevance: { es: 'Destacadas', en: 'Featured', pt: 'Destaques' } satisfies Localized,
     power: { es: 'Más potencia', en: 'Highest power', pt: 'Maior potência' } satisfies Localized,
     status: {
@@ -116,10 +118,10 @@ export const red = {
   },
 
   /**
-   * CERCANÍA. Toda esta rama está condicionada a que el dataset traiga `geo`:
-   * si ninguna estación tiene coordenadas, no se ofrece nada — igual que
-   * `MetricRow` no pinta métricas sin validar (§33). No es código muerto: se
-   * enciende sola cuando lleguen las coordenadas.
+   * PROXIMITY. This whole branch is conditional on the dataset carrying `geo`:
+   * if no station has coordinates, nothing is offered — the same way
+   * `MetricRow` does not render unvalidated metrics (§33). It is not dead
+   * code: it switches itself on when the coordinates arrive.
    */
   nearby: {
     action: {
@@ -155,8 +157,9 @@ export const red = {
 
   howToCharge: {
     eyebrow: { es: 'Cómo cargar', en: 'How to charge', pt: 'Como carregar' } satisfies Localized,
-    /* El portugués prometía otra cosa ("y ya estás cargando") que el español y
-       el inglés ("y sigues tu día"). La promesa es la misma en los tres. */
+    /* The Portuguese promised something different ("and you're already
+       charging") from the Spanish and the English ("and you get on with your
+       day"). The promise is now the same in all three. */
     title: {
       es: 'Tres pasos y sigues tu día',
       en: "Three steps and you're on your way",
@@ -183,8 +186,9 @@ export const red = {
       },
       {
         step: '03',
-        /* "Sigue" solo es ambiguo en español (¿seguir qué?), y los tres
-           idiomas decían cosas distintas. El cuerpo ya dice esto exacto. */
+        /* "Sigue" on its own is ambiguous in Spanish (follow what?), and the
+           three languages were saying different things. The body copy already
+           says exactly this. */
         title: {
           es: 'Sigue tu día',
           en: 'Get on with your day',
@@ -205,10 +209,10 @@ export const red = {
       en: 'FAQ',
       pt: 'Perguntas frequentes',
     } satisfies Localized,
-    /* El titular sigue al contenido: la última pregunta es sobre ayuda
-       DURANTE una carga, así que "antes de cargar" dejaba fuera parte de lo
-       que hay debajo. La fórmula recoge el arco entero y toma prestada la
-       cadencia de la propia respuesta 5. */
+    /* The headline follows the content: the last question is about help
+       DURING a charge, so "before you charge" left out part of what sits
+       below it. The wording covers the whole arc and borrows the cadence of
+       answer 5 itself. */
     title: {
       es: 'Antes, durante y después de cargar',
       en: 'Before, during and after a charge',
@@ -279,23 +283,23 @@ export const station = {
     en: 'Other stations nearby',
     pt: 'Outras estações por perto',
   } satisfies Localized,
-  /** Honestidad de datos: se declara qué falta y por qué (§33). */
+  /** Data honesty: what is missing and why is stated outright (§33). */
   pendingGeo: {
     es: 'Coordenadas pendientes de confirmación: el enlace abre una búsqueda por dirección.',
     en: 'Coordinates pending confirmation: the link opens a search by address.',
     pt: 'Coordenadas pendentes de confirmação: o link abre uma busca por endereço.',
   } satisfies Localized,
   /**
-   * Etiqueta CORTA. Antes esta cadena entera vivía dentro de un `PendingTag`:
-   * una frase con punto final, en mayúsculas y en mono, dentro de un recuadro
-   * de 11px. Un tag lleva una etiqueta; la frase va debajo como nota.
+   * SHORT label. This entire string used to live inside a `PendingTag`: a
+   * sentence with a full stop, uppercased and in mono, inside an 11px box. A
+   * tag carries a label; the sentence goes below it as a note.
    */
   pendingPricingTag: { es: 'Pendiente', en: 'Pending', pt: 'Pendente' } satisfies Localized,
   pendingPricing: {
-    /* "Confirmación comercial" es vocabulario de nuestro backlog delante de
-       alguien que solo quiere saber cuánto cuesta. La etiqueta "Pendiente" se
-       queda; el texto ahora da el paso siguiente, igual que la respuesta 3 del
-       FAQ. */
+    /* "Commercial confirmation" is our backlog's vocabulary put in front of
+       someone who just wants to know what it costs. The "Pendiente" label
+       stays; the text now gives the next step, the same way FAQ answer 3
+       does. */
     es: 'Todavía no publicamos la tarifa de esta estación. La ves en la app antes de iniciar la carga.',
     en: "We haven't published this station's rate yet. You'll see it in the app before you start charging.",
     pt: 'Ainda não publicamos a tarifa desta estação. Você a vê no app antes de iniciar o carregamento.',
@@ -303,29 +307,30 @@ export const station = {
 }
 
 /* ---------------------------------------------------------------- */
-/* Metadatos generados desde datos                                   */
+/* Metadata generated from data                                      */
 /* ---------------------------------------------------------------- */
 
 export type StationMetaVars = {
   city: string
-  /** Ya formateada: "22–80 kW" o "30 kW". */
+  /** Already formatted: "22–80 kW" or "30 kW". */
   powerKw: string
   points: number
   connectors: string
 }
 
 /**
- * DESCRIPCIÓN SEO DE CADA ESTACIÓN.
+ * SEO DESCRIPTION FOR EACH STATION.
  *
- * Vivía como ternario `locale === "es" ? … : …` DENTRO de la página. Un ternario
- * no tiene tercera rama: con un idioma más habría servido la descripción en
- * INGLÉS a todo lo que no fuera español —en silencio y en cada estación del
- * sitio—, que es justo el fallo que la capa de copy existe para impedir
- * (§36.15). Como par `Localized` de plantillas, el idioma que falte es un
- * error de tipos, no un texto equivocado en producción.
+ * This used to be a `locale === "es" ? … : …` ternary INSIDE the page. A
+ * ternary has no third branch: with one more language it would have served the
+ * ENGLISH description to everything that was not Spanish —silently, and on
+ * every station of the site— which is exactly the failure the copy layer
+ * exists to prevent (§36.15). As a `Localized` set of templates, a missing
+ * language is a type error, not the wrong text in production.
  *
- * Es una FUNCIÓN y no una cadena con huecos porque cada idioma ordena la
- * frase a su manera: la traducción no puede reducirse a rellenar espacios.
+ * It is a FUNCTION and not a string with placeholders because each language
+ * orders the sentence its own way: translation cannot be reduced to filling
+ * in blanks.
  */
 export const stationMeta = {
   description: {

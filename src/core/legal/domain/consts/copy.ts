@@ -3,14 +3,14 @@ import type { Localized } from '~/core/common/domain/i18n/config'
 /**
  * COPY · Legal
  *
- * ⚠️ CONTENIDO PENDIENTE. El texto legal de la política de tratamiento de datos
- * debe redactarlo el área legal de Voltop conforme a la Ley 1581 de 2012 y al
- * Decreto 1074 de 2015. No se redacta aquí ni se aproxima: un texto legal
- * inventado es peor que ninguno.
+ * ⚠️ CONTENT PENDING. The legal text of the data-processing policy must be
+ * drafted by Voltop's legal team in accordance with Ley 1581 de 2012 and
+ * Decreto 1074 de 2015. It is neither drafted nor approximated here: an
+ * invented legal text is worse than none.
  *
- * Esta página existe porque el formulario de leads enlaza a ella (requisito de
- * la autorización informada). La estructura queda lista para recibir el texto:
- * al pegarlo en `sections` la página deja de mostrar el aviso de pendiente.
+ * This page exists because the lead form links to it (a requirement of
+ * informed authorisation). The structure is ready to receive the text: once it
+ * is pasted into `sections`, the page stops showing the pending notice.
  */
 
 export const legal = {
@@ -45,7 +45,7 @@ export const legal = {
       pt: 'O texto final desta política deve ser emitido pela área jurídica da Voltop conforme a Lei colombiana 1581 de 2012 e seus decretos regulamentadores. Nenhuma versão aproximada é publicada.',
     } satisfies Localized,
 
-    /** Qué debe cubrir el texto final. Sirve de brief para el área legal. */
+    /** What the final text must cover. It doubles as a brief for the legal team. */
     requiredContents: [
       {
         es: 'Identificación del responsable del tratamiento y sus datos de contacto',
@@ -84,15 +84,15 @@ export const legal = {
       pt: 'Conteúdos a serem cobertos',
     } satisfies Localized,
 
-    /** Texto final: vacío hasta recibirlo del área legal. */
+    /** Final text: empty until the legal team delivers it. */
     sections: [] as { heading: Localized; body: Localized[] }[],
   },
 }
 
 /**
- * Envoltorio de los documentos legales. El TEXTO va en
- * `content/data/legal-docs.ts` y es español plano; aquí solo lo que rodea al
- * documento, que sí se traduce.
+ * Wrapper around the legal documents. The TEXT itself lives in
+ * `~/core/legal/infrastructure/content/legalDocs` and is plain Spanish; only
+ * what surrounds the document lives here, and that is translated.
  */
 export const legalDoc = {
   eyebrow: { es: 'Legal', en: 'Legal', pt: 'Legal' } satisfies Localized,
@@ -103,9 +103,9 @@ export const legalDoc = {
     pt: 'Última atualização',
   } satisfies Localized,
   /**
-   * Solo se muestra en inglés y portugués. Dice lo que hay que decir: el
-   * documento existe en español y esa es la versión que obliga. Prometer una
-   * traducción que nadie ha emitido sería peor que mostrar el original.
+   * Shown in English and Portuguese only. It says what needs saying: the
+   * document exists in Spanish and that is the binding version. Promising a
+   * translation nobody has issued would be worse than showing the original.
    */
   spanishOnly: {
     es: '',

@@ -1,7 +1,7 @@
 export type LegalBlock = { tipo: 'parrafo'; texto: string } | { tipo: 'lista'; items: string[] }
 
 export type LegalSection = {
-  /** Ancla estable: la usa el índice de contenidos. */
+  /** Stable anchor: the table of contents uses it. */
   id: string
   heading: string
   body: LegalBlock[]
@@ -9,11 +9,9 @@ export type LegalSection = {
 
 export type LegalDoc = {
   titulo: string
-  /** Fecha tal cual la emitió el área legal. */
+  /** The date exactly as the legal team issued it. */
   actualizado: string
-  /** ISO, para `<time dateTime>` y para el sitemap. */
+  /** ISO, for `<time dateTime>` and for the sitemap. */
   actualizadoISO: string
   secciones: LegalSection[]
 }
-
-/** TÉRMINOS Y CONDICIONES DE USO PLATAFORMA, APLICACIÓN, SITIO WEB Y ESTACIONES DE CARGA VOLTOP */

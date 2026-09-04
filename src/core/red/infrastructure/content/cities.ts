@@ -1,12 +1,12 @@
 /**
- * COLECCIÓN · Ciudades
- * Ver docs/MASTER-PROJECT-DEFINITION.md §14 y §27.
+ * COLLECTION · Cities
+ * See docs/MASTER-PROJECT-DEFINITION.md §14 and §27.
  *
- * La ciudad es una entidad, no un texto libre dentro de la estación.
- * Habilita: filtros reales, cobertura navegable y SEO local
- * ("cargador eléctrico Medellín" es la búsqueda que hace el usuario).
+ * A city is an entity, not free text inside a station.
+ * It enables: real filters, browsable coverage and local SEO
+ * ("cargador eléctrico Medellín" is the search the user actually types).
  *
- * Añadir una ciudad = añadir un registro. La ruta /red/[ciudad] se genera sola.
+ * Adding a city = adding a record. The /red/[city] route generates itself.
  */
 
 import type { City } from '~/core/red/domain/entities/City'
@@ -28,11 +28,11 @@ export const cities: City[] = [
     name: 'Medellín',
     region: 'Antioquia',
     intro: {
-      /* "Puntos estratégicos" era relleno. El intro de Bogotá, en esta misma
-         colección, es concreto y muy superior; esto lo pone a la par. */
-      /* Corregido con los datos reales: la estación de Medellín es Wake, de
-         80 kW, no San Fernando Plaza de 120. La referencia a El Poblado sale
-         también: no consta la dirección. */
+      /* "Puntos estratégicos" was filler. Bogotá's intro, in this same
+         collection, is concrete and far better; this brings it up to par. */
+      /* Corrected against the real data: the Medellín station is Wake, at
+         80 kW, not San Fernando Plaza at 120. The reference to El Poblado
+         goes as well: there is no address on record. */
       es: 'Nuestra primera estación en Medellín, con 80 kW y seis puntos de carga.',
       en: 'Our first station in Medellín, with 80 kW and six charge points.',
       pt: 'Nossa primeira estação em Medellín, com 80 kW e seis pontos de carga.',

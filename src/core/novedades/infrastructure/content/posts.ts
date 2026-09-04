@@ -1,35 +1,36 @@
 import { media } from '~/core/common/infrastructure/content/media'
 
 /**
- * COLECCIÓN · Novedades
- * Ver docs/MASTER-PROJECT-DEFINITION.md §14 (arquitectura) y §27 (datos).
+ * COLLECTION · News
+ * See docs/MASTER-PROJECT-DEFINITION.md §14 (architecture) and §27 (data).
  *
- * ── QUÉ ES Y QUÉ NO ES ────────────────────────────────────────────────────
- * No es un blog. Es el REGISTRO de lo que Voltop construye: aperturas,
- * eventos, alianzas y comunicados. La distinción no es de nombre:
+ * ── WHAT IT IS AND WHAT IT IS NOT ─────────────────────────────────────────
+ * It is not a blog. It is the LOG of what Voltop builds: openings, events,
+ * partnerships and announcements. The distinction is not just a name:
  *
- * - Un blog exige contenido que hay que inventar, y sin cadencia se ve muerto.
- *   Tres artículos con fecha vieja comunican que la compañía está parada.
- * - Un registro se alimenta de lo que la operación ya produce. Cada estación
- *   que abre es una entrada. Con entradas cada pocas semanas se ve vivo.
+ * - A blog demands content that has to be invented, and without cadence it
+ *   looks dead. Three articles with an old date say the company has stalled.
+ * - A log feeds on what the operation already produces. Every station that
+ *   opens is an entry. With entries every few weeks it looks alive.
  *
- * La forma sigue a esa decisión: es una bitácora cronológica, no una revista.
+ * The form follows from that decision: it is a chronological logbook, not a
+ * magazine.
  *
- * ── LA REGLA QUE GOBIERNA EL MODELO ───────────────────────────────────────
- * `body` VACÍO significa que la entrada vive solo en el índice, sin página
- * propia. Una apertura son dos líneas y una foto: obligar a hacer clic para
- * leer un párrafo es fricción sin contrapartida, y multiplica páginas
- * delgadas que además compiten entre sí en búsqueda.
+ * ── THE RULE THAT GOVERNS THE MODEL ───────────────────────────────────────
+ * An EMPTY `body` means the entry lives only in the index, with no page of its
+ * own. An opening is two lines and a photo: forcing a click to read one
+ * paragraph is friction with nothing in return, and it multiplies thin pages
+ * that then compete against each other in search.
  *
- * Solo las entradas con cuerpo —un comunicado, una alianza con contexto—
- * se abren a página propia, indexable y compartible. La página se genera si
- * hay material, no porque exista el registro.
+ * Only entries with a body —an announcement, a partnership with context— open
+ * into a page of their own, indexable and shareable. The page is generated if
+ * there is material, not because the log entry exists.
  *
- * ⚠️ CONTENIDO DE ARRANQUE. Las entradas describen hechos reales y
- * verificables del dataset y del registro de media, pero **las fechas no están
- * confirmadas** y se marcan `dataStatus: "placeholder"`. Regla del proyecto
- * (§33): no se inventan datos, y lo que no está verificado se declara. La UI
- * rotula toda entrada provisional. Ver `docs/05-assets-todo`.
+ * ⚠️ LAUNCH CONTENT. The entries describe real, verifiable facts from the
+ * dataset and the media registry, but **the dates are not confirmed** and are
+ * marked `dataStatus: "placeholder"`. Project rule (§33): data is never made
+ * up, and whatever is not verified is declared as such. The UI labels every
+ * provisional entry. See `docs/05-assets-todo`.
  */
 
 import type { Post } from '~/core/novedades/domain/entities/Post'
@@ -45,8 +46,8 @@ export const posts: Post[] = [
       pt: 'Nova estação na Universidade EAN',
     },
     summary: {
-      /* Cifras corregidas con los datos reales (2026-09-02): 18 puntos y
-         22–80 kW, no diez de 60. */
+      /* Figures corrected against the real data (2026-09-02): 18 points and
+         22–80 kW, not ten at 60. */
       es: 'Dieciocho puntos de carga en el campus, abiertos al público y en operación permanente.',
       en: 'Eighteen charging points on campus, open to the public and operating around the clock.',
       pt: 'Dezoito pontos de carregamento no campus, abertos ao público e em operação permanente.',
@@ -55,7 +56,8 @@ export const posts: Post[] = [
     stationSlug: 'universidad-ean',
     citySlug: 'bogota',
     featured: true,
-    /* Única entrada con cuerpo: es la que tiene material propio registrado. */
+    /* The only entry with a body: it is the one with its own registered
+       material. */
     body: [
       {
         kind: 'parrafo',
@@ -105,14 +107,14 @@ export const posts: Post[] = [
     stationSlug: 'wake',
     citySlug: 'medellin',
     featured: true,
-    /* El cuerpo abría con un bloque `media` que era EL MISMO asset que la
-       portada, así que la entrada mostraba el vídeo dos veces seguidas. Se
-       retiró el bloque y no la portada: la portada es además la imagen de los
-       metadatos y la del índice del registro.
-       
-       Con él se fue su pie de foto, "Así vivimos la apertura de Wake, nuestra
-       nueva estación de carga rápida en Medellín", y no se echa de menos:
-       repetía el titular de la propia entrada dos centímetros más abajo. */
+    /* The body used to open with a `media` block that was THE SAME asset as
+       the cover, so the entry showed the video twice in a row. The block was
+       removed and not the cover: the cover is also the metadata image and the
+       one used in the log index.
+
+       Its caption went with it — "Así vivimos la apertura de Wake, nuestra
+       nueva estación de carga rápida en Medellín" — and it is not missed: it
+       repeated the entry's own headline a couple of centimetres below it. */
     body: [
       {
         kind: 'subtitulo',
@@ -166,12 +168,12 @@ export const posts: Post[] = [
     status: 'publicado',
     dataStatus: 'verified',
   },
-  /* AQUÍ HABÍA DOS ENTRADAS MÁS: "San Fernando Plaza" y "Corredor Norte".
-     Se retiraron el 2026-09-02 junto con sus estaciones: anunciaban aperturas
-     de puntos que no existen. Una apertura publicada de una estación
-     inexistente no es un dato desactualizado, es un dato falso, y el registro
-     pierde su única función —ser el sitio donde consta lo que de verdad
-     pasó— en cuanto admite una. */
+  /* THERE WERE TWO MORE ENTRIES HERE: "San Fernando Plaza" and "Corredor
+     Norte". They were withdrawn on 2026-09-02 along with their stations: they
+     announced openings of points that do not exist. A published opening for a
+     station that does not exist is not out-of-date data, it is false data, and
+     the log loses its only function —being the place that records what
+     actually happened— the moment it admits one. */
   {
     slug: 'grand-hyatt-bogota',
     type: 'alianza',

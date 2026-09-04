@@ -8,20 +8,20 @@ import { PostLink } from '@ui/common/components/ui/PostLink'
 import type { Post } from '~/core/common/infrastructure/data-access'
 
 /**
- * RE-SUPERFICIE DEL REGISTRO EN OTRO DESTINO.
+ * RE-SURFACING THE LOG ON ANOTHER DESTINATION.
  *
- * Es la pieza que impide que las novedades sean un cajón aparte: una apertura
- * con `stationSlug` aparece sola en la ficha de esa estación y en la página de
- * su ciudad, sin que nadie la coloque a mano en tres sitios. Reutiliza el
- * sistema de referencias que ya conecta estación → ciudad.
+ * This is the piece that stops the news section from being a separate drawer:
+ * an opening with a `stationSlug` shows up on its own on that station's page
+ * and on its city's page, without anyone placing it by hand in three places.
+ * It reuses the reference system that already connects station → city.
  *
- * Sin entradas NO RENDERIZA NADA —ni titular vacío ni "próximamente"—, igual
- * que la franja de partners se omite mientras no haya logos con permiso (§33).
- * Un bloque vacío no informa: ocupa.
+ * With no entries it RENDERS NOTHING —no empty headline, no "coming soon"—
+ * the same way the partner strip is omitted while there are no logos cleared
+ * for use (§33). An empty block does not inform: it takes up room.
  *
- * Estructura deliberadamente distinta de la del registro principal: aquí es
- * una lista compacta de dos líneas, no la bitácora con separadores de año.
- * Dos superficies vecinas no repiten estructura (§36.11).
+ * Deliberately different in structure from the main log: here it is a compact
+ * two-line list, not the logbook with year separators. Two neighbouring
+ * surfaces do not repeat structure (§36.11).
  */
 export function PostsInline({
   posts,

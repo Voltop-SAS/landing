@@ -7,13 +7,13 @@ import { Button } from '@ui/common/components/ui/Button'
 import { TrackClick } from '@ui/common/components/analytics/TrackClick'
 
 /**
- * BEAT 7 · CIERRE — Intensidad: Alta · Registro: Impacto
- * ESTRUCTURA: asimétrica. Dos audiencias declaradas explícitamente, separadas
- * por una hairline, con jerarquía desigual: B2C es la acción primaria (único
- * gradiente de la vista), B2B es la secundaria.
+ * BEAT 7 · CLOSE — Intensity: High · Register: Impact
+ * STRUCTURE: asymmetric. Two audiences declared explicitly, separated by a
+ * hairline, with uneven hierarchy: B2C is the primary action (the only
+ * gradient in the view), B2B is the secondary one.
  *
- * El usuario no elige un carril antes de entender la propuesta; aquí, al final
- * del recorrido, elegir es exactamente lo que toca (§10).
+ * The user does not pick a lane before understanding the proposition; here, at
+ * the end of the journey, choosing is exactly what comes next (§10).
  */
 export function CloseCta({ locale }: { locale: Locale }) {
   return (

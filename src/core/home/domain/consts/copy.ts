@@ -3,14 +3,15 @@ import type { Localized } from '~/core/common/domain/i18n/config'
 /**
  * COPY · Home
  *
- * Narrativa de 7 beats. Ver docs/MASTER-PROJECT-DEFINITION.md §14 y §12.
+ * A 7-beat narrative. See docs/MASTER-PROJECT-DEFINITION.md §14 and §12.
  *
- * REGLA COMPOSITIVA: dos beats consecutivos NO comparten estructura.
- * La secuencia estructural es deliberada y está anotada en cada beat:
- *   1 full-bleed · 2 sticky scrub · 3 índice ancho · 4 columna estrecha
- *   5 full-bleed con texto encima · 6 columna estrecha editorial · 7 asimétrico
+ * COMPOSITION RULE: two consecutive beats do NOT share a structure.
+ * The structural sequence is deliberate and annotated on each beat:
+ *   1 full-bleed · 2 sticky scrub · 3 wide index · 4 narrow column
+ *   5 full-bleed with text over it · 6 narrow editorial column · 7 asymmetric
  *
- * La Home PRESENTA. Ninguna sección resuelve aquí lo que resuelve una interna.
+ * The home page PRESENTS. No section here resolves what an inner page
+ * resolves.
  */
 
 export const home = {
@@ -21,15 +22,16 @@ export const home = {
       pt: 'Voltop · A rede de carregamento que move a Colômbia',
     } satisfies Localized,
     description: {
-      /* Es el resultado de búsqueda. Abría con "Infraestructura", que nadie
-         teclea, y no nombraba ni las ciudades que sí se buscan ni la app. */
+      /* This is the search result. It used to open with "Infraestructura",
+         which nobody types, and it named neither the cities people do search
+         for nor the app. */
       es: 'Carga rápida para carros eléctricos en Bogotá y Medellín. Encuentra estación, actívala con la app y sigue tu día. También soluciones para empresas y flotas.',
       en: 'Fast charging for electric cars in Bogotá and Medellín. Find a station, start it from the app and get on with your day. Plus solutions for companies and fleets.',
       pt: 'Carregamento rápido para carros elétricos em Bogotá e Medellín. Encontre uma estação, ative pelo app e siga o seu dia. E também soluções para empresas e frotas.',
     } satisfies Localized,
   },
 
-  /* BEAT 1 · HERO — full-bleed sobre infraestructura real. Intensidad: Alta */
+  /* BEAT 1 · HERO — full-bleed over real infrastructure. Intensity: High */
   hero: {
     eyebrow: {
       es: 'Red de carga eléctrica · Colombia',
@@ -42,12 +44,12 @@ export const home = {
       pt: 'A rede que move a Colômbia',
     } satisfies Localized,
     lead: {
-      /* El párrafo más leído del sitio. Dejó de explicar QUIÉN construye la red
-         para decir QUÉ hace la persona que llega: cargar, encontrar, conectar,
-         empezar. El sujeto es el conductor de principio a fin, y los tres
-         verbos anticipan en una línea la secuencia que el beat 8 detalla.
-         Nombra la app porque es donde empieza la carga; no promete nada que
-         los Términos no reconozcan. */
+      /* The most-read paragraph on the site. It stopped explaining WHO builds
+         the network and now says WHAT the person arriving does: charge, find,
+         plug in, start. The subject is the driver from beginning to end, and
+         the three verbs foreshadow in one line the sequence beat 8 spells out.
+         It names the app because that is where charging begins; it promises
+         nothing the Terms do not recognise. */
       es: 'Carga tu vehículo eléctrico de forma rápida y sencilla. Encuentra una estación, conecta y empieza a cargar desde la app Voltop.',
       en: 'Charge your electric vehicle quickly and easily. Find a station, plug in and start charging from the Voltop app.',
       pt: 'Carregue seu veículo elétrico de forma rápida e simples. Encontre uma estação, conecte e comece a carregar pelo app Voltop.',
@@ -55,58 +57,61 @@ export const home = {
     scrollHint: { es: 'Desplázate', en: 'Scroll', pt: 'Deslize' } satisfies Localized,
   },
 
-  /* BEAT 2 · MEDELLÍN — sticky con scroll-scrub. Intensidad: MUY ALTA */
+  /* BEAT 2 · MEDELLÍN — sticky with scroll-scrub. Intensity: VERY HIGH */
   infrastructure: {
     eyebrow: {
       es: 'Estaciones Voltop',
       en: 'Voltop stations',
       pt: 'Estações Voltop',
     } satisfies Localized,
-    /* INTENCIÓN: resolver la objeción de fondo del conductor —"cargar me va a
-       robar tiempo y me va a dejar tirado en un sitio incómodo"— explicando
-       POR QUÉ elegimos dónde construir.
-       
-       Decía "No instalamos cargadores. Construimos lugares." Suena bien y no
-       dice nada: no comunica beneficio, no resuelve objeción y no indica qué
-       hacer después. "Construimos lugares" podría firmarlo una constructora,
-       una cadena hotelera o una inmobiliaria.
-       
-       La versión nueva sí tiene trabajo: nombra el beneficio real de nuestra
-       estrategia de ubicación —la carga ocurre dentro de tiempo que ya ibas a
-       gastar— sin prometer velocidad, que con 22–80 kW no podemos prometer. */
-    /* Dos frases y no una: la primera dice lo que hace el carro, la segunda lo
-       que hace la persona. El punto en medio es el que carga el mensaje —lo que
-       importa no es la carga, es que tu día no se detiene—.
-       
-       OJO, EL ESPACIO TRAS EL PRONOMBRE ES DURO (U+00A0). Sin él, el titular
-       partía como "Tu carro carga. Tú / sigues con tu día." en 1440, 1280,
-       1024, 768 y 390px: el pronombre quedaba huérfano al final de la primera
-       línea, separado de su verbo y justo después de un punto, que es el único
-       sitio donde el ojo espera parar.
-       
-       `text-balance` NO lo arregla y conviene dejarlo escrito: equilibra el
-       LARGO de las líneas, y "Tu carro carga. Tú" contra "sigues con tu día."
-       ya está perfectamente equilibrado —18 caracteres cada una—. El problema
-       no es métrico sino semántico, y un algoritmo de reparto no sabe dónde
-       acaba una frase. El espacio duro sí: ata el pronombre a su verbo y
-       empuja el corte al punto.
-       
-       Se aplica en los tres idiomas porque los tres tienen el mismo riesgo con
-       su pronombre. */
+    /* INTENT: resolve the driver's underlying objection —"charging is going
+       to steal my time and leave me stranded somewhere uncomfortable"— by
+       explaining WHY we choose where to build.
+
+       It used to say "No instalamos cargadores. Construimos lugares." It
+       sounds good and says nothing: it communicates no benefit, resolves no
+       objection and indicates nothing to do next. "We build places" could
+       have been signed by a construction firm, a hotel chain or a real-estate
+       company.
+
+       The new version does real work: it names the actual benefit of our
+       siting strategy —charging happens inside time you were going to spend
+       anyway— without promising speed, which at 22–80 kW we cannot promise. */
+    /* Two sentences and not one: the first says what the car does, the second
+       what the person does. The full stop in the middle is what loads the
+       message — what matters is not the charging, it is that your day does not
+       stop.
+
+       CAREFUL, THE SPACE AFTER THE PRONOUN IS NON-BREAKING (U+00A0). Without
+       it the headline broke as "Tu carro carga. Tú / sigues con tu día." at
+       1440, 1280, 1024, 768 and 390px: the pronoun was left orphaned at the
+       end of the first line, separated from its verb and right after a full
+       stop, which is the one place the eye expects to pause.
+
+       `text-balance` does NOT fix this, and that is worth writing down: it
+       balances the LENGTH of the lines, and "Tu carro carga. Tú" against
+       "sigues con tu día." is already perfectly balanced —18 characters
+       each—. The problem is not metric but semantic, and a distribution
+       algorithm does not know where a sentence ends. The non-breaking space
+       does: it ties the pronoun to its verb and pushes the break to the full
+       stop.
+
+       It is applied in all three languages because all three run the same
+       risk with their pronoun. */
     title: {
       es: 'Tu carro carga. Tú sigues con tu día.',
       en: 'Your car charges. You get on with your day.',
       pt: 'Seu carro carrega. Você segue com o seu dia.',
     } satisfies Localized,
     lead: {
-      /* Nunca promete tiempo de carga: con puntos de 22 kW no se sostiene, y
-         §19 no admite titulares que el producto no cumpla. Lo que sí es cierto
-         y sí diferencia es DÓNDE están las estaciones. */
+      /* It never promises charging time: with 22 kW points that does not
+         hold up, and §19 does not allow headlines the product cannot meet.
+         What is true and does differentiate is WHERE the stations are. */
       es: 'Ubicamos nuestras estaciones de carga en universidades, hoteles y centros comerciales para que puedas cargar tu vehículo eléctrico mientras continúas con tu día.',
       en: 'We put our charging stations in universities, hotels and shopping centres so you can charge your electric vehicle while you get on with your day.',
       pt: 'Instalamos nossas estações de carregamento em universidades, hotéis e shoppings para que você possa carregar seu veículo elétrico enquanto segue com o seu dia.',
     } satisfies Localized,
-    /** El video llega en la clave `estacionMedellin` del registro de media. */
+    /** The video arrives under the `estacionMedellin` key of the media registry. */
     caption: {
       es: 'Nueva estación · Medellín',
       en: 'New station · Medellín',
@@ -114,7 +119,7 @@ export const home = {
     } satisfies Localized,
   },
 
-  /* BEAT 3 · RED — índice ancho, lenguaje de ficha técnica. Intensidad: Media */
+  /* BEAT 3 · NETWORK — wide index, spec-sheet language. Intensity: Medium */
   network: {
     eyebrow: { es: 'Nuestra red', en: 'Our network', pt: 'Nossa rede' } satisfies Localized,
     title: {
@@ -123,17 +128,17 @@ export const home = {
       pt: 'Encontre onde carregar seu carro elétrico',
     } satisfies Localized,
     lead: {
-      /* Nombra las dos ciudades a mano, y eso hay que saberlo: es la ÚNICA
-         frase del sitio que se queda obsoleta al abrir una tercera. El resto
-         de esta sección se calcula desde el dataset. Cuando llegue la tercera
-         ciudad, esta línea es la que hay que tocar. */
+      /* It names the two cities by hand, and that is worth knowing: it is the
+         ONLY sentence on the site that goes stale when a third one opens. The
+         rest of this section is computed from the dataset. When the third city
+         arrives, this is the line to touch. */
       es: 'Consulta las estaciones de carga Voltop disponibles en Bogotá y Medellín.',
       en: 'See the Voltop charging stations available in Bogotá and Medellín.',
       pt: 'Veja as estações de carregamento Voltop disponíveis em Bogotá e Medellín.',
     } satisfies Localized,
-    /* Etiquetas de los agregados. Las CIFRAS no están aquí: se calculan desde
-       el dataset en `getNetworkSummary`, porque una cifra escrita a mano deja
-       de ser verdad en cuanto se añade una estación (§33). */
+    /* Labels for the aggregates. The FIGURES are not here: they are computed
+       from the dataset in `getNetworkSummary`, because a hand-written figure
+       stops being true the moment a station is added (§33). */
     stats: {
       points: {
         es: 'Puntos de carga',
@@ -144,9 +149,9 @@ export const home = {
       connectors: { es: 'Conectores', en: 'Connectors', pt: 'Conectores' } satisfies Localized,
     },
     live: { es: 'en operación', en: 'live', pt: 'em operação' } satisfies Localized,
-    /* Microcopy junto al CTA. No es una promesa con fecha —§19 no admite
-       titulares que el producto no cumpla— sino el estado de una red que
-       crece: dice que esto no está terminado sin comprometer un plazo. */
+    /* Microcopy beside the CTA. It is not a dated promise —§19 does not allow
+       headlines the product cannot meet— but the state of a growing network:
+       it says this is not finished without committing to a deadline. */
     moreCities: {
       es: 'Más ciudades en camino',
       en: 'More cities on the way',
@@ -154,7 +159,7 @@ export const home = {
     } satisfies Localized,
   },
 
-  /* BEAT 4 · EMPRESAS — columna estrecha, respiración. Intensidad: Media-baja */
+  /* BEAT 4 · BUSINESS — narrow column, breathing room. Intensity: Medium-low */
   business: {
     eyebrow: {
       es: 'Soluciones para empresas',
@@ -173,7 +178,7 @@ export const home = {
     } satisfies Localized,
   },
 
-  /* BEAT 5 · CASO REAL — full-bleed con la cita encima. Intensidad: Alta */
+  /* BEAT 5 · REAL CASE — full-bleed with the quote over it. Intensity: High */
   proof: {
     eyebrow: { es: 'Caso real', en: 'Real case', pt: 'Caso real' } satisfies Localized,
     title: {
@@ -183,34 +188,34 @@ export const home = {
     } satisfies Localized,
   },
 
-  /* BEAT 6 · VISIÓN — columna estrecha editorial. Intensidad: Media-alta */
+  /* BEAT 6 · VISION — narrow editorial column. Intensity: Medium-high */
   vision: {
     eyebrow: { es: 'Visión', en: 'Vision', pt: 'Visão' } satisfies Localized,
   },
 
-  /* BEAT 7 · CIERRE — asimétrico, dos audiencias. Intensidad: Alta */
+  /* BEAT 7 · CLOSE — asymmetric, two audiences. Intensity: High */
   close: {
-    /* El titular deja de describir la acción —"Conecta con la red"— y pasa a
-       PREGUNTAR. En un cierre con dos caminos, una pregunta es lo que hace que
-       el usuario se reconozca en uno de los dos; una afirmación deja la
-       elección implícita y hay que deducirla de las etiquetas. */
+    /* The headline stops describing the action —"Conecta con la red"— and
+       starts ASKING. In a close with two paths, a question is what makes the
+       user recognise themselves in one of them; a statement leaves the choice
+       implicit and it has to be inferred from the labels. */
     title: {
       es: '¿Cómo quieres conectarte con Voltop?',
       en: 'How do you want to connect with Voltop?',
       pt: 'Como você quer se conectar com a Voltop?',
     } satisfies Localized,
     b2c: {
-      /* Las dos etiquetas pasan a primera persona y al mismo largo: "conduzco
-         un carro eléctrico" / "represento una empresa". Antes una tenía dos
-         palabras y la otra seis, y en dos columnas simétricas eso se lee como
-         que una opción pesa más que la otra. */
+      /* Both labels move to the first person and to the same length: "I
+         drive an electric car" / "I represent a company". One used to have two
+         words and the other six, and in two symmetric columns that reads as
+         one option carrying more weight than the other. */
       label: {
         es: 'Conduzco un carro eléctrico',
         en: 'I drive an electric car',
         pt: 'Eu dirijo um carro elétrico',
       } satisfies Localized,
-      /* Nombra las dos ciudades, igual que el lead del beat 3: es la segunda y
-         última frase del sitio que se queda obsoleta al abrir una tercera. */
+      /* It names the two cities, like beat 3's lead: it is the second and
+         last sentence on the site that goes stale when a third one opens. */
       body: {
         es: 'Encuentra estaciones de carga Voltop en Bogotá y Medellín.',
         en: 'Find Voltop charging stations in Bogotá and Medellín.',
@@ -232,37 +237,38 @@ export const home = {
   },
 
   /**
-   * CÓMO SE CARGA · el beat del conductor.
+   * HOW CHARGING WORKS · the driver's beat.
    *
-   * Lo que promete está tomado de lo que los Términos y Condiciones declaran
-   * como servicios de la Plataforma (§4 del documento legal): consultar
-   * ubicación y disponibilidad, activar por QR, gestionar sesiones e historial.
-   * No se promete nada que el documento legal no reconozca — que es la forma
-   * más barata de cumplir §19 ("un titular es un contrato").
+   * What it promises is taken from what the Terms and Conditions declare as
+   * the Platform's services (§4 of the legal document): looking up location
+   * and availability, activating by QR, managing sessions and history. Nothing
+   * is promised that the legal document does not recognise — which is the
+   * cheapest way to comply with §19 ("a headline is a contract").
    *
-   * ── POR QUÉ DEJÓ DE SER "LA APP" ─────────────────────────────────────────
-   * El público mayoritario del sitio llega preguntando "¿cómo cargo?", y esa
-   * pregunta tenía UNA FRASE en todo el sitio, escondida dentro de una sección
-   * rotulada "La app". Rotular por el producto en vez de por la tarea deja el
-   * beat invisible justo para quien lo necesita.
+   * ── WHY IT STOPPED BEING "THE APP" ───────────────────────────────────────
+   * The site's largest audience arrives asking "how do I charge?", and that
+   * question had ONE SENTENCE on the whole site, hidden inside a section
+   * labelled "La app". Labelling by the product instead of by the task leaves
+   * the beat invisible to precisely the people who need it.
    *
-   * Los tres rasgos sueltos pasan a ser CUATRO PASOS en orden. Un rasgo
-   * responde "qué tiene"; un paso responde "qué me va a pasar", que es la
-   * pregunta real de quien nunca ha cargado un carro eléctrico.
+   * The three loose features become FOUR STEPS in order. A feature answers
+   * "what does it have"; a step answers "what is going to happen to me", which
+   * is the real question for someone who has never charged an electric car.
    *
-   * ── EL CUARTO PASO ES PAGAR ──────────────────────────────────────────────
-   * Confirmado por producto el 2026-09-03: el pago se hace desde la app con el
-   * método que el usuario tenga registrado. El paso lo dice así y no sigue.
+   * ── THE FOURTH STEP IS PAYING ────────────────────────────────────────────
+   * Confirmed by product on 2026-09-03: payment happens from the app with
+   * whatever method the user has on file. The step says exactly that and stops
+   * there.
    *
-   * Deliberadamente NO se explica la mecánica —medio de pago guardado,
-   * pasarela, preautorización, cuándo se cobra exactamente—. Quien lee esto
-   * está decidiendo si cargar es fácil, no auditando el flujo de cobro; cada
-   * frase de más ahí convierte una respuesta tranquilizadora en un contrato
-   * que hay que leer.
+   * The mechanics are deliberately NOT explained —stored payment method,
+   * gateway, pre-authorisation, exactly when the charge is taken—. Whoever
+   * reads this is deciding whether charging is easy, not auditing the billing
+   * flow; every extra sentence there turns a reassuring answer into a contract
+   * that has to be read.
    *
-   * La TARIFA sí sigue sin cifra: lo único confirmado es que se ve en la app
-   * antes de iniciar la carga, que es lo que dice el paso 3 y lo que ya decía
-   * la ficha de estación. Ni cifras ni rangos.
+   * The RATE still carries no figure: the only confirmed fact is that you see
+   * it in the app before starting the charge, which is what step 3 says and
+   * what the station page already said. No figures, no ranges.
    */
   app: {
     eyebrow: { es: 'Cómo cargar', en: 'How to charge', pt: 'Como carregar' } satisfies Localized,
@@ -277,8 +283,8 @@ export const home = {
       pt: 'Encontre uma estação Voltop, escaneie o código QR e comece a carregar pelo app.',
     } satisfies Localized,
     /**
-     * Cuatro pasos, en el orden en que ocurren. El rótulo es un verbo: lo que
-     * hace el conductor, no lo que hace la app.
+     * Four steps, in the order they happen. The label is a verb: what the
+     * driver does, not what the app does.
      */
     steps: [
       {
@@ -326,7 +332,7 @@ export const home = {
     } satisfies Localized,
   },
 
-  /** Componente flotante de descarga. */
+  /** Floating download component. */
   appFloating: {
     title: { es: 'Descarga la app Voltop', en: 'Get the Voltop app', pt: 'Baixe o app Voltop' },
     body: {
@@ -334,14 +340,15 @@ export const home = {
       en: 'Find stations and start your charge from the app.',
       pt: 'Encontre estações e inicie seu carregamento pelo app.',
     },
-    /* La barra móvil dice lo mismo MÁS CORTO en lugar de recortar el texto de
-       escritorio con puntos suspensivos.
-       
-       El título también tiene su versión: en la barra compiten el icono, dos
-       líneas de texto, el botón y el cerrar, y el hueco que queda para el
-       texto es de unos 180px. "Descarga la app Voltop" se cortaba ahí — y con
-       el icono al lado la palabra "Voltop" ya es redundante: el logo la dice.
-       Es la misma razón por la que el lockup del header no repite la marca. */
+    /* The mobile bar says the same thing SHORTER instead of truncating the
+       desktop text with an ellipsis.
+
+       The title has its own version too: in the bar the icon, two lines of
+       text, the button and the close control all compete, and the gap left for
+       text is around 180px. "Descarga la app Voltop" was being cut off there —
+       and with the icon beside it the word "Voltop" is already redundant: the
+       logo says it. It is the same reason the header lockup does not repeat
+       the brand name. */
     titleMobile: { es: 'Descarga la app', en: 'Get the app', pt: 'Baixe o app' },
     bodyMobile: {
       es: 'Encuentra estaciones e inicia tu carga',

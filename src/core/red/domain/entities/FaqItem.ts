@@ -5,13 +5,13 @@ export type FaqItem = {
   question: Localized
   answer: Localized
   /**
-   * Salidas de la respuesta. Es una LISTA porque una pregunta puede tener más
-   * de un camino legítimo —"necesito ayuda" se resuelve por WhatsApp o por
-   * correo, y elegir por el usuario sería peor— pero se mantienen pocas: una
-   * respuesta con cuatro salidas no responde, reparte.
+   * Ways out of the answer. It is a LIST because one question can have more
+   * than one legitimate path —"I need help" is resolved over WhatsApp or over
+   * email, and choosing on the user's behalf would be worse— but they are kept
+   * few: an answer with four ways out does not answer, it redistributes.
    *
-   * `external` cambia dos cosas: el href se usa tal cual (sin prefijo de
-   * idioma) y el enlace se abre en pestaña nueva anunciándolo (WCAG 3.2.5).
+   * `external` changes two things: the href is used as-is (no locale prefix)
+   * and the link opens in a new tab, announcing that it does (WCAG 3.2.5).
    */
   links?: { label: Localized; href: string; external?: boolean }[]
 }

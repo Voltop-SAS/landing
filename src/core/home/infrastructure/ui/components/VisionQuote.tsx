@@ -10,31 +10,31 @@ import { Button } from '@ui/common/components/ui/Button'
 import { Reveal } from '@ui/common/components/ui/Reveal'
 
 /**
- * BEAT 6 · VISIÓN — Intensidad: Media-alta · Registro: Silencio · Espacio: loose
- * ESTRUCTURA: dos columnas —retrato del fundador y sus palabras—. Invierte la
- * relación del beat 5: allí el texto va SOBRE el material y la foto acredita;
- * aquí la persona y el texto conviven al mismo nivel.
+ * BEAT 6 · VISION — Intensity: Medium-high · Register: Silence · Space: loose
+ * STRUCTURE: two columns —the founder's portrait and his words—. It inverts
+ * beat 5's relationship: there the text goes OVER the material and the photo
+ * credits it; here the person and the text sit at the same level.
  *
- * ── LA PELÍCULA SALIÓ DE AQUÍ ─────────────────────────────────────────────
- * Este beat cerraba con `filmVoltop` en una franja ancha de 16/9, y era el
- * segundo momento signature de la Home. Se retiró el 2026-09-04 por decisión
- * de producto, y de paso resuelve algo que estaba anotado como pendiente: ese
- * archivo es EL MISMO que la portada de la entrada de Wake, así que la misma
- * película se reproducía en dos sitios del sitio. Ahora vive solo en el
- * registro, que es donde tiene contexto.
+ * ── THE FILM LEFT THIS BEAT ───────────────────────────────────────────────
+ * This beat used to close with `filmVoltop` in a wide 16/9 band, and it was
+ * the home page's second signature moment. It was withdrawn on 2026-09-04 by
+ * a product decision, and in passing that resolves something noted as pending:
+ * that file is THE SAME one as the cover of the Wake entry, so the same film
+ * was playing in two places on the site. It now lives only in the log, which
+ * is where it has context.
  *
- * Con ella se fue `FilmStage`, el componente que le daba el encuadre al entrar
- * y atenuaba la página al reproducir. Está en el historial de git: si la
- * película vuelve, se recupera de ahí en lugar de dejar un componente sin uso
- * esperando por si acaso.
+ * `FilmStage` went with it — the component that gave the film its reveal on
+ * entry and dimmed the page during playback. It is in the git history: if the
+ * film comes back, it gets recovered from there rather than leaving an unused
+ * component waiting just in case.
  *
- * La Home queda con UN momento signature —el panel fijado del beat 2— en lugar
- * de dos. Conviene saberlo: la curva de intensidad que se diseñó tenía dos
- * picos separados por cinco beats, y ahora el segundo lo sostiene este beat
- * con el retrato, que es de otro orden.
+ * The home page is left with ONE signature moment —beat 2's pinned panel—
+ * instead of two. That is worth knowing: the intensity curve as designed had
+ * two peaks five beats apart, and the second is now carried by this beat with
+ * the portrait, which is of a different order.
  *
- * Era el momento mejor resuelto del prototipo anterior: se conserva su registro
- * editorial y se le da el aire que no tenía.
+ * It was the best-resolved moment of the previous prototype: its editorial
+ * register is kept and it is given the air it lacked.
  */
 export function VisionQuote({ locale }: { locale: Locale }) {
   const founder = getFounder()
@@ -46,32 +46,33 @@ export function VisionQuote({ locale }: { locale: Locale }) {
       space="loose"
       ariaLabelledby="vision-title"
     >
-      {/* ── DOS COLUMNAS: LA PERSONA Y SUS PALABRAS ──────────────────────
-          Este beat era una columna estrecha con el retrato reducido a una
-          miniatura de 96px en la fila de atribución. Ahora el retrato ocupa
-          media columna en vertical, y el cambio no es de tamaño sino de
-          función: en el beat 5 la foto ACREDITA un testimonio —quién lo dijo—
-          mientras aquí la persona ES el tema. Es la visión del fundador en
-          primera persona; su cara pesa tanto como el texto.
+      {/* ── TWO COLUMNS: THE PERSON AND HIS WORDS ────────────────────────
+          This beat used to be a narrow column with the portrait reduced to a
+          96px thumbnail in the attribution row. The portrait now occupies half
+          a column vertically, and the change is not one of size but of
+          function: in beat 5 the photo CREDITS a testimonial —who said it—
+          while here the person IS the subject. It is the founder's vision in
+          the first person; his face carries as much weight as the text.
 
-          Las dos secciones de cita siguen perteneciendo al mismo sistema: el
-          mismo marco, el mismo radio estructural, el mismo hairline. Lo que
-          las separa es la escala, y la separa a propósito.
+          The two quote sections still belong to the same system: the same
+          frame, the same structural radius, the same hairline. What separates
+          them is scale, and it separates them on purpose.
 
-          `items-center` alinea el texto contra el centro del retrato en lugar
-          de colgar los dos de arriba: con alturas distintas es lo único que
-          los lee como una unidad. */}
+          `items-center` aligns the text against the centre of the portrait
+          rather than hanging both from the top: with differing heights that is
+          the only thing that reads them as one unit. */}
       <Container>
         <div className="grid items-center gap-10 lg:grid-cols-[2fr_3fr] lg:gap-14">
-          {/* EL RETRATO. Mismo lenguaje de superficie que las tarjetas de
-              ciudad. Pendiente de entrega: hasta que llegue es una superficie
-              callada —sin rótulo, como el resto de los huecos de este tamaño—
-              y el archivo entra con `object-cover` sin tocar el layout. */}
-          {/* Acotado al apilarse. Sin tope, a 768px la columna única le daba
-              los 702px de ancho y el 2/3 lo convertía en 1053px de alto: un
-              hueco de mil píxeles que hacía crecer la sección a 2060. Con
-              `max-w-sm` queda en 384×576 y centrado, que es una presencia
-              fuerte sin ser un muro. Desde `lg` manda la rejilla. */}
+          {/* THE PORTRAIT. Same surface language as the city cards. Not
+              delivered yet: until it arrives it is a quiet surface —with no
+              label, like the rest of the gaps this size— and the file drops in
+              with `object-cover` without touching the layout. */}
+          {/* Capped when it stacks. With no cap, at 768px the single column
+              gave it the full 702px of width and the 2/3 ratio turned that
+              into 1053px of height: a thousand-pixel gap that grew the section
+              to 2060. With `max-w-sm` it settles at 384×576 and centred, which
+              is a strong presence without being a wall. From `lg` up the grid
+              takes over. */}
           <div className="relative mx-auto aspect-[2/3] w-full max-w-sm overflow-hidden rounded-(--radius-structural) border border-line bg-surface-1 lg:mx-0 lg:max-w-none">
             {media.retratoFundador.src && (
               <Image
@@ -87,25 +88,25 @@ export function VisionQuote({ locale }: { locale: Locale }) {
           <Reveal>
             <Eyebrow tone="brand">{t(home.vision.eyebrow, locale)}</Eyebrow>
 
-            {/* Nombre y cargo ANTES de la cita. Con el retrato al lado, quién
-              habla ya está dicho visualmente; ponerlo en texto aquí lo nombra
-              antes de que empiecen 280 caracteres en primera persona, que es
-              cuando sirve saberlo. En el beat 5 va después, porque allí el
-              testimonio se acredita, no se presenta. */}
+            {/* Name and role BEFORE the quote. With the portrait alongside,
+              who is speaking is already said visually; putting it in text here
+              names him before 280 characters in the first person begin, which
+              is when knowing it is useful. In beat 5 it goes after, because
+              there the testimonial is credited, not introduced. */}
             <p className="mt-5 text-body-s">
               <span className="font-medium text-ink">{founder.name}</span>
               <span className="text-ink-3"> · {t(founder.role, locale)}</span>
             </p>
 
-            {/* ── LA CITA, A ESCALA ──────────────────────────────────────────
-              Estaba en `display-m md:display-l`: 52px a 1440 para casi 300
-              caracteres, que son diez líneas de tipografía de titular. Con ese
-              cuerpo la cita dejaba de leerse y pasaba a mirarse.
+            {/* ── THE QUOTE, AT SCALE ────────────────────────────────────────
+              It was set in `display-m md:display-l`: 52px at 1440 for almost
+              300 characters, which is ten lines of headline type. At that size
+              the quote stopped being read and started being looked at.
 
-              Baja a `display-s md:display-m` (24 → 36px). El texto largo pide
-              menos cuerpo, no más: la presencia de este beat la da la
-              composición —columna estrecha, retrato, la película debajo— y no
-              el tamaño de la letra. */}
+              It drops to `display-s md:display-m` (24 → 36px). Long text asks
+              for a smaller size, not a larger one: this beat's presence comes
+              from the composition —narrow column, portrait, the film below—
+              and not from the size of the letters. */}
             <blockquote
               id="vision-title"
               className="mt-7 font-display text-display-s font-medium text-balance text-ink md:text-display-m"

@@ -5,27 +5,28 @@ import { formatDate } from '@ui/common/lib/dates'
 import { Section, Container } from '@ui/common/components/ui/LayoutPrimitives'
 
 /**
- * DOCUMENTO LEGAL
- * Ver docs/MASTER-PROJECT-DEFINITION.md §38.
+ * LEGAL DOCUMENT
+ * See docs/MASTER-PROJECT-DEFINITION.md §38.
  *
- * Un solo componente para términos y política: la diferencia entre los dos es
- * el contenido, no la forma, y tener dos plantillas casi iguales garantiza que
- * un día diverjan.
+ * A single component for both the terms and the policy: the difference
+ * between the two is content, not form, and keeping two near-identical
+ * templates guarantees they diverge one day.
  *
- * ── EL ÍNDICE NO ES DECORACIÓN ───────────────────────────────────────────
- * Los términos tienen 38 secciones. Sin índice, encontrar "cancelación" exige
- * recorrer el documento entero con la rueda del ratón; §16 dice que ningún
- * control es decorativo, y el corolario es que un documento así SÍ necesita
- * uno. En pantallas anchas queda fijo a la izquierda mientras se lee; en
- * estrechas va arriba, plegado dentro de un `<details>` nativo —sin JS, sin
- * ARIA a medias— para no empujar el texto media pantalla hacia abajo.
+ * ── THE TABLE OF CONTENTS IS NOT DECORATION ──────────────────────────────
+ * The terms have 38 sections. Without a table of contents, finding
+ * "cancelación" means scrolling the whole document with the mouse wheel; §16
+ * says no control is decorative, and the corollary is that a document like
+ * this DOES need one. On wide screens it stays pinned on the left while you
+ * read; on narrow ones it goes on top, folded inside a native `<details>`
+ * —no JavaScript, no half-finished ARIA— so it does not push the text half a
+ * screen down.
  *
- * ── LA MEDIDA MANDA SOBRE EL ANCHO ───────────────────────────────────────
- * El cuerpo se limita por medida de línea, no por el ancho del contenedor.
- * Usa `measure` (~62 caracteres) y no `measure-narrow` (~48): en un documento
- * de 38 secciones, la columna estrecha multiplica el alto y obliga a un scroll
- * interminable. 62 sigue dentro del rango de §22 y es lo cómodo para una
- * lectura de minutos.
+ * ── MEASURE WINS OVER WIDTH ──────────────────────────────────────────────
+ * The body is constrained by line measure, not by the container's width. It
+ * uses `measure` (~62 characters) and not `measure-narrow` (~48): in a
+ * 38-section document the narrow column multiplies the height and forces an
+ * endless scroll. 62 is still within §22's range and is the comfortable
+ * choice for a read that lasts minutes.
  */
 export function LegalDocument({
   doc,
@@ -36,7 +37,7 @@ export function LegalDocument({
   titulo: string
   locale: Locale
 }) {
-  /* El aviso solo aplica donde el documento NO está en el idioma de la página. */
+  /* The notice only applies where the document is NOT in the page's language. */
   const languageNotice = locale === defaultLocale ? null : t(legalDoc.spanishOnly, locale)
 
   const indice = (
@@ -53,8 +54,8 @@ export function LegalDocument({
             >
               {String(i + 1).padStart(2, '0')}
             </span>
-            {/* El heading ya trae su número ("1. Quiénes somos"); se retira
-                para no leer "01 1. Quiénes somos". */}
+            {/* The heading already carries its number ("1. Quiénes somos");
+                it is stripped so it does not read "01 1. Quiénes somos". */}
             <span>{s.heading.replace(/^\d+\.\s*/, '')}</span>
           </a>
         </li>
@@ -67,9 +68,9 @@ export function LegalDocument({
       space="none"
       className="pb-(--spacing-section) pt-32 md:pt-40"
     >
-      {/* `content` y no `wide`: el cuerpo está limitado por la medida de
-          línea, así que en un contenedor ancho el texto no crece —solo aparece
-          un tercio de pantalla vacío a la derecha del índice. */}
+      {/* `content` and not `wide`: the body is constrained by line measure,
+          so in a wide container the text does not grow — all that appears is a
+          third of a screen of emptiness to the right of the contents. */}
       <Container>
         <header className="border-b border-line pb-10">
           <p className="font-mono text-mono uppercase tracking-[0.14em] text-ink-3">
@@ -78,19 +79,19 @@ export function LegalDocument({
           <h1 className="mt-5 max-w-[18ch] font-display text-display-xl font-semibold text-balance text-ink">
             {titulo}
           </h1>
-          {/* La fecha se FORMATEA por idioma, como el resto del sitio. Antes
-              se pintaba la cadena literal del documento y se leía "Last
-              updated: 29 de mayo de 2026" en inglés. El texto legal se queda
-              en español a propósito; su metadato, no. */}
+          {/* The date is FORMATTED per language, like the rest of the site.
+              It used to render the document's literal string and read "Last
+              updated: 29 de mayo de 2026" in English. The legal text stays in
+              Spanish on purpose; its metadata does not. */}
           <p className="mt-6 font-mono text-mono text-ink-3">
             {t(legalDoc.updatedLabel, locale)}:{' '}
             <time dateTime={doc.actualizadoISO}>{formatDate(doc.actualizadoISO, locale)}</time>
           </p>
 
           {languageNotice ? (
-            /* `lang` en el aviso y `lang="es"` en el cuerpo: sin eso un lector
-               de pantalla leería el documento entero con la fonética del
-               idioma equivocado (§23). */
+            /* `lang` on the notice and `lang="es"` on the body: without that
+               a screen reader would read the whole document with the wrong
+               language's phonetics (§23). */
             <p
               lang={locale}
               className="measure mt-6 border-l-2 border-warn/50 py-1 pl-5 text-body-s text-ink-2"
@@ -101,7 +102,7 @@ export function LegalDocument({
         </header>
 
         <div className="lg:flex lg:items-start lg:gap-16">
-          {/* Índice — plegado en estrecho */}
+          {/* Table of contents — folded on narrow screens */}
           <details className="group mt-8 border-b border-line pb-6 lg:hidden">
             <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between font-display text-display-s font-semibold text-ink">
               {t(legalDoc.tocTitle, locale)}
@@ -121,7 +122,7 @@ export function LegalDocument({
             </nav>
           </details>
 
-          {/* Índice — fijo en ancho */}
+          {/* Table of contents — pinned on wide screens */}
           <nav
             aria-label={t(legalDoc.tocTitle, locale)}
             className="hidden lg:sticky lg:top-28 lg:block lg:max-h-[calc(100dvh-9rem)] lg:w-72 lg:shrink-0 lg:overflow-y-auto lg:pt-12"
@@ -140,8 +141,8 @@ export function LegalDocument({
               <section
                 key={s.id}
                 id={s.id}
-                /* `scroll-mt`: sin esto el header fijo tapa el título al que
-                   acabas de saltar desde el índice. */
+                /* `scroll-mt`: without this the fixed header covers the very
+                   heading you just jumped to from the contents. */
                 className="scroll-mt-28 border-t border-line py-9 first:border-t-0 first:pt-0"
               >
                 <h2 className="font-display text-display-m font-semibold text-ink">{s.heading}</h2>

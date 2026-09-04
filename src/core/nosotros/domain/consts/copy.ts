@@ -1,14 +1,14 @@
 import type { Localized } from '~/core/common/domain/i18n/config'
 
 /**
- * COPY · Nosotros
+ * COPY · About
  *
- * Objetivo: credibilidad. Historia, escala, infraestructura, liderazgo, impacto.
- * Es la página donde vive el detalle que la Home solo insinúa (§14).
+ * Goal: credibility. History, scale, infrastructure, leadership, impact. It is
+ * the page where the detail the home page only hints at lives (§14).
  *
- * Nota de contenido: los hitos de la historia describen la naturaleza del
- * recorrido sin fechas ni cifras inventadas. Se completan cuando el negocio
- * entregue los datos (decisión abierta O6).
+ * Content note: the history milestones describe the nature of the journey
+ * without invented dates or figures. They get completed when the business
+ * delivers the data (open decision O6).
  */
 
 export const nosotros = {
@@ -29,9 +29,9 @@ export const nosotros = {
       pt: 'Nenhum país se eletrifica sem onde carregar.',
     } satisfies Localized,
     lead: {
-      /* La idea del antiguo lead subió al titular, que es donde se recuerda.
-         El lead queda libre para introducir la capa tecnológica en la página
-         donde se construye credibilidad. */
+      /* The idea from the old lead moved up into the headline, which is where
+         things get remembered. That frees the lead to introduce the technology
+         layer on the page where credibility is built. */
       es: 'Voltop construye y opera esa parte: una red de carga rápida en las ciudades del país, con la tecnología que la hace simple de usar.',
       en: "Voltop builds and runs that part: a fast-charging network across the country's cities, with the technology that makes it simple to use.",
       pt: 'A Voltop constrói e opera essa parte: uma rede de carregamento rápido nas cidades do país, com a tecnologia que a torna simples de usar.',
@@ -130,14 +130,14 @@ export const nosotros = {
       pt: 'Uma rede que cresce junto com o país',
     } satisfies Localized,
     lead: {
-      /* Antes anunciaba cifras y justo debajo aparecía "Cifras en validación:
-         preferimos no publicar una imprecisa". La página se contradecía a sí
-         misma en pantalla; ahora la contención ES el mensaje. */
+      /* This used to announce figures, and right below it came "Cifras en
+         validación: preferimos no publicar una imprecisa". The page
+         contradicted itself on screen; now the restraint IS the message. */
       es: 'Medimos el avance de la red con datos de operación, no con estimaciones.',
       en: "We measure the network's progress with operational data, not estimates.",
       pt: 'Medimos o avanço da rede com dados de operação, não com estimativas.',
     } satisfies Localized,
-    /** Estado honesto mientras las cifras no estén validadas (§33). */
+    /** Honest state while the figures are not validated (§33). */
     pendingTitle: {
       es: 'Cifras en validación',
       en: 'Figures under validation',
@@ -161,7 +161,7 @@ export const nosotros = {
 
   trust: {
     eyebrow: { es: 'Confianza', en: 'Trust', pt: 'Confiança' } satisfies Localized,
-    /* El portugués anterior ("O que dizem quem…") era agramatical. */
+    /* The previous Portuguese ("O que dizem quem…") was ungrammatical. */
     title: {
       es: 'Lo dicen ellos, no nosotros.',
       en: 'Their words, not ours.',

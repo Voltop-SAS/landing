@@ -5,23 +5,23 @@ export type BusinessSegment = {
   label: Localized
   headline: Localized
   proposition: Localized
-  /** Capacidades CONFIRMADAS. Es lo único que se pinta. */
+  /** CONFIRMED capabilities. These are the only ones rendered. */
   benefits: Localized[]
   /**
-   * Capacidades REDACTADAS PERO NO CONFIRMADAS. No se renderizan.
+   * Capabilities that are WRITTEN BUT NOT CONFIRMED. They are not rendered.
    *
-   * §33 y §19 prohíben publicar como capacidad actual algo que el producto no
-   * pueda respaldar hoy. Estas estaban en `benefits` —es decir, publicadas
-   * bajo un rótulo que dice "Qué incluye"— y no constan en la única
-   * documentación de producto que existe: los Términos y Condiciones, cuyo §4
-   * enumera los servicios de la Plataforma (consultar ubicación y
-   * disponibilidad, activar por QR, gestionar sesiones e historial, soporte).
+   * §33 and §19 forbid publishing as a current capability anything the product
+   * cannot back up today. These used to sit in `benefits` —that is, published
+   * under a heading that says "What's included"— and they do not appear in the
+   * only product documentation that exists: the Terms and Conditions, whose §4
+   * enumerates the Platform's services (look up location and availability,
+   * activate by QR, manage sessions and history, support).
    *
-   * Se conservan aquí, no se borran: la redacción es buena y el día que
-   * producto confirme que existen, se mueven a `benefits` y aparecen. Lo que
-   * no puede seguir es presentarlas como un hecho.
+   * They are kept here rather than deleted: the wording is good, and the day
+   * product confirms they exist they move to `benefits` and show up. What
+   * cannot continue is presenting them as fact.
    */
-  benefitsPorConfirmar?: Localized[]
-  /** Referencia a un caso de éxito que sirve de prueba para este segmento. */
+  benefitsUnconfirmed?: Localized[]
+  /** Reference to a case study that serves as proof for this segment. */
   proofRef?: string
 }

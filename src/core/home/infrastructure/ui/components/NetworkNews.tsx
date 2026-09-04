@@ -9,27 +9,30 @@ import { Button } from '@ui/common/components/ui/Button'
 import { Reveal } from '@ui/common/components/ui/Reveal'
 
 /**
- * BEAT · LO ÚLTIMO DE LA RED
+ * BEAT · LATEST FROM THE NETWORK
  *
- * ── POR QUÉ EXISTE EN LA HOME ─────────────────────────────────────────────
- * La entrada del menú sirve a quien YA viene buscando novedades, que es un
- * público pequeño. Este bloque se lo pone delante a quien no venía buscando y
- * debería verlo: un inversionista que aterriza aquí y ve tres hechos fechados
- * y recientes ya respondió su pregunta —¿esta compañía se mueve?— sin hacer
- * un solo clic. De los dos puntos de entrada, este hace el trabajo pesado.
+ * ── WHY IT EXISTS ON THE HOME PAGE ────────────────────────────────────────
+ * The menu entry serves whoever is ALREADY looking for news, which is a small
+ * audience. This block puts it in front of whoever was not looking for it and
+ * ought to see it: an investor who lands here and sees three recent, dated
+ * facts has already answered their question —is this company moving?— without
+ * a single click. Of the two entry points, this one does the heavy lifting.
  *
- * ── POSICIÓN Y RITMO ──────────────────────────────────────────────────────
- * Va entre el caso (beat de intensidad alta, full-bleed con texto encima) y la
- * cita de visión. Es deliberadamente el beat MÁS BAJO de la curva: tres filas
- * densas y nada más. Funciona como respiro antes del cierre, y su estructura
- * —registro cronológico— no coincide con la de ninguno de sus dos vecinos.
+ * ── POSITION AND RHYTHM ───────────────────────────────────────────────────
+ * It sits between the case study (a high-intensity beat, full-bleed with text
+ * over it) and the vision quote. It is deliberately the LOWEST beat on the
+ * curve: three dense rows and nothing else. It works as a breather before the
+ * close, and its structure —a chronological log— matches neither of its two
+ * neighbours.
  *
- * No repite el índice denso del beat 3 por ser consecutivo a él: no lo es.
+ * It does not repeat beat 3's dense index by being consecutive to it: it is
+ * not.
  *
- * ── LO QUE NO HACE ────────────────────────────────────────────────────────
- * No resuelve aquí lo que resuelve el destino. Tres entradas, sin resumen ni
- * media: la Home presenta, las internas profundizan. Y sin entradas no se
- * renderiza, en lugar de dejar un titular sobre un hueco.
+ * ── WHAT IT DOES NOT DO ───────────────────────────────────────────────────
+ * It does not resolve here what the destination resolves. Three entries, with
+ * no summary and no media: the home page presents, the inner pages go deep.
+ * And with no entries it does not render, rather than leaving a headline over
+ * a gap.
  */
 export async function NetworkNews({ locale }: { locale: Locale }) {
   const posts = await getLatestPosts(3)

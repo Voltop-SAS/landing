@@ -6,16 +6,16 @@ import { Button } from '@ui/common/components/ui/Button'
 import { track } from '~/core/common/infrastructure/analytics'
 
 /**
- * "CÓMO LLEGAR" · isla de cliente mínima
+ * "GET DIRECTIONS" · minimal client island
  *
- * Existe por una sola razón: `estacion_como_llegar` es la CONVERSIÓN FINAL del
- * journey B2C y estaba declarada en el plan de medición sin emitirse nunca
- * (§31). La ficha de estación es un Server Component, así que el único modo de
- * instrumentar el clic es aislarlo aquí.
+ * It exists for one reason only: `estacion_como_llegar` is the FINAL
+ * CONVERSION of the B2C journey and it was declared in the measurement plan
+ * without ever being emitted (§31). The station page is a Server Component, so
+ * the only way to instrument the click is to isolate it here.
  *
- * Se queda deliberadamente pequeño: solo el evento. El aviso de enlace externo
- * y el icono de salida los resuelve `Button` con `external` + `locale`, para que
- * todo enlace que salga del sitio se comporte igual (WCAG 3.2.5).
+ * It stays deliberately small: just the event. The external-link warning and
+ * the exit icon are handled by `Button` through `external` + `locale`, so that
+ * every link leaving the site behaves the same way (WCAG 3.2.5).
  */
 export function DirectionsButton({
   locale,

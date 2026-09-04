@@ -22,68 +22,72 @@ import { track } from '~/core/common/infrastructure/analytics'
 import { cn } from '@ui/common/lib/cn'
 
 /**
- * BUSCADOR DE ESTACIONES · isla de cliente
- * Ver docs/MASTER-PROJECT-DEFINITION.md §14.
+ * STATION FINDER · client island
+ * See docs/MASTER-PROJECT-DEFINITION.md §14.
  *
- * /red es una SUPERFICIE DE PRODUCTO: su trabajo es encontrar una estación.
- * Los datos llegan como props desde el Server Component; la isla es solo la
- * interacción, no la obtención de datos.
+ * /red is a PRODUCT SURFACE: its job is to find a station. The data arrives as
+ * props from the Server Component; the island is only the interaction, not the
+ * data fetching.
  *
- * ── QUÉ CAMBIÓ EN ESTA REVISIÓN ───────────────────────────────────────────
+ * ── WHAT CHANGED IN THIS REVISION ─────────────────────────────────────────
  *
- * 1. LOS FILTROS SE COLAPSAN EN MÓVIL. Antes había que pasar título, lead,
- *    etiqueta, campo y cuatro grupos de chips —que envuelven a dos filas cada
- *    uno— para llegar al primer resultado: unos 700px de scroll en la tarea
- *    central del journey B2C. Ahora el resultado está a menos de un scroll y
- *    los filtros se abren cuando se quieren, con el recuento de activos a la
- *    vista para que colapsarlos no esconda estado.
+ * 1. THE FILTERS COLLAPSE ON MOBILE. You used to have to scroll past title,
+ *    lead, label, field and four chip groups —which wrap onto two rows each—
+ *    to reach the first result: roughly 700px of scrolling on the central task
+ *    of the B2C journey. The result is now less than one scroll away and the
+ *    filters open when you want them, with the active count in view so that
+ *    collapsing them does not hide state.
  *
- * 2. HAY ORDEN. No existía. Nadie busca "Grand Hyatt": se busca la más
- *    potente, la que está operativa, o la más cercana. Los tres primeros
- *    criterios el dataset los puede responder hoy.
+ * 2. THERE IS SORTING. There was none. Nobody searches for "Grand Hyatt": they
+ *    look for the most powerful one, the one that is live, or the closest one.
+ *    The dataset can answer the first three criteria today.
  *
- * 3. CERCANÍA ACTIVADA POR DATOS. Todas las estaciones tienen `geo: null`, así
- *    que el control de ubicación y la columna de distancia NO SE RENDERIZAN.
- *    No es código muerto: es el patrón del proyecto (`MetricRow` no pinta
- *    métricas sin validar, la franja de partners se omite sin logos) y se
- *    enciende solo cuando el dataset traiga coordenadas.
+ * 3. PROXIMITY IS ACTIVATED BY DATA. Every station has `geo: null`, so the
+ *    location control and the distance column ARE NOT RENDERED. It is not dead
+ *    code: it is the project's pattern (`MetricRow` does not render
+ *    unvalidated metrics, the partner strip is omitted when there are no
+ *    logos) and it switches itself on when the dataset carries coordinates.
  *
- * 4. EL ESTADO VIVE EN LA URL. Un resultado filtrado se puede compartir. Se usa
- *    `history.replaceState` en lugar de `useSearchParams` a propósito: esta
- *    ruta es estática y `useSearchParams` la volvería dinámica.
+ * 4. THE STATE LIVES IN THE URL. A filtered result can be shared.
+ *    `history.replaceState` is used instead of `useSearchParams` on purpose:
+ *    this route is static and `useSearchParams` would make it dynamic.
  *
- * 5. EL FILTRADO YA NO SE DUPLICA. `filterStations` existía en la capa de datos
- *    y este componente reimplementaba la misma lógica, con su propia copia de
- *    `normalize`. Era justo la duplicación que la capa existe para evitar.
+ * 5. THE FILTERING IS NO LONGER DUPLICATED. `filterStations` already existed
+ *    in the data layer and this component reimplemented the same logic, with
+ *    its own copy of `normalize`. That was exactly the duplication the layer
+ *    exists to prevent.
  * ──────────────────────────────────────────────────────────────────────────
  */
 
 type Props = { locale: Locale; stations: Station[]; cities: City[] }
 
 /**
- * ESCALONES DEL FILTRO DE POTENCIA — derivados del dataset, no escritos.
+ * POWER FILTER STEPS — derived from the dataset, not written by hand.
  *
- * Estaban fijos en `[0, 50, 100, 150]`. Con las potencias reales de la red
- * (22–80 kW), los escalones de 100+ y 150+ **no devolvían ninguna estación**:
- * dos de los cuatro controles del filtro estaban garantizados a dar cero
- * resultados, y §16 dice que ningún control es decorativo — si parece un
- * filtro, filtra.
+ * They were hard-coded to `[0, 50, 100, 150]`. With the network's real power
+ * ratings (22–80 kW), the 100+ and 150+ steps **returned no stations at all**:
+ * two of the filter's four controls were guaranteed to yield zero results, and
+ * §16 says no control is decorative — if it looks like a filter, it filters.
  *
- * Derivarlos evita que vuelva a pasar. Se toman los máximos distintos de las
- * estaciones, se ordenan y se antepone el 0 ("todas"). Añadir una estación de
- * 150 kW hace aparecer ese escalón sola; retirarla lo quita.
+ * Deriving them stops that from happening again. We take the stations'
+ * distinct maximums, sort them and prepend 0 ("all"). Adding a 150 kW station
+ * makes that step appear on its own; removing it takes the step away.
  */
 function computeSteps(stations: Station[]): number[] {
   const maxPowers = [...new Set(stations.map((s) => s.powerKw.max))].sort((a, b) => a - b)
-  /* Si todas las estaciones tuvieran la misma potencia, el filtro no separaría
-     nada: mejor un solo escalón "todas" que un control que no reduce. */
+  /* If every station had the same power output the filter would separate
+     nothing: better a single "all" step than a control that narrows nothing. */
   return maxPowers.length > 1 ? [0, ...maxPowers] : [0]
 }
 
 type Coords = { lat: number; lng: number }
 type GeoState = 'idle' | 'locating' | 'granted' | 'denied'
 
-/** Claves de URL cortas y estables: son parte del enlace que la gente comparte. */
+/**
+ * Short, stable URL keys: they are part of the link people share. The Spanish
+ * values are a contract, not a leftover — they appear in indexable URLs (see
+ * AGENTS.md).
+ */
 const PARAM = {
   q: 'q',
   city: 'ciudad',
@@ -94,12 +98,12 @@ const PARAM = {
 }
 
 /**
- * Todo el criterio de búsqueda en UN objeto.
+ * The entire search criteria in ONE object.
  *
- * Antes eran seis `useState` sueltos, y eso obligaba a seis `setState` para
- * hidratar desde la URL y a listar seis dependencias en cada `useMemo`. Con un
- * solo objeto, leer la URL es una asignación y el efecto de sincronía tiene una
- * única dependencia.
+ * These used to be six separate `useState` calls, which forced six `setState`
+ * calls to hydrate from the URL and six dependencies listed in every
+ * `useMemo`. With a single object, reading the URL is one assignment and the
+ * synchronising effect has a single dependency.
  */
 type Criteria = {
   query: string
@@ -120,18 +124,19 @@ const EMPTY: Criteria = {
 }
 
 /**
- * URL → criterio.
+ * URL → criteria.
  *
- * Se aplica DESPUÉS de montar, no en el inicializador de `useState`. Esta ruta
- * es estática: el HTML se genera en build sin query string, así que leer la URL
- * en el primer render daría un criterio distinto al del servidor y React
- * registraría un desajuste de hidratación. El precio es un fotograma con la
- * lista completa antes de aplicar el enlace compartido; el beneficio es no
- * volver la ruta dinámica ni ensuciar la consola.
+ * This is applied AFTER mounting, not in the `useState` initialiser. This
+ * route is static: the HTML is generated at build time with no query string,
+ * so reading the URL on the first render would produce criteria different from
+ * the server's and React would report a hydration mismatch. The price is one
+ * frame showing the full list before the shared link is applied; the benefit
+ * is not turning the route dynamic and not polluting the console.
  *
- * LIMITACIÓN ASUMIDA: un enlace filtrado es COMPARTIBLE pero no indexable —
- * el HTML servido siempre trae la lista completa. La cobertura indexable por
- * ciudad ya la dan las rutas `/red/[ciudad]`, que era el motivo SEO original.
+ * ACCEPTED LIMITATION: a filtered link is SHAREABLE but not indexable — the
+ * served HTML always carries the full list. Indexable coverage by city is
+ * already provided by the `/red/[city]` routes, which was the original SEO
+ * reason.
  */
 function readCriteria(steps: number[]): Criteria {
   const p = new URLSearchParams(window.location.search)
@@ -143,15 +148,15 @@ function readCriteria(steps: number[]): Criteria {
     connector: p.get(PARAM.connector) ?? '',
     minPower: steps.includes(kw) ? kw : 0,
     onlyLive: p.get(PARAM.live) === '1',
-    /* `distance` no se restaura de la URL: exige permiso de ubicación, y un
-       enlace no puede concederlo. */
+    /* `distance` is not restored from the URL: it requires location
+       permission, and a link cannot grant that. */
     sort: (['power', 'status', 'city'] as const).includes(sort as never)
       ? (sort as StationSort)
       : 'relevance',
   }
 }
 
-/** Criterio → URL. Claves cortas y estables: son el enlace que la gente comparte. */
+/** Criteria → URL. Short, stable keys: they are the link people share. */
 function writeCriteria(c: Criteria) {
   const p = new URLSearchParams()
   if (c.query) p.set(PARAM.q, c.query)
@@ -159,7 +164,7 @@ function writeCriteria(c: Criteria) {
   if (c.connector) p.set(PARAM.connector, c.connector)
   if (c.minPower) p.set(PARAM.power, String(c.minPower))
   if (c.onlyLive) p.set(PARAM.live, '1')
-  /* `distance` no se escribe: depende de un permiso que un enlace no concede. */
+  /* `distance` is not written: it depends on a permission a link cannot grant. */
   if (c.sort !== 'relevance' && c.sort !== 'distance') p.set(PARAM.sort, c.sort)
   const qs = p.toString()
   window.history.replaceState(null, '', qs ? `?${qs}` : window.location.pathname)
@@ -170,10 +175,10 @@ export function StationFinder({ locale, stations, cities }: Props) {
   const { query, city, connector, minPower, onlyLive, sort } = criteria
 
   /**
-   * La URL se escribe desde la ACCIÓN, no desde un efecto que observe el
-   * estado. Con un efecto reactivo, el que sincroniza desde la URL y el que
-   * escribe en ella corrían en el mismo commit y el segundo borraba la query
-   * string —con el criterio todavía vacío— antes de que el primero cuajara.
+   * The URL is written from the ACTION, not from an effect observing state.
+   * With a reactive effect, the one syncing from the URL and the one writing
+   * to it ran in the same commit and the second wiped the query string —with
+   * the criteria still empty— before the first had settled.
    */
   const apply = (next: Criteria) => {
     setCriteria(next)
@@ -192,7 +197,7 @@ export function StationFinder({ locale, stations, cities }: Props) {
   const sortId = `${uid}-orden`
   const filtersId = `${uid}-filtros`
 
-  /* La cercanía solo existe si el dataset la sostiene. */
+  /* Proximity only exists if the dataset supports it. */
   const geoAvailable = useMemo(() => hasCoordinates(stations), [stations])
 
   const cityName = useMemo(
@@ -214,12 +219,12 @@ export function StationFinder({ locale, stations, cities }: Props) {
 
   const steps = useMemo(() => computeSteps(stations), [stations])
 
-  /* ── URL → criterio, una sola vez al montar.
-     `setState` dentro de un efecto es exactamente lo que la regla
-     `react-hooks/set-state-in-effect` vigila, y aquí es el caso que la propia
-     regla admite: sincronizar con una fuente externa a React —la barra de
-     direcciones— que no existe durante el render del servidor. Es una única
-     asignación, sin cascada. */
+  /* ── URL → criteria, once on mount.
+     `setState` inside an effect is exactly what the
+     `react-hooks/set-state-in-effect` rule watches for, and this is the case
+     the rule itself allows: syncing with a source external to React —the
+     address bar— that does not exist during the server render. It is a single
+     assignment, with no cascade. */
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setCriteria(readCriteria(steps))
@@ -235,11 +240,15 @@ export function StationFinder({ locale, stations, cities }: Props) {
   )
 
   const clearAll = () => {
-    /* Conserva el orden: limpiar filtros no es reordenar. */
+    /* Keep the sort order: clearing filters is not re-sorting. */
     apply({ ...EMPTY, sort: criteria.sort })
     track('red_filtros_limpiados')
   }
 
+  /* `tipo` and `valor` keep their Spanish names because shorthand makes the
+     parameter name the analytics PROPERTY name, and those land in the
+     dashboard as a dimension someone reads. Renaming them here would silently
+     split that dimension in two (see AGENTS.md). */
   const onFilter = (tipo: string, valor: string | number | boolean) =>
     track('red_filtro_aplicado', { tipo, valor: String(valor) })
 
@@ -260,20 +269,21 @@ export function StationFinder({ locale, stations, cities }: Props) {
 
   return (
     <div>
-      {/* ── BÚSQUEDA ─────────────────────────────────────────────────────────
-          El campo ahora PARECE un campo: icono, borde de control a 3:1 y botón
-          de limpiar. Antes era una hairline de 1.25:1 con un placeholder de
-          24px en gris, y se leía como contenido, no como control. */}
-      {/* ── ORDEN VERTICAL EN MÓVIL ─────────────────────────────────────────
-          Medido a 390px, el primer resultado quedaba a 695px: casi el viewport
-          entero de andamiaje antes del contenido. Las etiquetas visibles y el
-          selector de orden en su propia fila costaban 105px por sí solos.
+      {/* ── SEARCH ───────────────────────────────────────────────────────────
+          The field now LOOKS like a field: icon, control border at 3:1 and a
+          clear button. It used to be a 1.25:1 hairline with a 24px grey
+          placeholder, and it read as content rather than as a control. */}
+      {/* ── VERTICAL ORDER ON MOBILE ────────────────────────────────────────
+          Measured at 390px, the first result sat at 695px: almost a full
+          viewport of scaffolding before the content. The visible labels and
+          the sort select on its own row cost 105px by themselves.
 
-          Ahora: fila 1 el buscador, fila 2 [Filtros] + [Orden] juntos. Las
-          etiquetas pasan a `sr-only` bajo `lg` —el campo tiene icono y
-          placeholder, y el selector muestra su valor— sin perder nada para
-          lectores de pantalla. En desktop vuelven a ser visibles y el orden
-          recupera su sitio junto al buscador vía `lg:contents`. */}
+          Now: row 1 the search field, row 2 [Filters] + [Sort] together. The
+          labels become `sr-only` below `lg` —the field has an icon and a
+          placeholder, and the select shows its value— losing nothing for
+          screen readers. On desktop they become visible again and the sort
+          control returns to its place beside the search field via
+          `lg:contents`. */}
       <div className="grid gap-4 border-b border-line pb-5 lg:flex lg:items-end lg:gap-6 lg:pb-6">
         <div className="min-w-0 lg:flex-1">
           <label
@@ -313,9 +323,9 @@ export function StationFinder({ locale, stations, cities }: Props) {
               type="search"
               value={query}
               onChange={(e) => set('query', e.target.value)}
-              /* Antes se emitía en CADA blur con valor: enfocar y desenfocar
-                 tres veces contaba tres búsquedas. Solo se emite si el término
-                 cambió desde el último registrado. */
+              /* This used to fire on EVERY blur that had a value: focusing
+                 and blurring three times counted as three searches. It now
+                 only fires if the term changed since the last one recorded. */
               onBlur={(e) => {
                 const term = e.target.value.trim()
                 if (term && term !== lastTracked.current) {
@@ -353,9 +363,9 @@ export function StationFinder({ locale, stations, cities }: Props) {
           </div>
         </div>
 
-        {/* `lg:contents` disuelve este envoltorio en desktop, así que buscador
-            y orden vuelven a ser hermanos de la misma fila flex sin duplicar el
-            `<select>` ni su etiqueta. */}
+        {/* `lg:contents` dissolves this wrapper on desktop, so the search
+            field and the sort control become siblings of the same flex row
+            again without duplicating the `<select>` or its label. */}
         <div className="flex items-center gap-3 lg:contents">
           <FiltersToggle
             open={filtersOpen}
@@ -365,8 +375,9 @@ export function StationFinder({ locale, stations, cities }: Props) {
             count={activeCount}
           />
 
-          {/* Orden. `<select>` nativo a propósito: teclado, lector de pantalla y
-              la rueda nativa de iOS/Android salen gratis y sin JS de más. */}
+          {/* Sorting. A native `<select>` on purpose: keyboard, screen reader
+              and the native iOS/Android wheel come for free, with no extra
+              JavaScript. */}
           <div className="min-w-0 flex-1 lg:flex-none lg:shrink-0">
             <label
               htmlFor={sortId}
@@ -395,9 +406,9 @@ export function StationFinder({ locale, stations, cities }: Props) {
         </div>
       </div>
 
-      {/* ── FILTROS ──────────────────────────────────────────────────────────
-          Colapsados en móvil, siempre abiertos desde `lg`. El recuento de
-          activos va en el disparador: colapsar no puede esconder estado. */}
+      {/* ── FILTERS ──────────────────────────────────────────────────────────
+          Collapsed on mobile, always open from `lg` up. The active count sits
+          on the trigger: collapsing must not hide state. */}
       <div className="border-b border-line">
         <div
           id={filtersId}
@@ -454,8 +465,9 @@ export function StationFinder({ locale, stations, cities }: Props) {
             ))}
           </FilterGroup>
 
-          {/* Con un solo escalón el grupo no separa nada, así que no se pinta:
-              un filtro que no filtra es un control decorativo (§16). */}
+          {/* With a single step the group separates nothing, so it is not
+              rendered: a filter that does not filter is a decorative
+              control (§16). */}
           {steps.length > 1 && (
             <FilterGroup label={t(red.filters.power, locale)}>
               {steps.map((p) => (
@@ -473,8 +485,8 @@ export function StationFinder({ locale, stations, cities }: Props) {
             </FilterGroup>
           )}
 
-          {/* La etiqueta del grupo dice DE QUÉ es; el chip, QUÉ hace. Antes las
-              dos decían "Solo en operación". */}
+          {/* The group label says WHAT IT IS ABOUT; the chip, WHAT IT DOES.
+              Both used to say "Solo en operación". */}
           <FilterGroup label={t(red.filters.availabilityGroup, locale)}>
             <Chip
               active={onlyLive}
@@ -506,9 +518,10 @@ export function StationFinder({ locale, stations, cities }: Props) {
         </p>
       )}
 
-      {/* ── RECUENTO ─────────────────────────────────────────────────────────
-          Es el feedback central de la herramienta y estaba en mono de 12px: el
-          texto más discreto de la sección. Ahora tiene el peso que le toca. */}
+      {/* ── RESULT COUNT ─────────────────────────────────────────────────────
+          It is the tool's central feedback and it was set in 12px mono: the
+          most discreet text in the section. It now carries the weight it
+          deserves. */}
       <div className="flex flex-wrap items-baseline justify-between gap-4 py-5 lg:py-6">
         <p
           role="status"
@@ -531,7 +544,7 @@ export function StationFinder({ locale, stations, cities }: Props) {
         )}
       </div>
 
-      {/* El encabezado evita un salto de nivel (h1 → h3) */}
+      {/* The heading prevents a level skip (h1 → h3) */}
       <h2 className="sr-only">{t(red.filters.resultsMany, locale)}</h2>
       {results.length > 0 ? (
         <ul>
@@ -542,9 +555,9 @@ export function StationFinder({ locale, stations, cities }: Props) {
                 <Link
                   href={href(locale, routes.station(s.slug))}
                   onClick={() => track('estacion_vista', { slug: s.slug, origen: 'buscador' })}
-                  /* Cuatro columnas desde `lg`, no desde `md`: a 768px metía
-                     cuatro celdas en el ancho de tablet y "En operación"
-                     quedaba tocando el borde del contenedor (§22). */
+                  /* Four columns from `lg` up, not from `md`: at 768px it
+                     crammed four cells into the tablet width and "En
+                     operación" ended up touching the container edge (§22). */
                   className="group grid gap-x-6 gap-y-2 border-b border-line py-6 transition-colors hover:bg-surface-1 lg:grid-cols-[1.5fr_1fr_1.2fr_auto] lg:items-center"
                 >
                   <div>
@@ -593,9 +606,9 @@ export function StationFinder({ locale, stations, cities }: Props) {
   )
 }
 
-/** Disparador de los filtros en móvil. Lleva el recuento de activos para que
- *  colapsar no esconda estado. Desaparece desde `lg`, donde no hay nada que
- *  desplegar. */
+/** Trigger for the filters on mobile. It carries the active count so that
+ *  collapsing does not hide state. It disappears from `lg` up, where there is
+ *  nothing to expand. */
 function FiltersToggle({
   open,
   onToggle,
@@ -654,17 +667,17 @@ function FilterGroup({ label, children }: { label: string; children: React.React
 }
 
 /**
- * Chip de FILTRO. La prohibición del sistema es a los chips decorativos sin
- * función; estos accionan el filtrado y declaran su estado.
+ * FILTER chip. What the system forbids is decorative chips with no function;
+ * these drive the filtering and declare their state.
  *
- * `aria-pressed` va siempre. Antes se emitía solo en el grupo de
- * disponibilidad, así que ciudad, conector y potencia comunicaban su selección
- * únicamente con color (WCAG 4.1.2).
+ * `aria-pressed` is always emitted. It used to be set only on the availability
+ * group, so city, connector and power communicated their selection through
+ * colour alone (WCAG 4.1.2).
  *
- * Su forma es de PASTILLA y su estado es un relleno de marca. Es deliberadamente
- * distinto del tab de `/empresas`, que ahora lleva subrayado e indicador: eran
- * idénticos y significaban cosas opuestas — filtrar una lista frente a cambiar
- * de vista.
+ * Its shape is a PILL and its state is a brand fill. That is deliberately
+ * different from the `/empresas` tab, which now carries an underline and an
+ * indicator: they were identical and meant opposite things — filtering a list
+ * versus switching a view.
  */
 function Chip({
   children,

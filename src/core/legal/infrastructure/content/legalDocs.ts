@@ -1,29 +1,36 @@
 /**
- * DOCUMENTOS LEGALES · texto íntegro emitido por el área legal de Voltop
- * Ver docs/MASTER-PROJECT-DEFINITION.md §38.
+ * LEGAL DOCUMENTS · full text as issued by Voltop's legal team
+ * See docs/MASTER-PROJECT-DEFINITION.md §38.
  *
- * ── POR QUÉ ESTO NO ES `Localized` ───────────────────────────────────────
- * El resto del contenido del sitio es `Localized` con los tres idiomas
- * obligatorios. Estos dos documentos NO: son texto plano en español.
+ * ── WHY THIS IS NOT `Localized` ──────────────────────────────────────────
+ * The rest of the site's content is `Localized` with all three languages
+ * mandatory. These two documents are NOT: they are plain Spanish text.
  *
- * No es un descuido ni una traducción pendiente. Un instrumento jurídico
- * traducido por quien no lo emitió deja de ser el mismo instrumento: cambia
- * obligaciones, plazos y definiciones sin que nadie lo haya aprobado. §38 es
- * explícito —"el texto legal lo emite el área legal de Voltop: no se redacta
- * ni se aproxima"— y traducirlo es aproximarlo.
+ * That is neither an oversight nor a pending translation. A legal instrument
+ * translated by someone other than its issuer stops being the same
+ * instrument: it changes obligations, deadlines and definitions without
+ * anyone having approved the change. §38 is explicit —"legal text is issued
+ * by Voltop's legal team: it is neither drafted nor approximated"— and
+ * translating it is approximating it.
  *
- * Las páginas en inglés y portugués muestran el documento en español con un
- * aviso de que esa es la versión vinculante. Cuando el área legal emita
- * versiones traducidas, se añaden como documentos propios.
+ * The English and Portuguese pages show the Spanish document with a notice
+ * that that is the binding version. When the legal team issues translated
+ * versions, they get added as documents of their own.
  *
- * ── GENERADO, NO TRANSCRITO ──────────────────────────────────────────────
- * Extraído de los .docx originales entregados el 2026-09-02. Transcribir 250
- * párrafos a mano habría introducido erratas en un texto donde una errata es
- * un problema legal.
+ * The same rule applies to the text BELOW: only the comments in this file are
+ * in English. Not one character of the documents themselves is touched.
+ *
+ * ── GENERATED, NOT TRANSCRIBED ───────────────────────────────────────────
+ * Extracted from the original .docx files delivered on 2026-09-02.
+ * Transcribing 250 paragraphs by hand would have introduced typos into a text
+ * where a typo is a legal problem.
  */
 
 import type { LegalDoc, LegalSection } from '~/core/legal/domain/entities/LegalDoc'
 
+/** Official title, as issued:
+ *  TÉRMINOS Y CONDICIONES DE USO PLATAFORMA, APLICACIÓN, SITIO WEB Y
+ *  ESTACIONES DE CARGA VOLTOP */
 const termsSections: LegalSection[] = [
   {
     id: 'quienes-somos-y-objeto',
@@ -673,7 +680,8 @@ const termsSections: LegalSection[] = [
   },
 ]
 
-/** POLÍTICA DE TRATAMIENTO DE DATOS PERSONALES Y AVISO DE PRIVACIDAD - VOLTOP */
+/** Official title, as issued:
+ *  POLÍTICA DE TRATAMIENTO DE DATOS PERSONALES Y AVISO DE PRIVACIDAD - VOLTOP */
 const privacySections: LegalSection[] = [
   {
     id: 'identificacion-del-responsable-del-tratamiento',

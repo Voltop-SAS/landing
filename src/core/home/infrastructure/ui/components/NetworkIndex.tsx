@@ -12,57 +12,59 @@ import { Reveal } from '@ui/common/components/ui/Reveal'
 import { CountUp } from '@ui/common/components/ui/CountUp'
 
 /**
- * BEAT 3 · NUESTRA RED
- * Ver docs/MASTER-PROJECT-DEFINITION.md §12, §14 y §33.
+ * BEAT 3 · OUR NETWORK
+ * See docs/MASTER-PROJECT-DEFINITION.md §12, §14 and §33.
  *
- * ── LA COMPOSICIÓN VIENE DE UNA REFERENCIA, Y ESO CAMBIA LAS REGLAS ──────
- * Este beat se rediseñó contra una referencia visual concreta (2026-09-04) que
- * es la fuente de verdad de su composición: jerarquía, proporciones, ritmo
- * vertical, tratamiento de las tarjetas, bloque de métricas y CTA.
+ * ── THE COMPOSITION COMES FROM A REFERENCE, AND THAT CHANGES THE RULES ───
+ * This beat was redesigned against a specific visual reference (2026-09-04)
+ * that is the source of truth for its composition: hierarchy, proportions,
+ * vertical rhythm, card treatment, metrics block and CTA.
  *
- * Antes de decidir nada se MUESTREÓ el mockup en lugar de estimarlo a ojo, y
- * eso evitó dos errores:
+ * Before deciding anything the mockup was SAMPLED rather than estimated by
+ * eye, and that avoided two mistakes:
  *
- * · El titular PARECÍA de dos tonos —la segunda línea se veía gris—. Medido,
- *   el píxel más claro de las dos líneas es idéntico (253,253,253): era el
- *   antialias del mockup a ese tamaño. Un tono, no dos.
- * · El contador de Medellín aparece en cian y el de Bogotá en gris. No son dos
- *   estilos: es la MISMA tarjeta en estado hover. Se implementa como hover.
+ * · The headline LOOKED like it had two tones —the second line appeared grey—.
+ *   Measured, the lightest pixel of both lines is identical (253,253,253): it
+ *   was the mockup's antialiasing at that size. One tone, not two.
+ * · Medellín's counter appears in cyan and Bogotá's in grey. They are not two
+ *   styles: it is the SAME card in its hover state. It is implemented as
+ *   hover.
  *
- * Todos los demás colores del mockup mapean a tokens que ya existían —el
- * antetítulo a `brand`, el párrafo a `ink-2`, las etiquetas a `ink-3`, los
- * bordes a `line`—, así que no hizo falta inventar ni uno.
+ * Every other colour in the mockup maps to tokens that already existed —the
+ * eyebrow to `brand`, the paragraph to `ink-2`, the labels to `ink-3`, the
+ * borders to `line`— so there was no need to invent a single one.
  *
- * ── DOS ÁREAS, UNA SOLA COMPOSICIÓN ──────────────────────────────────────
- * Izquierda 52% para el contenido, derecha 48% reservado para el render del
- * cargador. La derecha NO es un contenedor de imagen: no tiene fondo, borde ni
- * etiqueta, así que la sección se lee como una composición editorial con aire
- * a la derecha y no como "bloque de texto | caja de foto". Cuando entre el
- * render, ocupará ese aire sin mover ni un píxel de la izquierda.
+ * ── TWO AREAS, ONE SINGLE COMPOSITION ────────────────────────────────────
+ * Left 52% for the content, right 48% reserved for the charger render. The
+ * right side is NOT an image container: it has no background, border or
+ * label, so the section reads as an editorial composition with air on the
+ * right and not as "text block | photo box". When the render arrives, it will
+ * occupy that air without moving a single pixel on the left.
  *
- * ── FONDO SÓLIDO: LO QUE SE FUE ──────────────────────────────────────────
- * Este beat tenía una fotografía de suelo muy atenuada con dos velos y FLOW
- * —parallax contenido— aplicado en el bloque 47. La referencia pide fondo
- * sólido `canvas` sin gradientes ni texturas, así que la fotografía y el FLOW
- * salen. El escalonado de las tarjetas (DEPTH expressive) se conserva.
+ * ── SOLID BACKGROUND: WHAT WENT AWAY ─────────────────────────────────────
+ * This beat used to have a heavily dimmed floor photograph with two veils and
+ * FLOW —contained parallax— applied in block 47. The reference calls for a
+ * solid `canvas` background with no gradients or textures, so the photograph
+ * and the FLOW are out. The cards' stagger (DEPTH expressive) is kept.
  *
- * Cuando llegue el render del cargador, ES la pieza que debe llevar FLOW: un
- * objeto grande y vertical dentro de un marco fijo es exactamente el caso para
- * el que existe esa primitiva.
+ * When the charger render arrives, IT is the piece that should carry FLOW: a
+ * large vertical object inside a fixed frame is exactly the case that
+ * primitive exists for.
  *
- * ── LAS CIFRAS NO ESTÁN ESCRITAS ─────────────────────────────────────────
- * Puntos, potencias y conectores se CALCULAN desde el dataset en
- * `getNetworkSummary()`. Una cifra escrita a mano deja de ser verdad en cuanto
- * se añade una estación, y §33 prohíbe inventar cifras: la forma más segura de
- * no inventarlas es no poder escribirlas.
+ * ── THE FIGURES ARE NOT WRITTEN ──────────────────────────────────────────
+ * Points, power ratings and connectors are COMPUTED from the dataset in
+ * `getNetworkSummary()`. A hand-written figure stops being true the moment a
+ * station is added, and §33 forbids inventing figures: the safest way not to
+ * invent them is to be unable to write them.
  */
 export function NetworkIndex({ locale }: { locale: Locale }) {
   const summary = getNetworkSummary()
   const cobertura = getCitiesWithStations()
 
   const cifras: { label: string; value: React.ReactNode }[] = [
-    /* La única que cuenta es la que ES un número. "22–80 kW" y la lista de
-       conectores no son cantidades: animarlas sería movimiento por moverse. */
+    /* The only one that counts up is the one that IS a number. "22–80 kW"
+       and the connector list are not quantities: animating them would be
+       motion for motion's sake. */
     { label: t(home.network.stats.points, locale), value: <CountUp value={summary.points} /> },
     {
       label: t(home.network.stats.power, locale),
@@ -74,7 +76,7 @@ export function NetworkIndex({ locale }: { locale: Locale }) {
     { label: t(home.network.stats.connectors, locale), value: summary.connectors.join(' · ') },
   ]
 
-  /** El asset de cada ciudad, por slug. Ver el bloque CIUDADES en `media.ts`. */
+  /** Each city's asset, by slug. See the CITIES block in the media registry. */
   const cityPhoto: Record<string, typeof media.cityBogota | undefined> = {
     bogota: media.cityBogota,
     medellin: media.cityMedellin,
@@ -84,58 +86,58 @@ export function NetworkIndex({ locale }: { locale: Locale }) {
     <Section
       id="red"
       space="base"
-      /* Fondo sólido, sin capas. Ver la nota de arriba. */
+      /* Solid background, no layers. See the note above. */
       className="bg-canvas"
       ariaLabelledby="red-title"
     >
       <Container>
-        {/* ── LAS DOS MITADES, SOBRE EL RIEL ──────────────────────────────
-            El reparto 56/44 no es estético: está CALCULADO para que el render
-            llene su columna sin dejar sobrante.
+        {/* ── THE TWO HALVES, ON THE RAIL ─────────────────────────────────
+            The 56/44 split is not aesthetic: it is CALCULATED so the render
+            fills its column with nothing left over.
 
-            El render es un objeto de 2:3 servido en `contain`, así que su ancho
-            lo decide la altura disponible. Con la columna al 48% sobraban 70px
-            que había que poner en algún lado, y las dos opciones eran malas:
-            hacia el texto lo separaba de él, hacia el borde dejaba un hueco a
-            la derecha. Al 44% —486px a 1440— el objeto ocupa su columna EXACTA
-            y no hay sobrante que colocar.
+            The render is a 2:3 object served with `contain`, so its width is
+            decided by the available height. With the column at 48% there were
+            70px left over that had to go somewhere, and both options were bad:
+            towards the text it separated it from it, towards the edge it left
+            a gap on the right. At 44% —486px at 1440— the object occupies its
+            column EXACTLY and there is nothing left to place.
 
-            Y vuelve al riel. Antes se salía hasta el borde de la ventana, y eso
-            arreglaba una cosa creando otra: era la única sección del sitio cuyo
-            contenido escapaba del contenedor, así que se leía como un bloque
-            ajeno. Medido a 1440, ahora los márgenes son 148px a la izquierda y
-            162 a la derecha: la composición está centrada en el layout como el
-            resto de las secciones.
+            And it returns to the rail. It used to run out to the window's
+            edge, and that fixed one thing by creating another: it was the only
+            section on the site whose content escaped the container, so it read
+            as a foreign block. Measured at 1440, the margins are now 148px on
+            the left and 162 on the right: the composition is centred in the
+            layout like every other section.
 
-            SIN ALTURA FORZADA. Hubo una versión con `min-h` en la rejilla para
-            que el objeto llenara 486px de ancho, y el precio era que la sección
-            medía 874px con 575 de contenido: **300px de aire que ninguna otra
-            sección del sitio tiene**, y eso era lo que la sacaba del ritmo de
-            la página. La escala del objeto no vale ese precio.
+            NO FORCED HEIGHT. There was a version with `min-h` on the grid so
+            the object would fill 486px of width, and the price was that the
+            section measured 874px with 575 of content: **300px of air no other
+            section on the site has**, and that was what pulled it out of the
+            page's rhythm. The object's scale is not worth that price.
 
-            Ahora la fila mide lo que mide el texto, y el objeto —servido en
-            `contain`— mide exactamente lo mismo de alto. Ese es el vínculo que
-            faltaba: el equipo y el bloque de contenido comparten su span
-            vertical al píxel, arriba y abajo, en lugar de que uno sobresalga
-            del otro. Dos elementos que empiezan y terminan juntos se leen como
-            una composición; uno flotando junto al otro, no.
+            The row now measures what the text measures, and the object
+            —served with `contain`— measures exactly the same height. That is
+            the link that was missing: the equipment and the content block
+            share their vertical span to the pixel, top and bottom, instead of
+            one overhanging the other. Two elements that start and end together
+            read as a composition; one floating beside the other does not.
 
-            El reparto 65/35 sale de ahí: con el contenido más ancho el texto
-            envuelve menos, la fila baja de alto y el objeto se estrecha en
-            proporción. La columna está dimensionada al objeto resultante para
-            que no sobre aire, igual que antes. */}
+            The 65/35 split comes from that: with wider content the text wraps
+            less, the row drops in height and the object narrows in proportion.
+            The column is dimensioned to the resulting object so no air is left
+            over, just as before. */}
         <div className="grid items-stretch gap-14 lg:grid-cols-[minmax(0,65fr)_minmax(0,35fr)] lg:gap-10">
           <div>
-            {/* `SectionHeading` y no un antetítulo más un `h2` a mano: es la
-                primitiva del sistema, y con ella la relación antetítulo/título
-                —el `mt-4`, el `text-balance`, el tono del kicker— es la misma
-                que en todas las demás secciones del sitio.
+            {/* `SectionHeading` and not an eyebrow plus a hand-rolled `h2`:
+                it is the system's primitive, and with it the eyebrow/title
+                relationship —the `mt-4`, the `text-balance`, the kicker's
+                tone— is the same as in every other section of the site.
 
-                `size="m"` está medido, no estimado: en el mockup la altura de
-                mayúscula del titular equivale a ~38px para su columna, y
-                `display-l` da 52px a 1440. Con 52px partía en TRES líneas y la
-                referencia tiene DOS. El tamaño no es un gusto: es lo que
-                produce ese ritmo. */}
+                `size="m"` is measured, not estimated: in the mockup the
+                headline's cap height corresponds to ~38px for its column, and
+                `display-l` gives 52px at 1440. At 52px it broke into THREE
+                lines and the reference has TWO. The size is not a preference:
+                it is what produces that rhythm. */}
             <SectionHeading
               id="red-title"
               kicker={t(home.network.eyebrow, locale)}
@@ -147,19 +149,19 @@ export function NetworkIndex({ locale }: { locale: Locale }) {
 
             <p className="measure mt-6 text-body-l text-ink-2">{t(home.network.lead, locale)}</p>
 
-            {/* ── TARJETAS DE COBERTURA ───────────────────────────────────
-                La fotografía es el elemento dominante y el texto vive DENTRO,
-                sobre ella. No son tarjetas del sistema con una imagen encima:
-                son un encuadre con contenido anclado abajo, que es lo que
-                pide la referencia.
+            {/* ── COVERAGE CARDS ──────────────────────────────────────────
+                The photograph is the dominant element and the text lives
+                INSIDE it, over the image. These are not system cards with an
+                image on top: they are a frame with content anchored at the
+                bottom, which is what the reference calls for.
 
-                Lado a lado desde `sm`, apiladas por debajo. Se probaron las
-                dos columnas en móvil —la referencia las tiene así— y a 390px
-                cada tarjeta queda en 164px: el contador parte en dos líneas
-                ("2 estaciones / en operación") y el botón circular se come un
-                tercio del ancho. Apiladas, cada una dispone de 341px y vuelve
-                a ser una tarjeta; la relación entre las dos ciudades se
-                mantiene por adyacencia, solo que vertical. */}
+                Side by side from `sm` up, stacked below that. Two columns on
+                mobile were tried —the reference has them that way— and at
+                390px each card comes out at 164px: the counter breaks onto two
+                lines ("2 estaciones / en operación") and the circular button
+                eats a third of the width. Stacked, each one gets 341px and
+                becomes a card again; the relationship between the two cities
+                is preserved by adjacency, just vertically. */}
             <ul className="mt-9 grid grid-cols-1 gap-3 sm:grid-cols-2">
               {cobertura.map(({ city, count, operational }, i) => (
                 <Reveal
@@ -172,45 +174,45 @@ export function NetworkIndex({ locale }: { locale: Locale }) {
                     href={href(locale, routes.city(city.slug))}
                     className="press group relative block overflow-hidden rounded-(--radius-structural) border border-line transition-[transform,border-color] duration-(--duration-fast) ease-(--ease-standard) hover:-translate-y-1 hover:border-line-strong motion-reduce:hover:translate-y-0"
                   >
-                    {/* EL ENCUADRE. La proporción la fija la tarjeta y el
-                        material la rellena con `fill`, no al revés.
+                    {/* THE FRAME. The card fixes the aspect ratio and the
+                        material fills it with `fill`, not the other way round.
 
-                        `fill` no es un detalle técnico: sin él, el hueco
-                        declarado imprime su rótulo Y su descripción completa
-                        dentro de la tarjeta, y esa descripción caía justo
-                        encima del nombre de la ciudad. Con `fill`, el hueco se
-                        reduce a una insignia en una esquina y el contenido de
-                        la tarjeta se lee. Cuando llegue la foto, la insignia
-                        desaparece sola. */}
+                        `fill` is not a technical detail: without it, the
+                        declared placeholder prints its label AND its full
+                        description inside the card, and that description
+                        landed right on top of the city's name. With `fill`,
+                        the placeholder shrinks to a badge in one corner and
+                        the card's content reads. When the photo arrives, the
+                        badge disappears on its own. */}
                     <div className="relative aspect-[16/9] w-full">
                       <Media
                         asset={cityPhoto[city.slug] ?? media.cityBogota}
                         locale={locale}
                         fill
-                        /* Los tres tramos siguen a la rejilla de arriba
-                           (`grid-cols-1 sm:grid-cols-2`) dentro de la columna
-                           de 65fr, medidos en el navegador:
+                        /* The three ranges follow the grid above
+                           (`grid-cols-1 sm:grid-cols-2`) inside the 65fr
+                           column, measured in the browser:
 
-                           · <640px  → una columna, la tarjeta ocupa ~87vw
-                           · 640px+  → dos columnas del riel, ~45vw
-                           · 1024px+ → dos columnas dentro del 65fr; la caja
-                                       toca su máximo de 353px a 1280px
+                           · <640px  → one column, the card occupies ~87vw
+                           · 640px+  → two columns of the rail, ~45vw
+                           · 1024px+ → two columns inside the 65fr; the box
+                                       hits its maximum of 353px at 1280px
 
-                           Declararlo corto no rompe nada visible: el navegador
-                           sirve un archivo más pequeño y lo AMPLÍA. Con el
-                           `45vw` anterior, a 390px la caja real medía 339px y
-                           llegaban 384px de imagen para 678px de píxeles
-                           físicos —0,57×, foto ampliada al 175%—, el mismo
-                           defecto que se vio en el retrato de Helbert. */
+                           Declaring it too small does not break anything
+                           visible: the browser serves a smaller file and
+                           SCALES IT UP. With the previous `45vw`, at 390px the
+                           real box measured 339px and 384px of image arrived
+                           for 678px of physical pixels —0.57×, a photo
+                           upscaled to 175%— the same defect seen in Helbert's
+                           portrait. */
                         sizes="(min-width: 1024px) 23rem, (min-width: 640px) 45vw, 90vw"
                         className="h-full w-full"
                       />
                     </div>
 
-                    {/* Velo de legibilidad: no es decoración, es lo que
-                        garantiza que el nombre se lea sobre cualquier
-                        fotografía. De abajo a arriba, porque el texto está
-                        anclado abajo. */}
+                    {/* Legibility veil: it is not decoration, it is what
+                        guarantees the name reads over any photograph. Bottom
+                        to top, because the text is anchored at the bottom. */}
                     <div
                       aria-hidden="true"
                       className="absolute inset-0 bg-gradient-to-t from-canvas via-canvas/55 to-transparent"
@@ -218,19 +220,19 @@ export function NetworkIndex({ locale }: { locale: Locale }) {
 
                     <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-3 p-4">
                       <div className="min-w-0">
-                        {/* El acento de hover va en el NOMBRE, como en las
-                            tarjetas de ciudad de `/red`. En la referencia
-                            aparece sobre el contador, pero el sitio ya tiene
-                            decidido dónde responde una tarjeta de ciudad y una
-                            sola cosa por tarjeta: dos acentos compitiendo es
-                            lo que hace que un hover se lea como un parpadeo. */}
+                        {/* The hover accent goes on the NAME, as on the city
+                            cards on /red. In the reference it appears on the
+                            counter, but the site has already decided where a
+                            city card responds, and one thing per card: two
+                            competing accents are what make a hover read as a
+                            flicker. */}
                         <h3 className="font-display text-display-s font-semibold text-ink transition-colors duration-(--duration-fast) group-hover:text-brand">
                           {city.name}
                         </h3>
-                        {/* `font-mono text-mono`: es el registro con el que
-                            todo el sitio escribe un recuento de estaciones
-                            —ver las tarjetas de `/red`—. Un dato técnico en
-                            texto corrido rompe ese lenguaje. */}
+                        {/* `font-mono text-mono`: it is the register the
+                            whole site uses to write a station count —see the
+                            cards on /red—. A technical figure in running text
+                            breaks that language. */}
                         <p className="mt-1.5 font-mono text-mono text-ink-2">
                           <CountUp value={operational} />{' '}
                           {t(operational === 1 ? units.station : units.stations, locale)}{' '}
@@ -241,10 +243,10 @@ export function NetworkIndex({ locale }: { locale: Locale }) {
                         </p>
                       </div>
 
-                      {/* Botón circular con flecha. Es la afordancia de la
-                          tarjeta, así que va marcado como decorativo: el
-                          enlace ya lo envuelve todo y anunciarlo otra vez
-                          duplicaría el objetivo para un lector de pantalla. */}
+                      {/* Circular button with an arrow. It is the card's
+                          affordance, so it is marked as decorative: the link
+                          already wraps everything and announcing it again
+                          would duplicate the target for a screen reader. */}
                       <span
                         aria-hidden="true"
                         className="grid size-10 shrink-0 place-items-center rounded-(--radius-pill) border border-line-control text-ink transition-[transform,background-color,border-color] duration-(--duration-fast) ease-(--ease-overshoot) group-hover:translate-x-0.5 group-hover:border-brand group-hover:text-brand motion-reduce:group-hover:translate-x-0"
@@ -257,48 +259,47 @@ export function NetworkIndex({ locale }: { locale: Locale }) {
               ))}
             </ul>
 
-            {/* ── MÉTRICAS ───────────────────────────────────────────────
-                Un solo contenedor horizontal con hairlines: registro de ficha
-                técnica, no de eslogan. Sin relleno propio —el muestreo del
-                mockup da el mismo tono que el fondo—, así que solo el borde lo
-                define.
+            {/* ── METRICS ─────────────────────────────────────────────────
+                A single horizontal container with hairlines: spec-sheet
+                register, not slogan register. With no fill of its own
+                —sampling the mockup gives the same tone as the background— so
+                only the border defines it.
 
-                Los anchos son NATURALES y no tres columnas iguales: en la
-                referencia la celda de conectores es visiblemente más ancha
-                porque su contenido lo es. `flex` con `divide-x` lo da solo.
-                Por debajo de `sm` se apila con hairlines horizontales, que a
-                390px es la única forma de que "GB/T · CCS1 · CCS2" no se
-                parta. */}
+                The widths are NATURAL and not three equal columns: in the
+                reference the connectors cell is visibly wider because its
+                content is. `flex` with `divide-x` gives that for free. Below
+                `sm` it stacks with horizontal hairlines, which at 390px is the
+                only way "GB/T · CCS1 · CCS2" does not break. */}
             <dl className="mt-3 flex flex-col gap-px overflow-hidden rounded-(--radius-structural) border border-line bg-line sm:flex-row sm:flex-wrap">
               {cifras.map((c) => (
                 <div
                   key={c.label}
                   className="grow bg-canvas px-4 py-4"
                 >
-                  {/* `gap-px` sobre `bg-line` en lugar de `divide-x`: es la
-                      técnica con la que el sitio dibuja una rejilla de
-                      hairlines —ver la lista de ciudades de `/red`— y además
-                      se comporta bien cuando una celda pasa a otra fila.
+                  {/* `gap-px` over `bg-line` instead of `divide-x`: it is the
+                      technique the site uses to draw a hairline grid —see the
+                      city list on /red— and it also behaves well when a cell
+                      moves to another row.
 
-                      `grow` reparte el sobrante entre las tres: sin él las
-                      celdas medían lo que su contenido y quedaba una franja
-                      vacía de ~20px contra el borde derecho, con el hairline
-                      del fondo asomando. Las proporciones naturales se
-                      conservan —conectores sigue siendo la más ancha—, solo
-                      que ahora llenan el contenedor.
+                      `grow` shares the surplus between the three: without it
+                      the cells measured whatever their content did and left an
+                      empty ~20px strip against the right border, with the
+                      background hairline showing through. The natural
+                      proportions are kept —connectors is still the widest—
+                      only now they fill the container.
 
-                      `tracking-wider` y no un valor suelto: la etiqueta era el
-                      elemento que forzaba el reparto, y 0.14em literales
-                      además estaban fuera de los tokens. */}
+                      `tracking-wider` and not a loose value: the label was the
+                      element forcing the distribution, and a literal 0.14em
+                      was outside the tokens as well. */}
                   <dt className="font-mono text-mono uppercase tracking-wider text-ink-3">
                     {c.label}
                   </dt>
-                  {/* El VALOR no se parte nunca: "22–80 / kW" y
-                      "GB/T · CCS1 · / CCS2" son las dos formas de que un dato
-                      deje de leerse como un dato. La etiqueta sí puede caer a
-                      dos líneas en los anchos más justos —es descripción, no
-                      cifra— y `flex-wrap` deja que una celda entera pase a una
-                      segunda fila antes que desbordar. */}
+                  {/* The VALUE never breaks: "22–80 / kW" and
+                      "GB/T · CCS1 · / CCS2" are the two ways a figure stops
+                      reading as a figure. The label may drop to two lines at
+                      the tightest widths —it is description, not figure— and
+                      `flex-wrap` lets a whole cell move to a second row rather
+                      than overflow. */}
                   <dd className="mt-1.5 whitespace-nowrap font-display text-display-s font-semibold text-ink">
                     {c.value}
                   </dd>
@@ -306,14 +307,14 @@ export function NetworkIndex({ locale }: { locale: Locale }) {
               ))}
             </dl>
 
-            {/* ── CTA Y MICROCOPY ────────────────────────────────────────
-                En una sola fila, como la referencia. El microcopy NO es un
-                segundo CTA: no enlaza a nada y su punto de marca es el único
-                acento de color de la fila, así que no compite. */}
-            {/* `ghost`, la misma variante que el CTA del beat 2. La referencia
-                trae un botón de relleno claro, pero eso obligaba a añadir una
-                quinta variante al sistema para un solo botón, y un lenguaje de
-                botones con una excepción deja de ser un lenguaje. */}
+            {/* ── CTA AND MICROCOPY ───────────────────────────────────────
+                On a single row, like the reference. The microcopy is NOT a
+                second CTA: it links to nothing and its brand dot is the row's
+                only colour accent, so it does not compete. */}
+            {/* `ghost`, the same variant as beat 2's CTA. The reference brings
+                a light filled button, but that would have meant adding a fifth
+                variant to the system for a single button, and a button
+                language with one exception stops being a language. */}
             <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3">
               <Button
                 variant="ghost"
@@ -322,17 +323,17 @@ export function NetworkIndex({ locale }: { locale: Locale }) {
               >
                 {t(actions.seeNetwork, locale)}
               </Button>
-              {/* Mono en versales: es como el sitio escribe una nota al lado
-                  de un CTA —ver el pie de foto del beat 2, "NUEVA ESTACIÓN ·
-                  MEDELLÍN"—. La referencia la trae en texto corrido, pero esa
-                  ranura ya tiene registro decidido y dos secciones vecinas
-                  hablando distinto en el mismo sitio es lo que se nota.
+              {/* Mono in caps: it is how the site writes a note beside a CTA
+                  —see beat 2's caption, "NUEVA ESTACIÓN · MEDELLÍN"—. The
+                  reference has it in running text, but that slot already has a
+                  decided register, and two neighbouring sections speaking
+                  differently in the same place is what gets noticed.
 
-                  SIN PUNTO DE COLOR. La referencia trae uno verde delante y se
-                  retiró: no existe en ninguna otra parte del sitio, así que era
-                  un adorno de una sola aparición — justo lo que §12 llama un
-                  chip decorativo sin función. El pie de foto del beat 2 dice lo
-                  suyo sin ninguno. */}
+                  NO COLOUR DOT. The reference has a green one in front and it
+                  was removed: it exists nowhere else on the site, so it was an
+                  ornament with a single appearance — exactly what §12 calls a
+                  decorative chip with no function. Beat 2's caption says its
+                  piece without one. */}
               <p className="font-mono text-mono uppercase tracking-wider text-ink-3">
                 {t(home.network.moreCities, locale)}
               </p>
@@ -340,47 +341,47 @@ export function NetworkIndex({ locale }: { locale: Locale }) {
           </div>
 
           {/* ══════════════════════════════════════════════════════════════
-              EL RENDER DEL CARGADOR
+              THE CHARGER RENDER
               ══════════════════════════════════════════════════════════════
-              Entregado el 2026-09-04 y colocado en el hueco que esta sección
-              ya tenía reservado: no hubo que mover ni un píxel de la columna
-              izquierda, que era exactamente el objetivo de reservarlo.
+              Delivered on 2026-09-04 and placed in the slot this section had
+              already reserved: not a single pixel of the left column had to
+              move, which was exactly the point of reserving it.
 
-              SIN CAJA. El PNG viene con fondo transparente (comprobado: alfa 0
-              en los bordes), así que el equipo se apoya directamente sobre el
-              `canvas` de la sección. Nada de fondo propio, borde ni sombra: la
-              mitad derecha sigue siendo aire con un objeto dentro, que es lo
-              que hace que las dos mitades se lean como UNA composición y no
-              como "texto | foto".
+              NO BOX. The PNG comes with a transparent background (verified:
+              alpha 0 at the edges), so the equipment sits directly on the
+              section's `canvas`. No background of its own, no border, no
+              shadow: the right half is still air with an object in it, which
+              is what makes the two halves read as ONE composition and not as
+              "text | photo".
 
-              `object-contain` y no `cover`: un cargador recortado por arriba o
-              por los lados deja de ser el retrato de un equipo.
+              `object-contain` and not `cover`: a charger cropped at the top or
+              at the sides stops being the portrait of a piece of equipment.
 
-              SIN FLOW, Y ESO SE PROBÓ. Parecía el sitio ideal para el
-              parallax —un objeto grande y vertical, y este beat se había
-              quedado sin momento de profundidad al perder la fotografía de
-              fondo— pero FLOW RECORTA POR DISEÑO: su marco clipa un interior
-              un 24% más alto, y con `object-contain` eso cortaba el cargador
-              por arriba y por abajo. Medido: 135px de equipo desaparecidos.
-              Un objeto recortado deja de ser el retrato de un objeto, así que
-              el render se queda quieto y entero. La regla general quedó
-              anotada en `Flow`, para que nadie vuelva a intentarlo.
+              NO FLOW, AND THAT WAS TESTED. It looked like the ideal place for
+              parallax —a large vertical object, and this beat had been left
+              without a depth moment after losing its background photograph—
+              but FLOW CROPS BY DESIGN: its frame clips an interior 24% taller,
+              and with `object-contain` that cut the charger off top and
+              bottom. Measured: 135px of equipment gone. A cropped object stops
+              being the portrait of an object, so the render stays still and
+              whole. The general rule was written down in `Flow`, so nobody
+              tries it again.
 
-              VUELVE AL RIEL, Y ESO ES LA CORRECCIÓN DEFINITIVA. Estuvo un
-              momento saliéndose hasta el borde de la ventana: arreglaba el
-              problema de las dos cajas, pero creaba otro — era la única
-              sección del sitio cuyo contenido escapaba del contenedor, así
-              que se leía como un bloque ajeno, y encima dejaba un hueco de
-              ~200px contra el borde porque un objeto de 2:3 nunca llena una
-              columna tan ancha.
+              IT RETURNS TO THE RAIL, AND THAT IS THE DEFINITIVE FIX. For a
+              while it ran out to the window's edge: that fixed the two-boxes
+              problem but created another — it was the only section on the site
+              whose content escaped the container, so it read as a foreign
+              block, and on top of that it left a ~200px gap against the edge
+              because a 2:3 object never fills a column that wide.
 
-              Ahora vive en su celda del riel, y la celda está dimensionada al
-              objeto: al 44% del ancho útil el render ocupa su columna EXACTA y
-              no hay sobrante que repartir. Ni se separa del texto ni deja
-              hueco a la derecha, que eran las dos quejas y estaban en tensión.
+              It now lives in its cell on the rail, and the cell is dimensioned
+              to the object: at 44% of the usable width the render occupies its
+              column EXACTLY and there is no surplus to distribute. It neither
+              separates from the text nor leaves a gap on the right, which were
+              the two complaints and they were in tension.
 
-              En móvil pasa DEBAJO del contenido con su propia altura: `Media
-              fill` necesita un padre con medida. */}
+              On mobile it moves BELOW the content with its own height: `Media
+              fill` needs a parent with a measured size. */}
           <div
             data-charger-visual=""
             aria-hidden="true"

@@ -9,39 +9,39 @@ import { Button } from '@ui/common/components/ui/Button'
 import { Reveal } from '@ui/common/components/ui/Reveal'
 
 /**
- * BEAT 8 · CÓMO SE CARGA — Intensidad: STANDARD
- * Ver docs/MASTER-PROJECT-DEFINITION.md §12 y §15.
+ * BEAT 8 · HOW CHARGING WORKS — Intensity: STANDARD
+ * See docs/MASTER-PROJECT-DEFINITION.md §12 and §15.
  *
- * ── DEJÓ DE SER "LA SECCIÓN DE LA APP" ────────────────────────────────────
- * Este beat es la única respuesta del sitio a la pregunta del público
- * mayoritario: "¿cómo cargo?". Antes esa respuesta era UNA FRASE dentro de un
- * bloque rotulado "La app", con tres rasgos sueltos debajo. Rotular por el
- * producto en vez de por la tarea deja el beat invisible justo para quien lo
- * necesita, y un rasgo no responde lo que responde un paso.
+ * ── IT STOPPED BEING "THE APP SECTION" ────────────────────────────────────
+ * This beat is the site's only answer to the majority audience's question:
+ * "how do I charge?". That answer used to be ONE SENTENCE inside a block
+ * labelled "La app", with three loose features below it. Labelling by the
+ * product instead of by the task leaves the beat invisible to precisely the
+ * people who need it, and a feature does not answer what a step answers.
  *
- * Ahora son cuatro pasos en orden —encuentra, escanea, carga, listo— más una
- * salida a la red para quien quiere ver dónde cargar sin descargar nada. La
- * intensidad sigue siendo STANDARD a propósito: viene después del momento
- * signature de la película y antes del cierre. Aquí no se busca impacto, se
- * busca que se entienda.
+ * It is now four steps in order —find, scan, charge, done— plus a way out to
+ * the network for anyone who wants to see where to charge without downloading
+ * anything. The intensity stays STANDARD on purpose: it comes after the film's
+ * signature moment and before the close. Impact is not what is wanted here;
+ * being understood is.
  *
- * ── EL QR NO ES DECORACIÓN, RESUELVE UN PROBLEMA CONCRETO ────────────────
- * Esta sección se lee sobre todo en escritorio, y ahí las insignias de tienda
- * son un callejón: llevan a una ficha que no se puede instalar en el aparato
- * que tienes delante. El QR salta ese hueco — sacas el teléfono y escaneas.
- * En móvil ocurre lo contrario: el QR sobra porque las insignias ya funcionan,
- * así que se OCULTA por debajo de `md` en lugar de encogerse.
+ * ── THE QR IS NOT DECORATION, IT SOLVES A CONCRETE PROBLEM ───────────────
+ * This section is read mostly on desktop, and there the store badges are a
+ * dead end: they lead to a listing that cannot be installed on the device in
+ * front of you. The QR bridges that gap — you take out your phone and scan.
+ * On mobile the opposite happens: the QR is redundant because the badges
+ * already work, so it is HIDDEN below `md` rather than shrunk.
  *
- * ── POR QUÉ EL QR VA SOBRE BLANCO ────────────────────────────────────────
- * Un lector de códigos espera módulos oscuros sobre fondo claro. Invertirlo
- * para que "combine" con el lienzo oscuro hace que muchos teléfonos fallen, y
- * un QR que no escanea es peor que ningún QR. El asset incluye además la zona
- * tranquila de 4 módulos que exige la especificación.
+ * ── WHY THE QR SITS ON WHITE ─────────────────────────────────────────────
+ * A code reader expects dark modules on a light background. Inverting it so it
+ * "matches" the dark canvas makes many phones fail, and a QR that does not
+ * scan is worse than no QR at all. The asset also includes the 4-module quiet
+ * zone the specification requires.
  *
- * ── COMPOSICIÓN ──────────────────────────────────────────────────────────
- * Dos columnas asimétricas, no la mitad y la mitad: el texto pesa y el QR es
- * un objeto pequeño. Partirlo por el medio dejaría al QR flotando en un vacío
- * y repetiría el split simétrico que §12 prohíbe.
+ * ── COMPOSITION ──────────────────────────────────────────────────────────
+ * Two asymmetric columns, not half and half: the text carries weight and the
+ * QR is a small object. Splitting it down the middle would leave the QR
+ * floating in a void and would repeat the symmetric split §12 forbids.
  */
 export function AppDownload({ locale }: { locale: Locale }) {
   const c = home.app
@@ -64,14 +64,14 @@ export function AppDownload({ locale }: { locale: Locale }) {
             </h2>
             <p className="measure-narrow mt-5 text-body-l text-ink-2">{t(c.lead, locale)}</p>
 
-            {/* CUATRO PASOS, EN ORDEN. Una lista numerada y no viñetas: el
-                número es información —dice que hay una secuencia y en qué
-                punto estás—, mientras que un punto solo dice "otro elemento".
+            {/* FOUR STEPS, IN ORDER. A numbered list and not bullets: the
+                number is information —it says there is a sequence and where in
+                it you are— whereas a bullet only says "another item".
 
-                El número va en mono, en tinta apagada y sin círculo de color:
-                es un rótulo de ficha técnica, no una insignia. §12 reserva el
-                gradiente para UNA acción por vista, y esa acción son las
-                insignias de tienda que vienen justo debajo. */}
+                The number is set in mono, in muted ink and with no coloured
+                circle: it is a spec-sheet label, not a badge. §12 reserves the
+                gradient for ONE action per view, and that action is the store
+                badges that come right below. */}
             <ol className="mt-8">
               {c.steps.map((paso, i) => (
                 <li
@@ -96,14 +96,16 @@ export function AppDownload({ locale }: { locale: Locale }) {
               ))}
             </ol>
 
-            {/* Salida a la red: "¿dónde puedo cargar?" se responde en /red y no
-                exige descargar nada antes. Va como enlace y no como botón para
-                no competir con las insignias, que son la acción de este beat.
+            {/* Way out to the network: "where can I charge?" is answered on
+                /red and does not require downloading anything first. It is a
+                link and not a button so it does not compete with the badges,
+                which are this beat's action.
 
-                Reutiliza `actions.findCharger`, el mismo rótulo que el Hero y
-                el cierre: los tres llevan a /red, y tener una tercera clave con
-                el mismo texto solo multiplica los sitios donde puede divergir.
-                La clave propia `home.app.seeNetwork` se retiró por eso. */}
+                It reuses `actions.findCharger`, the same label as the Hero and
+                the close: all three lead to /red, and having a third key with
+                the same text only multiplies the places it can diverge. The
+                dedicated `home.app.seeNetwork` key was removed for that
+                reason. */}
             <div className="mt-7">
               <Button
                 variant="link"
@@ -120,12 +122,12 @@ export function AppDownload({ locale }: { locale: Locale }) {
             />
           </div>
 
-          {/* Solo escritorio: ver la cabecera del archivo. */}
+          {/* Desktop only: see this file's header. */}
           <Reveal className="hidden md:block">
             <div className="flex flex-col items-center gap-4">
-              {/* Marco de vidrio con el código sobre blanco dentro: el efecto
-                  va en el marco, nunca en el código. Ver `.glass` y la nota de
-                  `AppFloating`. */}
+              {/* Glass frame with the code on white inside it: the effect
+                  goes on the frame, never on the code. See `.glass` and the
+                  note in `AppFloating`. */}
               <div className="glass relative rounded-(--radius-structural) p-3">
                 <div className="rounded-[1.125rem] bg-white p-3.5 shadow-[0_10px_28px_-10px_rgb(0_0_0/0.7)]">
                   <Image
@@ -133,9 +135,9 @@ export function AppDownload({ locale }: { locale: Locale }) {
                     alt={t(c.qrAlt, locale)}
                     width={168}
                     height={168}
-                    /* SVG de 1.2 KB con geometría exacta: pasarlo por el
-                     optimizador solo añadiría una petición y riesgo de
-                     resampleo en un gráfico donde cada módulo cuenta. */
+                    /* A 1.2 KB SVG with exact geometry: running it through
+                     the optimiser would only add a request and a risk of
+                     resampling in a graphic where every module counts. */
                     unoptimized
                     className="block size-[10.5rem]"
                   />

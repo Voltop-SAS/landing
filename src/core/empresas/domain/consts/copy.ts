@@ -1,11 +1,12 @@
 import type { Localized } from '~/core/common/domain/i18n/config'
 
 /**
- * COPY · Empresas
+ * COPY · Business
  *
- * Orden obligatorio de la página (§10, §14):
- *   propuesta → selector de caso → capacidades → EVIDENCIA → formulario
- * La evidencia SIEMPRE precede a la petición del dato. No al revés.
+ * Mandatory page order (§10, §14):
+ *   proposition → case selector → capabilities → EVIDENCE → form
+ * Evidence ALWAYS precedes asking for the user's data. Never the other way
+ * round.
  */
 
 export const empresas = {
@@ -29,9 +30,10 @@ export const empresas = {
       pt: 'Empresas e espaços',
     } satisfies Localized,
     title: {
-      /* El diferencial —que lo operamos nosotros— iba enterrado en una cola
-         pasiva. El lead de abajo ya detalla diseñar, instalar, operar y
-         mantener, así que el titular puede quedarse con el trato. */
+      /* The differentiator —that we run it ourselves— was buried in a
+         passive tail. The lead below already spells out designing,
+         installing, operating and maintaining, so the headline can keep just
+         the deal. */
       es: 'Tú pones el espacio. Nosotros ponemos la red.',
       en: 'You bring the space. We bring the network.',
       pt: 'Você entra com o espaço. A gente entra com a rede.',
@@ -118,7 +120,7 @@ export const empresas = {
     ],
   },
 
-  /** EVIDENCIA — precede al formulario. Sin esto, la página no se publica. */
+  /** EVIDENCE — precedes the form. Without this, the page does not ship. */
   proof: {
     eyebrow: { es: 'Evidencia', en: 'Evidence', pt: 'Evidência' } satisfies Localized,
     title: {
@@ -147,13 +149,13 @@ export const empresas = {
       pt: 'Conte o seu caso',
     } satisfies Localized,
     /**
-     * QUÉ PASA DESPUÉS. La columna izquierda del bloque de contacto tenía un
-     * antetítulo, un titular y ~600px de vacío al lado de un formulario alto.
-     * Ese es exactamente el espacio donde va lo que reduce la fricción del lead.
+     * WHAT HAPPENS NEXT. The left column of the contact block had an eyebrow,
+     * a headline and ~600px of emptiness beside a tall form. That is exactly
+     * the space where whatever reduces the lead's friction belongs.
      *
-     * Deliberadamente SIN compromiso de plazo: mientras no exista integración de
-     * CRM, prometer un tiempo de respuesta es la misma falta que el estado de
-     * éxito que se corrigió en el Bloque 7.
+     * Deliberately WITHOUT a turnaround commitment: while there is no CRM
+     * integration, promising a response time is the same offence as the
+     * success state that was corrected in Block 7.
      */
     nextTitle: {
       es: 'Qué pasa después',

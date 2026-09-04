@@ -4,52 +4,54 @@ import type { MediaAsset } from '~/core/common/domain/entities/Media'
 export type PostType = 'apertura' | 'evento' | 'alianza' | 'comunicado' | 'noticia'
 
 /**
- * Cuerpo por BLOQUES, no Markdown ni HTML.
+ * Body as BLOCKS, not Markdown or HTML.
  *
- * Es la forma exacta en que un CMS headless entrega texto enriquecido
- * (Portable Text de Sanity, rich text de Contentful), así que migrar será
- * conectar y no reescribir — y no cierra ninguno de los tres caminos de
- * producción que §2 mantiene abiertos. Markdown suelto habría metido formato
- * dentro del dato y quitado control sobre composición y accesibilidad.
+ * It is the exact shape in which a headless CMS delivers rich text (Sanity's
+ * Portable Text, Contentful's rich text), so migrating will be a matter of
+ * connecting rather than rewriting — and it closes none of the three
+ * production paths §2 keeps open. Loose Markdown would have put formatting
+ * inside the data and taken away control over composition and accessibility.
  */
 export type PostBlock =
   | { kind: 'parrafo'; text: Localized }
   | { kind: 'subtitulo'; text: Localized }
   | { kind: 'lista'; items: Localized[] }
-  /** Atribución obligatoria: una cita sin autor no es una cita. */
+  /** Attribution is mandatory: a quote with no author is not a quote. */
   | { kind: 'cita'; text: Localized; author: string; role: Localized }
   /**
-   * `caption` es el pie VISIBLE. Si falta, se usa el `alt` del asset.
+   * `caption` is the VISIBLE caption. If it is missing, the asset's `alt` is
+   * used instead.
    *
-   * No son lo mismo y por eso se separan: el `alt` describe la imagen para
-   * quien no la ve, y el pie la comenta para quien sí. Usar el alt como pie
-   * obliga a que un solo texto haga dos trabajos, y acaba haciendo mal los dos.
+   * They are not the same thing, which is why they are separate: `alt`
+   * describes the image for whoever cannot see it, and the caption comments on
+   * it for whoever can. Using the alt as the caption forces one piece of text
+   * to do two jobs, and it ends up doing both badly.
    */
   | { kind: 'media'; asset: MediaAsset; caption?: Localized }
 
 export type Post = {
   slug: string
   type: PostType
-  /** ISO `YYYY-MM-DD`. Ordena el registro y alimenta `lastModified` del sitemap. */
+  /** ISO `YYYY-MM-DD`. Orders the log and feeds the sitemap's `lastModified`. */
   date: string
   title: Localized
-  /** Resumen del índice y descripción para buscadores. Una sola frase. */
+  /** Index summary and description for search engines. A single sentence. */
   summary: Localized
-  /** Vacío = la entrada vive solo en el índice. Ver cabecera del archivo. */
+  /** Empty = the entry lives only in the index. See the dataset's header. */
   body: PostBlock[]
   cover?: MediaAsset
-  /** Pie de la portada en el índice. Ver `caption` en el bloque `media`. */
+  /** Cover caption in the index. See `caption` on the `media` block. */
   coverCaption?: Localized
   /**
-   * Referencias, nunca texto libre. Es lo que hace que una apertura aparezca
-   * sola en la ficha de su estación y en la página de su ciudad, sin que nadie
-   * la coloque a mano en tres sitios.
+   * References, never free text. This is what makes an opening show up on its
+   * own on its station's page and on its city's page, without anyone placing
+   * it by hand in three places.
    */
   stationSlug?: string
   citySlug?: string
   featured?: boolean
-  /** `borrador` no se publica ni se construye. */
+  /** `borrador` is neither published nor built. */
   status: 'borrador' | 'publicado'
-  /** Trazabilidad del dato, igual que en estaciones. */
+  /** Data provenance, the same as on stations. */
   dataStatus: 'placeholder' | 'verified'
 }

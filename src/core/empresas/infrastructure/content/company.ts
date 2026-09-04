@@ -1,14 +1,18 @@
 /**
- * COLECCIONES · Métricas, casos, partners, testimonios y personas.
- * Ver docs/MASTER-PROJECT-DEFINITION.md §27 y §33.
+ * COLLECTIONS · B2B segments and case studies.
+ * See docs/MASTER-PROJECT-DEFINITION.md §27 and §33.
  *
- * REGLA INVIOLABLE: no se inventan cifras. Toda métrica lleva `validated`.
- * Si `validated` es false, la UI la muestra como provisional o la omite.
- * REGLA DE ECONOMÍA: máximo DOS métricas provisionales visibles por página.
+ * INVIOLABLE RULE: figures are never made up. Nothing here is published as a
+ * current capability unless product has confirmed it exists — see
+ * `benefitsUnconfirmed` on the `BusinessSegment` entity for where the written
+ * but unconfirmed ones wait.
+ *
+ * The impact metrics, partners, testimonials and the founder live in
+ * `~/core/nosotros/infrastructure/content/company`.
  */
 
 /* ------------------------------------------------------------------ */
-/* Métricas de impacto                                                 */
+/* B2B segments — they feed the /empresas selector                     */
 /* ------------------------------------------------------------------ */
 
 import type { BusinessSegment } from '~/core/empresas/domain/entities/BusinessSegment'
@@ -39,8 +43,8 @@ export const businessSegments: BusinessSegment[] = [
         en: 'Maintenance and support included',
         pt: 'Manutenção e suporte incluídos',
       },
-      /* CONFIRMADAS por producto el 2026-09-02: el backoffice de Voltop las
-         soporta. Vuelven a "Qué incluye". */
+      /* CONFIRMED by product on 2026-09-02: Voltop's back office supports
+         them. They return to "What's included". */
       {
         es: 'Control de acceso y consumo por colaborador',
         en: 'Per-employee access and usage control',
@@ -63,9 +67,9 @@ export const businessSegments: BusinessSegment[] = [
       pt: 'Infraestrutura para manter sua frota elétrica em movimento.',
     },
     proposition: {
-      /* Decía "sin sorpresas de disponibilidad": una GARANTÍA de disponibilidad
-         sobre una red que no publica SLA y cuyo propio sitio declara que el
-         estado en vivo todavía no está integrado. */
+      /* This used to say "no availability surprises": an availability
+         GUARANTEE about a network that publishes no SLA and whose own site
+         declares that live status is not integrated yet. */
       es: 'Diseñamos la capacidad de carga según tus rutas y turnos, y la operamos nosotros para que tu equipo no tenga que hacerlo.',
       en: "We size charging capacity around your routes and shifts, and we run it so your team doesn't have to.",
       pt: 'Dimensionamos a capacidade de carregamento pelas suas rotas e turnos, e nós a operamos para que sua equipe não precise.',
@@ -81,16 +85,16 @@ export const businessSegments: BusinessSegment[] = [
         en: 'Access to the public Voltop network',
         pt: 'Acesso à rede pública Voltop',
       },
-      /* "Carga programada en horario valle" NO vuelve: producto confirmó que
-         no existen tarifas por franja horaria. Lo que sí existe es RESERVAR,
-         que es una capacidad distinta y mejor —resuelve la incertidumbre de
-         llegar y encontrar ocupado— así que se dice esa. */
+      /* "Off-peak scheduled charging" is NOT coming back: product confirmed
+         there are no time-of-day tariffs. What does exist is RESERVING, which
+         is a different and better capability —it resolves the uncertainty of
+         arriving to find every point taken— so that is what we say. */
       {
         es: 'Reserva de carga para tus turnos',
         en: 'Charge reservations for your shifts',
         pt: 'Reserva de carregamento para os seus turnos',
       },
-      /* CONFIRMADA: trazabilidad de punta a punta. */
+      /* CONFIRMED: end-to-end traceability. */
       {
         es: 'Datos de consumo por vehículo',
         en: 'Per-vehicle consumption data',
@@ -137,9 +141,10 @@ export const businessSegments: BusinessSegment[] = [
   },
   {
     key: 'partner',
-    /* "Partner" era el único anglicismo del modelo de contenido, y en un sitio
-       escrito para Colombia que los evita. "Aliados" dice lo mismo y en
-       castellano. */
+    /* "Partner" was the only anglicism in the content model, on a site
+       written for Colombia that avoids them. "Aliados" says the same thing in
+       Spanish. (This is about the Spanish COPY, not the `partner` key, which
+       is a data value.) */
     label: { es: 'Aliados', en: 'Partners', pt: 'Parceiros' },
     headline: {
       es: 'Construyamos juntos nuevos puntos de carga.',
@@ -147,10 +152,11 @@ export const businessSegments: BusinessSegment[] = [
       pt: 'Vamos construir novos pontos de carga juntos.',
     },
     proposition: {
-      /* Decía "la red líder de Colombia": un reclamo de liderazgo de mercado
-         sin fuente ni métrica validada, en la página que un partner o un
-         inversionista lee con más lupa. §33 no admite eso. La invitación
-         funciona además mejor para esa audiencia que la afirmación. */
+      /* This used to say "Colombia's leading network": a claim of market
+         leadership with no source and no validated metric, on the very page a
+         partner or an investor reads most closely. §33 does not allow that.
+         The invitation also works better for that audience than the
+         assertion. */
       es: 'Integraciones técnicas, alianzas de expansión y acuerdos con fabricantes y operadores que quieren construir la red de carga de Colombia con nosotros.',
       en: "Technical integrations, expansion partnerships and agreements with manufacturers and operators that want to build Colombia's charging network with us.",
       pt: 'Integrações técnicas, parcerias de expansão e acordos com fabricantes e operadoras que querem construir a rede de carregamento da Colômbia com a gente.',
@@ -176,7 +182,7 @@ export const businessSegments: BusinessSegment[] = [
 ]
 
 /* ------------------------------------------------------------------ */
-/* Casos de éxito                                                      */
+/* Case studies                                                        */
 /* ------------------------------------------------------------------ */
 
 export const cases: Case[] = [
@@ -196,17 +202,17 @@ export const cases: Case[] = [
       pt: 'A Voltop projetou, instalou e opera a estação do campus, com múltiplos pontos e conectores que atendem aos veículos de estudantes, professores e visitantes.',
     },
     results: [],
-    /* Actualizada el 2026-09-04. Dos cambios de fondo, no de estilo:
-       
-       El verbo pasa de PASADO a PRESENTE —"nos permitió" → "ofrecemos"—, y eso
-       cambia lo que la cita prueba: en pasado sonaba a un proyecto que ocurrió;
-       en presente dice que la estación está funcionando ahora, que es
-       exactamente la duda que este beat existe para resolver.
-       
-       Y "una operación impecable" pasa a "una operación que funciona todos los
-       días". "Impecable" es un superlativo que no se puede comprobar y que
-       §19 no admite; "funciona todos los días" es una afirmación concreta que
-       el cliente puede sostener. */
+    /* Updated on 2026-09-04. Two substantive changes, not stylistic ones:
+
+       The verb moves from PAST to PRESENT —"nos permitió" → "ofrecemos"— and
+       that changes what the quote proves: in the past tense it sounded like a
+       project that happened; in the present it says the station is running
+       now, which is exactly the doubt this beat exists to resolve.
+
+       And "una operación impecable" becomes "una operación que funciona todos
+       los días". "Impeccable" is a superlative that cannot be checked and that
+       §19 does not allow; "works every day" is a concrete claim the client can
+       stand behind. */
     quote: {
       es: 'Con Voltop ofrecemos carga eléctrica confiable a nuestra comunidad, con una operación que funciona todos los días.',
       en: 'With Voltop we offer our community reliable EV charging, with an operation that works every day.',
@@ -220,5 +226,5 @@ export const cases: Case[] = [
 ]
 
 /* ------------------------------------------------------------------ */
-/* Partners · Testimonios · Personas                                   */
+/* End of the /empresas collections                                    */
 /* ------------------------------------------------------------------ */

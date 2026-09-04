@@ -2,22 +2,22 @@ import type { Localized } from '~/core/common/domain/i18n/config'
 import type { PostType } from '~/core/novedades/domain/entities/Post'
 
 /**
- * COPY · Novedades
- * Ver docs/MASTER-PROJECT-DEFINITION.md §14, §18 y §19.
+ * COPY · News
+ * See docs/MASTER-PROJECT-DEFINITION.md §14, §18 and §19.
  *
- * El destino se llama "Novedades" en navegación —deliberadamente reconocible,
- * porque una etiqueta de menú no es el sitio donde ser ingenioso— mientras que
- * el titular de la página sí lleva la idea de marca. Quien busca la sala de
- * prensa la encuentra; quien llega, lee algo que suena a Voltop.
+ * The destination is called "Novedades" in navigation —deliberately
+ * recognisable, because a menu label is not the place to be clever— while the
+ * page's headline does carry the brand idea. Whoever is looking for the press
+ * room finds it; whoever arrives reads something that sounds like Voltop.
  */
 
 export const novedades = {
   /**
-   * CTA de la portada cuando la entrada es la apertura de una estación.
+   * Cover CTA when the entry is a station opening.
    *
-   * En una apertura, el destino útil no es el artículo sino el sitio donde se
-   * puede cargar: el titular ya cuenta la noticia y el vídeo la muestra. El
-   * detalle sigue a un clic — el título enlaza a él.
+   * On an opening, the useful destination is not the article but the place
+   * where you can charge: the headline already tells the news and the video
+   * shows it. The detail is still one click away — the title links to it.
    */
   knowStation: {
     es: 'Conoce la estación',
@@ -25,7 +25,7 @@ export const novedades = {
     pt: 'Conheça a estação',
   } satisfies Localized,
 
-  /** Rótulo del tipo de medio. La duración la aporta el propio asset. */
+  /** Media type label. The duration comes from the asset itself. */
   mediaLabel: {
     video: { es: 'Video', en: 'Video', pt: 'Vídeo' } satisfies Localized,
   },
@@ -53,9 +53,10 @@ export const novedades = {
   } satisfies Localized,
 
   /**
-   * PULSO DEL REGISTRO. Se calcula del propio dataset —no es una métrica de
-   * negocio inventada (§33)— y responde en un vistazo la única pregunta que
-   * trae aquí a un inversionista o a un periodista: ¿esta compañía se mueve?
+   * THE LOG'S PULSE. It is computed from the dataset itself —it is not an
+   * invented business metric (§33)— and it answers at a glance the only
+   * question that brings an investor or a journalist here: is this company
+   * moving?
    */
   pulse: {
     entries: { es: 'entradas', en: 'entries', pt: 'entradas' } satisfies Localized,
@@ -72,7 +73,7 @@ export const novedades = {
     all: { es: 'Todo', en: 'All', pt: 'Tudo' } satisfies Localized,
   },
 
-  /** Etiqueta de cada tipo de entrada. Un tipo nuevo se añade aquí y en el modelo. */
+  /** Label for each entry type. A new type is added here and in the model. */
   types: {
     apertura: { es: 'Apertura', en: 'Opening', pt: 'Abertura' },
     evento: { es: 'Evento', en: 'Event', pt: 'Evento' },
@@ -82,15 +83,15 @@ export const novedades = {
   } satisfies Record<PostType, Localized>,
 
   /**
-   * Los mismos tipos EN PLURAL, solo para la miga de pan.
+   * The same types IN THE PLURAL, for the breadcrumb only.
    *
-   * `types` está en singular porque su trabajo principal es rotular UNA
-   * entrada: "Apertura" al lado de una fecha, en el registro y en la Home. En
-   * la miga de pan, en cambio, el tipo no describe la entrada sino la
-   * CATEGORÍA a la que pertenece —"Novedades / Aperturas"—, y ahí el singular
-   * se lee como si la categoría tuviera un solo elemento.
+   * `types` is singular because its main job is labelling ONE entry:
+   * "Apertura" next to a date, in the log and on the home page. In the
+   * breadcrumb, by contrast, the type does not describe the entry but the
+   * CATEGORY it belongs to —"Novedades / Aperturas"— and there the singular
+   * reads as if the category had a single item.
    *
-   * Son dos trabajos distintos con la misma palabra, así que son dos claves.
+   * They are two different jobs done by the same word, so they are two keys.
    */
   typesPlural: {
     apertura: { es: 'Aperturas', en: 'Openings', pt: 'Aberturas' },
@@ -112,16 +113,16 @@ export const novedades = {
   } satisfies Localized,
 
   /**
-   * Marca de dato provisional (§33).
+   * Provisional-data marker (§33).
    *
-   * En el ÍNDICE se declara una sola vez para todo el registro, no por fila.
-   * Repetida en cada entrada dejaba de ser una advertencia y pasaba a ser
-   * textura: cuatro etiquetas ámbar eran lo más llamativo de la página
-   * después del titular, y llevaban el ojo al dato menos importante.
-   * Es la misma economía que §33 impone a los placeholders de métrica.
+   * In the INDEX it is declared once for the whole log, not per row. Repeated
+   * on every entry it stopped being a warning and became texture: four amber
+   * labels were the most eye-catching thing on the page after the headline,
+   * and they drew the eye to the least important fact. It is the same economy
+   * §33 imposes on metric placeholders.
    *
-   * En la página de UNA entrada sí va por entrada: ahí hay una sola y
-   * califica exactamente lo que se está leyendo.
+   * On a SINGLE entry's page it does go per entry: there is only one there and
+   * it qualifies exactly what is being read.
    */
   provisionalTag: {
     es: 'Fecha provisional',
@@ -145,9 +146,9 @@ export const novedades = {
   } satisfies Localized,
 
   /**
-   * Registro sin entradas. No debería ocurrir con la sección en el menú —una
-   * sala de novedades vacía comunica lo contrario de lo que pretende— pero se
-   * declara en lugar de servir una página en blanco si alguna vez pasa.
+   * A log with no entries. It should not happen with the section in the menu
+   * —an empty news room communicates the opposite of what it intends— but it
+   * is declared rather than serving a blank page if it ever does.
    */
   empty: {
     title: {
@@ -167,28 +168,29 @@ export const novedades = {
     } satisfies Localized,
   },
 
-  /** Enlace de vuelta al producto desde una entrada. Aquí paga la referencia. */
+  /** Link back to the product from an entry. This is where the reference pays off. */
   related: {
     station: {
       es: 'Estación relacionada',
       en: 'Related station',
       pt: 'Estação relacionada',
     } satisfies Localized,
-    /* El botón llevaba el NOMBRE de la estación como rótulo ("Wake"), lo cual
-       decía a dónde se va pero no que se pueda ir. Ahora es un verbo.
-       
-       No reutiliza `actions.seeStation` —"Conoce ESTA estación"— porque ahí el
-       demostrativo funciona: en el beat 2 y en el caso, la estación es el
-       sujeto que se está mirando. Aquí es una referencia al pie de una
-       entrada, y "la" es el artículo que corresponde. Es la única pareja de
-       rótulos casi idénticos que se conserva a propósito. */
+    /* The button used to carry the station's NAME as its label ("Wake"),
+       which said where you would go but not that you could go. It is now a
+       verb.
+
+       It does not reuse `actions.seeStation` —"Conoce ESTA estación"— because
+       the demonstrative works there: in beat 2 and in the case study, the
+       station is the subject being looked at. Here it is a reference at the
+       foot of an entry, and the definite article is the one that fits. It is
+       the only pair of near-identical labels kept on purpose. */
     stationCta: {
       es: 'Conoce la estación',
       en: 'See the station',
       pt: 'Conheça a estação',
     } satisfies Localized,
-    /* Se completa con el nombre de la ciudad. Antes se concatenaba
-       "Ver la cobertura de la ciudad — Medellín", que la nombraba dos veces. */
+    /* Completed with the city's name. It used to be concatenated as "Ver la
+       cobertura de la ciudad — Medellín", which named it twice. */
     city: {
       es: 'Ver la cobertura en',
       en: 'See coverage in',
@@ -198,12 +200,12 @@ export const novedades = {
 }
 
 /* ---------------------------------------------------------------- */
-/* Re-superficie en otros destinos                                   */
+/* Re-surfacing on other destinations                                */
 /* ---------------------------------------------------------------- */
 
 /**
- * El registro no es un cajón aparte: cada entrada aparece donde el usuario la
- * busca. Estos son los rótulos de esas apariciones.
+ * The log is not a separate drawer: every entry shows up where the user looks
+ * for it. These are the labels for those appearances.
  */
 export const novedadesInline = {
   station: {

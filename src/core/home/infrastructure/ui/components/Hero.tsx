@@ -12,21 +12,22 @@ import { Button } from '@ui/common/components/ui/Button'
 import { TrackClick } from '@ui/common/components/analytics/TrackClick'
 
 /**
- * BEAT 1 · HERO — Intensidad: Alta · Registro: Impacto
- * ESTRUCTURA: full-bleed sobre infraestructura real, contenido anclado abajo
- * a la izquierda, columna única, tipografía sobredimensionada.
+ * BEAT 1 · HERO — Intensity: High · Register: Impact
+ * STRUCTURE: full-bleed over real infrastructure, content anchored bottom
+ * left, single column, oversized typography.
  *
- * Se eliminó la constelación de nodos: era el cliché visual del sector y
- * contradecía el reencuadre 70% mundo real / 30% comportamiento (§12).
- * El hero ya no lleva métricas: no hay cifras validadas y diez placeholders
- * destruían la credibilidad de la página (§33).
+ * The node constellation was removed: it was the sector's visual cliché and it
+ * contradicted the 70% real world / 30% behaviour reframing (§12). The hero no
+ * longer carries metrics: there are no validated figures, and ten placeholders
+ * destroyed the page's credibility (§33).
  *
- * Server Component: el titular y el CTA son HTML servido — bueno para LCP.
+ * Server Component: the headline and the CTA are served HTML — good for LCP.
  */
 /**
- * Opacidades del velo de legibilidad, en porcentaje del color `canvas`.
- * Se escriben con `color-mix` sobre el token en lugar de un hex, para que
- * sigan al sistema si el color de fondo cambia (§24: cero literales de color).
+ * Opacities of the legibility veil, as a percentage of the `canvas` colour.
+ * They are written with `color-mix` over the token rather than as a hex, so
+ * they follow the system if the background colour changes (§24: zero colour
+ * literals).
  */
 const canvas = (pct: number) =>
   pct >= 100
@@ -35,11 +36,11 @@ const canvas = (pct: number) =>
 
 const VEIL = {
   /**
-   * En móvil el texto ocupa TODO el ancho, así que el velo tiene que ser
-   * vertical. Un degradado izquierda→derecha aquí hace lo contrario de lo que
-   * se busca: oscurece el lado donde está el cargador —el sujeto de la foto—
-   * y deja más claro el derecho, donde también hay texto. Medido y visto: con
-   * lateral el equipo desaparecía; sin él se lee.
+   * On mobile the text occupies the FULL width, so the veil has to be
+   * vertical. A left→right gradient here does the opposite of what is wanted:
+   * it darkens the side where the charger is —the photo's subject— and leaves
+   * the right side lighter, where there is also text. Measured and observed:
+   * with a lateral veil the equipment disappeared; without it, it reads.
    */
   mobile: {
     vertical: `linear-gradient(to top, ${canvas(100)} 0%, ${canvas(96)} 48%, ${canvas(80)} 80%, ${canvas(52)} 100%)`,
@@ -48,22 +49,24 @@ const VEIL = {
     vertical: `linear-gradient(to top, ${canvas(100)} 0%, ${canvas(90)} 45%, ${canvas(60)} 82%, ${canvas(30)} 100%)`,
     lateral: `linear-gradient(to right, ${canvas(70)} 0%, ${canvas(44)} 48%, transparent 78%)`,
     /**
-     * Banda superior, bajo el header.
+     * Top band, under the header.
      *
-     * El header es transparente hasta que hay scroll —solo entonces gana
-     * `bg-canvas/85` y desenfoque—, así que sobre el hero su texto cae
-     * directamente sobre la foto. El velo vertical llega arriba al 22%, que
-     * no basta: medido, el 1% más claro detrás de "Nosotros" a 768px daba
-     * **1.75:1**. No es un fallo de bloque sino de MANCHAS —las luces azules
-     * y los tubos del techo quedan detrás de letras concretas—, y por eso se
-     * percibe como que la navegación "se pierde" aunque el promedio pase.
+     * The header is transparent until there is scroll —only then does it gain
+     * `bg-canvas/85` and a blur— so over the hero its text falls directly onto
+     * the photo. The vertical veil reaches 22% at the top, which is not
+     * enough: measured, the lightest 1% behind "Nosotros" at 768px gave
+     * **1.75:1**. It is not a block-level failure but a failure of PATCHES
+     * —the blue lights and the ceiling tubes end up behind particular
+     * letters— and that is why the navigation is perceived as "getting lost"
+     * even though the average passes.
      *
-     * Se calibra contra el percentil 99 y no contra la media: bajo un fondo
-     * tan irregular, el promedio esconde justo el punto donde el trazo de una
-     * letra desaparece.
+     * It is calibrated against the 99th percentile and not against the mean:
+     * under such an irregular background, the average hides precisely the
+     * point where a letter's stroke disappears.
      *
-     * Solo en escritorio. En móvil el velo vertical ya llega al 52% arriba
-     * —por eso ahí sí cumplía— y sumarle esta banda lo oscurecería sin motivo.
+     * Desktop only. On mobile the vertical veil already reaches 52% at the top
+     * —which is why it did pass there— and adding this band would darken it
+     * for no reason.
      */
     superior: `linear-gradient(to bottom, ${canvas(80)} 0%, ${canvas(50)} 12%, transparent 22%)`,
   },
@@ -78,21 +81,21 @@ export function Hero({ locale }: { locale: Locale }) {
       space="none"
       className="flex min-h-[88dvh] flex-col justify-end overflow-hidden"
     >
-      {/* Material real de fondo.
-          `object-position` en 30% horizontal: `object-cover` recorta por el eje
-          que sobra, y ese eje cambia con el dispositivo. En escritorio el hueco
-          es más ancho que la foto (1.82 frente a 1.50), así que conserva TODO
-          el ancho y recorta arriba y abajo — ahí el valor horizontal no
-          interviene y el vertical centrado deja las estaciones en cuadro. En
-          móvil el hueco es mucho más estrecho (0.52), así que conserva todo el
-          alto y recorta a los lados: centrado se quedaría con la pared del
-          fondo y perdería el cargador con la marca, que está a la izquierda.
-          En la fotografía actual el cargador con marca está a la DERECHA del
-          centro (~55–68% del ancho), así que el anclaje va al 62%: es el que
-          lo deja centrado y legible en el recorte vertical. Se probó contra
-          24%, 40% y 52%; por debajo del 50% el equipo queda cortado en el
-          borde y el encuadre se reduce al lateral oscuro del vehículo.
-          En escritorio el valor no interviene: ahí se conserva todo el ancho. */}
+      {/* Real material in the background.
+          `object-position` at 30% horizontally: `object-cover` crops along
+          whichever axis has surplus, and that axis changes with the device. On
+          desktop the slot is wider than the photo (1.82 against 1.50), so it
+          keeps ALL the width and crops top and bottom — there the horizontal
+          value plays no part and a centred vertical keeps the stations in
+          frame. On mobile the slot is far narrower (0.52), so it keeps all the
+          height and crops the sides: centred, it would keep the back wall and
+          lose the branded charger, which is on the left.
+          In the current photograph the branded charger is to the RIGHT of
+          centre (~55–68% of the width), so the anchor goes to 62%: that is
+          what leaves it centred and legible in the vertical crop. It was
+          tested against 24%, 40% and 52%; below 50% the equipment is cut off
+          at the edge and the framing narrows to the vehicle's dark flank.
+          On desktop the value plays no part: there the full width is kept. */}
       <div className="absolute inset-0">
         <Media
           asset={media.heroVehiculoCargando}
@@ -101,45 +104,49 @@ export function Hero({ locale }: { locale: Locale }) {
           priority
           sizes="100vw"
           position="object-[62%_50%]"
-          /* Ver `qualities` en next.config.ts: esta foto es el elemento LCP y
-             a calidad por defecto se salía del presupuesto de peso. */
+          /* See `qualities` in next.config.ts: this photo is the LCP element
+             and at the default quality it exceeded the weight budget. */
           quality={70}
           className="h-full"
         />
       </div>
 
-      {/* ── CAPAS DE LEGIBILIDAD ──────────────────────────────────────────
-          Calibradas MIDIENDO sobre la fotografía real, no a ojo. El velo
-          anterior (`via-canvas/75`, un solo eje) se diseñó contra fondo plano;
-          con la foto puesta dejaba el antetítulo en **1.90:1** a 320px, muy
-          lejos del 4.5:1 que exige AA para 12px. Es texto verde de marca sobre
-          el panel claro del cargador: el peor caso del hero.
+      {/* ── LEGIBILITY LAYERS ─────────────────────────────────────────────
+          Calibrated by MEASURING against the real photograph, not by eye. The
+          previous veil (`via-canvas/75`, a single axis) was designed against a
+          flat background; with the photo in place it left the eyebrow at
+          **1.90:1** at 320px, far from the 4.5:1 AA requires for 12px. It is
+          brand-green text over the charger's light panel: the hero's worst
+          case.
 
-          LA FORMA DEL VELO SIGUE A LA FORMA DEL TEXTO, y por eso cambia con el
-          breakpoint:
+          THE SHAPE OF THE VEIL FOLLOWS THE SHAPE OF THE TEXT, which is why it
+          changes with the breakpoint:
 
-          · En ESCRITORIO el texto vive en la columna izquierda, así que un
-            lateral suave lo protege y deja la mitad derecha del encuadre a la
-            vista. Un velo solo vertical obligaría a oscurecer también donde no
-            hay texto.
-          · En MÓVIL el texto ocupa todo el ancho, así que el velo es vertical.
-            El lateral aquí sería contraproducente: oscurece el lado donde está
-            el cargador —el sujeto— y deja más claro el derecho, donde también
-            hay texto. Se probó y el equipo desaparecía.
+          · On DESKTOP the text lives in the left column, so a soft lateral
+            veil protects it and leaves the right half of the frame visible. A
+            vertical-only veil would force darkening where there is no text
+            too.
+          · On MOBILE the text occupies the full width, so the veil is
+            vertical. A lateral one here would be counterproductive: it darkens
+            the side where the charger is —the subject— and leaves the right
+            side lighter, where there is also text. It was tried and the
+            equipment disappeared.
 
-          Las intensidades también difieren: en móvil el recorte deja el panel
-          claro detrás del texto y hace falta más velo; en escritorio el mismo
-          valor llevaba el antetítulo a 8.65:1 cuando basta con ~5, y apagaba la
-          fotografía sin necesidad — que es el 70% de la dirección visual (§12).
+          The intensities differ as well: on mobile the crop leaves the light
+          panel behind the text and more veil is needed; on desktop the same
+          value took the eyebrow to 8.65:1 when ~5 is enough, and it dimmed the
+          photograph for no reason — and the photograph is 70% of the visual
+          direction (§12).
 
-          RECALIBRADO el 2026-09-01 al cambiar la fotografía del hero. La nueva
-          es más clara justo donde va el texto: con el velo anterior el
-          antetítulo caía a 3.36:1. Y se recalibró contra el **percentil 99**,
-          no contra el 90 —la lección del bloque 17—: bajo un fondo irregular
-          el promedio esconde el punto donde el trazo de una letra desaparece.
+          RECALIBRATED on 2026-09-01 when the hero photograph changed. The new
+          one is lighter exactly where the text sits: with the previous veil the
+          eyebrow dropped to 3.36:1. And it was recalibrated against the **99th
+          percentile**, not the 90th —block 17's lesson—: under an irregular
+          background the average hides the point where a letter's stroke
+          disappears.
 
-          Márgenes con el criterio nuevo: +12% en escritorio, +31% en móvil
-          (móvil ya cumplía y no se tocó). */}
+          Margins under the new criterion: +12% on desktop, +31% on mobile
+          (mobile already passed and was left untouched). */}
       <div
         aria-hidden="true"
         className="absolute inset-0 md:hidden"
@@ -161,7 +168,7 @@ export function Hero({ locale }: { locale: Locale }) {
         style={{ background: VEIL.desktop.superior }}
       />
 
-      {/* Acento de corriente: una sola línea, en el borde. Señal, no textura. */}
+      {/* Current accent: a single line, at the edge. Signal, not texture. */}
       <div
         aria-hidden="true"
         className="absolute inset-x-0 bottom-0 h-px brand-gradient opacity-70"
@@ -177,9 +184,9 @@ export function Hero({ locale }: { locale: Locale }) {
         <p className="mt-7 measure text-body-l text-ink-2">{t(home.hero.lead, locale)}</p>
 
         <div className="mt-10">
-          {/* El evento estaba declarado en §31 y no lo emitía nadie: el header
-              pasó a medir la descarga de la app, y ningún CTA de página medía
-              la entrada a la red. */}
+          {/* The event was declared in §31 and nobody emitted it: the header
+              moved on to measuring the app download, and no page CTA was
+              measuring entry into the network. */}
           <TrackClick
             event="cta_encontrar_cargador_click"
             props={{ ubicacion: 'hero' }}
@@ -195,9 +202,9 @@ export function Hero({ locale }: { locale: Locale }) {
           </TrackClick>
         </div>
 
-        {/* Señal de scroll. `home.hero.scrollHint` estaba escrito y sin usar, y
-            el hero mide 88dvh con un beat de 170vh justo debajo: sin una pista,
-            no hay nada que indique que la página continúa. */}
+        {/* Scroll cue. `home.hero.scrollHint` was written and unused, and the
+            hero is 88dvh tall with a 170vh beat right below it: without a cue,
+            nothing indicates that the page continues. */}
         <p
           aria-hidden="true"
           className="mt-12 flex items-center gap-2 font-mono text-mono uppercase tracking-wider text-ink-3"
@@ -220,18 +227,19 @@ export function Hero({ locale }: { locale: Locale }) {
           </svg>
         </p>
 
-        {/* Cobertura real desde la colección de ciudades: contenido útil que
-            ancla la composición y abre una segunda entrada al journey B2C.
-            No es decoración ni una cifra inventada. */}
+        {/* Real coverage from the cities collection: useful content that
+            anchors the composition and opens a second entry into the B2C
+            journey. It is neither decoration nor an invented figure. */}
         {coverage.length > 0 && (
           <nav
             aria-label={t(red.cities.title, locale)}
             className="mt-8 border-t border-line-strong pt-6"
           >
             <ul className="flex flex-wrap items-center gap-x-8 gap-y-2">
-              {/* En móvil la etiqueta ocupa su propia línea. Compartiéndola,
-                  "Bogotá" cabía al lado y "Medellín" caía sola a una segunda
-                  fila: las dos ciudades quedaban desalineadas entre sí. */}
+              {/* On mobile the label takes its own line. Sharing one,
+                  "Bogotá" fitted alongside it and "Medellín" dropped alone to
+                  a second row: the two cities ended up misaligned with each
+                  other. */}
               <li className="basis-full font-mono text-mono uppercase tracking-wider text-ink-3 sm:basis-auto">
                 {t(red.cities.title, locale)}
               </li>

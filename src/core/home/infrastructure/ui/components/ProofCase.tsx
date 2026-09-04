@@ -11,13 +11,14 @@ import { Button } from '@ui/common/components/ui/Button'
 import { TrackView } from '@ui/common/components/analytics/TrackView'
 
 /**
- * BEAT 5 · CASO REAL — Intensidad: Alta · Registro: Impacto
- * ESTRUCTURA: full-bleed con la cita ENCIMA del material, como tipografía
- * protagonista. No es un split de imagen + texto al lado.
+ * BEAT 5 · REAL CASE — Intensity: High · Register: Impact
+ * STRUCTURE: full-bleed with the quote OVER the material, as the leading
+ * typography. It is not an image + adjacent text split.
  *
- * Es la prueba humana e institucional: sirve simultáneamente a confianza B2B
- * y a marca. Antes convivía con tres "XX" gigantes que dominaban la pantalla;
- * las métricas se movieron a /nosotros, donde el impacto es el tema (§33).
+ * It is the human and institutional proof: it serves B2B trust and brand at
+ * the same time. It used to sit alongside three giant "XX" placeholders that
+ * dominated the screen; the metrics moved to /nosotros, where impact is the
+ * subject (§33).
  */
 export function ProofCase({ locale }: { locale: Locale }) {
   const featured = getFeaturedCase()
@@ -60,16 +61,16 @@ export function ProofCase({ locale }: { locale: Locale }) {
           </h2>
         </div>
 
-        {/* ── LA CITA, A ESCALA ────────────────────────────────────────
-            Estaba en `display-xl`: 72px a 1440 para 100 caracteres, dentro de
-            una medida de 20ch. Eso son seis líneas de tipografía enorme en un
-            beat cuyo propio titular va a 24px — una diferencia de 3× que no
-            era jerarquía sino desproporción, y rompía el ritmo de la página.
+        {/* ── THE QUOTE, AT SCALE ──────────────────────────────────────
+            It was set in `display-xl`: 72px at 1440 for 100 characters, inside
+            a 20ch measure. That is six lines of enormous type in a beat whose
+            own headline runs at 24px — a 3× difference that was not hierarchy
+            but disproportion, and it broke the page's rhythm.
 
-            `display-l` (52px) la mantiene como la voz más alta del beat sin
-            competir con el Hero, que es el único `display-2xl` del sitio. Y la
-            medida se ensancha de 20ch a 28ch: con menos cuerpo, forzar líneas
-            cortas solo multiplica los cortes. */}
+            `display-l` (52px) keeps it as the loudest voice in the beat
+            without competing with the Hero, which is the site's only
+            `display-2xl`. And the measure widens from 20ch to 28ch: at a
+            smaller size, forcing short lines only multiplies the breaks. */}
         <TrackView
           event="caso_visto"
           props={{ caso: featured.slug }}
@@ -79,14 +80,15 @@ export function ProofCase({ locale }: { locale: Locale }) {
           </blockquote>
         </TrackView>
 
-        {/* La atribución va DESPUÉS de la cita: esto es una prueba, así que
-            primero habla el cliente y después se acredita quién lo dijo. En el
-            beat 7 la misma unidad va antes, por la razón contraria. Ver
+        {/* The attribution goes AFTER the quote: this is proof, so the client
+            speaks first and only then do we credit who said it. In beat 7 the
+            same unit goes before, for the opposite reason. See
             `QuoteAttribution`. */}
         <footer className="mt-10 flex flex-wrap items-center gap-x-10 gap-y-6 border-t border-line-strong pt-8">
-          {/* `focus`: el retrato llegó de medio cuerpo y a 96px la cara
-              quedaba en ~35px. El zoom con origen alto recorta hacia el
-              rostro sin tocar el archivo — ver `QuoteAttribution`. */}
+          {/* `focus`: the portrait arrived as a half-body shot and at 96px
+              the face came out at ~35px. The zoom with a high origin crops
+              towards the face without touching the file — see
+              `QuoteAttribution`. */}
           <QuoteAttribution
             asset={media.retratoTestimonioEan}
             locale={locale}

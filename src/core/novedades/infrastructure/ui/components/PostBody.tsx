@@ -4,15 +4,16 @@ import type { PostBlock } from '~/core/novedades/domain/entities/Post'
 import { novedades } from '~/core/novedades/domain/consts/copy'
 
 /**
- * CUERPO DE UNA ENTRADA · render de bloques tipados.
+ * BODY OF AN ENTRY · rendering of typed blocks.
  *
- * Punto ÚNICO donde el modelo de contenido se convierte en marcado. El dato no
- * lleva formato dentro (nada de Markdown ni HTML en el campo), así que la
- * composición, la jerarquía de encabezados y la accesibilidad se deciden aquí
- * y no en el texto que escribe quien publica.
+ * The SINGLE point where the content model becomes markup. The data carries no
+ * formatting inside it (no Markdown or HTML in the field), so composition,
+ * heading hierarchy and accessibility are decided here and not in the text
+ * whoever publishes writes.
  *
- * Un bloque nuevo se añade al tipo `PostBlock` y a este `switch`: TypeScript
- * señala el caso que falte en lugar de renderizar nada en silencio.
+ * A new block is added to the `PostBlock` type and to this `switch`:
+ * TypeScript points at the missing case instead of silently rendering
+ * nothing.
  */
 export function PostBody({ blocks, locale }: { blocks: PostBlock[]; locale: Locale }) {
   return (
@@ -31,8 +32,8 @@ export function PostBody({ blocks, locale }: { blocks: PostBlock[]; locale: Loca
 
           case 'subtitulo':
             return (
-              /* `h2` porque el título de la entrada es el `h1` de la página:
-                 la jerarquía no salta niveles (§29). */
+              /* `h2` because the entry's title is the page's `h1`: the
+                 hierarchy does not skip levels (§29). */
               <h2
                 key={i}
                 className="mt-6 font-display text-display-s font-semibold text-balance text-ink"
@@ -83,8 +84,8 @@ export function PostBody({ blocks, locale }: { blocks: PostBlock[]; locale: Loca
                 key={i}
                 className="my-4"
               >
-                {/* Mismo criterio que la portada: un vídeo dentro del cuerpo de una
-                    entrada es una pieza que se ve, no un fondo. */}
+                {/* Same criterion as the cover: a video inside an entry's
+                    body is a piece you watch, not a background. */}
                 <Media
                   asset={block.asset}
                   locale={locale}
@@ -92,9 +93,9 @@ export function PostBody({ blocks, locale }: { blocks: PostBlock[]; locale: Loca
                   controls={block.asset.kind === 'video'}
                   sizes="(min-width: 768px) 46rem, 100vw"
                 />
-                {/* El rótulo se DERIVA del asset —tipo y duración— en lugar de
-                    escribirse. Un "VIDEO · 1:05" a mano se queda desfasado el
-                    día que se recorte la pieza y nadie lo nota. */}
+                {/* The label is DERIVED from the asset —type and duration—
+                    rather than written. A hand-written "VIDEO · 1:05" goes
+                    stale the day the piece is re-cut and nobody notices. */}
                 <figcaption className="mt-3 text-body-s text-ink-3">
                   {block.asset.kind === 'video' && block.asset.duration && (
                     <span className="mr-3 font-mono text-mono uppercase tracking-wider text-ink-2">

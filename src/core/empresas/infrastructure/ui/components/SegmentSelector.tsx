@@ -9,15 +9,16 @@ import { SectionHeading } from '@ui/common/components/ui/LayoutPrimitives'
 import { cn } from '@ui/common/lib/cn'
 
 /**
- * SELECTOR DE CASO B2B · patrón de pestañas COMPLETO
- * Ver docs/MASTER-PROJECT-DEFINITION.md §23.
+ * B2B CASE SELECTOR · COMPLETE tabs pattern
+ * See docs/MASTER-PROJECT-DEFINITION.md §23.
  *
- * La versión anterior declaraba `role="tab"` sin `tabpanel`, sin `aria-controls`
- * y sin navegación por flechas: un patrón ARIA incompleto degrada más que no
- * poner ARIA. Aquí está completo — roving tabindex, flechas, Inicio/Fin,
- * panel asociado y objetivos táctiles ≥44px.
+ * The previous version declared `role="tab"` with no `tabpanel`, no
+ * `aria-controls` and no arrow-key navigation: an incomplete ARIA pattern
+ * degrades things more than adding no ARIA at all. Here it is complete —
+ * roving tabindex, arrow keys, Home/End, an associated panel and touch
+ * targets ≥44px.
  *
- * El segmento elegido se comunica hacia arriba para prellenar el formulario.
+ * The chosen segment is reported upwards to pre-fill the form.
  */
 export function SegmentSelector({
   locale,
@@ -64,15 +65,16 @@ export function SegmentSelector({
 
   return (
     <div>
-      {/* ── TAB, NO CHIP ───────────────────────────────────────────────────
-          Antes esto y los filtros de /red eran visualmente IDÉNTICOS —pastilla,
-          borde de marca, relleno tenue— para dos semánticas opuestas: filtrar
-          una lista frente a cambiar de vista. Y nada indicaba que hubiera un
-          panel debajo que cambia.
+      {/* ── A TAB, NOT A CHIP ──────────────────────────────────────────────
+          This and the /red filters used to be visually IDENTICAL —pill, brand
+          border, faint fill— for two opposite semantics: filtering a list
+          versus switching a view. And nothing indicated there was a panel
+          below that changes.
 
-          Ahora el tab es una lengüeta: se apoya en la misma línea que separa el
-          panel y el activo la interrumpe con una barra de marca. La conexión
-          entre el control y su contenido es visual, no solo declarada en ARIA. */}
+          The tab is now a proper tab: it sits on the same line that separates
+          the panel, and the active one interrupts that line with a brand bar.
+          The connection between the control and its content is visual, not
+          merely declared in ARIA. */}
       <div
         role="tablist"
         aria-label={t(empresas.selector.title, locale)}
@@ -136,9 +138,9 @@ export function SegmentSelector({
           >
             {t(empresas.selector.benefitsTitle, locale)}
           </SectionHeading>
-          {/* "Qué incluye" es una lista de INCLUSIÓN, no una secuencia: el
-              número prometía un orden inexistente. La marca de verificación dice
-              lo que la lista significa de verdad. */}
+          {/* "What's included" is a list of INCLUSION, not a sequence: the
+              number promised an order that does not exist. The check mark says
+              what the list actually means. */}
           <ul className="mt-6 grid gap-x-10 gap-y-4 sm:grid-cols-2">
             {active.benefits.map((b, i) => (
               <li

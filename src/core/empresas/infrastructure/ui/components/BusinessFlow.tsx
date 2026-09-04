@@ -12,16 +12,17 @@ import { SegmentSelector } from '~/core/empresas/infrastructure/ui/components/Se
 import { LeadForm } from '~/core/empresas/infrastructure/ui/components/LeadForm'
 
 /**
- * FLUJO B2B · selector → capacidades → EVIDENCIA → formulario
- * Ver docs/MASTER-PROJECT-DEFINITION.md §10 y §14.
+ * B2B FLOW · selector → capabilities → EVIDENCE → form
+ * See docs/MASTER-PROJECT-DEFINITION.md §10 and §14.
  *
- * ORDEN NO NEGOCIABLE: la evidencia precede SIEMPRE a la petición del dato.
- * La versión anterior ponía el formulario al lado del selector, pidiendo el
- * lead sin haber probado nada. Aquí el usuario elige su caso, ve la propuesta,
- * ve una implementación real y solo entonces se le pide el contacto.
+ * NON-NEGOTIABLE ORDER: evidence ALWAYS precedes asking for the user's data.
+ * The previous version put the form beside the selector, asking for the lead
+ * without having proved anything. Here the user picks their case, reads the
+ * proposition, sees a real implementation, and only then is asked for their
+ * contact details.
  *
- * El segmento elegido prellena el formulario: menos fricción y mejor
- * segmentación del lead en el CRM.
+ * The chosen segment pre-fills the form: less friction and better lead
+ * segmentation in the CRM.
  */
 export function BusinessFlow({
   locale,
@@ -63,7 +64,7 @@ export function BusinessFlow({
         </Container>
       </Section>
 
-      {/* EVIDENCIA — precede al formulario */}
+      {/* EVIDENCE — precedes the form */}
       {proofCase && (
         <Section
           space="base"
@@ -121,7 +122,7 @@ export function BusinessFlow({
         </Section>
       )}
 
-      {/* CONVERSIÓN — al final del recorrido, nunca antes */}
+      {/* CONVERSION — at the end of the journey, never before */}
       <Section
         id="contacto"
         space="base"
@@ -138,9 +139,10 @@ export function BusinessFlow({
                 {t(empresas.contact.title, locale)}
               </SectionHeading>
 
-              {/* Esta columna tenía ~600px de vacío al lado de un formulario
-                  alto. Aquí va lo que reduce la fricción del lead: qué pasa
-                  después de enviar. Sin plazo prometido — no hay CRM todavía. */}
+              {/* This column had ~600px of emptiness beside a tall form.
+                  What reduces the lead's friction goes here: what happens
+                  after sending. No turnaround promised — there is no CRM
+                  yet. */}
               <SectionHeading
                 as="h3"
                 size="s"

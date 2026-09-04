@@ -4,16 +4,16 @@ export type Case = {
   slug: string
   client: string
   segment: string
-  /** Logo del cliente. Vacío hasta recibir el archivo con permiso de uso. */
+  /** Client logo. Empty until we receive the file cleared for use. */
   logo: string | null
   challenge: Localized
   solution: Localized
-  /** Resultados cuantitativos. Vacío mientras no haya cifras validadas. */
+  /** Quantitative results. Empty while there are no validated figures. */
   results: { value: string; label: Localized }[]
   quote: Localized
   author: string
   role: Localized
-  /** Estación asociada, si aplica. */
+  /** Associated station, where applicable. */
   stationSlug?: string
   featured?: boolean
 }

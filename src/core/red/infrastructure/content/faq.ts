@@ -2,32 +2,32 @@ import { routes } from '~/core/common/domain/i18n/routes'
 import { externalLinks } from '~/core/common/domain/consts/links'
 
 /**
- * COLECCIÓN · Preguntas frecuentes
- * Ver docs/MASTER-PROJECT-DEFINITION.md §19 (un titular es un contrato) y §33.
+ * COLLECTION · Frequently asked questions
+ * See docs/MASTER-PROJECT-DEFINITION.md §19 (a headline is a contract) and §33.
  *
- * El copy en español lo escribió Camilo; aquí se conserva literal. Inglés y
- * portugués son traducción de ese original, no versiones nuevas: si el español
- * cambia, los otros dos cambian con él.
+ * The Spanish copy was written by Camilo and is kept verbatim here. English
+ * and Portuguese are translations of that original, not new versions: if the
+ * Spanish changes, the other two change with it.
  *
- * ── LA DISPONIBILIDAD SE DEJA COMO ESTÁ ─────────────────────────────────
- * La respuesta 2 ofrece "disponibilidad" y la respuesta 1 habla de la sesión
- * "en tiempo real", mientras `states.pendingRealtime` avisa dos secciones más
- * arriba de que la disponibilidad en tiempo real todavía no está integrada.
- * DECISIÓN DE CAMILO (2026-09-02): en este alcance no se conecta nada; el
- * texto se queda en el front y se edita aquí cuando la disponibilidad cambie.
- * Se registra para que quien lo lea mañana sepa que es deliberado.
+ * ── AVAILABILITY IS LEFT AS IT IS ────────────────────────────────────────
+ * Answer 2 offers "availability" and answer 1 talks about the session "in real
+ * time", while `states.pendingRealtime` warns two sections further up that
+ * real-time availability is not integrated yet.
+ * CAMILO'S DECISION (2026-09-02): nothing gets wired up in this scope; the
+ * text stays in the front end and is edited here when availability changes.
+ * Recorded so that whoever reads it tomorrow knows it is deliberate.
  *
- * ── DOS ENLACES QUE AHORA SÍ EXISTEN ────────────────────────────────────
- * Soporte: WhatsApp +57 315 986 4931, operado vía Freshchat. Se publica como
- * `wa.me`, NO como `tel:`. Un `tel:` lanza una LLAMADA telefónica; el canal
- * de soporte es la conversación de WhatsApp, y `wa.me` es lo que la abre.
+ * ── TWO LINKS THAT NOW DO EXIST ──────────────────────────────────────────
+ * Support: WhatsApp +57 315 986 4931, operated through Freshchat. It is
+ * published as `wa.me`, NOT as `tel:`. A `tel:` starts a phone CALL; the
+ * support channel is the WhatsApp conversation, and `wa.me` is what opens it.
  *
- * Descarga de la app: https://app.voltop.co/ — al implementarlo devolvía 503
- * en tres intentos seguidos, con user-agent de navegador y por HTTP y HTTPS
- * (`voltop.co` sí respondía 200, así que era el subdominio). Se publica igual
- * porque es el dominio oficial y el sitio no está en producción, pero QUEDA
- * PENDIENTE DE VERIFICAR ANTES DEL LANZAMIENTO: §15 no admite un enlace que
- * no lleva a ninguna parte.
+ * App download: https://app.voltop.co/ — while implementing this it returned
+ * 503 on three consecutive attempts, with a browser user-agent and over both
+ * HTTP and HTTPS (`voltop.co` did answer 200, so it was the subdomain). It is
+ * published anyway because it is the official domain and the site is not in
+ * production, but it REMAINS TO BE VERIFIED BEFORE LAUNCH: §15 does not allow
+ * a link that leads nowhere.
  */
 
 import type { FaqItem } from '~/core/red/domain/entities/FaqItem'
@@ -69,9 +69,9 @@ export const faq: FaqItem[] = [
       en: 'You can see all our available stations right in the Voltop app, along with their location, connectors and availability, so you know where to charge before you arrive.',
       pt: 'Você pode consultar todas as nossas estações disponíveis diretamente no aplicativo da Voltop, junto com a localização, os conectores e a disponibilidade, para saber onde carregar antes de chegar.',
     },
-    /* La respuesta manda a la app, pero quien lee esto está de pie sobre el
-       buscador de la web. El enlace evita que la única salida sea una tienda
-       de aplicaciones cuyo enlace todavía no tenemos (O8). */
+    /* The answer points to the app, but whoever reads this is standing on
+       the web finder. The link keeps the only way out from being an app
+       store whose URL we do not have yet (O8). */
     links: [
       {
         label: {
@@ -132,9 +132,10 @@ export const faq: FaqItem[] = [
         external: true,
       },
       {
-        /* Dos caminos y no uno: WhatsApp resuelve lo urgente —alguien varado
-           en una estación— y el correo sirve para lo que necesita adjuntar o
-           dejar por escrito. Elegir por el usuario habría sido peor. */
+        /* Two paths and not one: WhatsApp handles what is urgent —someone
+           stranded at a station— and email serves whatever needs an
+           attachment or a written record. Choosing for the user would have
+           been worse. */
         label: { es: 'Escríbenos por correo', en: 'Email us', pt: 'Escreva para a gente' },
         href: externalLinks.soporte,
         external: true,

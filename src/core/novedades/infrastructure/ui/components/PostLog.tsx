@@ -5,21 +5,23 @@ import { LogEntry } from '~/core/novedades/infrastructure/ui/components/LogEntry
 import type { Post } from '~/core/common/infrastructure/data-access'
 
 /**
- * EL REGISTRO · lista cronológica con separadores de año.
+ * THE LOG · chronological list with year separators.
  *
- * El año no es decoración: es lo que convierte una lista en una bitácora y lo
- * que deja ver de un vistazo el ritmo real de la compañía —cuántas cosas
- * pasaron y cuándo—, que es justo la pregunta que trae aquí a un inversionista.
+ * The year is not decoration: it is what turns a list into a logbook and what
+ * makes the company's real rhythm visible at a glance —how many things
+ * happened and when— which is exactly the question that brings an investor
+ * here.
  *
- * Server Component. No hay filtro por tipo, y es una decisión, no una omisión:
- * con el volumen actual filtrar dejaría una o dos entradas por categoría, y un
- * control que no reduce nada útil es un control decorativo (§12). Cuando el
- * registro pase de ~15 entradas el filtro se gana su sitio; hasta entonces el
- * tipo se lee en cada fila y basta.
+ * Server Component. There is no filter by type, and that is a decision, not an
+ * omission: at the current volume, filtering would leave one or two entries
+ * per category, and a control that narrows nothing useful is a decorative
+ * control (§12). Once the log passes ~15 entries the filter earns its place;
+ * until then the type is readable on every row and that is enough.
  *
- * El año se agrupa ANTES de renderizar, no acumulando una variable dentro del
- * `map`: así el marcado no depende del orden de evaluación y el separador
- * puede ser hermano de las filas en lugar de anidarse dentro de una.
+ * The year is grouped BEFORE rendering, rather than accumulating a variable
+ * inside the `map`: that way the markup does not depend on evaluation order
+ * and the separator can be a sibling of the rows instead of nesting inside
+ * one.
  */
 export function PostLog({ posts, locale }: { posts: Post[]; locale: Locale }) {
   const groups = posts.reduce<{ year: string; entries: Post[] }[]>((acc, post) => {
@@ -31,11 +33,11 @@ export function PostLog({ posts, locale }: { posts: Post[]; locale: Locale }) {
   }, [])
 
   /**
-   * Con un solo año, el separador no separa nada: es un rótulo que no informa,
-   * y §12 no admite controles ni marcas decorativas. Aparece cuando hay más de
-   * un año que distinguir — activado por los datos, como el orden por
-   * distancia de `/red`, que solo se ofrece si alguna estación trae
-   * coordenadas.
+   * With a single year, the separator separates nothing: it is a label that
+   * does not inform, and §12 does not allow decorative controls or markers. It
+   * appears when there is more than one year to tell apart — activated by the
+   * data, like the sort-by-distance option on /red, which is only offered if
+   * some station carries coordinates.
    */
   const showYears = groups.length > 1
 
@@ -43,9 +45,9 @@ export function PostLog({ posts, locale }: { posts: Post[]; locale: Locale }) {
     <ul className="border-b border-line">
       {groups.map((group) => (
         <Fragment key={group.year}>
-          {/* Oculto a lectores de pantalla: cada entrada ya anuncia su fecha
-              completa, así que el separador es redundancia VISUAL. Repetirlo
-              en audio solo añade ruido entre entrada y entrada. */}
+          {/* Hidden from screen readers: every entry already announces its
+              full date, so the separator is VISUAL redundancy. Repeating it in
+              audio only adds noise between one entry and the next. */}
           {showYears && (
             <li
               aria-hidden="true"
