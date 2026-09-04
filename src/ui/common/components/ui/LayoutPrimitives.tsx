@@ -94,8 +94,8 @@ const spaces: Record<Space, string> = {
 
 /**
  * Section with explicit visual register and rhythm intensity.
- * - `silencio`: structural, flat, editorial. Lets the information breathe.
- * - `impacto`: energy and texture. Reserved for the key narrative points.
+ * - `silence`: structural, flat, editorial. Lets the information breathe.
+ * - `impact`: energy and texture. Reserved for the key narrative points.
  *
  * `register` is the project's confirmed visual decision no. 8 and until now it
  * WAS NOT USED by any component: `CloseCta` was the only one with texture and
@@ -103,14 +103,10 @@ const spaces: Record<Space, string> = {
  * `InfrastructureSignature`, `ProofCase`, `CloseCta`) now go through here, so
  * the concept exists in the code and not only in the documentation.
  *
- * The literals stay in Spanish because they are the shared vocabulary of the
- * design system: renaming them would touch every module that declares a
- * register.
- *
  * It accepts `ref` because the signature moment needs to measure its own
  * scroll.
  *
- * `impacto` applies ONLY the texture. It does not add `overflow-hidden`: an
+ * `impact` applies ONLY the texture. It does not add `overflow-hidden`: an
  * `overflow` other than `visible` creates a scroll container and would break
  * the signature moment's `position: sticky` — the same reason globals.css uses
  * `overflow-x: clip` on `body` and not `hidden`. Each section declares its own
