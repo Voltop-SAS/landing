@@ -1,51 +1,52 @@
 /**
- * EL REGISTRO DE ASSETS
+ * THE ASSET REGISTRY
  *
- * Los tipos viven en `domain/entities/Media.ts`; aquí está el catálogo. La
- * excepción es `MediaKey`, que se queda: es `keyof typeof media`, un tipo
- * DERIVADO del valor, y separarlo de él lo dejaría apuntando al vacío.
+ * The types live in `~/core/common/domain/entities/Media`; the catalogue lives
+ * here. The exception is `MediaKey`, which stays: it is `keyof typeof media`, a
+ * type DERIVED from the value, and separating it from that value would leave it
+ * pointing at nothing.
  */
 
 import type { MediaAsset } from '~/core/common/domain/entities/Media'
 
 export const media = {
-  /** SIGNATURE MOMENT — prueba de capacidad de construcción. */
+  /** SIGNATURE MOMENT — proof of the ability to build. */
   /**
-   * SIGNATURE MOMENT · entregado el 2026-09-01.
+   * SIGNATURE MOMENT · delivered 2026-09-01.
    *
-   * ── POR QUÉ EL BUCLE NECESITÓ UN FUNDIDO ─────────────────────────────────
-   * El original (`C1972.mov`, fuera del repositorio) son 27 s en HEVC Main 10
-   * a 4K. Es un TRAVELLING continuo: medido, la cámara se mueve entre 3.5 y
-   * 14.4 por segundo y **no se detiene en ningún momento**. Consecuencias:
+   * ── WHY THE LOOP NEEDED A FADE ───────────────────────────────────────────
+   * The original (`C1972.mov`, kept outside the repository) is 27 s of HEVC
+   * Main 10 at 4K. It is a continuous TRACKING SHOT: measured, the camera moves
+   * between 3.5 and 14.4 per second and **never stops**. The consequences:
    *
-   * · No existe ventana que cierre. Se evaluaron todas las de 10–12 s
-   *   comparando la secuencia de medio segundo alrededor de cada extremo:
-   *   mejor coste 23.8 sobre 255, peor 36.7. Rango estrecho y todo alto.
-   * · El fundido cruzado de cola sobre cabeza se estanca en 12.6 y produce
-   *   una doble exposición: disuelve entre dos imágenes distintas.
-   * · La ida y vuelta cierra numéricamente (6.4) pero **se ve mal**: el
-   *   desenfoque de movimiento va al revés y el ojo lo detecta como rebobinado.
-   *   Verificado por el usuario mirándolo, no por métrica.
+   * · There is no window that closes. Every 10–12 s window was evaluated by
+   *   comparing the half-second sequence around each end: best cost 23.8 out of
+   *   255, worst 36.7. A narrow range, and all of it high.
+   * · Cross-fading the tail over the head plateaus at 12.6 and produces a
+   *   double exposure: it dissolves between two different images.
+   * · Ping-pong closes numerically (6.4) but **looks wrong**: the motion blur
+   *   runs backwards and the eye reads it as rewinding. Verified by the user
+   *   watching it, not by a metric.
    *
-   * La solución que sí funciona en un plano que avanza: bucle RECTO con
-   * entrada y salida al color del fondo (`--color-canvas`). Los dos extremos
-   * llegan al mismo tono, así que no hay salto — cierre medido **3.7/255**—, y
-   * bajo el velo oscuro de la sección se lee como un respiro del plano, no
-   * como un efecto.
+   * What does work on a shot that keeps moving: a STRAIGHT loop that fades in
+   * and out to the background colour (`--color-canvas`). Both ends arrive at
+   * the same tone, so there is no jump — measured closure **3.7/255** — and
+   * under the section's dark veil it reads as the shot taking a breath rather
+   * than as an effect.
    *
-   * El fundido son 0.5 s y no más: cierra igual de bien que 0.8 s (2.2) pero
-   * interrumpe la mitad de tiempo.
+   * The fade is 0.5 s and no more: it closes just as well as 0.8 s (2.2) while
+   * interrupting for half as long.
    *
-   * ── EL PÓSTER NO SALE DEL FOTOGRAMA 0 ────────────────────────────────────
-   * Con la entrada fundida, el fotograma 0 es casi negro. El póster se toma
-   * del CENTRO del bucle, que es lo que debe verse mientras el video carga y
-   * lo que queda fijo con `prefers-reduced-motion`.
+   * ── THE POSTER DOES NOT COME FROM FRAME 0 ────────────────────────────────
+   * With a faded entry, frame 0 is almost black. The poster is taken from the
+   * MIDDLE of the loop, which is what should be visible while the video loads
+   * and what stays fixed under `prefers-reduced-motion`.
    */
   estacionMedellin: {
     id: 'estacion-medellin',
     kind: 'video',
     src: '/estacion-medellin-loop.mp4',
-    /* 960×540 · 0.66 MB frente a 2.92 MB del máster. */
+    /* 960×540 · 0.66 MB against the master's 2.92 MB. */
     srcMobile: '/estacion-medellin-loop-movil.mp4',
     poster: '/estacion-medellin-poster.jpg',
     alt: {
@@ -58,13 +59,13 @@ export const media = {
       en: 'Signature moment. Proves Voltop builds real infrastructure, not charging points.',
       pt: 'Signature moment. Prova que a Voltop constrói infraestrutura real, não pontos de carregamento.',
     },
-    /** Duración del BUCLE servido, no del corte original. */
+    /** Duration of the LOOP as served, not of the original cut. */
     duration: '0:11',
     aspect: '16/9',
     availability: 'entregado',
   },
 
-  /** Prueba de partnership institucional y de personas. */
+  /** Proof of institutional partnership, and of people. */
   aperturaEan: {
     id: 'apertura-ean',
     kind: 'video',
@@ -85,7 +86,7 @@ export const media = {
     availability: 'confirmado-no-entregado',
   },
 
-  /** Prueba de propósito y liderazgo. */
+  /** Proof of purpose and leadership. */
   visionCeo: {
     id: 'vision-ceo',
     kind: 'video',
@@ -106,7 +107,7 @@ export const media = {
     availability: 'confirmado-no-entregado',
   },
 
-  /** Material de respiración: comunica escala sin una sola cifra. */
+  /** Breathing material: it conveys scale without a single figure. */
   infraestructuraAmplia: {
     id: 'infraestructura-amplia',
     kind: 'photo',
@@ -165,22 +166,22 @@ export const media = {
   },
 
   /**
-   * FOTOGRAFÍA REAL · dos assets entregados el 2026-09-01.
+   * REAL PHOTOGRAPHY · two assets delivered 2026-09-01.
    *
-   * ── POR QUÉ NINGUNO APUNTA AL ARCHIVO ENTREGADO ──────────────────────────
-   * Los originales —`Hero.png` (60.9 MB) y `Hero_Banner.png` (50.3 MB)— superan
-   * el límite del optimizador de imágenes de Next, que rechaza cualquier origen
-   * por encima de **50.000.000 bytes** (`ERR_MAX_BODY_SIZE_EXCEEDED`). Por
-   * encima de esa cifra la imagen NO SE RENDERIZA, y no es configurable.
-   * Servirlas sin optimizar significaría mandar decenas de MB al navegador.
+   * ── WHY NEITHER POINTS AT THE DELIVERED FILE ─────────────────────────────
+   * The originals — `Hero.png` (60.9 MB) and `Hero_Banner.png` (50.3 MB) —
+   * exceed the limit of Next's image optimizer, which rejects any source over
+   * **50,000,000 bytes** (`ERR_MAX_BODY_SIZE_EXCEEDED`). Above that figure the
+   * image DOES NOT RENDER, and the limit is not configurable. Serving them
+   * unoptimized would mean shipping tens of MB to the browser.
    *
-   * Cada uno tiene su máster web derivado a 2560 px de ancho, la medida que
-   * `docs/05-assets-todo` fija para composiciones a sangre, conservando el 3/2
-   * exacto del original. Los originales quedan en `public/` y **deben salir del
-   * repositorio**: 111 MB de binario no pertenecen a un árbol de git.
+   * Each has its own web master derived at 2560 px wide, the size
+   * `docs/05-assets-todo` fixes for full-bleed compositions, preserving the
+   * original's exact 3/2. The originals stay in `public/` and **must leave the
+   * repository**: 111 MB of binary do not belong in a git tree.
    */
 
-  /** BEAT 1 · HERO. Vehículo conectado: la carga ocurriendo, no el equipo vacío. */
+  /** BEAT 1 · HERO. A connected vehicle: charging happening, not idle hardware. */
   heroVehiculoCargando: {
     id: 'hero-vehiculo-cargando',
     kind: 'photo',
@@ -201,13 +202,13 @@ export const media = {
   },
 
   /**
-   * BEAT 2 · SIGNATURE MOMENT. Sustituye al hueco que ocupaba el video
-   * `estacionMedellin`, que sigue pendiente de entrega y se conserva en este
-   * registro: cuando llegue, la sección puede volver a él cambiando una línea.
+   * BEAT 2 · SIGNATURE MOMENT. It fills the slot the `estacionMedellin` video
+   * used to hold; that video is still undelivered and is kept in this registry,
+   * so when it arrives the section can go back to it by changing one line.
    *
-   * Encaja con el titular del beat —"No instalamos cargadores, construimos
-   * lugares"— porque muestra varias estaciones en un espacio real, no un
-   * equipo aislado.
+   * It fits the beat's headline — "No instalamos cargadores, construimos
+   * lugares" — because it shows several stations in a real space rather than a
+   * single isolated unit.
    */
   estacionInfraestructura: {
     id: 'estacion-infraestructura',
@@ -229,21 +230,21 @@ export const media = {
   },
 
   /**
-   * CIUDADES · BEAT 3.
+   * CITIES · BEAT 3.
    *
-   * Las dos tarjetas de cobertura tienen la fotografía como elemento
-   * dominante: es lo que convierte "Bogotá · 2 estaciones" en un sitio real al
-   * que se puede ir. Sin ella la tarjeta es una etiqueta con un número.
+   * Both coverage cards use the photograph as their dominant element: it is
+   * what turns "Bogotá · 2 estaciones" into a real place you can drive to.
+   * Without it the card is a label with a number on it.
    *
-   * ENTREGADAS el 2026-09-04, y encajaron sin retocar nada: llegaron en
-   * 1672×941 y 1671×941, que es 16/9 exacto. Se convirtieron de PNG a JPEG
-   * para el handoff —2.4 MB cada una contra 0.3—: un PNG es un formato sin
-   * pérdida haciendo un trabajo con pérdida, y su peso en el árbol de git es
-   * permanente. La resolución no cambió, y las dos son vistas al atardecer
-   * con la franja inferior en sombra —justo donde caen el nombre y el
-   * contador—. La composición no cambió una línea al ponerlas: es lo que se
-   * gana declarando el hueco con su forma y su función en lugar de dejar un
-   * rectángulo gris.
+   * DELIVERED 2026-09-04, and they fit with no retouching: they arrived at
+   * 1672×941 and 1671×941, which is exactly 16/9. They were converted from PNG
+   * to JPEG for the handoff — 2.4 MB each against 0.3 — because a PNG is a
+   * lossless format doing a lossy job, and its weight in a git tree is
+   * permanent. The resolution did not change, and both are dusk views with the
+   * lower band in shadow — exactly where the name and the counter land. The
+   * composition did not change a single line when they were dropped in: that is
+   * what you gain by declaring the slot with its shape and its function instead
+   * of leaving a grey rectangle.
    */
   cityBogota: {
     id: 'ciudad-bogota',
@@ -284,43 +285,43 @@ export const media = {
   },
 
   /**
-   * RETRATOS DE LAS DOS CITAS · beats 5 y 7.
+   * PORTRAITS FOR THE TWO QUOTES · beats 5 and 7.
    *
-   * Las dos secciones de cita del sitio comparten tratamiento —ver
-   * `QuoteAttribution`— y por eso comparten también forma de asset: cuadrado,
-   * porque es la única proporción que funciona igual en la fila de atribución
-   * del beat 5 y sobre la columna estrecha del beat 7 sin recomponer nada.
+   * The site's two quote sections share their treatment — see
+   * `QuoteAttribution` — and so they also share an asset shape: square, because
+   * it is the only ratio that works the same in beat 5's attribution row and
+   * over beat 7's narrow column without recomposing anything.
    *
-   * QUÉ HACE FALTA: un retrato en 1/1, encuadre de hombros hacia arriba, con
-   * la persona mirando a cámara y fondo neutro y oscuro. No fondo blanco de
-   * estudio: en un sitio dark-first, un recorte claro de 96px se convierte en
-   * el punto más brillante de la sección y se lleva la mirada por delante de
-   * la cita, que es lo que se está intentando que se lea.
+   * WHAT IS NEEDED: a 1/1 portrait, framed from the shoulders up, with the
+   * person looking at the camera and a neutral, dark background. Not a white
+   * studio background: on a dark-first site, a light 96px cut-out becomes the
+   * brightest point in the section and takes the eye ahead of the quote, which
+   * is the thing we are trying to get read.
    *
-   * ── LOS DOS NO COMPARTEN TAMAÑO, Y ES DELIBERADO ─────────────────────────
-   * El de Helbert Perico es una MINIATURA de 96px en la fila de atribución: es
-   * un testimonio, y lo que acredita es quién lo dijo. El de Bruno Ocampo
-   * ocupa media columna en 2/3 vertical: es su visión, y ahí la persona pesa
-   * tanto como sus palabras. Mismo tratamiento de marco —radio estructural,
-   * hairline— y escalas opuestas, porque las funciones son opuestas.
+   * ── THE TWO DO NOT SHARE A SIZE, AND THAT IS DELIBERATE ──────────────────
+   * Helbert Perico's is a 96px THUMBNAIL in the attribution row: it is a
+   * testimonial, and what it certifies is who said it. Bruno Ocampo's takes
+   * half a column at 2/3 portrait: it is his vision, and there the person
+   * carries as much weight as the words. Same frame treatment — structural
+   * radius, hairline — and opposite scales, because the functions are opposite.
    *
-   * QUÉ HACE FALTA para el del fundador: retrato vertical 2/3, de medio cuerpo
-   * o tres cuartos, fondo neutro y oscuro. A 458px de ancho ya no es una
-   * miniatura: el fondo se ve, y un fondo claro a ese tamaño sí compite con la
-   * cita que tiene al lado.
+   * WHAT IS NEEDED for the founder's: a 2/3 vertical portrait, half-body or
+   * three-quarters, neutral dark background. At 458px wide it is no longer a
+   * thumbnail: the background is visible, and a light background at that size
+   * does compete with the quote beside it.
    *
-   * ── EL DE HELBERT PERICO LLEGÓ EL 2026-09-04, CON DOS DESVÍOS ────────────
-   * En 1/1 y 2048px, lo cual encajó sin tocar nada. Pero el encuadre es de
-   * MEDIO CUERPO —sentado, con las manos sobre la mesa— y el fondo es CLARO.
+   * ── HELBERT PERICO'S ARRIVED 2026-09-04, WITH TWO DEVIATIONS ─────────────
+   * At 1/1 and 2048px, which fit with nothing to change. But the framing is
+   * HALF-BODY — seated, hands on the table — and the background is LIGHT.
    *
-   * El encuadre se resuelve en `QuoteAttribution` con un reencuadre por CSS:
-   * a 96px, una foto de medio cuerpo deja la cara en unos 35px y no se
-   * reconoce a nadie. El zoom recorta hacia la cara sin tocar el archivo, así
-   * que el día que llegue un encuadre corto basta con quitarlo.
+   * The framing is handled in `QuoteAttribution` with a CSS re-crop: at 96px, a
+   * half-body photo leaves the face at around 35px and nobody is recognisable.
+   * The zoom crops towards the face without touching the file, so the day a
+   * tight framing arrives it is enough to remove it.
    *
-   * El fondo claro no se corrige: atenuar la cara de una persona para que
-   * "encaje" con el registro oscuro es peor que el problema que arregla. Si
-   * alguna vez se produce una versión con fondo oscuro, entra aquí sin más.
+   * The light background is NOT corrected: dimming a person's face so it "fits"
+   * the dark register is worse than the problem it fixes. If a version with a
+   * dark background is ever produced, it drops straight in here.
    */
   retratoTestimonioEan: {
     id: 'retrato-testimonio-ean',
@@ -361,22 +362,23 @@ export const media = {
   },
 
   /**
-   * RENDER DEL CARGADOR · entregado el 2026-09-04.
+   * CHARGER RENDER · delivered 2026-09-04.
    *
-   * Es el sujeto de la mitad derecha del beat 3, y es el único asset del
-   * registro que NO es fotografía de un sitio: es el equipo, aislado.
+   * It is the subject of beat 3's right-hand half, and the only asset in the
+   * registry that is NOT a photograph of a place: it is the hardware, isolated.
    *
-   * ── DOS COSAS QUE DECIDEN CÓMO SE INTEGRA ────────────────────────────────
-   * · Viene con FONDO TRANSPARENTE (PNG RGBA, alfa 0 en los bordes,
-   *   comprobado). Por eso puede ir sobre el `canvas` sólido de la sección sin
-   *   ninguna caja detrás: no hay recorte que disimular ni fondo que igualar.
-   * · Es VERTICAL, 2046×3074 (2/3). Se sirve con `object-contain` y no
-   *   `cover`: un cargador recortado por arriba o por los lados deja de ser el
-   *   retrato de un equipo y pasa a ser una textura.
+   * ── TWO THINGS THAT DECIDE HOW IT INTEGRATES ─────────────────────────────
+   * · It comes with a TRANSPARENT BACKGROUND (RGBA PNG, alpha 0 at the edges,
+   *   verified). That is why it can sit on the section's solid `canvas` with no
+   *   box behind it: there is no cut-out to disguise and no background to
+   *   match.
+   * · It is VERTICAL, 2046×3074 (2/3). It is served with `object-contain` and
+   *   not `cover`: a charger cropped at the top or the sides stops being the
+   *   portrait of a machine and becomes a texture.
    *
-   * El `alt` describe el equipo y sus conectores, que es lo que un lector de
-   * pantalla necesita saber de él; no dice "render" porque el formato del
-   * archivo no es información para quien lo escucha.
+   * The `alt` describes the unit and its connectors, which is what a screen
+   * reader user needs to know about it; it does not say "render", because the
+   * file format is not information for someone listening.
    */
   renderCargador: {
     id: 'render-cargador',
@@ -398,49 +400,49 @@ export const media = {
   },
 
   /**
-   * PELÍCULA DE MARCA · entregada el 2026-09-02 (`Video Home.mov`, 377 MB).
+   * BRAND FILM · delivered 2026-09-02 (`Video Home.mov`, 377 MB).
    *
-   * ── NO ES MATERIAL DE FONDO, Y ESO DECIDE CÓMO SE INTEGRA ────────────────
-   * Son 65 s con narración, subtítulos QUEMADOS en inglés de los ~5 s a los
-   * ~58 s y cierre con logo. Es una pieza terminada, no metraje suelto.
+   * ── IT IS NOT BACKGROUND MATERIAL, AND THAT DECIDES HOW IT INTEGRATES ────
+   * It is 65 s with narration, English subtitles BURNED IN from roughly 5 s to
+   * 58 s, and a logo close. It is a finished piece, not loose footage.
    *
-   * Por eso va con controles y no como fondo en bucle silenciado:
-   * · Silenciada pierde el mensaje, que está en la narración.
-   * · En bucle, 65 s con logo de cierre no son un bucle: son una película
-   *   reiniciándose.
-   * · Y un fondo silenciado con subtítulos en inglés contradice la regla del
-   *   propio brief de assets —"sin texto quemado: no se puede traducir ni leer
-   *   por asistencia"— sobre un sitio en tres idiomas.
+   * That is why it ships with controls rather than as a muted looping
+   * background:
+   * · Muted, it loses the message, which lives in the narration.
+   * · Looped, 65 s ending on a logo is not a loop: it is a film restarting.
+   * · And a muted background with English subtitles contradicts the asset
+   *   brief's own rule — "no burned-in text: it cannot be translated or read by
+   *   assistive technology" — on a site in three languages.
    *
-   * ── PENDIENTE, Y NO ES MENOR ─────────────────────────────────────────────
-   * Los subtítulos quemados en inglés se ven igual en `/es` y en `/pt`, y no
-   * son accesibles: un lector de pantalla no los alcanza. WCAG 1.2.2 pide
-   * subtítulos reales para audio pregrabado. La solución correcta es un máster
-   * SIN texto quemado más pistas `.vtt` en los tres idiomas. Registrado en
+   * ── OUTSTANDING, AND NOT A MINOR POINT ───────────────────────────────────
+   * The burned-in English subtitles look the same on `/es` and `/pt`, and they
+   * are not accessible: a screen reader cannot reach them. WCAG 1.2.2 requires
+   * real captions for prerecorded audio. The correct fix is a master WITHOUT
+   * burned-in text plus `.vtt` tracks in the three languages. Logged in
    * `docs/05-assets-todo`.
    *
-   * ── PÓSTER ──────────────────────────────────────────────────────────────
-   * **Segundo 3.0**, elegido por el usuario: dos vehículos cargando en el
-   * parqueadero, con los equipos Voltop y la luz azul al fondo. Es el que
-   * mejor encaja con el registro oscuro del sitio y el que más muestra
-   * infraestructura propia.
+   * ── POSTER ───────────────────────────────────────────────────────────────
+   * **Second 3.0**, chosen by the user: two vehicles charging in the car park,
+   * with Voltop hardware and the blue light in the background. It is the frame
+   * that best fits the site's dark register and the one that shows the most of
+   * our own infrastructure.
    *
-   * Verificado limpio de subtítulos —los primeros aparecen a ~4.2 s— y, al ser
-   * un plano más oscuro y con menos detalle fino, entra en el presupuesto de
-   * 120 KB: **110.8 KB**. El candidato anterior (2.0 s, el vehículo en la
-   * rampa) no bajaba de 138 KB ni a calidad 13.
+   * Verified free of subtitles — the first appear at ~4.2 s — and, being a
+   * darker frame with less fine detail, it fits the 120 KB budget at
+   * **110.8 KB**. The previous candidate (2.0 s, the vehicle on the ramp) would
+   * not go below 138 KB even at quality 13.
    */
   /**
-   * APERTURA DE WAKE.
+   * WAKE OPENING.
    *
-   * MISMO ARCHIVO que `filmVoltop` — es la pieza de 1:05 que se entregó como
-   * "Video Home". Se registra aparte porque un asset se identifica por su
-   * FUNCIÓN NARRATIVA, no por su ruta: aquí documenta una apertura concreta y
-   * allí cierra la Home. Alt y `role` distintos porque describen cosas
-   * distintas, aunque los píxeles sean los mismos.
+   * THE SAME FILE as `filmVoltop` — it is the 1:05 piece delivered as "Video
+   * Home". It is registered separately because an asset is identified by its
+   * NARRATIVE FUNCTION, not by its path: here it documents one specific
+   * opening, there it closes the Home page. Different `alt` and `role` because
+   * they describe different things, even though the pixels are identical.
    *
-   * OJO: eso significa que el mismo vídeo aparece en dos sitios del sitio.
-   * Conviene confirmar que es lo que se quiere, o entregar piezas separadas.
+   * NOTE: this means the same video appears in two places on the site. Worth
+   * confirming that is intended, or delivering separate pieces.
    */
   aperturaWake: {
     id: 'apertura-wake',
@@ -462,13 +464,12 @@ export const media = {
     availability: 'entregado',
   },
 
-  /* NO LO RENDERIZA NADIE desde el 2026-09-04, y el archivo sigue en uso.
-     La película salió del beat 7 por decisión de producto; el mismo
-     `/voltop-film.mp4` se sirve a través de `aperturaWake`, la portada de la
-     entrada de Wake. Esta entrada se conserva porque documenta la pieza de
-     marca —su función narrativa, su duración, sus subtítulos pendientes— y esa
-     información no está en `aperturaWake`, que la describe como material de
-     una apertura concreta. */
+  /* NOTHING RENDERS THIS since 2026-09-04, and the file is still in use. The
+     film left beat 7 by a product decision; the same `/voltop-film.mp4` is
+     served through `aperturaWake`, the cover of the Wake entry. This entry is
+     kept because it documents the brand piece — its narrative function, its
+     duration, its outstanding subtitles — and that information is not in
+     `aperturaWake`, which describes it as material for one specific opening. */
   filmVoltop: {
     id: 'film-voltop',
     kind: 'video',

@@ -3,24 +3,25 @@ import { routes } from '~/core/common/domain/i18n/routes'
 import { externalLinks } from '~/core/common/domain/consts/links'
 
 /**
- * COPY COMPARTIDO · navegación, acciones, formularios, estados y accesibilidad.
- * Ver docs/MASTER-PROJECT-DEFINITION.md §18 y §19.
+ * SHARED COPY · navigation, actions, forms, states and accessibility.
+ * See docs/MASTER-PROJECT-DEFINITION.md §18 and §19.
  *
- * Ningún componente contiene cadenas literales de copy. Sin esta capa no hay
- * flujo de traducción, ni revisión editorial, ni ruta a un CMS.
+ * No component contains literal copy strings. Without this layer there is no
+ * translation workflow, no editorial review and no path to a CMS.
  *
- * Tono: claro y humano · tecnológico y preciso · premium y sobrio.
- * Regla: un titular es un contrato. No se promete lo que el producto no hace.
+ * Tone: clear and human · technical and precise · premium and restrained.
+ * Rule: a headline is a contract. We do not promise what the product does not
+ * do.
  */
 
 /**
- * Datos registrales de la compañía. Salen de la Política de Tratamiento de
- * Datos y de los Términos, donde constan como información pública de VOLTOP
- * S.A.S. — no son un dato interno que estemos exponiendo por decisión propia.
+ * The company's registry details. They come from the Data Processing Policy and
+ * the Terms, where they appear as public information about VOLTOP S.A.S. — they
+ * are not internal data we are choosing to expose.
  *
- * Los usa `Organization` en los datos estructurados: un buscador que puede
- * verificar identidad legal, dirección y contacto trata a la marca como una
- * entidad real, no como un sitio más.
+ * `Organization` uses them in the structured data: a search engine that can
+ * verify legal identity, address and contact treats the brand as a real entity
+ * rather than as one more website.
  */
 export const empresa = {
   razonSocial: 'VOLTOP S.A.S.',
@@ -33,18 +34,19 @@ export const empresa = {
 export const brand = {
   name: 'Voltop',
   tagline: {
-    /* INTENCIÓN: alguien que no conoce Voltop tiene que entender en una línea
-       qué es y qué puede hacer. Es el `<title>`, la meta description global y
-       el subtítulo de la imagen Open Graph: la frase que más se repite.
-       
-       Iba primero como "Infraestructura de carga para la movilidad eléctrica
-       de Colombia" —una clase de activo, no un producto—. La corregí a "LA red
-       de carga eléctrica de Colombia" y ese artículo determinado cometía el
-       mismo error que "la red líder de Colombia" que acabábamos de retirar:
-       con tres estaciones, decir "la red de Colombia" es un claim de liderazgo
-       disfrazado de descripción.
-       
-       Ahora dice qué es, dónde, y las tres cosas que el usuario hace. */
+    /* INTENT: someone who does not know Voltop has to understand in one line
+       what it is and what they can do with it. This is the `<title>`, the
+       global meta description and the subtitle of the Open Graph image: the
+       sentence that repeats the most.
+
+       It first read "Infraestructura de carga para la movilidad eléctrica de
+       Colombia" — an asset class, not a product. Corrected to "LA red de carga
+       eléctrica de Colombia", that definite article made the same mistake as
+       "la red líder de Colombia", which had just been retired: with three
+       stations, saying "THE network of Colombia" is a leadership claim dressed
+       up as a description.
+
+       It now says what it is, where, and the three things the user does. */
     es: 'Red de carga para carros eléctricos en Colombia. La encuentras, la usas y la pagas desde la app.',
     en: 'Charging network for electric cars in Colombia. Find it, use it and pay for it from the app.',
     pt: 'Rede de carregamento para carros elétricos na Colômbia. Você encontra, usa e paga pelo aplicativo.',
@@ -52,63 +54,63 @@ export const brand = {
 }
 
 /**
- * NAVEGACIÓN PRINCIPAL.
+ * PRIMARY NAVIGATION.
  *
- * Cuatro puertas, no tres. §14 fijó tres y añadir una es la decisión más cara
- * de la arquitectura, así que va razonada:
+ * Four doors, not three. §14 fixed three, and adding one is the most expensive
+ * decision in the architecture, so here is the reasoning:
  *
- * "Novedades" sirve a un público que hasta ahora no tenía destino. §6 lista
- * "Inversionista / prensa" y los manda a Nosotros, pero esos dos públicos no
- * preguntan "quiénes son" —eso es estático— sino "qué han hecho últimamente".
- * Son preguntas distintas, y meter la segunda dentro de la primera esconde el
- * activo que mejor responde a ambas.
+ * "Novedades" serves an audience that until now had no destination. §6 lists
+ * "investor / press" and sends them to About, but those two audiences are not
+ * asking "who are you" — that is static — they are asking "what have you done
+ * lately". Those are different questions, and folding the second into the first
+ * hides the asset that answers both best.
  *
- * §14 ya admitió esta misma excepción antes con el nivel de ciudad, cuando
- * había razón real de contenido, intención y SEO. Aquí la hay igual.
+ * §14 already allowed this same exception once before, for the city level, when
+ * there was a real reason of content, intent and SEO. There is one here too.
  *
- * El orden deja las dos puertas de journey primero y el par institucional
- * —Novedades y Nosotros— adyacente al final, donde quien busca credibilidad
- * encuentra las dos cosas juntas.
+ * The order puts the two journey doors first and keeps the institutional pair
+ * — news and about — adjacent at the end, where anyone looking for credibility
+ * finds both things together.
  */
 export const nav: { label: Localized; href: string }[] = [
   { label: { es: 'Red', en: 'Network', pt: 'Rede' }, href: routes.red },
   { label: { es: 'Empresas', en: 'Business', pt: 'Empresas' }, href: routes.empresas },
   { label: { es: 'Novedades', en: 'Newsroom', pt: 'Novidades' }, href: routes.novedades },
-  /* El mismo destino se llamaba "Company" en el navbar y "About us" en el
-     footer, y en portugués "Companhia" — que además es la etiqueta del
-     segmento B2B "Empresa". Una entrada de navegación con dos nombres es dos
-     entradas para quien la lee. */
+  /* The same destination was called "Company" in the navbar and "About us" in
+     the footer, and "Companhia" in Portuguese — which is also the label of the
+     B2B segment "Empresa". A navigation entry with two names is two entries to
+     whoever reads it. */
   { label: { es: 'Nosotros', en: 'About us', pt: 'Sobre nós' }, href: routes.nosotros },
 ]
 
 /**
- * CTA global CONTEXTUAL. Un solo slot que cambia por ruta.
- * En /red no hay CTA: el usuario ya está en la herramienta (§15).
+ * CONTEXTUAL global CTA. A single slot that changes per route.
+ * On /red there is no CTA: the user is already inside the tool (§15).
  */
-/** Etiqueta única del CTA de app: se usa en el header y en el menú móvil. */
+/** The single app CTA label: used by the header and the mobile menu. */
 export const appCta: Localized = { es: 'Descarga la app', en: 'Get the app', pt: 'Baixe o app' }
 
-/** Acceso a las preguntas frecuentes desde el navbar. */
+/** Entry point to the FAQ from the navbar. */
 export const helpLink: { label: Localized; href: string } = {
   label: { es: '¿Necesitas ayuda?', en: 'Need help?', pt: 'Precisa de ajuda?' },
   href: `${routes.red}#preguntas`,
 }
 
 /**
- * CTA GLOBAL DEL HEADER · uno solo, contextual por ruta (§15).
+ * THE HEADER'S GLOBAL CTA · one only, contextual per route (§15).
  *
- * Pasó de "Encontrar cargador" a "Descargar la app". El motivo no es estético:
- * "Encontrar cargador" llevaba a /red, que YA está en el menú dos centímetros
- * a la izquierda. El CTA duplicaba una entrada de navegación en lugar de
- * ofrecer algo que la navegación no da. La app sí lo es —es donde de verdad
- * se carga y se paga—, así que ahora el botón lleva ahí.
+ * It went from "find a charger" to "download the app". The reason is not
+ * aesthetic: "find a charger" led to /red, which is ALREADY in the menu two
+ * centimetres to the left. The CTA was duplicating a navigation entry instead
+ * of offering something navigation does not give. The app is such a thing — it
+ * is where charging and paying actually happen — so the button now goes there.
  *
- * /empresas conserva el suyo: en B2B la conversión es la conversación con el
- * equipo, y sustituirla por una descarga de app rompería el journey.
+ * /empresas keeps its own: in B2B the conversion is the conversation with the
+ * team, and replacing it with an app download would break the journey.
  *
- * /red deja de ser `null`. Antes no tenía CTA porque "encontrar cargador"
- * dentro del buscador era redundante; descargar la app no lo es: es
- * exactamente el paso siguiente de quien acaba de encontrar dónde cargar.
+ * /red stops being `null`. It had no CTA before because "find a charger" inside
+ * the finder was redundant; downloading the app is not: it is exactly the next
+ * step for someone who has just found where to charge.
  */
 export const headerCta: Record<
   string,
@@ -125,15 +127,15 @@ export const headerCta: Record<
 }
 
 export const actions = {
-  /* REGLA DE REGISTRO (§13): conversión y marca en IMPERATIVO de segunda
-     persona; solo las acciones de sistema y los filtros van en infinitivo
-     ("Quitar filtros", "Ocultar filtros"). En español el infinitivo es el
-     registro del formulario administrativo, y aquí se estaban mezclando los
-     dos sin criterio: "Descargar la app" convivía con "Descarga la app" para
-     la misma acción. */
-  /* Un solo rótulo para una sola acción: lo usan el hero y el cierre, y los
-     dos llevan a `/red` y emiten el mismo evento. En el cierre, además, deja
-     de repetir palabra por palabra el texto que tiene justo encima. */
+  /* REGISTER RULE (§13): conversion and brand copy use the second-person
+     imperative; only system actions and filters use the infinitive ("Quitar
+     filtros", "Ocultar filtros"). In Spanish the infinitive is the register of
+     an administrative form, and the two were being mixed here with no
+     criterion: "Descargar la app" coexisted with "Descarga la app" for the very
+     same action. */
+  /* One label for one action: the hero and the closing block both use it, both
+     lead to `/red` and both emit the same event. In the closing block it also
+     stops repeating, word for word, the text sitting right above it. */
   findCharger: {
     es: 'Encuentra una estación',
     en: 'Find a station',
@@ -144,8 +146,8 @@ export const actions = {
     en: 'Explore the full network',
     pt: 'Explore a rede completa',
   } satisfies Localized,
-  /* Dejó de ser "Soluciones para empresas": ese texto pasó a ser el
-     ANTETÍTULO del beat 4, y un botón que repite el rótulo de su propia
+  /* No longer "Soluciones para empresas": that text became beat 4's EYEBROW,
+     and a button that repeats the label of its own
      sección no dice a dónde lleva. */
   businessSolutions: {
     es: 'Conoce nuestras soluciones',
@@ -157,11 +159,11 @@ export const actions = {
     en: 'Talk to our team',
     pt: 'Fale com nosso time',
   } satisfies Localized,
-  /* "Conoce" y no "Ver": invita a entrar en la ficha, no a mirar una foto. En
-     inglés se queda en "See this station" a propósito — "get to know" suena
-     forzado en un botón y "discover" es lenguaje de folleto. Se traduce la
-     intención, no la palabra. Lo usan el beat 2 y el caso, y los dos abren una
-     ficha de estación: una acción, un rótulo. */
+  /* "Conoce" rather than "Ver": it invites you into the page, not to look at a
+     photo. The English stays "See this station" on purpose — "get to know"
+     sounds forced on a button and "discover" is brochure language. The intent
+     is translated, not the word. Beat 2 and the case study both use it, and
+     both open a station page: one action, one label. */
   seeStation: {
     es: 'Conoce esta estación',
     en: 'See this station',
@@ -185,7 +187,7 @@ export const actions = {
   } satisfies Localized,
 }
 
-/** Estados de estación — un único origen para toda la UI. */
+/** Station statuses — one single source for the whole UI. */
 export const stationStatus = {
   operativa: { es: 'En operación', en: 'Live', pt: 'Em operação' } satisfies Localized,
   proxima: { es: 'Próximamente', en: 'Coming soon', pt: 'Em breve' } satisfies Localized,
@@ -203,7 +205,7 @@ export const units = {
 }
 
 /* ---------------------------------------------------------------- */
-/* Formulario de leads                                               */
+/* Lead form                                                         */
 /* ---------------------------------------------------------------- */
 
 export const leadForm = {
@@ -233,10 +235,10 @@ export const leadForm = {
       } satisfies Localized,
     },
     email: {
-      /* "Corporativo" imponía un requisito que la validación NO exige
-         (`LeadForm` solo comprueba la forma del correo), y justo al perfil que
-         más escribe desde Gmail: el dueño de un parqueadero o de una flota
-         pequeña. */
+      /* "Corporativo" implied a requirement the validation does NOT enforce
+         (`LeadForm` only checks the shape of the address), and it did so to
+         exactly the profile most likely to write from Gmail: the owner of a car
+         park or of a small fleet. */
       label: { es: 'Correo', en: 'Email', pt: 'E-mail' } satisfies Localized,
       hint: {
         es: 'Te respondemos a este correo.',
@@ -278,7 +280,7 @@ export const leadForm = {
       } satisfies Localized,
     },
     consent: {
-      /** Requisito legal: Ley 1581 de 2012 (habeas data, Colombia). §38. */
+      /** Legal requirement: Ley 1581 de 2012 (habeas data, Colombia). §38. */
       label: {
         es: 'Autorizo a Voltop a tratar mis datos personales para responder a esta solicitud, conforme a su política de tratamiento de datos.',
         en: 'I authorize Voltop to process my personal data in order to respond to this request, in accordance with its data processing policy.',
@@ -297,12 +299,12 @@ export const leadForm = {
     },
   },
 
-  /* El resto de la página ya dice "Tu caso" y "Cuéntanos tu caso"; el botón
-     decía "solicitud", que es vocabulario de ventanilla. */
+  /* The rest of the page already says "Tu caso" and "Cuéntanos tu caso"; the
+     button said "solicitud", which is service-counter vocabulary. */
   submit: { es: 'Enviar mi caso', en: 'Send my case', pt: 'Enviar meu caso' } satisfies Localized,
   submitting: { es: 'Enviando…', en: 'Sending…', pt: 'Enviando…' } satisfies Localized,
 
-  /** El asterisco por sí solo no comunica nada: necesita leyenda (WCAG 3.3.2). */
+  /** The asterisk alone communicates nothing: it needs a legend (WCAG 3.3.2). */
   requiredLegend: {
     es: 'Los campos marcados con * son obligatorios.',
     en: 'Fields marked with * are required.',
@@ -316,8 +318,9 @@ export const leadForm = {
   } satisfies Localized,
 
   /**
-   * Estado de éxito REAL. Se usa solo cuando existe destino de envío.
-   * Ver `CRM_ENABLED` en components/empresas/LeadForm.tsx.
+   * The REAL success state. Used only when a delivery destination exists.
+   * See `DESTINATION` in
+   * `~/core/empresas/infrastructure/ui/components/LeadForm`.
    */
   success: {
     title: {
@@ -333,22 +336,23 @@ export const leadForm = {
   },
 
   /**
-   * Estado de éxito MIENTRAS NO HAY CRM (decisión abierta O3).
+   * The success state WHILE THERE IS NO CRM (open decision O3).
    *
-   * El copy de `success` prometía revisión y respuesta en uno o dos días
-   * hábiles sobre un envío que no existe: `submitLead` descarta el payload.
-   * Un titular es un contrato (§19) y este era el punto donde romperlo tenía
-   * consecuencia comercial directa. Mientras el destino no exista, se dice lo
-   * que de verdad pasó. No se ofrece un canal alternativo porque no hay
-   * correo ni teléfono confirmados en el dataset: no se inventan datos (§33).
+   * The `success` copy promised review and a reply within one or two business
+   * days for a submission that does not exist: `submitLead` discards the
+   * payload. A headline is a contract (§19), and this was the point where
+   * breaking it had a direct commercial consequence. While there is no
+   * destination, it says what actually happened. No alternative channel is
+   * offered because there is no confirmed email or phone in the dataset: we do
+   * not invent data (§33).
    */
   /**
-   * Confirmación cuando el formulario redacta un correo.
+   * The confirmation shown when the form drafts an email.
    *
-   * Dice EXACTAMENTE lo que pasó. "Solicitud enviada" sería mentira: el
-   * mensaje está redactado, no enviado, y quien no lo mande no llega a
-   * nosotros. Que la persona sepa que le falta un clic es la diferencia entre
-   * un lead y un lead perdido.
+   * It says EXACTLY what happened. "Request sent" would be a lie: the message
+   * is drafted, not sent, and whoever does not send it never reaches us.
+   * Letting the person know they are one click short is the difference between
+   * a lead and a lost lead.
    */
   successEmail: {
     tag: { es: 'Casi listo', en: 'Almost there', pt: 'Quase lá' } satisfies Localized,
@@ -371,7 +375,7 @@ export const leadForm = {
       en: "We can't receive it here yet",
       pt: 'Ainda não conseguimos receber por aqui',
     } satisfies Localized,
-    /* Antes esto era un callejón sin salida en el instante de MÁXIMA intención
+    /* This used to be a dead end at the moment of MAXIMUM intent
        B2B: te decía que no se había enviado y ahí terminaba. El comentario
        original justificaba no ofrecer alternativa "porque no hay correo ni
        teléfono confirmados" — eso dejó de ser cierto: `content/data/links.ts`
@@ -384,7 +388,7 @@ export const leadForm = {
     } satisfies Localized,
   },
 
-  /** Aviso ANTES de pedir los datos, no en letra pequeña después del botón. */
+  /** The notice BEFORE asking for the data, not in small print after the button. */
   demoNotice: {
     es: 'Formulario de demostración: todavía no envía solicitudes. La integración con el CRM está pendiente de definir.',
     en: "Demo form: it doesn't send requests yet. The CRM integration is yet to be defined.",
@@ -393,7 +397,7 @@ export const leadForm = {
 }
 
 /* ---------------------------------------------------------------- */
-/* Estados vacíos y errores                                          */
+/* Empty states and errors                                           */
 /* ---------------------------------------------------------------- */
 
 export const states = {
@@ -404,7 +408,7 @@ export const states = {
       pt: 'Nenhuma estação atende a esses critérios',
     } satisfies Localized,
     body: {
-      /* "Cada mes" era una promesa de cadencia que nadie validó (§33). */
+      /* "Cada mes" was a cadence promise nobody validated (§33). */
       es: 'Prueba con menos filtros o mira otra ciudad. Hoy cargamos en Bogotá y Medellín, y seguimos abriendo.',
       en: 'Try fewer filters or check another city. Today we charge in Bogotá and Medellín, and we keep opening.',
       pt: 'Tente menos filtros ou veja outra cidade. Hoje carregamos em Bogotá e Medellín, e seguimos abrindo.',
@@ -430,10 +434,10 @@ export const states = {
     home: { es: 'Ir al inicio', en: 'Go to homepage', pt: 'Ir para o início' } satisfies Localized,
   },
   pendingRealtime: {
-    /* Antes decía "la integración de datos de operación", que es vocabulario
-       de nuestro backlog puesto delante de alguien que solo quiere cargar. Y
-       cerraba la puerta en vez de abrir la siguiente: la app SÍ muestra
-       disponibilidad, y así lo declaran los Términos. */
+    /* It used to say "la integración de datos de operación", which is our
+       backlog's vocabulary put in front of someone who just wants to charge.
+       And it closed the door instead of opening the next one: the app DOES show
+       availability, and the Terms say so. */
     es: 'Aquí todavía no mostramos el estado en vivo de cada punto. En la app sí puedes ver la disponibilidad antes de salir.',
     en: "We don't show live status for each point here yet. In the app you can check availability before you leave.",
     pt: 'Aqui ainda não mostramos o status ao vivo de cada ponto. No app você já consulta a disponibilidade antes de sair.',
@@ -441,7 +445,7 @@ export const states = {
 }
 
 /* ---------------------------------------------------------------- */
-/* Accesibilidad y chrome                                            */
+/* Accessibility and chrome                                          */
 /* ---------------------------------------------------------------- */
 
 export const a11y = {
@@ -477,7 +481,7 @@ export const a11y = {
     en: 'Breadcrumb',
     pt: 'Trilha de navegação',
   } satisfies Localized,
-  /** Se anuncia en todo enlace con `target="_blank"` (WCAG 3.2.5). */
+  /** Announced on every link with `target="_blank"` (WCAG 3.2.5). */
   opensInNewTab: {
     es: 'Se abre en una pestaña nueva',
     en: 'Opens in a new tab',
@@ -491,14 +495,14 @@ export const a11y = {
 }
 
 /* ---------------------------------------------------------------- */
-/* Rótulo del hueco de media                                         */
+/* Media placeholder label                                           */
 /* ---------------------------------------------------------------- */
 
 /**
- * Estas tres cadenas estaban escritas EN LÍNEA dentro de `Media.tsx`, así que
- * la versión inglesa del sitio mostraba "FOTO · PENDIENTE". Es exactamente el
- * fallo que la capa de copy existe para impedir (§36.15: todo el copy fuera
- * del JSX), y era visible en producción.
+ * These three strings were written INLINE inside `Media.tsx`, so the English
+ * version of the site displayed "FOTO · PENDIENTE". That is exactly the failure
+ * this copy layer exists to prevent (§36.15: all copy outside the JSX), and it
+ * was visible in production.
  */
 export const mediaPlaceholder = {
   photo: { es: 'Foto', en: 'Photo', pt: 'Foto' } satisfies Localized,
@@ -507,16 +511,16 @@ export const mediaPlaceholder = {
 }
 
 /* ---------------------------------------------------------------- */
-/* Imagen Open Graph                                                 */
+/* Open Graph image                                                  */
 /* ---------------------------------------------------------------- */
 
 /**
- * Estos dos textos estaban EN LÍNEA dentro de `opengraph-image.tsx`, como
- * ternarios de dos ramas. Es la misma clase de fallo que ya se corrigió en
- * `Media.tsx`, pero más caro: la imagen Open Graph es lo que se ve al
- * compartir el enlace en WhatsApp, LinkedIn o Slack, así que un idioma sin
- * rama propia se anuncia en inglés en el único sitio donde el error se
- * propaga por sí solo.
+ * These two texts were INLINE inside `opengraph-image.tsx`, as two-branch
+ * ternaries. It is the same class of failure already fixed in `Media.tsx`, but
+ * more expensive: the Open Graph image is what people see when the link is
+ * shared on WhatsApp, LinkedIn or Slack, so a language without its own branch
+ * announces itself in English in the one place where the mistake propagates on
+ * its own.
  */
 export const og = {
   eyebrow: {
@@ -532,7 +536,7 @@ export const og = {
 }
 
 /* ---------------------------------------------------------------- */
-/* Footer — tres columnas con destinos reales (§15)                  */
+/* Footer — three columns with real destinations (§15)               */
 /* ---------------------------------------------------------------- */
 
 export const footer = {
@@ -618,19 +622,19 @@ export const footer = {
     },
   ],
   /**
-   * REDES · perfiles reales, verificados uno a uno antes de publicarlos.
+   * SOCIAL · real profiles, verified one by one before publishing them.
    *
-   * §15 prohíbe publicar un enlace sin destino real, así que los tres se
-   * comprobaron con una petición: los tres responden 200.
+   * §15 forbids publishing a link with no real destination, so all three were
+   * checked with a request: all three answer 200.
    *
-   * Se guardan las URLs CANÓNICAS, no las que entrega el botón de compartir
-   * de cada app:
-   * · Instagram llegaba con un parámetro de rastreo (`igsi`) que no aporta
-   *   nada y ata el enlace a una sesión concreta.
-   * · Facebook llegaba como `/share/18uWjiJFsV/`, un redirector. Resuelve al
-   *   perfil, pero un redirector puede caducar y añade un salto en cada clic.
+   * The CANONICAL URLs are stored, not the ones each app's share button hands
+   * you:
+   * · Instagram arrived with a tracking parameter (`igsi`) that adds nothing
+   *   and ties the link to one particular session.
+   * · Facebook arrived as `/share/18uWjiJFsV/`, a redirector. It resolves to
+   *   the profile, but a redirector can expire and adds a hop on every click.
    *
-   * `name` es nombre propio: no se traduce.
+   * `name` is a proper noun: it is not translated.
    */
   social: [
     { name: 'Instagram', url: 'https://www.instagram.com/voltop.co' },
@@ -639,14 +643,15 @@ export const footer = {
   ],
 
   /**
-   * §15: un enlace sin destino real no se publica. Estos dos lo tienen —los
-   * documentos legales están escritos y publicados—, así que van en el pie.
+   * §15: a link with no real destination is not published. These two have one —
+   * the legal documents are written and published — so they go in the footer.
    *
-   * Aquí vivía `legalNotice`: "Prototipo · contenido provisional", heredado de
-   * cuando esto era una maqueta. Se retiró el 2026-09-03 porque ya no era
-   * cierto y sí era visible en TODAS las páginas: la marca es la definitiva,
-   * los datos de la red están verificados y los legales están publicados.
-   * Un sitio que se declara provisional en el pie invita a no creerse el resto.
+   * `legalNotice` used to live here: "Prototipo · contenido provisional",
+   * inherited from when this was a mockup. It was removed on 2026-09-03 because
+   * it was no longer true and it WAS visible on every page: the brand is final,
+   * the network data is verified and the legal documents are published. A site
+   * that declares itself provisional in the footer invites you to disbelieve
+   * the rest.
    */
   terms: {
     es: 'Términos y condiciones',
@@ -666,11 +671,11 @@ export const footer = {
 }
 
 /**
- * Rótulo superior de cada insignia de tienda.
+ * The top label on each store badge.
  *
- * La redacción es la OFICIAL de Apple y Google en cada idioma, no una
- * traducción propia: ambas publican guías de marca que fijan esta línea, y una
- * insignia con texto inventado deja de ser la insignia.
+ * The wording is Apple's and Google's OFFICIAL wording in each language, not a
+ * translation of our own: both publish brand guidelines that fix this line, and
+ * a badge with invented text stops being the badge.
  */
 export const storeBadges = {
   apple: { es: 'Descárgalo en el', en: 'Download on the', pt: 'Baixar na' } satisfies Localized,
@@ -678,16 +683,17 @@ export const storeBadges = {
 }
 
 /**
- * AVISO DE COOKIES.
+ * COOKIE NOTICE.
  *
- * El sitio carga Google Tag Manager, que a su vez instala cookies de
- * analítica. La Política de Tratamiento de Datos las declara, pero declararlas
- * no es lo mismo que pedir permiso: la Ley 1581 exige autorización **previa,
- * expresa e informada** (§38), y "previa" significa antes de instalarlas.
+ * The site loads Google Tag Manager, which in turn installs analytics cookies.
+ * The Data Processing Policy declares them, but declaring them is not the same
+ * as asking permission: Ley 1581 requires **prior, express and informed**
+ * authorisation (§38), and "prior" means before installing them.
  *
- * Por eso el texto no dice "usamos cookies" en pasado ni da por hecho nada.
- * Dice qué son, para qué, y deja las dos salidas al mismo nivel: un botón de
- * rechazo escondido o en gris no es una elección informada.
+ * That is why the text does not say "we use cookies" in the past tense and
+ * assumes nothing. It says what they are, what for, and leaves both exits at
+ * the same level: a reject button that is hidden or greyed out is not an
+ * informed choice.
  */
 export const cookies = {
   title: {
