@@ -2,7 +2,8 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { motion, useReducedMotion } from 'motion/react'
-import { depthMotion, useScrolledPast, type DepthLevel } from '@/lib/motion'
+import { depthMotion, type DepthLevel } from '@ui/common/lib/motion'
+import { useScrolledPast } from '@ui/common/hooks/useScrolledPast'
 
 /**
  * DEPTH · el contenido llega desde el fondo.

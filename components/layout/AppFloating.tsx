@@ -9,7 +9,7 @@ import { a11y } from '@/content/copy/common'
 import { externalLinks } from '@/content/data/links'
 import { stripLocale, routes } from '@/lib/i18n/routes'
 import { track } from '@/lib/analytics'
-import { cn } from '@/lib/cn'
+import { cn } from '@ui/common/lib/cn'
 
 /**
  * COMPONENTE FLOTANTE · descarga de la app

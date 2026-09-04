@@ -2,7 +2,7 @@
 
 import { useRef } from 'react'
 import { motion, useScroll, useTransform, useReducedMotion } from 'motion/react'
-import { cn } from '@/lib/cn'
+import { cn } from '@ui/common/lib/cn'
 
 /**
  * FLOW · el material se desplaza dentro de un marco que no se mueve.

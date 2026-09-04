@@ -19,7 +19,7 @@ import {
 import { StatusBadge } from '@/components/ui/data'
 import { Button } from '@/components/ui/Button'
 import { track } from '@/lib/analytics'
-import { cn } from '@/lib/cn'
+import { cn } from '@ui/common/lib/cn'
 
 /**
  * BUSCADOR DE ESTACIONES · isla de cliente

@@ -6,7 +6,7 @@ import { getBusinessSegments } from '@/lib/data'
 import { Section, Container, SectionHeading } from '@/components/ui/layout'
 import { Button } from '@/components/ui/Button'
 import { Reveal } from '@/components/ui/Reveal'
-import { cn } from '@/lib/cn'
+import { cn } from '@ui/common/lib/cn'
 
 /**
  * BEAT 4 · EMPRESAS — Intensidad: Media-baja · Registro: Silencio · Espacio: loose

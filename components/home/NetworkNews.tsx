@@ -1,6 +1,6 @@
 import { t, type Locale } from '@/lib/i18n/config'
 import { href, routes } from '@/lib/i18n/routes'
-import { formatDate } from '@/lib/dates'
+import { formatDate } from '@ui/common/lib/dates'
 import { novedades, novedadesInline } from '@/content/copy/novedades'
 import { PostLink } from '@/components/novedades/PostLink'
 import { getLatestPosts } from '@/lib/data'

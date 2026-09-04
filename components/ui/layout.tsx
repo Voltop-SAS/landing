@@ -1,4 +1,4 @@
-import { cn } from '@/lib/cn'
+import { cn } from '@ui/common/lib/cn'
 
 /**
  * PRIMITIVAS DE ESTRUCTURA

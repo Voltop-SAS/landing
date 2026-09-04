@@ -1,7 +1,7 @@
 import { t, defaultLocale, type Locale } from '@/lib/i18n/config'
 import { legalDoc } from '@/content/copy/legal'
 import type { LegalDoc } from '@/content/data/legal-docs'
-import { formatDate } from '@/lib/dates'
+import { formatDate } from '@ui/common/lib/dates'
 import { Section, Container } from '@/components/ui/layout'
 
 /**

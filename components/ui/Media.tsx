@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import { cn } from '@/lib/cn'
+import { cn } from '@ui/common/lib/cn'
 import { t, type Locale } from '@/lib/i18n/config'
 import type { MediaAsset } from '@/content/data/media'
 import { a11y, mediaPlaceholder } from '@/content/copy/common'

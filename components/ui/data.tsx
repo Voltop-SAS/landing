@@ -1,4 +1,4 @@
-import { cn } from '@/lib/cn'
+import { cn } from '@ui/common/lib/cn'
 import { t, type Locale } from '@/lib/i18n/config'
 import { stationStatus } from '@/content/copy/common'
 import type { StationStatus } from '@/content/data/stations'

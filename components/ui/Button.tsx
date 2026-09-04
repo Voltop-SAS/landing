@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { a11y } from '@/content/copy/common'
 import { t, type Locale } from '@/lib/i18n/config'
-import { cn } from '@/lib/cn'
+import { cn } from '@ui/common/lib/cn'
 
 /**
  * BOTÓN VOLTOP · Server Component

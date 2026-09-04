@@ -14,7 +14,7 @@ import {
 import { switchLocalePath } from '@/lib/i18n/routes'
 import { a11y } from '@/content/copy/common'
 import { track } from '@/lib/analytics'
-import { cn } from '@/lib/cn'
+import { cn } from '@ui/common/lib/cn'
 
 /**
  * SELECTOR DE IDIOMA

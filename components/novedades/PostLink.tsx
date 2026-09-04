@@ -3,7 +3,7 @@ import { type Locale } from '@/lib/i18n/config'
 import { href, routes } from '@/lib/i18n/routes'
 import { hasPage } from '@/lib/data'
 import type { Post } from '@/lib/data'
-import { cn } from '@/lib/cn'
+import { cn } from '@ui/common/lib/cn'
 
 /**
  * ENVOLTORIO DE UNA ENTRADA · enlaza solo si hay dónde ir.

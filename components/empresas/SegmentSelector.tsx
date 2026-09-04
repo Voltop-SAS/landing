@@ -6,7 +6,7 @@ import { empresas } from '@/content/copy/empresas'
 import type { BusinessSegment } from '@/content/data/company'
 import { track } from '@/lib/analytics'
 import { SectionHeading } from '@/components/ui/layout'
-import { cn } from '@/lib/cn'
+import { cn } from '@ui/common/lib/cn'
 
 /**
  * SELECTOR DE CASO B2B · patrón de pestañas COMPLETO

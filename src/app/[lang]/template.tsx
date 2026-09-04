@@ -1,7 +1,7 @@
 'use client'
 
 import { motion, useReducedMotion } from 'motion/react'
-import { duration, ease } from '@/lib/motion'
+import { duration, ease } from '@ui/common/lib/motion'
 
 /**
  * TRANSICIÓN ENTRE PÁGINAS.

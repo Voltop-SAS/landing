@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import { t, type Locale } from '@/lib/i18n/config'
 import type { MediaAsset } from '@/content/data/media'
-import { cn } from '@/lib/cn'
+import { cn } from '@ui/common/lib/cn'
 
 /**
  * ATRIBUCIÓN DE UNA CITA · retrato + nombre + cargo, como una sola unidad.

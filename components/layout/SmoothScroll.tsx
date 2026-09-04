@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react'
 import Lenis from 'lenis'
-import { registerScrollEngine } from '@/lib/scroll'
+import { registerScrollEngine } from '@ui/common/lib/scroll'
 
 /**
  * Scroll suavizado. Se desactiva por completo con `prefers-reduced-motion`

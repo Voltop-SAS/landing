@@ -1,10 +1,10 @@
 import { t, type Locale } from '@/lib/i18n/config'
-import { formatDate } from '@/lib/dates'
+import { formatDate } from '@ui/common/lib/dates'
 import { novedades } from '@/content/copy/novedades'
 import { PostLink } from '@/components/novedades/PostLink'
 import type { Post } from '@/lib/data'
 import { hasPage } from '@/lib/data'
-import { cn } from '@/lib/cn'
+import { cn } from '@ui/common/lib/cn'
 
 /**
  * UNA FILA DEL REGISTRO.

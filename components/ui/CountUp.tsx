@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from 'react'
 import { animate, useInView, useReducedMotion } from 'motion/react'
-import { COUNT_DURATION, ease } from '@/lib/motion'
+import { COUNT_DURATION, ease } from '@ui/common/lib/motion'
 
 /**
  * CIFRA QUE CUENTA AL ENTRAR EN PANTALLA

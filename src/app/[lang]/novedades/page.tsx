@@ -11,7 +11,7 @@ import { Button } from '@/components/ui/Button'
 import { PendingTag } from '@/components/ui/data'
 import { PostLog } from '@/components/novedades/PostLog'
 import { TrackView } from '@/components/analytics/TrackView'
-import { formatDate } from '@/lib/dates'
+import { formatDate } from '@ui/common/lib/dates'
 
 type Props = { params: Promise<{ lang: string }> }
 

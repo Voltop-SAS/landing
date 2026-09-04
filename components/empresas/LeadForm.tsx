@@ -9,7 +9,7 @@ import { leadRecipients } from '@/content/data/links'
 import { Button } from '@/components/ui/Button'
 import { PendingTag } from '@/components/ui/data'
 import { track } from '@/lib/analytics'
-import { cn } from '@/lib/cn'
+import { cn } from '@ui/common/lib/cn'
 
 /**
  * FORMULARIO DE LEADS · CRM-ready

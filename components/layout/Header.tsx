@@ -9,9 +9,9 @@ import { nav, headerCta, helpLink, a11y } from '@/content/copy/common'
 import { Button } from '@/components/ui/Button'
 import { LangSwitch } from '@/components/layout/LangSwitch'
 import { Logo } from '@/components/layout/Logo'
-import { lockScroll, unlockScroll } from '@/lib/scroll'
+import { lockScroll, unlockScroll } from '@ui/common/lib/scroll'
 import { track } from '@/lib/analytics'
-import { cn } from '@/lib/cn'
+import { cn } from '@ui/common/lib/cn'
 
 /**
  * HEADER

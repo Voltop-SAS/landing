@@ -9,7 +9,7 @@ import {
   useInView,
   useReducedMotion,
 } from 'motion/react'
-import { duration, ease } from '@/lib/motion'
+import { duration, ease } from '@ui/common/lib/motion'
 import { t, type Locale } from '@/lib/i18n/config'
 import { href, routes } from '@/lib/i18n/routes'
 import { home } from '@/content/copy/home'
