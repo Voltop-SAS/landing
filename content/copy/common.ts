@@ -128,7 +128,10 @@ export const actions = {
      registro del formulario administrativo, y aquí se estaban mezclando los
      dos sin criterio: "Descargar la app" convivía con "Descarga la app" para
      la misma acción. */
-  findCharger: { es: "Encuentra dónde cargar", en: "Find where to charge", pt: "Encontre onde carregar", } satisfies Localized,
+  /* Un solo rótulo para una sola acción: lo usan el hero y el cierre, y los
+     dos llevan a `/red` y emiten el mismo evento. En el cierre, además, deja
+     de repetir palabra por palabra el texto que tiene justo encima. */
+  findCharger: { es: "Encuentra una estación", en: "Find a station", pt: "Encontre uma estação", } satisfies Localized,
   seeNetwork: { es: "Ver la red completa", en: "See the full network", pt: "Ver a rede completa", } satisfies Localized,
   businessSolutions: { es: "Soluciones para empresas", en: "Business solutions", pt: "Soluções para empresas", } satisfies Localized,
   talkToTeam: { es: "Hablar con el equipo", en: "Talk to the team", pt: "Falar com o time", } satisfies Localized,

@@ -34,12 +34,15 @@ export const home = {
     eyebrow: { es: "Red de carga eléctrica · Colombia", en: "EV charging network · Colombia", pt: "Rede de carregamento elétrico · Colômbia", } satisfies Localized,
     title: { es: "La red que mueve a Colombia", en: "The network that moves Colombia", pt: "A rede que move a Colômbia", } satisfies Localized,
     lead: {
-      /* El párrafo más leído del sitio era 100% sujeto-Voltop: no nombraba la
-         app ni decía qué hace el usuario. Conserva la credibilidad de
-         infraestructura, pero cierra en la persona que va a cargar. */
-      es: "Carga rápida donde ya te mueves y una app que la abre con un escaneo. Nosotros construimos y operamos la red; tú solo conectas.",
-      en: "Fast charging where you already go, and an app that starts it with a scan. We build and run the network; you just plug in.",
-      pt: "Carregamento rápido onde você já circula e um app que inicia tudo com um escaneio. Nós construímos e operamos a rede; você só conecta.",
+      /* El párrafo más leído del sitio. Dejó de explicar QUIÉN construye la red
+         para decir QUÉ hace la persona que llega: cargar, encontrar, conectar,
+         empezar. El sujeto es el conductor de principio a fin, y los tres
+         verbos anticipan en una línea la secuencia que el beat 8 detalla.
+         Nombra la app porque es donde empieza la carga; no promete nada que
+         los Términos no reconozcan. */
+      es: "Carga tu vehículo eléctrico de forma rápida y sencilla. Encuentra una estación, conecta y empieza a cargar desde la app Voltop.",
+      en: "Charge your electric vehicle quickly and easily. Find a station, plug in and start charging from the Voltop app.",
+      pt: "Carregue seu veículo elétrico de forma rápida e simples. Encontre uma estação, conecte e comece a carregar pelo app Voltop.",
     } satisfies Localized,
     scrollHint: { es: "Desplázate", en: "Scroll", pt: "Deslize", } satisfies Localized,
   },
