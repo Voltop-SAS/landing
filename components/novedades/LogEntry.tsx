@@ -1,8 +1,7 @@
-import Link from "next/link";
 import { t, type Locale } from "@/lib/i18n/config";
-import { href, routes } from "@/lib/i18n/routes";
 import { formatDate } from "@/lib/dates";
 import { novedades } from "@/content/copy/novedades";
+import { PostLink } from "@/components/novedades/PostLink";
 import type { Post } from "@/lib/data";
 import { hasPage } from "@/lib/data";
 import { cn } from "@/lib/cn";
@@ -21,9 +20,10 @@ import { cn } from "@/lib/cn";
  * "ficha técnica" que ya usan las specs de estación.
  *
  * ── LA FILA ES UN ENLACE SOLO SI HAY DÓNDE IR ─────────────────────────────
- * Una apertura son dos líneas: se leen aquí y no hay página que abrir.
- * Renderizarla como enlace a una página con el mismo texto sería un enlace sin
- * destino real, que §15 prohíbe. Solo las entradas con cuerpo enlazan.
+ * Una apertura son dos líneas: se leen aquí y no hay página que abrir. Esa
+ * decisión la toma `PostLink`, compartido con las otras dos listas; aquí solo
+ * se consulta `hasPage` para decidir qué se PINTA —el hover del título y el
+ * "leer entrada"—, que es otra cosa.
  */
 export function LogEntry({ post, lang }: { post: Post; lang: Locale }) {
   const linked = hasPage(post);
@@ -69,17 +69,15 @@ export function LogEntry({ post, lang }: { post: Post; lang: Locale }) {
     </>
   );
 
-  const grid = "grid gap-x-10 gap-y-3 py-8 md:grid-cols-[9rem_1fr] md:py-10";
-
   return (
     <li className="border-t border-line">
-      {linked ? (
-        <Link href={href(lang, routes.post(post.slug))} className={cn("group block", grid)}>
-          {content}
-        </Link>
-      ) : (
-        <div className={grid}>{content}</div>
-      )}
+      <PostLink
+        post={post}
+        lang={lang}
+        className="grid gap-x-10 gap-y-3 py-8 md:grid-cols-[9rem_1fr] md:py-10"
+      >
+        {content}
+      </PostLink>
     </li>
   );
 }

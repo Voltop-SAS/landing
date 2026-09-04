@@ -4,8 +4,8 @@ import { href, routes } from "@/lib/i18n/routes";
 import { formatDate } from "@/lib/dates";
 import { novedades } from "@/content/copy/novedades";
 import { Section, Container, SectionHeading } from "@/components/ui/layout";
+import { PostLink } from "@/components/novedades/PostLink";
 import type { Post } from "@/lib/data";
-import { hasPage } from "@/lib/data";
 
 /**
  * RE-SUPERFICIE DEL REGISTRO EN OTRO DESTINO.
@@ -42,9 +42,13 @@ export function PostsInline({
         </SectionHeading>
 
         <ul className="mt-8 border-t border-line">
-          {posts.map((post) => {
-            const row = (
-              <>
+          {posts.map((post) => (
+            <li key={post.slug} className="border-b border-line">
+              <PostLink
+                post={post}
+                lang={lang}
+                className="flex min-h-14 flex-col justify-center gap-1 py-4 sm:flex-row sm:items-baseline sm:gap-6"
+              >
                 <time
                   dateTime={post.date}
                   className="shrink-0 font-mono text-mono uppercase tracking-wider text-ink-3"
@@ -54,26 +58,9 @@ export function PostsInline({
                 <span className="text-body-s text-ink-2 transition-colors group-hover:text-ink">
                   {t(post.title, lang)}
                 </span>
-              </>
-            );
-
-            return (
-              <li key={post.slug} className="border-b border-line">
-                {hasPage(post) ? (
-                  <Link
-                    href={href(lang, routes.post(post.slug))}
-                    className="group flex min-h-14 flex-col justify-center gap-1 py-4 sm:flex-row sm:items-baseline sm:gap-6"
-                  >
-                    {row}
-                  </Link>
-                ) : (
-                  <div className="flex min-h-14 flex-col justify-center gap-1 py-4 sm:flex-row sm:items-baseline sm:gap-6">
-                    {row}
-                  </div>
-                )}
-              </li>
-            );
-          })}
+              </PostLink>
+            </li>
+          ))}
         </ul>
 
         <Link

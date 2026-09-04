@@ -1,9 +1,9 @@
-import Link from "next/link";
 import { t, type Locale } from "@/lib/i18n/config";
 import { href, routes } from "@/lib/i18n/routes";
 import { formatDate } from "@/lib/dates";
 import { novedades, novedadesInline } from "@/content/copy/novedades";
-import { getLatestPosts, hasPage } from "@/lib/data";
+import { PostLink } from "@/components/novedades/PostLink";
+import { getLatestPosts } from "@/lib/data";
 import { Section, Container, SectionHeading } from "@/components/ui/layout";
 import { Button } from "@/components/ui/Button";
 import { Reveal } from "@/components/ui/Reveal";
@@ -50,9 +50,13 @@ export async function NetworkNews({ lang }: { lang: Locale }) {
         </div>
 
         <ul className="mt-10 border-t border-line">
-          {posts.map((post, i) => {
-            const row = (
-              <>
+          {posts.map((post, i) => (
+            <Reveal as="li" key={post.slug} delay={i * 0.06} y={12} className="border-b border-line">
+              <PostLink
+                post={post}
+                lang={lang}
+                className="grid items-baseline gap-x-8 gap-y-2 py-6 md:grid-cols-[9rem_1fr_auto]"
+              >
                 <time
                   dateTime={post.date}
                   className="shrink-0 font-mono text-mono uppercase tracking-wider text-ink-3"
@@ -65,24 +69,9 @@ export async function NetworkNews({ lang }: { lang: Locale }) {
                 <span className="font-mono text-mono uppercase tracking-wider text-ink-3 md:justify-self-end">
                   {t(novedades.types[post.type], lang)}
                 </span>
-              </>
-            );
-
-            const grid =
-              "grid items-baseline gap-x-8 gap-y-2 py-6 md:grid-cols-[9rem_1fr_auto]";
-
-            return (
-              <Reveal as="li" key={post.slug} delay={i * 0.06} y={12} className="border-b border-line">
-                {hasPage(post) ? (
-                  <Link href={href(lang, routes.post(post.slug))} className={`group ${grid}`}>
-                    {row}
-                  </Link>
-                ) : (
-                  <div className={grid}>{row}</div>
-                )}
-              </Reveal>
-            );
-          })}
+              </PostLink>
+            </Reveal>
+          ))}
         </ul>
       </Container>
     </Section>
