@@ -7,12 +7,13 @@
  */
 
 import { stations } from '~/core/network/infrastructure/content/stations'
+import type { Station } from '~/core/network/domain/entities/Station'
 import { cities } from '~/core/network/infrastructure/content/cities'
 import type { City } from '~/core/network/domain/entities/City'
 import { getStationsByCity } from './stations'
 
-export function getNetworkSummary() {
-  const operational = stations.filter((s) => s.status === 'operativa')
+export function getNetworkSummary(list: Station[] = stations) {
+  const operational = list.filter((s) => s.status === 'operativa')
   /* The network minimum is the minimum of the minimums and the maximum the
      maximum of the maximums: publishing "80 kW" while there are 22 kW points
      would be promising more than the network delivers. */
