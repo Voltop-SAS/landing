@@ -3,7 +3,7 @@
 import { useEffect, useRef } from 'react'
 import { useReducedMotion } from 'motion/react'
 import { t, type Locale } from '~/core/common/domain/i18n/config'
-import type { MediaAsset } from '@/content/data/media'
+import type { MediaAsset } from '~/core/common/domain/entities/Media'
 
 /**
  * VIDEO DE FONDO · respeta la preferencia de movimiento reducido.

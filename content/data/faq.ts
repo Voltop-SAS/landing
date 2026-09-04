@@ -1,6 +1,6 @@
 import type { Localized } from '~/core/common/domain/i18n/config'
 import { routes } from '~/core/common/domain/i18n/routes'
-import { externalLinks } from './links'
+import { externalLinks } from '~/core/common/domain/consts/links'
 
 /**
  * COLECCIÓN · Preguntas frecuentes

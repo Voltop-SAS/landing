@@ -1,5 +1,5 @@
 import { t, type Locale } from '~/core/common/domain/i18n/config'
-import { a11y, footer } from '@/content/copy/common'
+import { a11y, footer } from '~/core/common/domain/consts/copy'
 
 /**
  * ENLACES A REDES SOCIALES.

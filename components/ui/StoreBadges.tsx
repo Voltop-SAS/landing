@@ -1,6 +1,6 @@
 import { t, type Locale } from '~/core/common/domain/i18n/config'
-import { a11y, storeBadges } from '@/content/copy/common'
-import { externalLinks } from '@/content/data/links'
+import { a11y, storeBadges } from '~/core/common/domain/consts/copy'
+import { externalLinks } from '~/core/common/domain/consts/links'
 import { TrackClick } from '@/components/analytics/TrackClick'
 
 /**

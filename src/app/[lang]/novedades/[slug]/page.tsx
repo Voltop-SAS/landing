@@ -10,7 +10,7 @@ import {
   SITE_URL,
 } from '~/core/common/domain/i18n/routes'
 import { novedades } from '@/content/copy/novedades'
-import { a11y, brand } from '@/content/copy/common'
+import { a11y, brand } from '~/core/common/domain/consts/copy'
 import { getPostsWithPage, getPost, getStation, getCity } from '@/lib/data'
 import { Section, Container, Rule } from '@/components/ui/layout'
 import { Media } from '@/components/ui/Media'

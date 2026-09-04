@@ -1,6 +1,6 @@
 import type { Localized } from '~/core/common/domain/i18n/config'
-import { media } from '@/content/data/media'
-import type { MediaAsset } from '@/content/data/media'
+import { media } from '~/core/common/infrastructure/content/media'
+import type { MediaAsset } from '~/core/common/domain/entities/Media'
 
 /**
  * COLECCIÓN · Novedades

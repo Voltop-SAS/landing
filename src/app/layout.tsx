@@ -4,7 +4,7 @@ import './globals.css'
 
 import { defaultLocale, localeMeta, t } from '~/core/common/domain/i18n/config'
 import { SITE_URL } from '~/core/common/domain/i18n/routes'
-import { brand } from '@/content/copy/common'
+import { brand } from '~/core/common/domain/consts/copy'
 
 /**
  * LAYOUT RAÍZ · emite el documento

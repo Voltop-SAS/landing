@@ -10,7 +10,7 @@ import {
   type Locale,
 } from '~/core/common/domain/i18n/config'
 import { absoluteUrl, alternatesFor, routes } from '~/core/common/domain/i18n/routes'
-import { a11y, brand } from '@/content/copy/common'
+import { a11y, brand } from '~/core/common/domain/consts/copy'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
 import { SmoothScroll } from '@/components/layout/SmoothScroll'

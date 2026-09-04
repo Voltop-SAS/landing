@@ -27,7 +27,7 @@
  * Un idioma PUBLICADO con huecos rompe el build.
  */
 
-import { readdirSync } from 'node:fs'
+import { existsSync, readdirSync } from 'node:fs'
 import { join } from 'node:path'
 
 import {
@@ -40,7 +40,7 @@ import {
 
 /* El contenido real del sitio. Añadir un módulo de contenido = añadirlo aquí,
    y `assertAllContentRegistered()` se encarga de que no se olvide. */
-import * as copyCommon from '@/content/copy/common'
+import * as copyCommon from '~/core/common/domain/consts/copy'
 import * as copyHome from '@/content/copy/home'
 import * as copyRed from '@/content/copy/red'
 import * as copyEmpresas from '@/content/copy/empresas'
@@ -50,14 +50,14 @@ import * as copyNovedades from '@/content/copy/novedades'
 import * as dataStations from '@/content/data/stations'
 import * as dataCities from '@/content/data/cities'
 import * as dataCompany from '@/content/data/company'
-import * as dataMedia from '@/content/data/media'
+import * as dataMedia from '~/core/common/infrastructure/content/media'
 import * as dataPosts from '@/content/data/posts'
 import * as dataFaq from '@/content/data/faq'
-import * as dataLinks from '@/content/data/links'
+import * as dataLinks from '~/core/common/domain/consts/links'
 import * as dataLegalDocs from '@/content/data/legal-docs'
 
 const SOURCES: Record<string, unknown> = {
-  'copy/common': copyCommon,
+  'common/consts/copy': copyCommon,
   'copy/home': copyHome,
   'copy/red': copyRed,
   'copy/empresas': copyEmpresas,
@@ -67,10 +67,10 @@ const SOURCES: Record<string, unknown> = {
   'data/stations': dataStations,
   'data/cities': dataCities,
   'data/company': dataCompany,
-  'data/media': dataMedia,
+  'common/content/media': dataMedia,
   'data/posts': dataPosts,
   'data/faq': dataFaq,
-  'data/links': dataLinks,
+  'common/consts/links': dataLinks,
   /* Español plano a propósito: ver la cabecera del archivo. Aporta 0 nodos
      `Localized` y por eso no altera el recuento de cobertura. */
   'data/legal-docs': dataLegalDocs,
@@ -108,21 +108,71 @@ export type LocaleAudit = {
  * registrar rompe el build en lugar de desaparecer del conteo en silencio.
  * `fs` está disponible: esto corre en Node durante el build, no en el navegador.
  */
-function assertAllContentRegistered(): void {
-  const found: string[] = []
-  for (const dir of ['copy', 'data'] as const) {
-    for (const file of readdirSync(join(process.cwd(), 'content', dir))) {
-      if (file.endsWith('.ts')) found.push(`${dir}/${file.slice(0, -3)}`)
+/**
+ * Las dos raíces, con TODOS sus segmentos literales.
+ *
+ * No es cosmético: `join(process.cwd(), ...segmentosVariables)` deja a
+ * Turbopack sin poder analizar la ruta, y responde trazando el proyecto entero
+ * ("Dynamic filesystem access causes tracing of the whole project"). Con la
+ * raíz fija y solo el resto variable, el aviso desaparece.
+ */
+const CORE_DIR = join(process.cwd(), 'src', 'core')
+const LEGACY_CONTENT_DIR = join(process.cwd(), 'content')
+
+/** Los `.ts` de un directorio, sin extensión. Ausente = lista vacía. */
+function contentFilesIn(dir: string): string[] {
+  if (!existsSync(dir)) return []
+  return readdirSync(dir)
+    .filter((file) => file.endsWith('.ts'))
+    .map((file) => file.slice(0, -3))
+}
+
+/**
+ * El contenido en su sitio: `src/core/{módulo}/domain/consts/` para los textos
+ * y `src/core/{módulo}/infrastructure/content/` para los datos.
+ *
+ * Recorrer los MÓDULOS en lugar de dos carpetas fijas amplía la garantía: un
+ * módulo nuevo entero que nadie registró también salta, no solo un archivo
+ * suelto dentro de uno ya conocido.
+ */
+function registrableModuleContent(): string[] {
+  if (!existsSync(CORE_DIR)) return []
+
+  const keys: string[] = []
+  for (const entry of readdirSync(CORE_DIR, { withFileTypes: true })) {
+    if (!entry.isDirectory()) continue
+    const mod = entry.name
+    for (const file of contentFilesIn(join(CORE_DIR, mod, 'domain', 'consts'))) {
+      keys.push(`${mod}/consts/${file}`)
+    }
+    for (const file of contentFilesIn(join(CORE_DIR, mod, 'infrastructure', 'content'))) {
+      keys.push(`${mod}/content/${file}`)
     }
   }
+  return keys
+}
 
+/**
+ * TRANSITORIO. La ubicación heredada, mientras queden módulos por mudar a
+ * `src/core/`. Devuelve vacío en cuanto `content/` no exista, así que el día
+ * que se mude el último módulo esta función deja de aportar nada y se borra
+ * junto con esta nota.
+ */
+function legacyContent(): string[] {
+  return (['copy', 'data'] as const).flatMap((dir) =>
+    contentFilesIn(join(LEGACY_CONTENT_DIR, dir)).map((file) => `${dir}/${file}`),
+  )
+}
+
+function assertAllContentRegistered(): void {
+  const found = [...registrableModuleContent(), ...legacyContent()]
   const unregistered = found.filter((key) => !(key in SOURCES))
   if (unregistered.length === 0) return
 
   throw new Error(
     `\n[i18n] Hay módulos de contenido que la auditoría de idiomas no está revisando:\n` +
-      unregistered.map((k) => `      · content/${k}.ts`).join('\n') +
-      `\n\n  Añádelos a SOURCES en lib/i18n/audit.ts.\n`,
+      unregistered.map((k) => `      · ${k}`).join('\n') +
+      `\n\n  Añádelos a SOURCES en core/common/infrastructure/i18n/audit.ts.\n`,
   )
 }
 

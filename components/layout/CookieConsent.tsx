@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import Script from 'next/script'
 import { t, type Locale } from '~/core/common/domain/i18n/config'
-import { cookies as copy } from '@/content/copy/common'
+import { cookies as copy } from '~/core/common/domain/consts/copy'
 import { href, routes } from '~/core/common/domain/i18n/routes'
 
 /**

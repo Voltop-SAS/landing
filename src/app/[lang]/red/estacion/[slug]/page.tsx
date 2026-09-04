@@ -10,7 +10,7 @@ import {
   SITE_URL,
 } from '~/core/common/domain/i18n/routes'
 import { red, station as stationCopy, stationMeta } from '@/content/copy/red'
-import { actions, a11y, units } from '@/content/copy/common'
+import { actions, a11y, units } from '~/core/common/domain/consts/copy'
 import { getStations, getStation, getCity, getStationsByCity, getPostsForStation } from '@/lib/data'
 import { novedadesInline } from '@/content/copy/novedades'
 import { PostsInline } from '@/components/novedades/PostsInline'
@@ -20,7 +20,7 @@ import { StatusBadge, SpecList, PendingTag } from '@/components/ui/data'
 import { Media } from '@/components/ui/Media'
 import { Button } from '@/components/ui/Button'
 import { DirectionsButton } from '@/components/red/DirectionsButton'
-import { media } from '@/content/data/media'
+import { media } from '~/core/common/infrastructure/content/media'
 import { formatPowerKw } from '@/content/data/stations'
 
 type Props = { params: Promise<{ lang: string; slug: string }> }

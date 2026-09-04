@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { a11y } from '@/content/copy/common'
+import { a11y } from '~/core/common/domain/consts/copy'
 import { t, type Locale } from '~/core/common/domain/i18n/config'
 import { cn } from '@ui/common/lib/cn'
 

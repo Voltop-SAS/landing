@@ -1,7 +1,7 @@
 import { t, type Locale } from '~/core/common/domain/i18n/config'
 import { href, routes } from '~/core/common/domain/i18n/routes'
 import { home } from '@/content/copy/home'
-import { actions } from '@/content/copy/common'
+import { actions } from '~/core/common/domain/consts/copy'
 import { Section, Container, SectionHeading } from '@/components/ui/layout'
 import { Button } from '@/components/ui/Button'
 import { TrackClick } from '@/components/analytics/TrackClick'
