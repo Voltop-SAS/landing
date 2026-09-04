@@ -59,5 +59,6 @@ export {
 
 export type { Station } from '~/core/red/domain/entities/Station'
 export type { City } from '~/core/red/domain/entities/City'
-export type { Metric, Case } from '@/content/data/company'
+export type { Metric } from '~/core/common/domain/entities/Metric'
+export type { Case } from '~/core/empresas/domain/entities/Case'
 export type { Post, PostType } from '~/core/novedades/domain/entities/Post'

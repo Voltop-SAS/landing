@@ -1,15 +1,14 @@
 /** Métricas, segmentos, casos, aliados, testimonios y fundador. */
 
+import { businessSegments, cases } from '~/core/empresas/infrastructure/content/company'
 import {
   metrics,
-  businessSegments,
-  cases,
   partners,
   testimonials,
   founder,
-  type Metric,
-  type Case,
-} from '@/content/data/company'
+} from '~/core/nosotros/infrastructure/content/company'
+import type { Metric } from '~/core/common/domain/entities/Metric'
+import type { Case } from '~/core/empresas/domain/entities/Case'
 
 /**
  * Métricas para mostrar. `validated: false` significa que NO hay cifra real.

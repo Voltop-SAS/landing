@@ -4,11 +4,12 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { t, type Locale } from '~/core/common/domain/i18n/config'
 import { href, routes } from '~/core/common/domain/i18n/routes'
-import { empresas } from '@/content/copy/empresas'
-import type { BusinessSegment, Case } from '@/content/data/company'
+import { empresas } from '~/core/empresas/domain/consts/copy'
+import type { BusinessSegment } from '~/core/empresas/domain/entities/BusinessSegment'
+import type { Case } from '~/core/empresas/domain/entities/Case'
 import { Section, Container, SectionHeading } from '@/components/ui/layout'
-import { SegmentSelector } from '@/components/empresas/SegmentSelector'
-import { LeadForm } from '@/components/empresas/LeadForm'
+import { SegmentSelector } from '~/core/empresas/infrastructure/ui/components/SegmentSelector'
+import { LeadForm } from '~/core/empresas/infrastructure/ui/components/LeadForm'
 
 /**
  * FLUJO B2B · selector → capacidades → EVIDENCIA → formulario

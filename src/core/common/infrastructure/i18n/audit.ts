@@ -43,13 +43,14 @@ import {
 import * as copyCommon from '~/core/common/domain/consts/copy'
 import * as copyHome from '@/content/copy/home'
 import * as copyRed from '~/core/red/domain/consts/copy'
-import * as copyEmpresas from '@/content/copy/empresas'
-import * as copyNosotros from '@/content/copy/nosotros'
+import * as copyEmpresas from '~/core/empresas/domain/consts/copy'
+import * as copyNosotros from '~/core/nosotros/domain/consts/copy'
 import * as copyLegal from '@/content/copy/legal'
 import * as copyNovedades from '~/core/novedades/domain/consts/copy'
 import * as dataStations from '~/core/red/infrastructure/content/stations'
 import * as dataCities from '~/core/red/infrastructure/content/cities'
-import * as dataCompany from '@/content/data/company'
+import * as dataCompanyEmpresas from '~/core/empresas/infrastructure/content/company'
+import * as dataCompanyNosotros from '~/core/nosotros/infrastructure/content/company'
 import * as dataMedia from '~/core/common/infrastructure/content/media'
 import * as dataPosts from '~/core/novedades/infrastructure/content/posts'
 import * as dataFaq from '~/core/red/infrastructure/content/faq'
@@ -60,13 +61,14 @@ const SOURCES: Record<string, unknown> = {
   'common/consts/copy': copyCommon,
   'copy/home': copyHome,
   'red/consts/copy': copyRed,
-  'copy/empresas': copyEmpresas,
-  'copy/nosotros': copyNosotros,
+  'empresas/consts/copy': copyEmpresas,
+  'nosotros/consts/copy': copyNosotros,
   'copy/legal': copyLegal,
   'novedades/consts/copy': copyNovedades,
   'red/content/stations': dataStations,
   'red/content/cities': dataCities,
-  'data/company': dataCompany,
+  'empresas/content/company': dataCompanyEmpresas,
+  'nosotros/content/company': dataCompanyNosotros,
   'common/content/media': dataMedia,
   'novedades/content/posts': dataPosts,
   'red/content/faq': dataFaq,
