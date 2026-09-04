@@ -104,7 +104,9 @@ export default async function PostPage({ params }: Props) {
                 </Link>
               </li>
               <li aria-hidden="true">/</li>
-              <li className="text-ink-2">{t(novedades.types[post.type], lang)}</li>
+              {/* Plural: aquí el tipo nombra la CATEGORÍA, no esta entrada.
+                  Ver la nota de `typesPlural` en el copy. */}
+              <li className="text-ink-2">{t(novedades.typesPlural[post.type], lang)}</li>
             </ol>
           </nav>
 
@@ -172,7 +174,7 @@ export default async function PostPage({ params }: Props) {
                         arrow
                         href={href(lang, routes.station(station.slug))}
                       >
-                        {station.name}
+                        {t(novedades.related.stationCta, lang)}
                       </Button>
                     </div>
                   </div>

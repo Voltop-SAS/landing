@@ -2258,3 +2258,49 @@ Y el vídeo **no tenía audio** por una razón de fondo: se renderizaba sin `con
 ### Evidencia
 
 `lint`, `tsc` y build limpios · los cuatro beats verificados en el HTML servido, línea a línea y en el orden pedido · el vídeo de la entrada: **un solo `<video>`, con `controls` y sin `muted`** · retratos servidos en 43 KB y 25 KB en AVIF · 27 combinaciones de ruta × viewport sin problemas · `prefers-reduced-motion` intacto.
+
+---
+
+## Bloque 57 · La entrada de Wake, las fichas con foto, y 135 MB que no entraron en git — 2026-09-04
+
+### La entrada de Wake, reescrita
+
+Titular, entradilla y cuerpo completo: dos subtítulos y cuatro párrafos en lugar de uno y dos. El CTA del pie pasa de llevar el NOMBRE de la estación como rótulo —"Wake", que dice a dónde se va pero no que se pueda ir— a un verbo: **"Conoce la estación"**.
+
+No reutiliza `actions.seeStation` ("Conoce **esta** estación") y es deliberado: ahí el demostrativo funciona porque la estación es el sujeto que se está mirando; al pie de una entrada, "la" es el artículo que corresponde. Es la única pareja de rótulos casi idénticos que se conserva a propósito.
+
+### La miga de pan decía "Apertura" y debía decir "Aperturas"
+
+El mismo token rotulaba dos cosas distintas: el TIPO de una entrada —"Apertura" junto a una fecha, en el registro y en la Home, donde el singular es lo correcto— y la CATEGORÍA en la miga de pan, donde el singular se lee como si tuviera un solo elemento. Son dos trabajos, así que ahora son dos claves: `types` y `typesPlural`.
+
+### Las fichas de estación, con foto
+
+Wake y Universidad EAN. **No hizo falta tocar la página**: ya leía `station.media.photos[0]` y caía al hueco declarado si estaba vacío. Bastó con poblar el dataset — que es exactamente lo que se buscaba al escribir esa rama.
+
+Grand Hyatt sigue sin foto y su ficha sigue mostrando su hueco, sin que nadie tenga que acordarse de nada.
+
+### 135 MB que no entraron en git
+
+Las tres fotos llegaron en PNG: **48 MB Wake, 57 MB la EAN y 30 MB el retrato de Bruno**. Un PNG es un formato sin pérdida haciendo un trabajo con pérdida, y 135 MB en el árbol de git son **permanentes** — el propio `.gitignore` del proyecto lo advierte.
+
+Se convirtieron con `sharp`, que ya está en el proyecto porque Next lo usa para optimizar imágenes: reescaladas a 2400px de ancho —el doble de lo que el optimizador llega a pedir— y a JPEG de calidad 82.
+
+| | Antes | Después |
+|---|---|---|
+| Estación Wake | 48.0 MB | **0.34 MB** |
+| Estación EAN | 57.4 MB | **0.20 MB** |
+| Retrato Bruno | 29.6 MB | **0.60 MB** |
+
+**135 MB → 1.14 MB, un 99.2% menos**, sin pérdida visible a los tamaños en que se muestran. Los tres másteres se movieron a `~/Voltop-masters-originales/`, que es donde la convención del proyecto dice que viven.
+
+Al navegador llegan en AVIF: 98 KB y 52 KB las fichas en escritorio, 29 y 15 en móvil.
+
+### La película sale del Home
+
+`filmVoltop` cerraba el beat 7 en una franja de 16/9 y era el segundo momento signature de la Home. Se retiró por decisión de producto, y de paso **resuelve un pendiente anotado**: ese archivo es el mismo que la portada de la entrada de Wake, así que la misma película se reproducía en dos sitios. Ahora vive solo en el registro, donde tiene contexto.
+
+`FilmStage` queda sin uso y **no se borra todavía**: si la película vuelve, es la pieza que la sostiene. Decisión pendiente.
+
+### Evidencia
+
+`lint`, `tsc` y build limpios · la entrada verificada a 1440, 390 y 320px: dos `h2` en el orden pedido, cinco párrafos, **un solo `<video>` con controles y sin silenciar**, un CTA, cero invisibles, cero desbordes · las dos fichas con su foto a 1144×490 en escritorio y 341×146 en móvil, cero errores de JS · 27 combinaciones de ruta × viewport sin problemas · `prefers-reduced-motion` intacto.

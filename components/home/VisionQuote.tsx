@@ -6,16 +6,26 @@ import { actions } from "@/content/copy/common";
 import { media } from "@/content/data/media";
 import { getFounder } from "@/lib/data";
 import { Section, Container, Eyebrow } from "@/components/ui/layout";
-import { Media } from "@/components/ui/Media";
 import { Button } from "@/components/ui/Button";
 import { Reveal } from "@/components/ui/Reveal";
-import { FilmStage } from "@/components/ui/FilmStage";
 
 /**
  * BEAT 6 · VISIÓN — Intensidad: Media-alta · Registro: Silencio · Espacio: loose
- * ESTRUCTURA: columna estrecha centrada con la cita como único elemento, y el
- * material en una franja ancha DEBAJO. Invierte la relación del beat 5
- * (allí el texto va sobre el material; aquí el texto precede al material).
+ * ESTRUCTURA: dos columnas —retrato del fundador y sus palabras—. Invierte la
+ * relación del beat 5: allí el texto va SOBRE el material y la foto acredita;
+ * aquí la persona y el texto conviven al mismo nivel.
+ *
+ * ── LA PELÍCULA SALIÓ DE AQUÍ ─────────────────────────────────────────────
+ * Este beat cerraba con `filmVoltop` en una franja ancha de 16/9, y era el
+ * segundo momento signature de la Home. Se retiró el 2026-09-04 por decisión
+ * de producto, y de paso resuelve algo que estaba anotado como pendiente: ese
+ * archivo es EL MISMO que la portada de la entrada de Wake, así que la misma
+ * película se reproducía en dos sitios del sitio. Ahora vive solo en el
+ * registro, que es donde tiene contexto.
+ *
+ * `FilmStage` —el componente que le daba el encuadre y el atenuado al
+ * reproducir— queda sin uso. No se borra todavía: si la película vuelve, es
+ * la pieza que la sostiene.
  *
  * Era el momento mejor resuelto del prototipo anterior: se conserva su registro
  * editorial y se le da el aire que no tenía.
@@ -102,27 +112,6 @@ export function VisionQuote({ lang }: { lang: Locale }) {
         </div>
       </Container>
 
-      <Container width="wide" className="mt-16">
-        {/* SIGNATURE. `FilmStage` sustituye al `Reveal` genérico: el encuadre
-            se abre al entrar y la página se atenúa al reproducir. No puede ir
-            DENTRO de `Reveal` — ver la cabecera de `FilmStage`: el atenuado es
-            `fixed` y un ancestro transformado lo encajaría en su caja.
-
-            Pieza con controles, no fondo: lleva narración y subtítulos
-            quemados, así que silenciarla en bucle perdería el mensaje.
-            Ver la cabecera de `filmVoltop` en el registro de media.
-            El `aspect-[16/9]` que aplica `Media` reserva el espacio, así que
-            el póster entra sin desplazar nada. */}
-        <FilmStage>
-          <Media
-            asset={media.filmVoltop}
-            lang={lang}
-            controls
-            corner
-            sizes="(min-width: 1600px) 1600px, 100vw"
-          />
-        </FilmStage>
-      </Container>
     </Section>
   );
 }

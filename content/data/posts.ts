@@ -140,14 +140,14 @@ export const posts: Post[] = [
     type: "apertura",
     date: "2026-04-21",
     title: {
-      es: "Más potencia para Medellín: nueva estación de carga rápida en Wake",
-      en: "More power for Medellín: a new fast-charging station at Wake",
-      pt: "Mais potência para Medellín: nova estação de carregamento rápido no Wake",
+      es: "Nueva estación de carga rápida Voltop en Wake Medellín",
+      en: "New Voltop fast-charging station at Wake Medellín",
+      pt: "Nova estação de carregamento rápido Voltop no Wake Medellín",
     },
     summary: {
-      es: "Hasta 80 kW de potencia para cargar más rápido y pasar más tiempo en movimiento.",
-      en: "Up to 80 kW so you charge faster and spend more time moving.",
-      pt: "Até 80 kW para carregar mais rápido e passar mais tempo em movimento.",
+      es: "Voltop amplía su red en Medellín con una nueva estación de carga rápida en Wake, equipada con cargadores de hasta 80 kW de potencia para ofrecer una experiencia de carga más ágil a los conductores de vehículos eléctricos.",
+      en: "Voltop expands its network in Medellín with a new fast-charging station at Wake, fitted with chargers of up to 80 kW to give electric vehicle drivers a quicker charging experience.",
+      pt: "A Voltop amplia sua rede em Medellín com uma nova estação de carregamento rápido no Wake, equipada com carregadores de até 80 kW para oferecer uma experiência de carregamento mais ágil aos motoristas de veículos elétricos.",
     },
     cover: media.aperturaWake,
     coverCaption: {
@@ -169,22 +169,42 @@ export const posts: Post[] = [
     body: [
       {
         kind: "subtitulo",
-        text: { es: "80 kW para cargar más rápido", en: "80 kW to charge faster", pt: "80 kW para carregar mais rápido", },
+        text: { es: "Hasta 80 kW para cargar más rápido", en: "Up to 80 kW to charge faster", pt: "Até 80 kW para carregar mais rápido", },
       },
       {
         kind: "parrafo",
         text: {
-          es: "Wake llega a la red Voltop con carga rápida de hasta 80 kW. Más potencia significa menos tiempo conectado y una experiencia de carga mucho más ágil.",
-          en: "Wake joins the Voltop network with fast charging of up to 80 kW. More power means less time plugged in and a much quicker charging experience.",
-          pt: "O Wake chega à rede Voltop com carregamento rápido de até 80 kW. Mais potência significa menos tempo conectado e uma experiência de carregamento muito mais ágil.",
+          es: "La nueva estación de Voltop en Wake se suma a nuestra red de carga en Medellín con una potencia de hasta 80 kW, ofreciendo una nueva alternativa para cargar vehículos eléctricos en la ciudad.",
+          en: "Voltop's new station at Wake joins our charging network in Medellín with power of up to 80 kW, adding another option for charging electric vehicles in the city.",
+          pt: "A nova estação da Voltop no Wake se soma à nossa rede de carregamento em Medellín com potência de até 80 kW, oferecendo mais uma alternativa para carregar veículos elétricos na cidade.",
         },
       },
       {
         kind: "parrafo",
         text: {
-          es: "Una nueva estación en Medellín que nos acerca a lo que queremos construir: una ciudad donde moverse en eléctrico sea cada vez más fácil.",
-          en: "A new station in Medellín that brings us closer to what we want to build: a city where moving electric keeps getting easier.",
-          pt: "Uma nova estação em Medellín que nos aproxima do que queremos construir: uma cidade onde se mover de elétrico seja cada vez mais fácil.",
+          es: "La carga rápida permite aprovechar mejor el tiempo de cada parada y continuar el recorrido con mayor facilidad. Desde Wake, seguimos ampliando una red pensada para integrar la carga a los lugares y momentos que ya hacen parte del día a día.",
+          en: "Fast charging makes better use of every stop and makes getting back on the road easier. From Wake, we keep expanding a network designed to fit charging into the places and moments that are already part of the day.",
+          pt: "O carregamento rápido permite aproveitar melhor o tempo de cada parada e seguir viagem com mais facilidade. A partir do Wake, seguimos ampliando uma rede pensada para integrar o carregamento aos lugares e momentos que já fazem parte do dia a dia.",
+        },
+      },
+      {
+        kind: "subtitulo",
+        text: { es: "Una red que sigue creciendo en Medellín", en: "A network that keeps growing in Medellín", pt: "Uma rede que segue crescendo em Medellín", },
+      },
+      {
+        kind: "parrafo",
+        text: {
+          es: "Esta apertura representa un nuevo paso en la expansión de Voltop en la ciudad. Seguimos desarrollando infraestructura de carga confiable y estratégicamente ubicada para acompañar el crecimiento de la movilidad eléctrica en Colombia.",
+          en: "This opening marks another step in Voltop's expansion across the city. We keep developing reliable, strategically located charging infrastructure to support the growth of electric mobility in Colombia.",
+          pt: "Esta abertura representa mais um passo na expansão da Voltop na cidade. Seguimos desenvolvendo infraestrutura de carregamento confiável e estrategicamente localizada para acompanhar o crescimento da mobilidade elétrica na Colômbia.",
+        },
+      },
+      {
+        kind: "parrafo",
+        text: {
+          es: "Con Wake sumamos una nueva ubicación a una red que continúa creciendo y acercando la carga eléctrica a más conductores.",
+          en: "With Wake we add another location to a network that keeps growing and bringing EV charging closer to more drivers.",
+          pt: "Com o Wake somamos mais uma localização a uma rede que continua crescendo e aproximando o carregamento elétrico de mais motoristas.",
         },
       },
     ],

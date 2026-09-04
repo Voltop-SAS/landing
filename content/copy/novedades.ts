@@ -73,6 +73,25 @@ export const novedades = {
     noticia: { es: "Noticia", en: "News", pt: "Notícia", },
   } satisfies Record<PostType, Localized>,
 
+  /**
+   * Los mismos tipos EN PLURAL, solo para la miga de pan.
+   *
+   * `types` está en singular porque su trabajo principal es rotular UNA
+   * entrada: "Apertura" al lado de una fecha, en el registro y en la Home. En
+   * la miga de pan, en cambio, el tipo no describe la entrada sino la
+   * CATEGORÍA a la que pertenece —"Novedades / Aperturas"—, y ahí el singular
+   * se lee como si la categoría tuviera un solo elemento.
+   *
+   * Son dos trabajos distintos con la misma palabra, así que son dos claves.
+   */
+  typesPlural: {
+    apertura: { es: "Aperturas", en: "Openings", pt: "Aberturas", },
+    evento: { es: "Eventos", en: "Events", pt: "Eventos", },
+    alianza: { es: "Alianzas", en: "Partnerships", pt: "Parcerias", },
+    comunicado: { es: "Comunicados", en: "Statements", pt: "Comunicados", },
+    noticia: { es: "Noticias", en: "News", pt: "Notícias", },
+  } satisfies Record<PostType, Localized>,
+
   readEntry: { es: "Leer la entrada", en: "Read the entry", pt: "Ler a entrada", } satisfies Localized,
   backToIndex: { es: "Volver a novedades", en: "Back to the newsroom", pt: "Voltar para novidades", } satisfies Localized,
 
@@ -119,6 +138,15 @@ export const novedades = {
   /** Enlace de vuelta al producto desde una entrada. Aquí paga la referencia. */
   related: {
     station: { es: "Estación relacionada", en: "Related station", pt: "Estação relacionada", } satisfies Localized,
+    /* El botón llevaba el NOMBRE de la estación como rótulo ("Wake"), lo cual
+       decía a dónde se va pero no que se pueda ir. Ahora es un verbo.
+       
+       No reutiliza `actions.seeStation` —"Conoce ESTA estación"— porque ahí el
+       demostrativo funciona: en el beat 2 y en el caso, la estación es el
+       sujeto que se está mirando. Aquí es una referencia al pie de una
+       entrada, y "la" es el artículo que corresponde. Es la única pareja de
+       rótulos casi idénticos que se conserva a propósito. */
+    stationCta: { es: "Conoce la estación", en: "See the station", pt: "Conheça a estação", } satisfies Localized,
     /* Se completa con el nombre de la ciudad. Antes se concatenaba
        "Ver la cobertura de la ciudad — Medellín", que la nombraba dos veces. */
     city: { es: "Ver la cobertura en", en: "See coverage in", pt: "Ver a cobertura em", } satisfies Localized,

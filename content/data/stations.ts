@@ -94,7 +94,18 @@ export const stations: Station[] = [
       { es: "Baños", en: "Restrooms", pt: "Banheiros", },
       { es: "Wifi", en: "Wi-Fi", pt: "Wi-Fi", },
     ],
-    media: { photos: [] },
+    media: {
+      photos: [
+        {
+          src: "/estacion-universidad-ean.jpg",
+          alt: {
+            es: "Estación de carga Voltop en la Universidad EAN, con varios puntos de carga en operación",
+            en: "Voltop charging station at EAN University, with several charge points in service",
+            pt: "Estação de carregamento Voltop na Universidade EAN, com vários pontos de carga em operação",
+          },
+        },
+      ],
+    },
     featured: true,
     dataStatus: "verified",
   },
@@ -132,7 +143,18 @@ export const stations: Station[] = [
     hours: { es: "Consultar en la app", en: "Check in the app", pt: "Consulte no aplicativo", },
     pricing: null,
     services: [],
-    media: { photos: [] },
+    media: {
+      photos: [
+        {
+          src: "/estacion-wake.jpg",
+          alt: {
+            es: "Estación de carga rápida Voltop en Wake, Medellín, con seis puntos de carga de 80 kW",
+            en: "Voltop fast-charging station at Wake, Medellín, with six 80 kW charge points",
+            pt: "Estação de carregamento rápido Voltop no Wake, Medellín, com seis pontos de carga de 80 kW",
+          },
+        },
+      ],
+    },
     featured: true,
     dataStatus: "verified",
   },

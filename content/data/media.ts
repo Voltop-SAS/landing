@@ -379,7 +379,7 @@ export const media = {
   retratoFundador: {
     id: "retrato-fundador",
     kind: "photo",
-    src: "/retrato-bruno-ocampo.png",
+    src: "/retrato-bruno-ocampo.jpg",
     poster: null,
     alt: {
       es: "Retrato de Bruno Ocampo, fundador y CEO de Voltop",
