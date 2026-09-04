@@ -80,8 +80,13 @@ export function Media({
    *
    * `contain` existe para el material que es un OBJETO AISLADO —el render del
    * cargador— donde el recorte destruye el sujeto: un equipo cortado por
-   * arriba o por los lados deja de ser el retrato de un equipo. Con `contain`,
-   * además, el `position` deja de tener efecto: no hay eje que recortar.
+   * arriba o por los lados deja de ser el retrato de un equipo.
+   *
+   * `position` SIGUE ACTUANDO con `contain`, y conviene saberlo: la imagen se
+   * ajusta por un eje y sobra espacio en el otro, y `object-position` decide
+   * dónde se apoya dentro de ese sobrante. Es lo que permite pegar el render
+   * del beat 3 al bloque de texto en lugar de dejarlo flotando en el centro de
+   * su caja.
    */
   fit?: "cover" | "contain";
   /**
@@ -102,6 +107,18 @@ export function Media({
   corner?: boolean;
 }) {
   const shape = fill ? "" : aspects[aspect ?? asset.aspect];
+  /**
+   * `bg-surface-1` es el fondo que sostiene el hueco mientras la imagen carga,
+   * y con `cover` nunca se ve: la foto lo tapa entero.
+   *
+   * Con `contain` sí se ve, y se convierte en una CAJA. Medido en el beat 3:
+   * el render del cargador viene con fondo transparente y este relleno pintaba
+   * un rectángulo más claro de 662px con una costura vertical visible contra
+   * el fondo de la sección — exactamente la caja que la composición evitaba.
+   * Un objeto aislado se apoya sobre el fondo que le toque, sin superficie
+   * propia detrás.
+   */
+  const fondo = fit === "contain" ? "" : "bg-surface-1";
   /* `overflow-hidden` ya está en los tres envoltorios, así que el recorte de
      la esquina se aplica también al contenido —foto, vídeo o hueco—. */
   const esquina = corner ? "rounded-tr-(--radius-signature)" : "";
@@ -109,7 +126,7 @@ export function Media({
   if (asset.src) {
     if (asset.kind === "photo") {
       return (
-        <div className={cn("relative overflow-hidden bg-surface-1", shape, esquina, className)}>
+        <div className={cn("relative overflow-hidden", fondo, shape, esquina, className)}>
           <Image
             src={asset.src}
             alt={t(asset.alt, lang)}
@@ -126,7 +143,7 @@ export function Media({
        `prefers-reduced-motion`, que no es consultable desde el servidor.
        La fotografía —la rama de arriba— sigue siendo servidor puro. */
     return (
-      <div className={cn("relative overflow-hidden bg-surface-1", shape, esquina, className)}>
+      <div className={cn("relative overflow-hidden", fondo, shape, esquina, className)}>
         <VideoMedia
           asset={asset}
           lang={lang}

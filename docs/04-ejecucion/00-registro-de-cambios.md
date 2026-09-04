@@ -2062,3 +2062,37 @@ Con el clip corregido: **nombre 8.42–10.95:1 y contador 7.66–8.14:1** sobre 
 ### Evidencia
 
 `lint`, `tsc` y build limpios · las tres imágenes sirviéndose en AVIF, 70 KB en escritorio y 54 KB en móvil · contraste del texto sobre foto medido en las dos tarjetas a 1440 y 390px · 27 combinaciones de ruta × viewport sin problemas · `prefers-reduced-motion` intacto · cero overflow a 1440, 1280, 768, 390 y 320px.
+
+---
+
+## Bloque 52 · El beat 3 deja de ser dos cajas — 2026-09-04
+
+La composición no convencía y la revisión encontró tres causas concretas, ninguna de gusto: se midieron.
+
+### 1. El render vivía dentro del riel
+
+Estaba en una celda de rejilla dentro del contenedor de 1240, así que la sección se leía como **dos cajas**: el cargador centrado en su mitad con ~85px de aire a un lado y ~110 al otro, y **148px de página vacía a su derecha** a 1440 — justo debajo de un beat que sí va a sangre.
+
+Ahora se posiciona contra la sección y corre hasta el borde de la ventana, con `46vw` en lugar de 526px. Un objeto encuadrado por el riel está *colocado*; uno que se sale está *presente*.
+
+### 2. `bg-surface-1` pintaba la caja que la composición evitaba
+
+`Media` pone ese fondo detrás de toda foto para sostener el hueco mientras carga. Con `cover` nunca se ve porque la imagen lo tapa entero. Con `contain` y un PNG transparente sí: pintaba un **rectángulo más claro de 662px con costura vertical visible** contra el fondo de la sección.
+
+Corregido en la primitiva, no en el componente: con `fit="contain"` no hay relleno. Un objeto aislado se apoya sobre el fondo que le toque, sin superficie propia detrás.
+
+### 3. El objeto estaba lejos del contenido
+
+`object-contain` centra por defecto. Con una caja de 662px y un objeto de 479, eso repartía 183px de aire a los dos lados: **el contenido acababa en x=766 y el cargador empezaba en x=869**. Esos 103px eran lo que hacía que las dos mitades se leyeran como piezas sueltas.
+
+Anclado con `object-left`, el equipo queda a **26px** del bloque de texto y el aire se acumula donde debe: hacia el borde de la página. Verificado que no hay superposición en ningún ancho — la separación mínima es de 17px a 1024px, y el render lleva `pointer-events-none`.
+
+De paso se corrigió un comentario propio que era falso: **`position` SÍ actúa con `contain`**. La imagen se ajusta por un eje y sobra espacio en el otro, y `object-position` decide dónde se apoya en ese sobrante. Es justo lo que resuelve este caso.
+
+### El punto verde, fuera
+
+La referencia trae un punto de marca delante de "Más ciudades en camino". Se retiró: **no existe en ninguna otra parte del sitio**, así que era un adorno de una sola aparición — lo que §12 llama un chip decorativo sin función. El pie de foto del beat 2 dice lo suyo sin ninguno.
+
+### Evidencia
+
+`lint`, `tsc` y build limpios · separación equipo/texto medida a 1024, 1100, 1280, 1440 y 1680px: siempre positiva, de 17 a 45px · cero overflow a 1440, 1280, 768, 390 y 320px · 27 combinaciones de ruta × viewport sin problemas · `prefers-reduced-motion` intacto.

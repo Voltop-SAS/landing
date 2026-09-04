@@ -85,12 +85,17 @@ export function NetworkIndex({ lang }: { lang: Locale }) {
       id="red"
       space="base"
       /* Fondo sólido, sin capas. Ver la nota de arriba. */
-      className="bg-canvas"
+      /* `relative`: el render se posiciona contra la sección para poder salirse
+         del riel. Ver su bloque más abajo. */
+      className="relative bg-canvas"
       ariaLabelledby="red-title"
     >
       <Container>
-        <div className="grid items-stretch gap-14 lg:grid-cols-[minmax(0,52fr)_minmax(0,48fr)] lg:gap-12">
-          {/* ── IZQUIERDA · CONTENIDO ─────────────────────────────────── */}
+        {/* ── IZQUIERDA · CONTENIDO ───────────────────────────────────────
+            Tope del 54% en escritorio: el render ya no vive en una celda de
+            rejilla sino posicionado contra la sección, así que es el contenido
+            el que declara hasta dónde llega para no pasar por debajo. */}
+        <div className="lg:max-w-[54%]">
           <div>
             {/* `SectionHeading` y no un antetítulo más un `h2` a mano: es la
                 primitiva del sistema, y con ella la relación antetítulo/título
@@ -260,17 +265,24 @@ export function NetworkIndex({ lang }: { lang: Locale }) {
                   de un CTA —ver el pie de foto del beat 2, "NUEVA ESTACIÓN ·
                   MEDELLÍN"—. La referencia la trae en texto corrido, pero esa
                   ranura ya tiene registro decidido y dos secciones vecinas
-                  hablando distinto en el mismo sitio es lo que se nota. */}
-              <p className="flex items-center gap-2 font-mono text-mono uppercase tracking-wider text-ink-3">
-                <span aria-hidden="true" className="size-1.5 shrink-0 rounded-full bg-brand" />
+                  hablando distinto en el mismo sitio es lo que se nota.
+
+                  SIN PUNTO DE COLOR. La referencia trae uno verde delante y se
+                  retiró: no existe en ninguna otra parte del sitio, así que era
+                  un adorno de una sola aparición — justo lo que §12 llama un
+                  chip decorativo sin función. El pie de foto del beat 2 dice lo
+                  suyo sin ninguno. */}
+              <p className="font-mono text-mono uppercase tracking-wider text-ink-3">
                 {t(home.network.moreCities, lang)}
               </p>
             </div>
           </div>
+        </div>
+      </Container>
 
-          {/* ══════════════════════════════════════════════════════════════
-              DERECHA · EL RENDER DEL CARGADOR
-              ══════════════════════════════════════════════════════════════
+      {/* ══════════════════════════════════════════════════════════════════
+          EL RENDER DEL CARGADOR
+          ══════════════════════════════════════════════════════════════════
               Entregado el 2026-09-04 y colocado en el hueco que esta sección
               ya tenía reservado: no hubo que mover ni un píxel de la columna
               izquierda, que era exactamente el objetivo de reservarlo.
@@ -295,28 +307,53 @@ export function NetworkIndex({ lang }: { lang: Locale }) {
               el render se queda quieto y entero. La regla general quedó
               anotada en `Flow`, para que nadie vuelva a intentarlo.
 
-              En móvil pasa DEBAJO del contenido en lugar de esconderse: ya no
-              es un hueco vacío que costaría scroll, es el producto. */}
-          <div
-            data-charger-visual=""
-            /* Altura explícita por debajo de `lg`: `Flow` posiciona su interior
-               en absoluto y `Media fill` necesita un padre con medida, así que
-               sin esto el contenedor colapsaba a 0 en móvil y tablet y el
-               render no aparecía. Desde `lg` la fila manda y solo se garantiza
-               un mínimo. */
-            className="mx-auto h-[26rem] w-full max-w-sm sm:h-[32rem] lg:mx-0 lg:h-auto lg:max-w-none lg:min-h-[32rem]"
-          >
-            <Media
-              asset={media.renderCargador}
-              lang={lang}
-              fill
-              sizes="(min-width: 1024px) 45vw, 90vw"
-              className="h-full w-full"
-              fit="contain"
-            />
-          </div>
-        </div>
-      </Container>
+          SE SALE DEL RIEL, Y ESO ES LA CORRECCIÓN. Estaba en una celda de
+          rejilla dentro del contenedor de 1240, y así la sección se leía como
+          DOS CAJAS: el cargador centrado en su mitad con ~85px de aire a un
+          lado y ~110 al otro, y 148px de página vacía a su derecha a 1440 —
+          justo debajo de un beat que sí va a sangre. Un objeto encuadrado por
+          el riel está *colocado*; uno que se sale está *presente*.
+
+          Ahora se posiciona contra la sección y corre hasta el borde derecho
+          de la ventana, con 46vw en lugar de 526px: a 1440 son 662px de
+          cargador contra los 375 de antes. El contenido sigue en el riel, así
+          que las dos mitades se leen como una composición con el objeto
+          escapándose y no como texto al lado de una foto.
+
+          `inset-y-0` lo lleva también hasta los bordes verticales de la
+          sección, por dentro de su propio padding: el equipo sobrepasa el
+          bloque de texto, que es lo que le da escala.
+
+          `pointer-events-none`: es una imagen decorativa que cruza media
+          pantalla; sin esto se comería los clics de lo que quede debajo.
+
+          En móvil vuelve al FLUJO, debajo del contenido, con su propia altura:
+          `Media fill` necesita un padre con medida y en absoluto ahí taparía la
+          sección entera. */}
+      <div
+        data-charger-visual=""
+        aria-hidden="true"
+        className="pointer-events-none mx-auto mt-12 h-[26rem] w-full max-w-sm px-(--spacing-gutter) sm:h-[32rem] lg:absolute lg:inset-y-0 lg:right-0 lg:mt-0 lg:h-auto lg:w-[46vw] lg:max-w-none lg:px-0"
+      >
+        {/* ANCLADO A LA IZQUIERDA DE SU CAJA, no centrado.
+            `object-contain` centra por defecto, y con una caja de 662px y un
+            objeto de 479 eso repartía 183px de aire a los dos lados: medido,
+            el contenido acababa en x=766 y el cargador empezaba en x=869. Esos
+            103px de separación eran lo que hacía que las dos mitades se leyeran
+            como dos piezas sueltas en vez de una composición.
+
+            Anclado a la izquierda, el equipo queda junto al bloque de texto y
+            el aire se acumula donde debe estar: hacia el borde de la página. */}
+        <Media
+          asset={media.renderCargador}
+          lang={lang}
+          fill
+          sizes="(min-width: 1024px) 46vw, 90vw"
+          className="h-full w-full"
+          fit="contain"
+          position="object-left"
+        />
+      </div>
     </Section>
   );
 }
