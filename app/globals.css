@@ -417,6 +417,35 @@ body {
   }
 }
 
+/* -------------------------------------------------------------------------
+   `.glass-strong` — el mismo vidrio, para paneles que FLOTAN SOBRE TEXTO
+   -------------------------------------------------------------------------
+   El 68% de `.glass` está calibrado para paneles que viven dentro de una
+   composición: detrás tienen fotografía o superficie, no párrafos.
+
+   El flotante de la app es otro caso. Cruza toda la página y pasa por encima
+   de titulares de tamaño display y de listas densas. Y aquí el contraste NO es
+   la métrica que falla: medido sobre el píxel compuesto a percentil 99, el
+   texto secundario del panel daba 7.79:1 en escritorio y 8.45:1 en móvil, muy
+   por encima del 4.5:1 de AA. El problema es otro y hay que nombrarlo bien:
+   **el texto de detrás sigue siendo legible a través del vidrio**, y dos
+   textos legibles en el mismo sitio compiten aunque los dos tengan contraste.
+
+   Lo que se corrige, entonces, no es la luminancia sino la ESTRUCTURA que
+   queda del fondo. Subir a 92% la borra sin convertir el panel en un
+   rectángulo opaco: el desenfoque y la insinuación del color de detrás siguen
+   ahí, que es lo que lo mantiene dentro del sistema.
+   ------------------------------------------------------------------------- */
+.glass-strong {
+  background: color-mix(in srgb, var(--color-surface-2) 92%, transparent);
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glass-strong {
+    background: var(--color-surface-2);
+  }
+}
+
 /* =========================================================================
    PRESSED · la respuesta al clic
    Ver docs/MASTER-PROJECT-DEFINITION.md §21 y `lib/motion.ts`.

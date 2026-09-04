@@ -269,18 +269,25 @@ export const home = {
 
   /** Componente flotante de descarga. */
   appFloating: {
-    title: { es: "Descarga la app", en: "Get the app", pt: "Baixe o aplicativo" },
+    title: { es: "Descarga la app Voltop", en: "Get the Voltop app", pt: "Baixe o app Voltop" },
     body: {
-      es: "Escanea el código y carga desde tu teléfono.",
-      en: "Scan the code and charge from your phone.",
-      pt: "Escaneie o código e carregue pelo seu celular.",
+      es: "Encuentra estaciones e inicia tu carga desde la app.",
+      en: "Find stations and start your charge from the app.",
+      pt: "Encontre estações e inicie seu carregamento pelo app.",
     },
-    /* La barra móvil tiene una línea, no dos: el mensaje se dice más corto en
-       lugar de recortar el de escritorio con puntos suspensivos. */
+    /* La barra móvil dice lo mismo MÁS CORTO en lugar de recortar el texto de
+       escritorio con puntos suspensivos.
+       
+       El título también tiene su versión: en la barra compiten el icono, dos
+       líneas de texto, el botón y el cerrar, y el hueco que queda para el
+       texto es de unos 180px. "Descarga la app Voltop" se cortaba ahí — y con
+       el icono al lado la palabra "Voltop" ya es redundante: el logo la dice.
+       Es la misma razón por la que el lockup del header no repite la marca. */
+    titleMobile: { es: "Descarga la app", en: "Get the app", pt: "Baixe o app" },
     bodyMobile: {
-      es: "Carga desde tu teléfono",
-      en: "Charge from your phone",
-      pt: "Carregue pelo seu celular",
+      es: "Encuentra estaciones e inicia tu carga",
+      en: "Find stations and start charging",
+      pt: "Encontre estações e inicie seu carregamento",
     },
     open: { es: "Abrir", en: "Open", pt: "Abrir" },
     dismiss: { es: "Cerrar", en: "Dismiss", pt: "Fechar" },

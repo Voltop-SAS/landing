@@ -1918,3 +1918,50 @@ iniciar la carga, que es lo que ya dice el paso 3.
 **Evidencia:** `lint`, `tsc` y build limpios · los cuatro pasos verificados a
 1440, 768, 390 y 320px sin desbordes de texto ni de página · 27 combinaciones
 de ruta × viewport sin problemas · `prefers-reduced-motion` intacto.
+
+---
+
+## Bloque 49 · El flotante de la app: se queda, se reconoce y se lee — 2026-09-04
+
+Tres peticiones sobre el mismo componente y una consecuencia que hubo que resolver.
+
+### Aparece tras la primera sección y no vuelve a esconderse
+
+Antes el umbral era "el 90% de la altura del viewport" —una aproximación a la primera sección, no la primera sección— y **desaparecía en tres zonas del recorrido**. Un elemento que se va y vuelve tres veces mientras bajas se percibe como un fallo, no como delicadeza.
+
+Ahora se observa la primera sección real de cada página: mientras esté a la vista no existe; en cuanto sale, aparece y se queda hasta que se vuelve a ella. Funciona igual en las seis plantillas sin un número por página, y se reobserva al cambiar de ruta —el componente vive en el layout y la navegación de cliente no lo remonta—.
+
+### Las dos colisiones que las zonas mudas tapaban, resueltas donde tocaba
+
+Esas zonas existían por dos fallos reales, no por gusto. Se arreglan en su sitio:
+
+- **Los controles de la película.** La tarjeta se solapa con la barra de reproducción, y un clic en pantalla completa **abría la tienda de apps**. Ahora `FilmStage` se eleva por encima del flotante mientras el puntero está sobre la pieza o mientras se reproduce. Verificado: sin puntero, ese punto pertenece al flotante; con el puntero encima, al `<video>`.
+- **El CTA del beat 2.** Ancla su contenido al fondo de un panel fijado a pantalla completa, así que no había ninguna posición de scroll que liberara la barra. Ahora el beat reserva el hueco por debajo de `lg`. Verificado: el clic llega al CTA a 320, 390 y 768px.
+
+### Copy nuevo e icono de la app
+
+"Descarga la app Voltop" · "Encuentra estaciones e inicia tu carga desde la app." El icono responde una pregunta que el texto no puede: **cuál** app. Va en la fila superior, ocupando el lado que el botón de cerrar dejaba vacío, así que no añade ni una fila ni un píxel de alto. No compite con el CTA porque no es interactivo, y su gradiente es el del propio archivo de marca, no un segundo gradiente en la vista.
+
+El origen pesa 657 KB y **llega al navegador como 1 KB en AVIF a 64px**, comprobado en red.
+
+### La transparencia: el problema no era el contraste
+
+Medido sobre el píxel compuesto a percentil 99, el texto secundario daba **7.79:1 en escritorio y 8.45:1 en móvil** — muy por encima del 4.5:1 de AA. El contraste no era el problema: era que **el texto de detrás seguía siendo legible a través del vidrio**, y dos textos legibles en el mismo sitio compiten aunque los dos tengan contraste.
+
+Por eso el arreglo no toca la luminancia sino la opacidad: `.glass-strong` sube el fondo del 68% al 92% (verificado en el color computado, alfa 0.68 → 0.92) sin renunciar al desenfoque, que es lo que lo mantiene dentro del sistema.
+
+### La barra móvil pasa a dos filas por debajo de 480px
+
+Con el icono dentro, en una sola fila compiten icono, dos líneas, botón y cerrar. Medido: **a 390px al texto le quedan 158px y la segunda línea necesita 227; a 320px le quedan 88 y hasta el título se corta.** No es un problema de copy —acortarlo hasta caber en 88px lo dejaría sin mensaje— sino de estructura.
+
+Por debajo de `xs` el botón se lleva su propia fila a ancho completo: el texto pasa a 234px, cabe entero, y el CTA gana un objetivo táctil mayor, que en un teléfono es mejor y no peor. Un solo `<a>` reordenado con `order`, no dos ocultándose: duplicarlo duplicaría el emisor del evento de medición.
+
+A 320px la segunda línea envuelve en lugar de cortarse (`line-clamp-2`): conserva el mensaje y solo cuesta alto en el ancho más estrecho.
+
+### CONSECUENCIA CORREGIDA: los enlaces legales del pie
+
+El pie ya reservaba 5.5rem para la barra de una fila. Con la barra a dos filas —126px a 390 y 145px a 320— **los enlaces legales acababan a 707px y la barra empezaba a 706: quedaban a un píxel**, y cualquier idioma más largo los metía debajo. Al llegar al fondo del documento no queda scroll para apartarla, así que habrían sido inalcanzables. Ahora son 11rem, que cubre el peor caso con 87px de margen.
+
+### Evidencia
+
+`lint`, `tsc` y build limpios · comportamiento verificado en `/es` y `/es/red` en escritorio y en `/es`, `/es/novedades` en móvil y a 320px: oculto al cargar, aparece tras la primera sección, **nunca se esconde a mitad**, oculto de vuelta arriba · sin texto cortado en ningún ancho · icono presente en las dos piezas · 27 combinaciones de ruta × viewport sin problemas · `prefers-reduced-motion` intacto.

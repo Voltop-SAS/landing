@@ -239,7 +239,15 @@ export function InfrastructureSignature({
           className="absolute inset-x-0 top-0 h-[22%] bg-gradient-to-b from-canvas via-canvas/55 to-transparent"
         />
 
-        <Container className="relative z-(--z-raised) py-(--spacing-section-tight)">
+        {/* `pb-28` por debajo de `lg`: es donde vive la barra móvil del
+            flotante de descarga, y este beat ancla su contenido al fondo de un
+            panel FIJADO a pantalla completa. Sin reservar el hueco, la barra le
+            caía encima al CTA y al pie de foto —medido: hasta el 84% y el 100%
+            respectivamente— y, como el contenido está pinneado durante todo el
+            recorrido, NO HABÍA NINGUNA POSICIÓN DE SCROLL QUE LO LIBERARA.
+            Antes se resolvía escondiendo el flotante aquí; ahora que se queda
+            visible en toda la página, el hueco lo reserva el beat. */}
+        <Container className="relative z-(--z-raised) py-(--spacing-section-tight) pb-28 lg:pb-(--spacing-section-tight)">
           <motion.div {...phase(0)}>
             <Eyebrow tone="brand">{t(home.infrastructure.eyebrow, lang)}</Eyebrow>
             {/* `text-balance` reparte el largo de las líneas. Lo que evita

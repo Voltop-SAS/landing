@@ -23,13 +23,21 @@ export function Footer({ lang }: { lang: Locale }) {
   const year = new Date().getFullYear();
 
   return (
-    /* `pb` extra en móvil: la barra flotante mide 70px y al llegar al fondo
-       del documento no queda scroll para apartarla, así que tapaba de forma
-       permanente los enlaces legales y el aviso de prototipo. Reservar el
-       espacio es la única solución real — esconderla ahí abajo la quitaría
-       justo donde más se decide. Desaparece en `lg`, donde el flotante es una
-       tarjeta en la esquina y no cruza el pie. */
-    <footer className="border-t border-line bg-surface-1 pb-[calc(5.5rem+env(safe-area-inset-bottom))] lg:pb-0">
+    /* `pb` extra en móvil: al llegar al fondo del documento no queda scroll
+       para apartar la barra flotante, así que tapaba de forma permanente los
+       enlaces legales. Reservar el espacio es la única solución real —
+       esconderla ahí abajo la quitaría justo donde más se decide.
+
+       El valor se recalculó cuando la barra pasó a dos filas: mide 126px a
+       390px y 145px a 320px, más 12px de separación del borde. Con el 5.5rem
+       anterior —dimensionado para la barra de una fila, 70px— los enlaces
+       legales acababan a 707px y la barra empezaba a 706: quedaban A UN PÍXEL,
+       y cualquier idioma más largo los metía debajo. Ahora son 11rem (176px),
+       que cubre el peor caso con margen.
+
+       Desaparece en `lg`, donde el flotante es una tarjeta en la esquina y no
+       cruza el pie. */
+    <footer className="border-t border-line bg-surface-1 pb-[calc(11rem+env(safe-area-inset-bottom))] lg:pb-0">
       <Container className="py-(--spacing-section-tight)">
         <div className="grid gap-10 md:grid-cols-[1.5fr_repeat(3,1fr)] md:gap-8">
           <div>

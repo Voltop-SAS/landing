@@ -33,6 +33,20 @@ import { cn } from "@/lib/cn";
  * él se habría quedado encajado en su caja en vez de cubrir la pantalla. Por
  * eso son hermanos, y por eso este componente no puede ir dentro de `Reveal`.
  *
+ * ── POR ENCIMA DEL FLOTANTE, PERO SOLO MIENTRAS SE USA ───────────────────
+ * La tarjeta flotante de descarga vive abajo a la derecha y se solapa con la
+ * barra de controles de esta pieza. Antes el flotante se ocultaba en este beat;
+ * ahora se queda visible en toda la página, así que la colisión se resuelve
+ * aquí: la película se eleva por encima de él mientras el puntero está sobre
+ * ella o mientras se reproduce.
+ *
+ * Así los dos coexisten. Un clic en silenciar o en pantalla completa vuelve a
+ * ser un clic en silenciar o en pantalla completa —antes ABRÍA LA TIENDA DE
+ * APPS— y el flotante sigue ahí el resto del tiempo.
+ *
+ * Se eleva solo durante la interacción y no siempre: `z-index` permanente
+ * pondría la pieza por encima del header, que también es fijo.
+ *
  * ── MÓVIL ─────────────────────────────────────────────────────────────────
  * La expansión se apaga: a 390px la pieza ya ocupa todo el ancho, así que
  * crecerla solo la recortaría contra los bordes. Se conservan el atenuado
@@ -46,6 +60,8 @@ export function FilmStage({ children }: { children: React.ReactNode }) {
      recortada por los lados y a opacidad 0 para siempre. */
   const yaPasado = useScrolledPast(ref);
   const [reproduciendo, setReproduciendo] = useState(false);
+  /* Puntero o foco sobre la pieza. Ver la nota del z-index en la cabecera. */
+  const [enUso, setEnUso] = useState(false);
   const [compacto, setCompacto] = useState(false);
 
   useEffect(() => {
@@ -63,6 +79,12 @@ export function FilmStage({ children }: { children: React.ReactNode }) {
     onPlayCapture: () => setReproduciendo(true),
     onPauseCapture: () => setReproduciendo(false),
     onEndedCapture: () => setReproduciendo(false),
+    /* `focus-within` no basta: en escritorio se llega a los controles con el
+       ratón sin dar foco a nada. */
+    onPointerEnter: () => setEnUso(true),
+    onPointerLeave: () => setEnUso(false),
+    onFocusCapture: () => setEnUso(true),
+    onBlurCapture: () => setEnUso(false),
   };
 
   const recorte = compacto ? 6 : 14;
@@ -83,7 +105,7 @@ export function FilmStage({ children }: { children: React.ReactNode }) {
         {...escuchas}
         ref={ref}
         data-reveal=""
-        className={cn("relative", reproduciendo && "z-(--z-overlay)")}
+        className={cn("relative", (reproduciendo || enUso) && "z-(--z-overlay)")}
         {...(yaPasado
           ? {}
           : {
