@@ -9,7 +9,7 @@ import {
   alternatesFor,
   SITE_URL,
 } from '~/core/common/domain/i18n/routes'
-import { red, station as stationCopy, stationMeta } from '~/core/red/domain/consts/copy'
+import { red, station as stationCopy, stationMeta } from '~/core/network/domain/consts/copy'
 import { actions, a11y, units } from '~/core/common/domain/consts/copy'
 import {
   getStations,
@@ -18,8 +18,8 @@ import {
   getStationsByCity,
   getPostsForStation,
 } from '~/core/common/infrastructure/data-access'
-import { novedadesInline } from '~/core/novedades/domain/consts/copy'
-import { PostsInline } from '~/core/novedades/infrastructure/ui/components/PostsInline'
+import { novedadesInline } from '~/core/news/domain/consts/copy'
+import { PostsInline } from '~/core/news/infrastructure/ui/components/PostsInline'
 import { TrackView } from '@ui/common/components/analytics/TrackView'
 import {
   Section,
@@ -30,9 +30,9 @@ import {
 import { StatusBadge, SpecList, PendingTag } from '@ui/common/components/ui/DataPrimitives'
 import { Media } from '@ui/common/components/ui/Media'
 import { Button } from '@ui/common/components/ui/Button'
-import { DirectionsButton } from '~/core/red/infrastructure/ui/components/DirectionsButton'
+import { DirectionsButton } from '~/core/network/infrastructure/ui/components/DirectionsButton'
 import { media } from '~/core/common/infrastructure/content/media'
-import { formatPowerKw } from '~/core/red/domain/entities/Station'
+import { formatPowerKw } from '~/core/network/domain/entities/Station'
 
 type Props = { params: Promise<{ locale: string; slug: string }> }
 
@@ -159,7 +159,7 @@ export default async function StationPage({ params }: Props) {
         '@type': 'ListItem',
         position: 1,
         name: t(red.hero.eyebrow, locale),
-        item: absoluteUrl(locale, routes.red),
+        item: absoluteUrl(locale, routes.network),
       },
       ...(city
         ? [
@@ -219,7 +219,7 @@ export default async function StationPage({ params }: Props) {
             <ol className="flex flex-wrap items-center gap-2">
               <li>
                 <Link
-                  href={href(locale, routes.red)}
+                  href={href(locale, routes.network)}
                   className="inline-flex min-h-11 items-center transition-colors hover:text-ink"
                 >
                   {t(red.hero.eyebrow, locale)}
@@ -413,7 +413,7 @@ export default async function StationPage({ params }: Props) {
               <Button
                 variant="link"
                 arrow
-                href={href(locale, routes.red)}
+                href={href(locale, routes.network)}
               >
                 {t(actions.backToNetwork, locale)}
               </Button>

@@ -1,6 +1,6 @@
 /** The news log. */
 
-import { type Post } from '~/core/novedades/domain/entities/Post'
+import { type Post } from '~/core/news/domain/entities/Post'
 import { fetchPosts } from './postsSource'
 
 /**

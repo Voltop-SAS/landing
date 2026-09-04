@@ -78,7 +78,7 @@ export function BusinessIntro({ locale }: { locale: Locale }) {
           <Button
             variant="ghost"
             arrow
-            href={href(locale, routes.empresas)}
+            href={href(locale, routes.business)}
           >
             {t(actions.businessSolutions, locale)}
           </Button>

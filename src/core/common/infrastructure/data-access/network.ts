@@ -6,9 +6,9 @@
  * added. Adding one record updates the home page on its own.
  */
 
-import { stations } from '~/core/red/infrastructure/content/stations'
-import { cities } from '~/core/red/infrastructure/content/cities'
-import type { City } from '~/core/red/domain/entities/City'
+import { stations } from '~/core/network/infrastructure/content/stations'
+import { cities } from '~/core/network/infrastructure/content/cities'
+import type { City } from '~/core/network/domain/entities/City'
 import { getStationsByCity } from './stations'
 
 export function getNetworkSummary() {

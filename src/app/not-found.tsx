@@ -71,7 +71,7 @@ export default function NotFound() {
             <Button
               variant="primary"
               arrow
-              href={href(locale, routes.red)}
+              href={href(locale, routes.network)}
             >
               {t(states.notFound.action, locale)}
             </Button>

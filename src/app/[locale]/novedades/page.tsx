@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { locales, isLocale, t, type Locale } from '~/core/common/domain/i18n/config'
 import { href, routes, alternatesFor } from '~/core/common/domain/i18n/routes'
-import { novedades } from '~/core/novedades/domain/consts/copy'
+import { novedades } from '~/core/news/domain/consts/copy'
 import { getPosts, getFeaturedPost, hasPage } from '~/core/common/infrastructure/data-access'
 import {
   Section,
@@ -15,7 +15,7 @@ import {
 import { Media } from '@ui/common/components/ui/Media'
 import { Button } from '@ui/common/components/ui/Button'
 import { PendingTag } from '@ui/common/components/ui/DataPrimitives'
-import { PostLog } from '~/core/novedades/infrastructure/ui/components/PostLog'
+import { PostLog } from '~/core/news/infrastructure/ui/components/PostLog'
 import { TrackView } from '@ui/common/components/analytics/TrackView'
 import { formatDate } from '@ui/common/lib/dates'
 
@@ -55,7 +55,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: t(novedades.meta.title, locale),
     description: t(novedades.meta.description, locale),
-    alternates: alternatesFor(locale, routes.novedades),
+    alternates: alternatesFor(locale, routes.news),
   }
 }
 
@@ -136,7 +136,7 @@ export default async function NovedadesPage({ params }: Props) {
               <Button
                 variant="primary"
                 arrow
-                href={href(locale, routes.red)}
+                href={href(locale, routes.network)}
               >
                 {t(novedades.empty.action, locale)}
               </Button>

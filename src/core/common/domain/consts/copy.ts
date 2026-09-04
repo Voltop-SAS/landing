@@ -73,14 +73,14 @@ export const brand = {
  * finds both things together.
  */
 export const nav: { label: Localized; href: string }[] = [
-  { label: { es: 'Red', en: 'Network', pt: 'Rede' }, href: routes.red },
-  { label: { es: 'Empresas', en: 'Business', pt: 'Empresas' }, href: routes.empresas },
-  { label: { es: 'Novedades', en: 'Newsroom', pt: 'Novidades' }, href: routes.novedades },
+  { label: { es: 'Red', en: 'Network', pt: 'Rede' }, href: routes.network },
+  { label: { es: 'Empresas', en: 'Business', pt: 'Empresas' }, href: routes.business },
+  { label: { es: 'Novedades', en: 'Newsroom', pt: 'Novidades' }, href: routes.news },
   /* The same destination was called "Company" in the navbar and "About us" in
      the footer, and "Companhia" in Portuguese — which is also the label of the
      B2B segment "Empresa". A navigation entry with two names is two entries to
      whoever reads it. */
-  { label: { es: 'Nosotros', en: 'About us', pt: 'Sobre nós' }, href: routes.nosotros },
+  { label: { es: 'Nosotros', en: 'About us', pt: 'Sobre nós' }, href: routes.about },
 ]
 
 /**
@@ -93,7 +93,7 @@ export const appCta: Localized = { es: 'Descarga la app', en: 'Get the app', pt:
 /** Entry point to the FAQ from the navbar. */
 export const helpLink: { label: Localized; href: string } = {
   label: { es: '¿Necesitas ayuda?', en: 'Need help?', pt: 'Precisa de ajuda?' },
-  href: `${routes.red}#preguntas`,
+  href: `${routes.network}#preguntas`,
 }
 
 /**
@@ -122,7 +122,7 @@ export const headerCta: Record<
   red: { label: appCta, href: externalLinks.app, external: true },
   empresas: {
     label: { es: 'Hablar con el equipo', en: 'Talk to the team', pt: 'Falar com o time' },
-    href: `${routes.empresas}#contacto`,
+    href: `${routes.business}#contacto`,
   },
 }
 
@@ -320,7 +320,7 @@ export const leadForm = {
   /**
    * The REAL success state. Used only when a delivery destination exists.
    * See `DESTINATION` in
-   * `~/core/empresas/infrastructure/ui/components/LeadForm`.
+   * `~/core/business/infrastructure/ui/components/LeadForm`.
    */
   success: {
     title: {
@@ -550,7 +550,7 @@ export const footer = {
             en: 'Find a station',
             pt: 'Encontrar uma estação',
           } satisfies Localized,
-          href: routes.red,
+          href: routes.network,
         },
         {
           label: {
@@ -558,7 +558,7 @@ export const footer = {
             en: 'How to charge',
             pt: 'Como carregar',
           } satisfies Localized,
-          href: `${routes.red}#como-cargar`,
+          href: `${routes.network}#como-cargar`,
         },
         {
           label: {
@@ -566,7 +566,7 @@ export const footer = {
             en: 'Coverage by city',
             pt: 'Cobertura por cidade',
           } satisfies Localized,
-          href: `${routes.red}#ciudades`,
+          href: `${routes.network}#ciudades`,
         },
       ],
     },
@@ -579,7 +579,7 @@ export const footer = {
             en: 'Solutions by case',
             pt: 'Soluções por caso',
           } satisfies Localized,
-          href: routes.empresas,
+          href: routes.business,
         },
         {
           label: {
@@ -587,7 +587,7 @@ export const footer = {
             en: 'Bring Voltop to your space',
             pt: 'Leve a Voltop para o seu espaço',
           } satisfies Localized,
-          href: `${routes.empresas}#casos`,
+          href: `${routes.business}#casos`,
         },
         {
           label: {
@@ -595,7 +595,7 @@ export const footer = {
             en: 'Talk to the team',
             pt: 'Falar com o time',
           } satisfies Localized,
-          href: `${routes.empresas}#contacto`,
+          href: `${routes.business}#contacto`,
         },
       ],
     },
@@ -604,19 +604,19 @@ export const footer = {
       links: [
         {
           label: { es: 'Nosotros', en: 'About us', pt: 'Sobre nós' } satisfies Localized,
-          href: routes.nosotros,
+          href: routes.about,
         },
         {
           label: { es: 'Novedades', en: 'Newsroom', pt: 'Novidades' } satisfies Localized,
-          href: routes.novedades,
+          href: routes.news,
         },
         {
           label: { es: 'Impacto', en: 'Impact', pt: 'Impacto' } satisfies Localized,
-          href: `${routes.nosotros}#impacto`,
+          href: `${routes.about}#impacto`,
         },
         {
           label: { es: 'Liderazgo', en: 'Leadership', pt: 'Liderança' } satisfies Localized,
-          href: `${routes.nosotros}#liderazgo`,
+          href: `${routes.about}#liderazgo`,
         },
       ],
     },

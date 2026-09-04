@@ -1,14 +1,14 @@
 /** Metrics, segments, cases, partners, testimonials and founder. */
 
-import { businessSegments, cases } from '~/core/empresas/infrastructure/content/company'
+import { businessSegments, cases } from '~/core/business/infrastructure/content/company'
 import {
   metrics,
   partners,
   testimonials,
   founder,
-} from '~/core/nosotros/infrastructure/content/company'
+} from '~/core/about/infrastructure/content/company'
 import type { Metric } from '~/core/common/domain/entities/Metric'
-import type { Case } from '~/core/empresas/domain/entities/Case'
+import type { Case } from '~/core/business/domain/entities/Case'
 
 /**
  * Metrics to display. `validated: false` means there is NO real figure. The UI

@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { isLocale, t, type Locale } from '~/core/common/domain/i18n/config'
 import { routes, alternatesFor, SITE_URL } from '~/core/common/domain/i18n/routes'
-import { nosotros } from '~/core/nosotros/domain/consts/copy'
+import { nosotros } from '~/core/about/domain/consts/copy'
 import { brand } from '~/core/common/domain/consts/copy'
 import { media } from '~/core/common/infrastructure/content/media'
 import {
@@ -30,7 +30,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: t(nosotros.meta.title, locale),
     description: t(nosotros.meta.description, locale),
-    alternates: alternatesFor(locale, routes.nosotros),
+    alternates: alternatesFor(locale, routes.about),
   }
 }
 

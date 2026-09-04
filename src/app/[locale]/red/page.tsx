@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { isLocale, t, type Locale } from '~/core/common/domain/i18n/config'
 import { href, routes, alternatesFor } from '~/core/common/domain/i18n/routes'
-import { red } from '~/core/red/domain/consts/copy'
+import { red } from '~/core/network/domain/consts/copy'
 import { actions, states, units, a11y } from '~/core/common/domain/consts/copy'
 import {
   getStations,
@@ -20,7 +20,7 @@ import {
 } from '@ui/common/components/ui/LayoutPrimitives'
 import { Button } from '@ui/common/components/ui/Button'
 import { Reveal } from '@ui/common/components/ui/Reveal'
-import { StationFinder } from '~/core/red/infrastructure/ui/components/StationFinder'
+import { StationFinder } from '~/core/network/infrastructure/ui/components/StationFinder'
 import { Accordion } from '@ui/common/components/ui/Accordion'
 
 type Props = { params: Promise<{ locale: string }> }
@@ -31,7 +31,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: t(red.meta.title, locale),
     description: t(red.meta.description, locale),
-    alternates: alternatesFor(locale, routes.red),
+    alternates: alternatesFor(locale, routes.network),
   }
 }
 
@@ -244,7 +244,7 @@ export default async function RedPage({ params }: Props) {
             <Button
               variant="ghost"
               arrow
-              href={href(locale, routes.empresas)}
+              href={href(locale, routes.business)}
               className="shrink-0"
             >
               {t(actions.hostStation, locale)}

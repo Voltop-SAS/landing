@@ -43,36 +43,36 @@ import {
    `assertAllContentRegistered()` makes sure nobody forgets. */
 import * as copyCommon from '~/core/common/domain/consts/copy'
 import * as copyHome from '~/core/home/domain/consts/copy'
-import * as copyRed from '~/core/red/domain/consts/copy'
-import * as copyEmpresas from '~/core/empresas/domain/consts/copy'
-import * as copyNosotros from '~/core/nosotros/domain/consts/copy'
+import * as copyRed from '~/core/network/domain/consts/copy'
+import * as copyEmpresas from '~/core/business/domain/consts/copy'
+import * as copyNosotros from '~/core/about/domain/consts/copy'
 import * as copyLegal from '~/core/legal/domain/consts/copy'
-import * as copyNovedades from '~/core/novedades/domain/consts/copy'
-import * as dataStations from '~/core/red/infrastructure/content/stations'
-import * as dataCities from '~/core/red/infrastructure/content/cities'
-import * as dataCompanyEmpresas from '~/core/empresas/infrastructure/content/company'
-import * as dataCompanyNosotros from '~/core/nosotros/infrastructure/content/company'
+import * as copyNovedades from '~/core/news/domain/consts/copy'
+import * as dataStations from '~/core/network/infrastructure/content/stations'
+import * as dataCities from '~/core/network/infrastructure/content/cities'
+import * as dataCompanyEmpresas from '~/core/business/infrastructure/content/company'
+import * as dataCompanyNosotros from '~/core/about/infrastructure/content/company'
 import * as dataMedia from '~/core/common/infrastructure/content/media'
-import * as dataPosts from '~/core/novedades/infrastructure/content/posts'
-import * as dataFaq from '~/core/red/infrastructure/content/faq'
+import * as dataPosts from '~/core/news/infrastructure/content/posts'
+import * as dataFaq from '~/core/network/infrastructure/content/faq'
 import * as dataLinks from '~/core/common/domain/consts/links'
 import * as dataLegalDocs from '~/core/legal/infrastructure/content/legalDocs'
 
 const SOURCES: Record<string, unknown> = {
   'common/consts/copy': copyCommon,
   'home/consts/copy': copyHome,
-  'red/consts/copy': copyRed,
-  'empresas/consts/copy': copyEmpresas,
-  'nosotros/consts/copy': copyNosotros,
+  'network/consts/copy': copyRed,
+  'business/consts/copy': copyEmpresas,
+  'about/consts/copy': copyNosotros,
   'legal/consts/copy': copyLegal,
-  'novedades/consts/copy': copyNovedades,
-  'red/content/stations': dataStations,
-  'red/content/cities': dataCities,
-  'empresas/content/company': dataCompanyEmpresas,
-  'nosotros/content/company': dataCompanyNosotros,
+  'news/consts/copy': copyNovedades,
+  'network/content/stations': dataStations,
+  'network/content/cities': dataCities,
+  'business/content/company': dataCompanyEmpresas,
+  'about/content/company': dataCompanyNosotros,
   'common/content/media': dataMedia,
-  'novedades/content/posts': dataPosts,
-  'red/content/faq': dataFaq,
+  'news/content/posts': dataPosts,
+  'network/content/faq': dataFaq,
   'common/consts/links': dataLinks,
   /* Plain Spanish on purpose — it is legal prose. It contributes 0 `Localized`
      nodes and therefore does not move the coverage count, which also means the

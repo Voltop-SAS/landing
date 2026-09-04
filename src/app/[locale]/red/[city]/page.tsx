@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { locales, isLocale, t, type Locale } from '~/core/common/domain/i18n/config'
 import { href, routes, alternatesFor } from '~/core/common/domain/i18n/routes'
-import { red, city as cityCopy } from '~/core/red/domain/consts/copy'
+import { red, city as cityCopy } from '~/core/network/domain/consts/copy'
 import { units, a11y } from '~/core/common/domain/consts/copy'
 import {
   getCities,
@@ -11,8 +11,8 @@ import {
   getStationsByCity,
   getPostsForCity,
 } from '~/core/common/infrastructure/data-access'
-import { novedadesInline } from '~/core/novedades/domain/consts/copy'
-import { PostsInline } from '~/core/novedades/infrastructure/ui/components/PostsInline'
+import { novedadesInline } from '~/core/news/domain/consts/copy'
+import { PostsInline } from '~/core/news/infrastructure/ui/components/PostsInline'
 import {
   Section,
   Container,
@@ -22,7 +22,7 @@ import {
 import { StatusBadge } from '@ui/common/components/ui/DataPrimitives'
 import { Reveal } from '@ui/common/components/ui/Reveal'
 import { TrackView } from '@ui/common/components/analytics/TrackView'
-import { formatPowerKw } from '~/core/red/domain/entities/Station'
+import { formatPowerKw } from '~/core/network/domain/entities/Station'
 
 type Props = { params: Promise<{ locale: string; city: string }> }
 
@@ -94,7 +94,7 @@ export default async function CityPage({ params }: Props) {
             <ol className="flex flex-wrap items-center gap-2">
               <li>
                 <Link
-                  href={href(locale, routes.red)}
+                  href={href(locale, routes.network)}
                   className="inline-flex min-h-11 items-center transition-colors hover:text-ink"
                 >
                   {t(red.hero.eyebrow, locale)}

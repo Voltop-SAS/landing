@@ -169,7 +169,7 @@ export function AppFloating({ locale }: { locale: Locale }) {
     }
   }, [])
 
-  const pathAllows = !path.startsWith(routes.empresas) && !path.startsWith('/legal')
+  const pathAllows = !path.startsWith(routes.business) && !path.startsWith('/legal')
   const show = !firstInView && pathAllows && cookiesDecided
 
   const transition =

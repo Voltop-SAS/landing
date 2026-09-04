@@ -58,8 +58,8 @@ export {
   getLatestPostDate,
 } from './posts'
 
-export type { Station } from '~/core/red/domain/entities/Station'
-export type { City } from '~/core/red/domain/entities/City'
+export type { Station } from '~/core/network/domain/entities/Station'
+export type { City } from '~/core/network/domain/entities/City'
 export type { Metric } from '~/core/common/domain/entities/Metric'
-export type { Case } from '~/core/empresas/domain/entities/Case'
-export type { Post, PostType } from '~/core/novedades/domain/entities/Post'
+export type { Case } from '~/core/business/domain/entities/Case'
+export type { Post, PostType } from '~/core/news/domain/entities/Post'

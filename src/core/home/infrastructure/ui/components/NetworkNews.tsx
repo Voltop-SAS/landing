@@ -1,7 +1,7 @@
 import { t, type Locale } from '~/core/common/domain/i18n/config'
 import { href, routes } from '~/core/common/domain/i18n/routes'
 import { formatDate } from '@ui/common/lib/dates'
-import { novedades, novedadesInline } from '~/core/novedades/domain/consts/copy'
+import { novedades, novedadesInline } from '~/core/news/domain/consts/copy'
 import { PostLink } from '@ui/common/components/ui/PostLink'
 import { getLatestPosts } from '~/core/common/infrastructure/data-access'
 import { Section, Container, SectionHeading } from '@ui/common/components/ui/LayoutPrimitives'
@@ -59,7 +59,7 @@ export async function NetworkNews({ locale }: { locale: Locale }) {
             <Button
               variant="link"
               arrow
-              href={href(locale, routes.novedades)}
+              href={href(locale, routes.news)}
             >
               {t(novedadesInline.home.action, locale)}
             </Button>

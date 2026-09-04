@@ -9,7 +9,7 @@ import {
   alternatesFor,
   SITE_URL,
 } from '~/core/common/domain/i18n/routes'
-import { novedades } from '~/core/novedades/domain/consts/copy'
+import { novedades } from '~/core/news/domain/consts/copy'
 import { a11y, brand } from '~/core/common/domain/consts/copy'
 import {
   getPostsWithPage,
@@ -21,7 +21,7 @@ import { Section, Container, Rule } from '@ui/common/components/ui/LayoutPrimiti
 import { Media } from '@ui/common/components/ui/Media'
 import { Button } from '@ui/common/components/ui/Button'
 import { PendingTag } from '@ui/common/components/ui/DataPrimitives'
-import { PostBody } from '~/core/novedades/infrastructure/ui/components/PostBody'
+import { PostBody } from '~/core/news/infrastructure/ui/components/PostBody'
 import { TrackView } from '@ui/common/components/analytics/TrackView'
 import { formatDate } from '@ui/common/lib/dates'
 
@@ -122,7 +122,7 @@ export default async function PostPage({ params }: Props) {
             <ol className="flex flex-wrap items-center gap-2">
               <li>
                 <Link
-                  href={href(locale, routes.novedades)}
+                  href={href(locale, routes.news)}
                   className="inline-flex min-h-11 items-center transition-colors hover:text-ink"
                 >
                   {t(novedades.eyebrow, locale)}
@@ -225,7 +225,7 @@ export default async function PostPage({ params }: Props) {
 
           <div className="mt-14">
             <Link
-              href={href(locale, routes.novedades)}
+              href={href(locale, routes.news)}
               className="inline-flex min-h-11 items-center font-mono text-mono uppercase tracking-wider text-ink-3 transition-colors hover:text-ink"
             >
               ← {t(novedades.backToIndex, locale)}

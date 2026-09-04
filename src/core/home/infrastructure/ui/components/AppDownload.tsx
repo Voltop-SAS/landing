@@ -110,7 +110,7 @@ export function AppDownload({ locale }: { locale: Locale }) {
               <Button
                 variant="link"
                 arrow
-                href={href(locale, routes.red)}
+                href={href(locale, routes.network)}
               >
                 {t(actions.findCharger, locale)}
               </Button>

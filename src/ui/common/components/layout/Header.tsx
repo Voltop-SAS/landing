@@ -52,13 +52,13 @@ export function Header({ locale }: { locale: Locale }) {
 
   /* Route context → contextual CTA */
   const path = stripLocale(pathname) || '/'
-  const context = path.startsWith(routes.red)
+  const context = path.startsWith(routes.network)
     ? 'red'
-    : path.startsWith(routes.empresas)
+    : path.startsWith(routes.business)
       ? 'empresas'
-      : path.startsWith(routes.novedades)
+      : path.startsWith(routes.news)
         ? 'novedades'
-        : path.startsWith(routes.nosotros)
+        : path.startsWith(routes.about)
           ? 'nosotros'
           : 'home'
   const cta = headerCta[context]

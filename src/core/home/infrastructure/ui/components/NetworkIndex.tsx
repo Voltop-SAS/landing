@@ -319,7 +319,7 @@ export function NetworkIndex({ locale }: { locale: Locale }) {
               <Button
                 variant="ghost"
                 arrow
-                href={href(locale, routes.red)}
+                href={href(locale, routes.network)}
               >
                 {t(actions.seeNetwork, locale)}
               </Button>

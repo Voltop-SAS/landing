@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { isLocale, t, type Locale } from '~/core/common/domain/i18n/config'
 import { routes, alternatesFor } from '~/core/common/domain/i18n/routes'
-import { empresas } from '~/core/empresas/domain/consts/copy'
+import { empresas } from '~/core/business/domain/consts/copy'
 import { media } from '~/core/common/infrastructure/content/media'
 import { getBusinessSegments, getFeaturedCase } from '~/core/common/infrastructure/data-access'
 import {
@@ -13,7 +13,7 @@ import {
   ProcessList,
 } from '@ui/common/components/ui/LayoutPrimitives'
 import { Media } from '@ui/common/components/ui/Media'
-import { BusinessFlow } from '~/core/empresas/infrastructure/ui/components/BusinessFlow'
+import { BusinessFlow } from '~/core/business/infrastructure/ui/components/BusinessFlow'
 
 type Props = { params: Promise<{ locale: string }> }
 
@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: t(empresas.meta.title, locale),
     description: t(empresas.meta.description, locale),
-    alternates: alternatesFor(locale, routes.empresas),
+    alternates: alternatesFor(locale, routes.business),
   }
 }
 

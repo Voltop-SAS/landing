@@ -118,7 +118,7 @@ export function VisionQuote({ locale }: { locale: Locale }) {
               <Button
                 variant="link"
                 arrow
-                href={href(locale, routes.nosotros)}
+                href={href(locale, routes.about)}
               >
                 {t(actions.knowVoltop, locale)}
               </Button>

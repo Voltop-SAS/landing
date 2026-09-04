@@ -1,5 +1,5 @@
-import { posts } from '~/core/novedades/infrastructure/content/posts'
-import type { Post } from '~/core/novedades/domain/entities/Post'
+import { posts } from '~/core/news/infrastructure/content/posts'
+import type { Post } from '~/core/news/domain/entities/Post'
 
 /**
  * THE LOG'S ORIGIN · the only point that changes when a CMS is connected.

@@ -50,7 +50,7 @@ export function CloseCta({ locale }: { locale: Locale }) {
                   variant="primary"
                   size="l"
                   arrow
-                  href={href(locale, routes.red)}
+                  href={href(locale, routes.network)}
                 >
                   {t(actions.findCharger, locale)}
                 </Button>
@@ -69,7 +69,7 @@ export function CloseCta({ locale }: { locale: Locale }) {
               <Button
                 variant="secondary"
                 arrow
-                href={href(locale, `${routes.empresas}#contacto`)}
+                href={href(locale, `${routes.business}#contacto`)}
               >
                 {t(actions.talkToTeam, locale)}
               </Button>

@@ -6,8 +6,8 @@
  * different things.
  */
 
-import { stations } from '~/core/red/infrastructure/content/stations'
-import type { Station } from '~/core/red/domain/entities/Station'
+import { stations } from '~/core/network/infrastructure/content/stations'
+import type { Station } from '~/core/network/domain/entities/Station'
 
 export function getStations(): Station[] {
   return stations

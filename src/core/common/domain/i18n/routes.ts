@@ -21,10 +21,10 @@ import { locales, publishedLocales, defaultLocale, localeMeta, type Locale } fro
 /** The site's canonical routes, without a language prefix. */
 export const routes = {
   home: '',
-  red: '/red',
-  empresas: '/empresas',
-  nosotros: '/nosotros',
-  novedades: '/novedades',
+  network: '/red',
+  business: '/empresas',
+  about: '/nosotros',
+  news: '/novedades',
   privacy: '/legal/privacidad',
   terms: '/legal/terminos',
   post: (slug: string) => `/novedades/${slug}`,

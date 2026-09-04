@@ -1,7 +1,7 @@
 /** Cities. */
 
-import { cities } from '~/core/red/infrastructure/content/cities'
-import type { City } from '~/core/red/domain/entities/City'
+import { cities } from '~/core/network/infrastructure/content/cities'
+import type { City } from '~/core/network/domain/entities/City'
 
 export function getCities(): City[] {
   return cities

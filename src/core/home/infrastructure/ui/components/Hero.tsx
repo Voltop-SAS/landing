@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { t, type Locale } from '~/core/common/domain/i18n/config'
 import { href, routes } from '~/core/common/domain/i18n/routes'
 import { home } from '~/core/home/domain/consts/copy'
-import { red } from '~/core/red/domain/consts/copy'
+import { red } from '~/core/network/domain/consts/copy'
 import { actions } from '~/core/common/domain/consts/copy'
 import { media } from '~/core/common/infrastructure/content/media'
 import { getCitiesWithStations } from '~/core/common/infrastructure/data-access'
@@ -195,7 +195,7 @@ export function Hero({ locale }: { locale: Locale }) {
               variant="primary"
               size="l"
               arrow
-              href={href(locale, routes.red)}
+              href={href(locale, routes.network)}
             >
               {t(actions.findCharger, locale)}
             </Button>

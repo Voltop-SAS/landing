@@ -45,17 +45,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const entries: Entry[] = [
     { path: routes.home, priority: 1, lastModified: build, changeFrequency: 'monthly' },
-    { path: routes.red, priority: 0.9, lastModified: build, changeFrequency: 'monthly' },
-    { path: routes.empresas, priority: 0.9, lastModified: build, changeFrequency: 'monthly' },
+    { path: routes.network, priority: 0.9, lastModified: build, changeFrequency: 'monthly' },
+    { path: routes.business, priority: 0.9, lastModified: build, changeFrequency: 'monthly' },
     {
-      path: routes.novedades,
+      path: routes.news,
       priority: 0.8,
       lastModified: latestPost ? new Date(latestPost) : build,
       /* The index does change often: that is what justifies re-crawling it.
          Each entry, by contrast, does not change once published. */
       changeFrequency: 'weekly',
     },
-    { path: routes.nosotros, priority: 0.7, lastModified: build, changeFrequency: 'monthly' },
+    { path: routes.about, priority: 0.7, lastModified: build, changeFrequency: 'monthly' },
     /* The legal pages enter the sitemap now that they have final text, and
        with THEIR real date of issue — not the build's — which is exactly what
        this file's header complains about. Low priority: they exist to be found
