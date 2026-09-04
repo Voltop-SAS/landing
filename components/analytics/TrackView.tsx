@@ -1,7 +1,7 @@
-"use client";
+'use client'
 
-import { useEffect, useRef } from "react";
-import { track, type EventName, type EventProps } from "@/lib/analytics";
+import { useEffect, useRef } from 'react'
+import { track, type EventName, type EventProps } from '@/lib/analytics'
 
 /**
  * Emite un evento cuando su contenido ENTRA EN VISTA, una sola vez.
@@ -21,40 +21,40 @@ export function TrackView({
   /** `0.5` = medio bloque visible. Para páginas completas, `0`. */
   threshold = 0.5,
 }: {
-  event: EventName;
-  props?: EventProps;
-  children?: React.ReactNode;
-  threshold?: number;
+  event: EventName
+  props?: EventProps
+  children?: React.ReactNode
+  threshold?: number
 }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const sent = useRef(false);
+  const ref = useRef<HTMLDivElement>(null)
+  const sent = useRef(false)
 
   useEffect(() => {
-    const el = ref.current;
-    if (!el || sent.current) return;
+    const el = ref.current
+    if (!el || sent.current) return
 
     /* Sin IntersectionObserver el evento se emite igual: perder la medición es
        peor que medirla sin umbral. */
-    if (typeof IntersectionObserver === "undefined") {
-      sent.current = true;
-      track(event, props);
-      return;
+    if (typeof IntersectionObserver === 'undefined') {
+      sent.current = true
+      track(event, props)
+      return
     }
 
     const io = new IntersectionObserver(
       (entries) => {
         if (entries.some((e) => e.isIntersecting) && !sent.current) {
-          sent.current = true;
-          track(event, props);
-          io.disconnect();
+          sent.current = true
+          track(event, props)
+          io.disconnect()
         }
       },
-      { threshold }
-    );
-    io.observe(el);
-    return () => io.disconnect();
+      { threshold },
+    )
+    io.observe(el)
+    return () => io.disconnect()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [event, threshold]);
+  }, [event, threshold])
 
-  return <div ref={ref}>{children}</div>;
+  return <div ref={ref}>{children}</div>
 }

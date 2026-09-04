@@ -13,8 +13,8 @@
  * se deriva de aquí y nunca se escribe a mano.
  */
 
-export const locales = ["es", "en", "pt"] as const;
-export type Locale = (typeof locales)[number];
+export const locales = ['es', 'en', 'pt'] as const
+export type Locale = (typeof locales)[number]
 
 /**
  * Idioma base. Tipado como el LITERAL `"es"` y no como `Locale`: es lo que
@@ -23,10 +23,10 @@ export type Locale = (typeof locales)[number];
  * `Exclude<Locale, typeof defaultLocale>` resuelva de verdad a los idiomas
  * traducibles. Anotado como `Locale`, ambas cosas se pierden.
  */
-export const defaultLocale = "es" as const satisfies Locale;
+export const defaultLocale = 'es' as const satisfies Locale
 
 export function isLocale(value: string): value is Locale {
-  return (locales as readonly string[]).includes(value);
+  return (locales as readonly string[]).includes(value)
 }
 
 /* ---------------------------------------------------------------- */
@@ -43,22 +43,22 @@ export function isLocale(value: string): value is Locale {
  *                 selector, fuera del sitemap, sin `hreflang` y con `noindex`.
  *                 Lo que falte cae al idioma por defecto.
  */
-export type LocaleStatus = "publicado" | "borrador";
+export type LocaleStatus = 'publicado' | 'borrador'
 
 export const localeStatus: Record<Locale, LocaleStatus> = {
-  es: "publicado",
-  en: "publicado",
+  es: 'publicado',
+  en: 'publicado',
   /* Portugués de Brasil. Decisión estratégica orientada a audiencia de
      inversión. Publicado el 2026-09-01 con cobertura completa verificada por
      la auditoría de build. */
-  pt: "publicado",
-};
+  pt: 'publicado',
+}
 
 /** Idiomas que el sitio ofrece de cara al público. */
-export const publishedLocales = locales.filter((l) => localeStatus[l] === "publicado");
+export const publishedLocales = locales.filter((l) => localeStatus[l] === 'publicado')
 
 export function isPublished(lang: Locale): boolean {
-  return localeStatus[lang] === "publicado";
+  return localeStatus[lang] === 'publicado'
 }
 
 /* ---------------------------------------------------------------- */
@@ -93,8 +93,8 @@ export function isPublished(lang: Locale): boolean {
  * Lo que no se traduce (nombres propios, unidades) se modela como string plano.
  */
 export type Localized<T = string> = { es: T } & {
-  [K in Exclude<Locale, typeof defaultLocale>]?: T;
-};
+  [K in Exclude<Locale, typeof defaultLocale>]?: T
+}
 
 /**
  * Resuelve un texto al idioma activo.
@@ -104,7 +104,7 @@ export type Localized<T = string> = { es: T } & {
  * cualquier otro mensaje. Quien lleva la cuenta es la auditoría de build.
  */
 export function t<T>(value: Localized<T>, lang: Locale): T {
-  return value[lang] ?? value[defaultLocale];
+  return value[lang] ?? value[defaultLocale]
 }
 
 /**
@@ -125,10 +125,10 @@ export const localeMeta: Record<
   Locale,
   { label: string; name: string; htmlLang: string; hreflang: string }
 > = {
-  es: { label: "ES", name: "Español", htmlLang: "es-CO", hreflang: "es" },
-  en: { label: "EN", name: "English", htmlLang: "en", hreflang: "en" },
+  es: { label: 'ES', name: 'Español', htmlLang: 'es-CO', hreflang: 'es' },
+  en: { label: 'EN', name: 'English', htmlLang: 'en', hreflang: 'en' },
   /* URL corta `/pt`, pero `pt-BR` de cara al buscador: no hay versión europea
      con la que competir, y declarar el genérico `pt` para un texto escrito en
      brasileño describe mal lo que hay. */
-  pt: { label: "PT", name: "Português", htmlLang: "pt-BR", hreflang: "pt-BR" },
-};
+  pt: { label: 'PT', name: 'Português', htmlLang: 'pt-BR', hreflang: 'pt-BR' },
+}

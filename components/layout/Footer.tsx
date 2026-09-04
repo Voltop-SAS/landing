@@ -1,11 +1,11 @@
-import Link from "next/link";
-import { t, type Locale } from "@/lib/i18n/config";
-import { href, routes } from "@/lib/i18n/routes";
-import { footer, brand, a11y } from "@/content/copy/common";
-import { Container } from "@/components/ui/layout";
-import { Logo } from "@/components/layout/Logo";
-import { SocialLinks } from "@/components/layout/SocialLinks";
-import { externalLinks, soporteEmail } from "@/content/data/links";
+import Link from 'next/link'
+import { t, type Locale } from '@/lib/i18n/config'
+import { href, routes } from '@/lib/i18n/routes'
+import { footer, brand, a11y } from '@/content/copy/common'
+import { Container } from '@/components/ui/layout'
+import { Logo } from '@/components/layout/Logo'
+import { SocialLinks } from '@/components/layout/SocialLinks'
+import { externalLinks, soporteEmail } from '@/content/data/links'
 
 /**
  * FOOTER · Server Component
@@ -20,7 +20,7 @@ import { externalLinks, soporteEmail } from "@/content/data/links";
  * Un enlace sin destino real no se publica. App, ayuda, legal y redes se
  */
 export function Footer({ lang }: { lang: Locale }) {
-  const year = new Date().getFullYear();
+  const year = new Date().getFullYear()
 
   return (
     /* `pb` extra en móvil: al llegar al fondo del documento no queda scroll
@@ -64,14 +64,19 @@ export function Footer({ lang }: { lang: Locale }) {
             <SocialLinks lang={lang} />
           </div>
 
-          <nav className="contents" aria-label={t(a11y.footerNav, lang)}>
+          <nav
+            className="contents"
+            aria-label={t(a11y.footerNav, lang)}
+          >
             {footer.columns.map((col) => (
               <div key={col.title.es}>
                 {/* Etiqueta, no encabezado. Como `<h2>` de 12px entraba en el
                     outline del documento al mismo nivel que los `h2` de
                     contenido y los enanizaba. La navegación del pie ya se
                     anuncia por el `aria-label` del `<nav>`. */}
-                <p className="font-mono text-mono uppercase tracking-wider text-ink-3">{t(col.title, lang)}</p>
+                <p className="font-mono text-mono uppercase tracking-wider text-ink-3">
+                  {t(col.title, lang)}
+                </p>
                 <ul className="mt-4 space-y-1">
                   {col.links.map((link) => (
                     <li key={link.label.es}>
@@ -110,5 +115,5 @@ export function Footer({ lang }: { lang: Locale }) {
         </div>
       </Container>
     </footer>
-  );
+  )
 }

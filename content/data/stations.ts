@@ -1,4 +1,4 @@
-import type { Localized } from "@/lib/i18n/config";
+import type { Localized } from '@/lib/i18n/config'
 
 /**
  * COLECCIÓN CENTRAL · Estaciones
@@ -12,45 +12,45 @@ import type { Localized } from "@/lib/i18n/config";
  * Regla del proyecto: no se inventan datos.
  */
 
-export type Connector = "CCS1" | "CCS2" | "GB/T" | "Type2";
-export type StationStatus = "operativa" | "proxima" | "mantenimiento";
+export type Connector = 'CCS1' | 'CCS2' | 'GB/T' | 'Type2'
+export type StationStatus = 'operativa' | 'proxima' | 'mantenimiento'
 
 export type StationMedia = {
   /** Fotografías de la estación. Vacío = pendiente de recibir. */
-  photos: { src: string; alt: Localized }[];
+  photos: { src: string; alt: Localized }[]
   /** Video propio de la estación, si existe. */
-  video?: { src: string; poster: string; duration: string; caption: Localized };
-};
+  video?: { src: string; poster: string; duration: string; caption: Localized }
+}
 
 export type Station = {
-  slug: string;
+  slug: string
   /** Nombre propio: no se traduce. */
-  name: string;
+  name: string
   /** Referencia al slug de una ciudad. Nunca texto libre. */
-  citySlug: string;
-  address: Localized;
+  citySlug: string
+  address: Localized
   /** Coordenadas. `null` hasta recibirlas: no se inventan. */
-  geo: { lat: number; lng: number } | null;
-  connectors: Connector[];
+  geo: { lat: number; lng: number } | null
+  connectors: Connector[]
   /**
    * Potencia en kW. Es un RANGO porque una estación puede tener cargadores de
    * distinta potencia —la EAN va de 22 a 80— y publicar solo el máximo diría
    * que todos los puntos cargan a 80, que es exactamente el tipo de promesa
    * que §19 no admite. Cuando todos los puntos son iguales, `min === max`.
    */
-  powerKw: { min: number; max: number };
-  points: number;
-  status: StationStatus;
-  hours: Localized;
+  powerKw: { min: number; max: number }
+  points: number
+  status: StationStatus
+  hours: Localized
   /** Tarifas. `null` mientras no estén confirmadas comercialmente. */
-  pricing: { perKwh: number; currency: string } | null;
-  services: Localized[];
-  media: StationMedia;
+  pricing: { perKwh: number; currency: string } | null
+  services: Localized[]
+  media: StationMedia
   /** Curaduría: aparece en previews y destacados. */
-  featured?: boolean;
+  featured?: boolean
   /** Trazabilidad del dato. Nada se presenta como verificado si no lo está. */
-  dataStatus: "placeholder" | "verified";
-};
+  dataStatus: 'placeholder' | 'verified'
+}
 
 /**
  * LAS TRES ESTACIONES REALES.
@@ -70,92 +70,104 @@ export type Station = {
  * no informa, confunde.
  */
 export function formatPowerKw(p: { min: number; max: number }): string {
-  return p.min === p.max ? `${p.max} kW` : `${p.min}–${p.max} kW`;
+  return p.min === p.max ? `${p.max} kW` : `${p.min}–${p.max} kW`
 }
 
 export const stations: Station[] = [
   {
-    slug: "universidad-ean",
-    name: "Universidad EAN",
-    citySlug: "bogota",
-    address: { es: "Calle 79 #11-45, Bogotá", en: "Calle 79 #11-45, Bogotá", pt: "Calle 79 #11-45, Bogotá", },
+    slug: 'universidad-ean',
+    name: 'Universidad EAN',
+    citySlug: 'bogota',
+    address: {
+      es: 'Calle 79 #11-45, Bogotá',
+      en: 'Calle 79 #11-45, Bogotá',
+      pt: 'Calle 79 #11-45, Bogotá',
+    },
     /* Extraídas de los enlaces de Google Maps entregados el 2026-09-02, no
        transcritas a ojo desde un mapa. */
     geo: { lat: 4.6631495, lng: -74.0599846 },
-    connectors: ["GB/T", "CCS1", "CCS2"],
+    connectors: ['GB/T', 'CCS1', 'CCS2'],
     powerKw: { min: 22, max: 80 },
     points: 18,
-    status: "operativa",
-    hours: { es: "Abierto 24/7", en: "Open 24/7", pt: "Aberto 24/7", },
+    status: 'operativa',
+    hours: { es: 'Abierto 24/7', en: 'Open 24/7', pt: 'Aberto 24/7' },
     pricing: null,
     services: [
-      { es: "Techo", en: "Covered", pt: "Coberto", },
-      { es: "Cafetería", en: "Café", pt: "Café", },
-      { es: "Baños", en: "Restrooms", pt: "Banheiros", },
-      { es: "Wifi", en: "Wi-Fi", pt: "Wi-Fi", },
+      { es: 'Techo', en: 'Covered', pt: 'Coberto' },
+      { es: 'Cafetería', en: 'Café', pt: 'Café' },
+      { es: 'Baños', en: 'Restrooms', pt: 'Banheiros' },
+      { es: 'Wifi', en: 'Wi-Fi', pt: 'Wi-Fi' },
     ],
     media: {
       photos: [
         {
-          src: "/estacion-universidad-ean.jpg",
+          src: '/estacion-universidad-ean.jpg',
           alt: {
-            es: "Estación de carga Voltop en la Universidad EAN, con varios puntos de carga en operación",
-            en: "Voltop charging station at EAN University, with several charge points in service",
-            pt: "Estação de carregamento Voltop na Universidade EAN, com vários pontos de carga em operação",
+            es: 'Estación de carga Voltop en la Universidad EAN, con varios puntos de carga en operación',
+            en: 'Voltop charging station at EAN University, with several charge points in service',
+            pt: 'Estação de carregamento Voltop na Universidade EAN, com vários pontos de carga em operação',
           },
         },
       ],
     },
     featured: true,
-    dataStatus: "verified",
+    dataStatus: 'verified',
   },
   {
-    slug: "grand-hyatt",
-    name: "Grand Hyatt",
-    citySlug: "bogota",
-    address: { es: "Calle 24A #57-60, Bogotá", en: "Calle 24A #57-60, Bogotá", pt: "Calle 24A #57-60, Bogotá", },
+    slug: 'grand-hyatt',
+    name: 'Grand Hyatt',
+    citySlug: 'bogota',
+    address: {
+      es: 'Calle 24A #57-60, Bogotá',
+      en: 'Calle 24A #57-60, Bogotá',
+      pt: 'Calle 24A #57-60, Bogotá',
+    },
     geo: { lat: 4.6440714, lng: -74.1026313 },
-    connectors: ["GB/T"],
+    connectors: ['GB/T'],
     powerKw: { min: 30, max: 30 },
     points: 11,
-    status: "operativa",
-    hours: { es: "Abierto 24/7", en: "Open 24/7", pt: "Aberto 24/7", },
+    status: 'operativa',
+    hours: { es: 'Abierto 24/7', en: 'Open 24/7', pt: 'Aberto 24/7' },
     pricing: null,
     services: [
-      { es: "Valet", en: "Valet", pt: "Manobrista", },
-      { es: "Restaurante", en: "Restaurant", pt: "Restaurante", },
-      { es: "Parqueadero cubierto", en: "Covered parking", pt: "Estacionamento coberto", },
+      { es: 'Valet', en: 'Valet', pt: 'Manobrista' },
+      { es: 'Restaurante', en: 'Restaurant', pt: 'Restaurante' },
+      { es: 'Parqueadero cubierto', en: 'Covered parking', pt: 'Estacionamento coberto' },
     ],
     media: { photos: [] },
     featured: true,
-    dataStatus: "verified",
+    dataStatus: 'verified',
   },
   {
-    slug: "wake",
-    name: "Wake",
-    citySlug: "medellin",
-    address: { es: "Cra. 35 #10b-66, El Poblado, Medellín", en: "Cra. 35 #10b-66, El Poblado, Medellín", pt: "Cra. 35 #10b-66, El Poblado, Medellín", },
+    slug: 'wake',
+    name: 'Wake',
+    citySlug: 'medellin',
+    address: {
+      es: 'Cra. 35 #10b-66, El Poblado, Medellín',
+      en: 'Cra. 35 #10b-66, El Poblado, Medellín',
+      pt: 'Cra. 35 #10b-66, El Poblado, Medellín',
+    },
     geo: { lat: 6.2096216, lng: -75.5756009 },
-    connectors: ["GB/T", "CCS2"],
+    connectors: ['GB/T', 'CCS2'],
     powerKw: { min: 80, max: 80 },
     points: 6,
-    status: "operativa",
-    hours: { es: "Consultar en la app", en: "Check in the app", pt: "Consulte no aplicativo", },
+    status: 'operativa',
+    hours: { es: 'Consultar en la app', en: 'Check in the app', pt: 'Consulte no aplicativo' },
     pricing: null,
     services: [],
     media: {
       photos: [
         {
-          src: "/estacion-wake.jpg",
+          src: '/estacion-wake.jpg',
           alt: {
-            es: "Estación de carga rápida Voltop en Wake, Medellín, con seis puntos de carga de 80 kW",
-            en: "Voltop fast-charging station at Wake, Medellín, with six 80 kW charge points",
-            pt: "Estação de carregamento rápido Voltop no Wake, Medellín, com seis pontos de carga de 80 kW",
+            es: 'Estación de carga rápida Voltop en Wake, Medellín, con seis puntos de carga de 80 kW',
+            en: 'Voltop fast-charging station at Wake, Medellín, with six 80 kW charge points',
+            pt: 'Estação de carregamento rápido Voltop no Wake, Medellín, com seis pontos de carga de 80 kW',
           },
         },
       ],
     },
     featured: true,
-    dataStatus: "verified",
+    dataStatus: 'verified',
   },
-];
+]

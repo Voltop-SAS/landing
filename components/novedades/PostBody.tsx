@@ -1,7 +1,7 @@
-import { t, type Locale } from "@/lib/i18n/config";
-import { Media } from "@/components/ui/Media";
-import type { PostBlock } from "@/content/data/posts";
-import { novedades } from "@/content/copy/novedades";
+import { t, type Locale } from '@/lib/i18n/config'
+import { Media } from '@/components/ui/Media'
+import type { PostBlock } from '@/content/data/posts'
+import { novedades } from '@/content/copy/novedades'
 
 /**
  * CUERPO DE UNA ENTRADA · render de bloques tipados.
@@ -19,14 +19,17 @@ export function PostBody({ blocks, lang }: { blocks: PostBlock[]; lang: Locale }
     <div className="mt-12 flex flex-col gap-7">
       {blocks.map((block, i) => {
         switch (block.kind) {
-          case "parrafo":
+          case 'parrafo':
             return (
-              <p key={i} className="measure text-body-l text-ink-2">
+              <p
+                key={i}
+                className="measure text-body-l text-ink-2"
+              >
                 {t(block.text, lang)}
               </p>
-            );
+            )
 
-          case "subtitulo":
+          case 'subtitulo':
             return (
               /* `h2` porque el título de la entrada es el `h1` de la página:
                  la jerarquía no salta niveles (§29). */
@@ -36,23 +39,35 @@ export function PostBody({ blocks, lang }: { blocks: PostBlock[]; lang: Locale }
               >
                 {t(block.text, lang)}
               </h2>
-            );
+            )
 
-          case "lista":
+          case 'lista':
             return (
-              <ul key={i} className="measure flex flex-col gap-3">
+              <ul
+                key={i}
+                className="measure flex flex-col gap-3"
+              >
                 {block.items.map((item, j) => (
-                  <li key={j} className="flex gap-3 text-body-l text-ink-2">
-                    <span aria-hidden="true" className="mt-3 h-px w-4 shrink-0 bg-line-strong" />
+                  <li
+                    key={j}
+                    className="flex gap-3 text-body-l text-ink-2"
+                  >
+                    <span
+                      aria-hidden="true"
+                      className="mt-3 h-px w-4 shrink-0 bg-line-strong"
+                    />
                     <span>{t(item, lang)}</span>
                   </li>
                 ))}
               </ul>
-            );
+            )
 
-          case "cita":
+          case 'cita':
             return (
-              <figure key={i} className="my-4 border-l border-line-strong pl-6">
+              <figure
+                key={i}
+                className="my-4 border-l border-line-strong pl-6"
+              >
                 <blockquote className="measure font-display text-display-s font-medium text-balance text-ink">
                   {t(block.text, lang)}
                 </blockquote>
@@ -60,25 +75,28 @@ export function PostBody({ blocks, lang }: { blocks: PostBlock[]; lang: Locale }
                   {block.author} · {t(block.role, lang)}
                 </figcaption>
               </figure>
-            );
+            )
 
-          case "media":
+          case 'media':
             return (
-              <figure key={i} className="my-4">
+              <figure
+                key={i}
+                className="my-4"
+              >
                 {/* Mismo criterio que la portada: un vídeo dentro del cuerpo de una
                     entrada es una pieza que se ve, no un fondo. */}
                 <Media
                   asset={block.asset}
                   lang={lang}
                   corner
-                  controls={block.asset.kind === "video"}
+                  controls={block.asset.kind === 'video'}
                   sizes="(min-width: 768px) 46rem, 100vw"
                 />
                 {/* El rótulo se DERIVA del asset —tipo y duración— en lugar de
                     escribirse. Un "VIDEO · 1:05" a mano se queda desfasado el
                     día que se recorte la pieza y nadie lo nota. */}
                 <figcaption className="mt-3 text-body-s text-ink-3">
-                  {block.asset.kind === "video" && block.asset.duration && (
+                  {block.asset.kind === 'video' && block.asset.duration && (
                     <span className="mr-3 font-mono text-mono uppercase tracking-wider text-ink-2">
                       {t(novedades.mediaLabel.video, lang)} · {block.asset.duration}
                     </span>
@@ -86,9 +104,9 @@ export function PostBody({ blocks, lang }: { blocks: PostBlock[]; lang: Locale }
                   {t(block.caption ?? block.asset.alt, lang)}
                 </figcaption>
               </figure>
-            );
+            )
         }
       })}
     </div>
-  );
+  )
 }

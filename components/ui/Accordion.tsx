@@ -1,15 +1,15 @@
-"use client";
+'use client'
 
-import { useId, useState } from "react";
-import Link from "next/link";
-import { cn } from "@/lib/cn";
+import { useId, useState } from 'react'
+import Link from 'next/link'
+import { cn } from '@/lib/cn'
 
 export type AccordionItem = {
-  id: string;
-  question: string;
-  answer: string;
-  links?: { label: string; href: string; external?: boolean }[];
-};
+  id: string
+  question: string
+  answer: string
+  links?: { label: string; href: string; external?: boolean }[]
+}
 
 /**
  * ACORDEÓN · patrón `disclosure`, no `tabs`.
@@ -39,10 +39,9 @@ export type AccordionItem = {
    24px de WCAG 2.5.8, y no son enlaces en línea dentro de una frase, así que
    no les vale la excepción. `Footer` y `PostsInline` ya lo hacían. */
 const enlace =
-  "group inline-flex min-h-11 items-center gap-2 font-mono text-mono text-brand transition-colors hover:text-ink";
+  'group inline-flex min-h-11 items-center gap-2 font-mono text-mono text-brand transition-colors hover:text-ink'
 
-const flecha =
-  "transition-transform duration-(--duration-fast) ease-(--ease-overshoot)";
+const flecha = 'transition-transform duration-(--duration-fast) ease-(--ease-overshoot)'
 
 export function Accordion({
   items,
@@ -51,29 +50,32 @@ export function Accordion({
       UI genérica y §24 le prohíbe contener copy literal. */
   newTabLabel,
 }: {
-  items: AccordionItem[];
-  className?: string;
-  newTabLabel: string;
+  items: AccordionItem[]
+  className?: string
+  newTabLabel: string
 }) {
-  const uid = useId();
-  const [abiertas, setAbiertas] = useState<Set<string>>(new Set());
+  const uid = useId()
+  const [abiertas, setAbiertas] = useState<Set<string>>(new Set())
 
   const alternar = (id: string) =>
     setAbiertas((prev) => {
-      const next = new Set(prev);
-      if (!next.delete(id)) next.add(id);
-      return next;
-    });
+      const next = new Set(prev)
+      if (!next.delete(id)) next.add(id)
+      return next
+    })
 
   return (
-    <ul className={cn("border-t border-line", className)}>
+    <ul className={cn('border-t border-line', className)}>
       {items.map((item) => {
-        const abierta = abiertas.has(item.id);
-        const botonId = `${uid}-${item.id}-boton`;
-        const panelId = `${uid}-${item.id}-panel`;
+        const abierta = abiertas.has(item.id)
+        const botonId = `${uid}-${item.id}-boton`
+        const panelId = `${uid}-${item.id}-panel`
 
         return (
-          <li key={item.id} className="border-b border-line">
+          <li
+            key={item.id}
+            className="border-b border-line"
+          >
             <h3>
               <button
                 type="button"
@@ -88,12 +90,15 @@ export function Accordion({
                 </span>
                 {/* Cruz que se vuelve raya: la barra vertical rota 90°. Solo
                     `transform`, que es lo que §29 permite animar. */}
-                <span aria-hidden="true" className="relative mt-1.5 grid size-6 shrink-0 place-items-center text-ink-3 transition-colors group-hover:text-brand">
+                <span
+                  aria-hidden="true"
+                  className="relative mt-1.5 grid size-6 shrink-0 place-items-center text-ink-3 transition-colors group-hover:text-brand"
+                >
                   <span className="absolute h-px w-4 bg-current" />
                   <span
                     className={cn(
-                      "absolute h-px w-4 bg-current transition-transform duration-(--duration-base) ease-(--ease-out) motion-reduce:transition-none",
-                      abierta ? "rotate-0" : "rotate-90",
+                      'absolute h-px w-4 bg-current transition-transform duration-(--duration-base) ease-(--ease-out) motion-reduce:transition-none',
+                      abierta ? 'rotate-0' : 'rotate-90',
                     )}
                   />
                 </span>
@@ -102,8 +107,8 @@ export function Accordion({
 
             <div
               className={cn(
-                "grid transition-[grid-template-rows] duration-(--duration-base) ease-(--ease-out) motion-reduce:transition-none",
-                abierta ? "grid-rows-[1fr]" : "grid-rows-[0fr]",
+                'grid transition-[grid-template-rows] duration-(--duration-base) ease-(--ease-out) motion-reduce:transition-none',
+                abierta ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]',
               )}
             >
               <div className="overflow-hidden">
@@ -134,19 +139,35 @@ export function Accordion({
                              mono sale más pequeño y fino que la →, desparejado
                              justo al lado de ella. */
                           <li key={l.href}>
-                            <a href={l.href} target="_blank" rel="noopener noreferrer" className={enlace}>
+                            <a
+                              href={l.href}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className={enlace}
+                            >
                               {l.label}
                               <span className="sr-only"> · {newTabLabel}</span>
-                              <span aria-hidden="true" className={flecha + " group-hover:-translate-y-1 group-hover:translate-x-1"}>
+                              <span
+                                aria-hidden="true"
+                                className={
+                                  flecha + ' group-hover:-translate-y-1 group-hover:translate-x-1'
+                                }
+                              >
                                 →
                               </span>
                             </a>
                           </li>
                         ) : (
                           <li key={l.href}>
-                            <Link href={l.href} className={enlace}>
+                            <Link
+                              href={l.href}
+                              className={enlace}
+                            >
                               {l.label}
-                              <span aria-hidden="true" className={flecha + " group-hover:translate-x-1"}>
+                              <span
+                                aria-hidden="true"
+                                className={flecha + ' group-hover:translate-x-1'}
+                              >
                                 →
                               </span>
                             </Link>
@@ -159,8 +180,8 @@ export function Accordion({
               </div>
             </div>
           </li>
-        );
+        )
       })}
     </ul>
-  );
+  )
 }

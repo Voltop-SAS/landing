@@ -1,8 +1,8 @@
-import { Fragment } from "react";
-import { type Locale } from "@/lib/i18n/config";
-import { yearOf } from "@/lib/dates";
-import { LogEntry } from "@/components/novedades/LogEntry";
-import type { Post } from "@/lib/data";
+import { Fragment } from 'react'
+import { type Locale } from '@/lib/i18n/config'
+import { yearOf } from '@/lib/dates'
+import { LogEntry } from '@/components/novedades/LogEntry'
+import type { Post } from '@/lib/data'
 
 /**
  * EL REGISTRO · lista cronológica con separadores de año.
@@ -23,12 +23,12 @@ import type { Post } from "@/lib/data";
  */
 export function PostLog({ posts, lang }: { posts: Post[]; lang: Locale }) {
   const groups = posts.reduce<{ year: string; entries: Post[] }[]>((acc, post) => {
-    const year = yearOf(post.date);
-    const last = acc[acc.length - 1];
-    if (last?.year === year) last.entries.push(post);
-    else acc.push({ year, entries: [post] });
-    return acc;
-  }, []);
+    const year = yearOf(post.date)
+    const last = acc[acc.length - 1]
+    if (last?.year === year) last.entries.push(post)
+    else acc.push({ year, entries: [post] })
+    return acc
+  }, [])
 
   /**
    * Con un solo año, el separador no separa nada: es un rótulo que no informa,
@@ -37,7 +37,7 @@ export function PostLog({ posts, lang }: { posts: Post[]; lang: Locale }) {
    * distancia de `/red`, que solo se ofrece si alguna estación trae
    * coordenadas.
    */
-  const showYears = groups.length > 1;
+  const showYears = groups.length > 1
 
   return (
     <ul className="border-b border-line">
@@ -47,17 +47,24 @@ export function PostLog({ posts, lang }: { posts: Post[]; lang: Locale }) {
               completa, así que el separador es redundancia VISUAL. Repetirlo
               en audio solo añade ruido entre entrada y entrada. */}
           {showYears && (
-            <li aria-hidden="true" className="border-t border-line-strong pb-1 pt-7">
+            <li
+              aria-hidden="true"
+              className="border-t border-line-strong pb-1 pt-7"
+            >
               <span className="font-mono text-mono uppercase tracking-wider text-ink-3">
                 {group.year}
               </span>
             </li>
           )}
           {group.entries.map((post) => (
-            <LogEntry key={post.slug} post={post} lang={lang} />
+            <LogEntry
+              key={post.slug}
+              post={post}
+              lang={lang}
+            />
           ))}
         </Fragment>
       ))}
     </ul>
-  );
+  )
 }

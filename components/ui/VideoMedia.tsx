@@ -1,9 +1,9 @@
-"use client";
+'use client'
 
-import { useEffect, useRef } from "react";
-import { useReducedMotion } from "motion/react";
-import { t, type Locale } from "@/lib/i18n/config";
-import type { MediaAsset } from "@/content/data/media";
+import { useEffect, useRef } from 'react'
+import { useReducedMotion } from 'motion/react'
+import { t, type Locale } from '@/lib/i18n/config'
+import type { MediaAsset } from '@/content/data/media'
 
 /**
  * VIDEO DE FONDO · respeta la preferencia de movimiento reducido.
@@ -29,9 +29,9 @@ export function VideoMedia({
   className,
   controls = false,
 }: {
-  asset: MediaAsset;
-  lang: Locale;
-  className?: string;
+  asset: MediaAsset
+  lang: Locale
+  className?: string
   /**
    * `true` cuando el material es una PIEZA QUE SE VE, no un fondo.
    *
@@ -43,19 +43,19 @@ export function VideoMedia({
    * `prefers-reduced-motion` deja de aplicar aquí: nada arranca solo, así que
    * no hay movimiento que la preferencia deba frenar.
    */
-  controls?: boolean;
+  controls?: boolean
 }) {
-  const reduce = useReducedMotion();
-  const ref = useRef<HTMLVideoElement>(null);
+  const reduce = useReducedMotion()
+  const ref = useRef<HTMLVideoElement>(null)
 
   /* `autoPlay` no basta: si la preferencia cambia en caliente, o si el
      navegador arrancó la reproducción antes de hidratar, hay que detenerlo. */
   useEffect(() => {
-    const v = ref.current;
-    if (!v || controls) return;
-    if (reduce) v.pause();
-    else void v.play().catch(() => {});
-  }, [reduce, controls]);
+    const v = ref.current
+    if (!v || controls) return
+    if (reduce) v.pause()
+    else void v.play().catch(() => {})
+  }, [reduce, controls])
 
   return (
     <video
@@ -81,9 +81,16 @@ export function VideoMedia({
           es lo correcto aquí —nadie cambia de teléfono a monitor a mitad de
           página— y evita recargar el vídeo en cada cambio de tamaño. */}
       {asset.srcMobile ? (
-        <source src={asset.srcMobile} media="(max-width: 767px)" type="video/mp4" />
+        <source
+          src={asset.srcMobile}
+          media="(max-width: 767px)"
+          type="video/mp4"
+        />
       ) : null}
-      <source src={asset.src ?? undefined} type="video/mp4" />
+      <source
+        src={asset.src ?? undefined}
+        type="video/mp4"
+      />
     </video>
-  );
+  )
 }

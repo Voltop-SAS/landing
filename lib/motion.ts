@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react'
 
 /**
  * EL LENGUAJE DE MOVIMIENTO DE VOLTOP
@@ -61,14 +61,14 @@ export const ease = {
   current: [0.65, 0, 0.35, 1],
   /** Salidas. Arranca lento, acelera al desaparecer. */
   exit: [0.4, 0, 1, 1],
-} as const;
+} as const
 
 /** Duraciones EN SEGUNDOS, que es lo que espera Motion. Espejo de `--duration-*`. */
 export const duration = {
   fast: 0.2,
   base: 0.32,
   reveal: 0.7,
-} as const;
+} as const
 
 /**
  * Duración del CONTEO de cifras. No tiene espejo en CSS a propósito: no es una
@@ -76,7 +76,7 @@ export const duration = {
  * las demás. Antes se escribía como `duration.slow * 2.2`, que es una forma de
  * decir "1.32 segundos" sin decirlo y ataba una lectura a un token de UI.
  */
-export const COUNT_DURATION = 1.3;
+export const COUNT_DURATION = 1.3
 
 /**
  * DEPTH · los dos niveles del gesto base.
@@ -92,9 +92,9 @@ export const COUNT_DURATION = 1.3;
 export const depth = {
   standard: { scale: 0.965, y: 10, duration: 0.55 },
   expressive: { scale: 0.9, y: 24, duration: 0.85 },
-} as const;
+} as const
 
-export type DepthLevel = keyof typeof depth;
+export type DepthLevel = keyof typeof depth
 
 /**
  * Retardo entre hermanos de una misma lista. UN valor para todo el sitio.
@@ -103,13 +103,13 @@ export type DepthLevel = keyof typeof depth;
  * Cuatro valores que nadie distingue no son cuatro decisiones: son la ausencia
  * de una.
  */
-export const STAGGER = 0.07;
+export const STAGGER = 0.07
 
 /**
  * Tope del escalonado. Sin él, una lista de doce elementos hace esperar casi un
  * segundo al último y la página se siente lenta en lugar de coreografiada.
  */
-const STAGGER_MAX = 5;
+const STAGGER_MAX = 5
 
 /**
  * DEPTH aplicado. Devuelve las props de Motion completas, incluido el enganche
@@ -121,22 +121,22 @@ const STAGGER_MAX = 5;
  * siendo movimiento (§21).
  */
 export function depthMotion(level: DepthLevel, reduce: boolean, index = 0) {
-  const d = depth[level];
-  const delay = Math.min(index, STAGGER_MAX) * STAGGER;
+  const d = depth[level]
+  const delay = Math.min(index, STAGGER_MAX) * STAGGER
 
   return {
-    "data-reveal": "",
+    'data-reveal': '',
     initial: { opacity: 0, scale: d.scale, y: d.y },
     whileInView: { opacity: 1, scale: 1, y: 0 },
     /* `once`: el contenido se revela una vez y permanece. Nunca ligamos la
        opacidad del contenido al progreso de scroll — volvería a 0 al subir. */
-    viewport: { once: true, margin: "-80px" },
+    viewport: { once: true, margin: '-80px' },
     transition: {
       duration: reduce ? 0 : d.duration,
       ease: ease.standard,
       delay: reduce ? 0 : delay,
     },
-  } as const;
+  } as const
 }
 
 /**
@@ -158,16 +158,16 @@ export function depthMotion(level: DepthLevel, reduce: boolean, index = 0) {
  * dejó atrás, y como está fuera de pantalla tampoco hay parpadeo que ver.
  */
 export function useScrolledPast(ref: React.RefObject<HTMLElement | null>) {
-  const [pasado, setPasado] = useState(false);
+  const [pasado, setPasado] = useState(false)
 
   useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
+    const el = ref.current
+    if (!el) return
     /* `bottom < 0`: el elemento entero quedó por encima del borde superior.
        Lo que está parcialmente visible SÍ lo ve el observador, así que no
        necesita este atajo. */
-    if (el.getBoundingClientRect().bottom < 0) setPasado(true);
-  }, [ref]);
+    if (el.getBoundingClientRect().bottom < 0) setPasado(true)
+  }, [ref])
 
-  return pasado;
+  return pasado
 }

@@ -1,16 +1,23 @@
-"use client";
+'use client'
 
-import { useEffect, useRef, useState } from "react";
-import { motion, useScroll, useTransform, useMotionValueEvent, useInView, useReducedMotion } from "motion/react";
-import { duration, ease } from "@/lib/motion";
-import { t, type Locale } from "@/lib/i18n/config";
-import { href, routes } from "@/lib/i18n/routes";
-import { home } from "@/content/copy/home";
-import { actions } from "@/content/copy/common";
-import { media } from "@/content/data/media";
-import { Section, Container, Eyebrow } from "@/components/ui/layout";
-import { Media } from "@/components/ui/Media";
-import { Button } from "@/components/ui/Button";
+import { useEffect, useRef, useState } from 'react'
+import {
+  motion,
+  useScroll,
+  useTransform,
+  useMotionValueEvent,
+  useInView,
+  useReducedMotion,
+} from 'motion/react'
+import { duration, ease } from '@/lib/motion'
+import { t, type Locale } from '@/lib/i18n/config'
+import { href, routes } from '@/lib/i18n/routes'
+import { home } from '@/content/copy/home'
+import { actions } from '@/content/copy/common'
+import { media } from '@/content/data/media'
+import { Section, Container, Eyebrow } from '@/components/ui/layout'
+import { Media } from '@/components/ui/Media'
+import { Button } from '@/components/ui/Button'
 
 /**
  * BEAT 2 · SIGNATURE MOMENT — Intensidad: MUY ALTA · Registro: Impacto
@@ -49,7 +56,7 @@ export function InfrastructureSignature({
   lang,
   entradaSlug,
 }: {
-  lang: Locale;
+  lang: Locale
   /**
    * Entrada del registro que cuenta la apertura de ESTA estación. La resuelve
    * la página desde `lib/data`, porque este componente es de cliente y no
@@ -60,11 +67,11 @@ export function InfrastructureSignature({
    * se retiró del dataset— y llevaba a un 404 desde entonces sin que nadie se
    * enterara. Un botón que desaparece se nota; uno que va a ninguna parte, no.
    */
-  entradaSlug?: string;
+  entradaSlug?: string
 }) {
-  const reduce = useReducedMotion();
-  const ref = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
+  const reduce = useReducedMotion()
+  const ref = useRef<HTMLDivElement>(null)
+  const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end end'] })
 
   /* El MATERIAL se revela con scroll-scrub: arranca recortado y se abre a
      sangre completa. Los hooks se llaman siempre, sin condicionales. */
@@ -109,12 +116,12 @@ export function InfrastructureSignature({
    * vídeo. No se intenta fingir que son uno. La continuidad la da la
    * composición —el borde compartido y el fondo que los cose— no el material.
    */
-  const apertura = useTransform(scrollYProgress, [0, 0.25], reduce ? [0, 0] : [1, 0]);
+  const apertura = useTransform(scrollYProgress, [0, 0.25], reduce ? [0, 0] : [1, 0])
   const clipPath = useTransform(
     apertura,
     (v) => `inset(0% ${(v * 13).toFixed(2)}% ${(v * 30).toFixed(2)}% ${(v * 13).toFixed(2)}%)`,
-  );
-  const scale = useTransform(scrollYProgress, [0, 0.25], reduce ? [1, 1] : [1.06, 1]);
+  )
+  const scale = useTransform(scrollYProgress, [0, 0.25], reduce ? [1, 1] : [1.06, 1])
 
   /**
    * El texto se destraba cuando la apertura ya terminó (30% del recorrido) y
@@ -129,19 +136,19 @@ export function InfrastructureSignature({
    * o recarga a media sección: si el progreso ya pasó el umbral, el texto está
    * visible desde el primer fotograma.
    */
-  const [abierto, setAbierto] = useState(false);
-  useMotionValueEvent(scrollYProgress, "change", (v) => {
-    if (v > 0.3) setAbierto(true);
-  });
+  const [abierto, setAbierto] = useState(false)
+  useMotionValueEvent(scrollYProgress, 'change', (v) => {
+    if (v > 0.3) setAbierto(true)
+  })
   /* Diferido un fotograma: `useScroll` no tiene medida hasta después del
      layout, y actualizar el estado dentro del efecto sin diferir choca con
      la regla de React y provocaría un renderizado extra en la hidratación. */
   useEffect(() => {
     const id = requestAnimationFrame(() => {
-      if (scrollYProgress.get() > 0.3) setAbierto(true);
-    });
-    return () => cancelAnimationFrame(id);
-  }, [scrollYProgress]);
+      if (scrollYProgress.get() > 0.3) setAbierto(true)
+    })
+    return () => cancelAnimationFrame(id)
+  }, [scrollYProgress])
 
   /**
    * SALIDA DE EMERGENCIA para quien llega por `#infraestructura` y no se mueve.
@@ -158,17 +165,17 @@ export function InfrastructureSignature({
    *
    * Ninguna ruta del sitio enlaza hoy a esta ancla, pero la URL es pública.
    */
-  const enVista = useInView(ref, { amount: 0.5 });
-  const [forzado, setForzado] = useState(false);
+  const enVista = useInView(ref, { amount: 0.5 })
+  const [forzado, setForzado] = useState(false)
   useEffect(() => {
-    if (!enVista) return;
+    if (!enVista) return
     const id = setTimeout(() => {
-      if (scrollYProgress.get() < 0.15) setForzado(true);
-    }, 1200);
-    return () => clearTimeout(id);
-  }, [enVista, scrollYProgress]);
+      if (scrollYProgress.get() < 0.15) setForzado(true)
+    }, 1200)
+    return () => clearTimeout(id)
+  }, [enVista, scrollYProgress])
 
-  const visible = reduce || abierto || forzado;
+  const visible = reduce || abierto || forzado
   /**
    * RECALIBRADO al entrar la fotografía real (2026-09-01).
    *
@@ -182,15 +189,19 @@ export function InfrastructureSignature({
    * de un punto en el que el texto ya es legible, que es cuando empieza a
    * aparecer (`whileInView` con margen del 20%).
    */
-  const scrimOpacity = useTransform(scrollYProgress, [0.1, 0.45], reduce ? [1, 1] : [0.8, 1]);
+  const scrimOpacity = useTransform(scrollYProgress, [0.1, 0.45], reduce ? [1, 1] : [0.8, 1])
 
   /** Fase de entrada del texto. Se dispara con el pestillo, no al asomar. */
   const phase = (delay: number) => ({
-    "data-reveal": "",
+    'data-reveal': '',
     initial: { opacity: 0, y: 32 },
     animate: visible ? { opacity: 1, y: 0 } : { opacity: 0, y: 32 },
-    transition: { duration: reduce ? 0 : duration.reveal, ease: ease.standard, delay: reduce ? 0 : delay },
-  });
+    transition: {
+      duration: reduce ? 0 : duration.reveal,
+      ease: ease.standard,
+      delay: reduce ? 0 : delay,
+    },
+  })
 
   return (
     <Section
@@ -205,7 +216,7 @@ export function InfrastructureSignature({
     >
       <div className="sticky top-0 flex h-dvh flex-col justify-end overflow-hidden motion-reduce:static motion-reduce:h-auto">
         <motion.div
-          style={{ scale, clipPath: forzado ? "inset(0% 0% 0% 0%)" : clipPath }}
+          style={{ scale, clipPath: forzado ? 'inset(0% 0% 0% 0%)' : clipPath }}
           /* La transición solo actúa en el caso forzado; durante el scroll el
              valor lo escribe motion en cada fotograma y no hay nada que animar. */
           className="absolute inset-0 transition-[clip-path] duration-500 ease-out"
@@ -261,10 +272,16 @@ export function InfrastructureSignature({
           </motion.div>
 
           <motion.div {...phase(0.18)}>
-            <p className="mt-6 measure text-body-l text-ink-2">{t(home.infrastructure.lead, lang)}</p>
+            <p className="mt-6 measure text-body-l text-ink-2">
+              {t(home.infrastructure.lead, lang)}
+            </p>
             <div className="mt-9 flex flex-wrap items-center gap-x-6 gap-y-3">
               {entradaSlug && (
-                <Button variant="ghost" arrow href={href(lang, routes.post(entradaSlug))}>
+                <Button
+                  variant="ghost"
+                  arrow
+                  href={href(lang, routes.post(entradaSlug))}
+                >
                   {t(actions.seeStation, lang)}
                 </Button>
               )}
@@ -276,5 +293,5 @@ export function InfrastructureSignature({
         </Container>
       </div>
     </Section>
-  );
+  )
 }

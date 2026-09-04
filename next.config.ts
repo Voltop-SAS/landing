@@ -1,4 +1,4 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
   /**
@@ -7,11 +7,11 @@ const nextConfig: NextConfig = {
    * lo esté, pasar a `permanent: true`.
    */
   async redirects() {
-    return [{ source: "/", destination: "/es", permanent: false }];
+    return [{ source: '/', destination: '/es', permanent: false }]
   },
 
   images: {
-    formats: ["image/avif", "image/webp"],
+    formats: ['image/avif', 'image/webp'],
     /**
      * Next solo sirve las calidades declaradas aquí; cualquier otra devuelve
      * error. Se añade 70 para la fotografía del hero: es el elemento LCP y a
@@ -22,6 +22,6 @@ const nextConfig: NextConfig = {
      */
     qualities: [70, 75],
   },
-};
+}
 
-export default nextConfig;
+export default nextConfig

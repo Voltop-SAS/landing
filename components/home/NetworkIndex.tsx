@@ -1,15 +1,15 @@
-import Link from "next/link";
-import { t, type Locale } from "@/lib/i18n/config";
-import { href, routes } from "@/lib/i18n/routes";
-import { home } from "@/content/copy/home";
-import { actions, units } from "@/content/copy/common";
-import { media } from "@/content/data/media";
-import { getCitiesWithStations, getNetworkSummary } from "@/lib/data";
-import { Section, Container, SectionHeading } from "@/components/ui/layout";
-import { Media } from "@/components/ui/Media";
-import { Button } from "@/components/ui/Button";
-import { Reveal } from "@/components/ui/Reveal";
-import { CountUp } from "@/components/ui/CountUp";
+import Link from 'next/link'
+import { t, type Locale } from '@/lib/i18n/config'
+import { href, routes } from '@/lib/i18n/routes'
+import { home } from '@/content/copy/home'
+import { actions, units } from '@/content/copy/common'
+import { media } from '@/content/data/media'
+import { getCitiesWithStations, getNetworkSummary } from '@/lib/data'
+import { Section, Container, SectionHeading } from '@/components/ui/layout'
+import { Media } from '@/components/ui/Media'
+import { Button } from '@/components/ui/Button'
+import { Reveal } from '@/components/ui/Reveal'
+import { CountUp } from '@/components/ui/CountUp'
 
 /**
  * BEAT 3 · NUESTRA RED
@@ -57,8 +57,8 @@ import { CountUp } from "@/components/ui/CountUp";
  * no inventarlas es no poder escribirlas.
  */
 export function NetworkIndex({ lang }: { lang: Locale }) {
-  const resumen = getNetworkSummary();
-  const cobertura = getCitiesWithStations();
+  const resumen = getNetworkSummary()
+  const cobertura = getCitiesWithStations()
 
   const cifras: { etiqueta: string; valor: React.ReactNode }[] = [
     /* La única que cuenta es la que ES un número. "22–80 kW" y la lista de
@@ -69,16 +69,16 @@ export function NetworkIndex({ lang }: { lang: Locale }) {
       valor:
         resumen.potenciaMin && resumen.potenciaMax
           ? `${resumen.potenciaMin}–${resumen.potenciaMax} kW`
-          : "—",
+          : '—',
     },
-    { etiqueta: t(home.network.stats.connectors, lang), valor: resumen.conectores.join(" · ") },
-  ];
+    { etiqueta: t(home.network.stats.connectors, lang), valor: resumen.conectores.join(' · ') },
+  ]
 
   /** El asset de cada ciudad, por slug. Ver el bloque CIUDADES en `media.ts`. */
   const fotoCiudad: Record<string, typeof media.ciudadBogota | undefined> = {
     bogota: media.ciudadBogota,
     medellin: media.ciudadMedellin,
-  };
+  }
 
   return (
     <Section
@@ -136,7 +136,12 @@ export function NetworkIndex({ lang }: { lang: Locale }) {
                 `display-l` da 52px a 1440. Con 52px partía en TRES líneas y la
                 referencia tiene DOS. El tamaño no es un gusto: es lo que
                 produce ese ritmo. */}
-            <SectionHeading id="red-title" kicker={t(home.network.eyebrow, lang)} kickerTone="brand" size="m">
+            <SectionHeading
+              id="red-title"
+              kicker={t(home.network.eyebrow, lang)}
+              kickerTone="brand"
+              size="m"
+            >
               {t(home.network.title, lang)}
             </SectionHeading>
 
@@ -157,7 +162,12 @@ export function NetworkIndex({ lang }: { lang: Locale }) {
                 mantiene por adyacencia, solo que vertical. */}
             <ul className="mt-9 grid grid-cols-1 gap-3 sm:grid-cols-2">
               {cobertura.map(({ city, count, operational }, i) => (
-                <Reveal as="li" key={city.slug} index={i} level="expressive">
+                <Reveal
+                  as="li"
+                  key={city.slug}
+                  index={i}
+                  level="expressive"
+                >
                   <Link
                     href={href(lang, routes.city(city.slug))}
                     className="press group relative block overflow-hidden rounded-(--radius-structural) border border-line transition-[transform,border-color] duration-(--duration-fast) ease-(--ease-standard) hover:-translate-y-1 hover:border-line-strong motion-reduce:hover:translate-y-0"
@@ -222,8 +232,8 @@ export function NetworkIndex({ lang }: { lang: Locale }) {
                             —ver las tarjetas de `/red`—. Un dato técnico en
                             texto corrido rompe ese lenguaje. */}
                         <p className="mt-1.5 font-mono text-mono text-ink-2">
-                          <CountUp value={operational} />{" "}
-                          {t(operational === 1 ? units.station : units.stations, lang)}{" "}
+                          <CountUp value={operational} />{' '}
+                          {t(operational === 1 ? units.station : units.stations, lang)}{' '}
                           {t(home.network.live, lang)}
                           {operational !== count ? (
                             <span className="text-ink-3"> · {count} total</span>
@@ -261,7 +271,10 @@ export function NetworkIndex({ lang }: { lang: Locale }) {
                 parta. */}
             <dl className="mt-3 flex flex-col gap-px overflow-hidden rounded-(--radius-structural) border border-line bg-line sm:flex-row sm:flex-wrap">
               {cifras.map((c) => (
-                <div key={c.etiqueta} className="grow bg-canvas px-4 py-4">
+                <div
+                  key={c.etiqueta}
+                  className="grow bg-canvas px-4 py-4"
+                >
                   {/* `gap-px` sobre `bg-line` en lugar de `divide-x`: es la
                       técnica con la que el sitio dibuja una rejilla de
                       hairlines —ver la lista de ciudades de `/red`— y además
@@ -302,7 +315,11 @@ export function NetworkIndex({ lang }: { lang: Locale }) {
                 quinta variante al sistema para un solo botón, y un lenguaje de
                 botones con una excepción deja de ser un lenguaje. */}
             <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3">
-              <Button variant="ghost" arrow href={href(lang, routes.red)}>
+              <Button
+                variant="ghost"
+                arrow
+                href={href(lang, routes.red)}
+              >
                 {t(actions.seeNetwork, lang)}
               </Button>
               {/* Mono en versales: es como el sitio escribe una nota al lado
@@ -381,5 +398,5 @@ export function NetworkIndex({ lang }: { lang: Locale }) {
         </div>
       </Container>
     </Section>
-  );
+  )
 }

@@ -19,7 +19,7 @@ export const externalLinks = {
    * §15 no admite un enlace sin destino real: hay que comprobarlo antes de
    * publicar el sitio.
    */
-  app: "https://app.voltop.co/",
+  app: 'https://app.voltop.co/',
 
   /**
    * Fichas directas de cada tienda (entregadas 2026-09-02). Las insignias
@@ -34,25 +34,25 @@ export const externalLinks = {
    * Google: sin `pcampaignid`, que es un parámetro de campaña del botón de
    * compartir y no pertenece a la URL canónica.
    */
-  appStore: "https://apps.apple.com/co/app/voltop/id6759729784",
-  googlePlay: "https://play.google.com/store/apps/details?id=co.voltop.charging",
+  appStore: 'https://apps.apple.com/co/app/voltop/id6759729784',
+  googlePlay: 'https://play.google.com/store/apps/details?id=co.voltop.charging',
 
   /**
    * Soporte. El número es de WhatsApp y se atiende vía Freshchat, así que se
    * enlaza con `wa.me` y NO con `tel:`: un `tel:` lanzaría una llamada
    * telefónica en lugar de abrir la conversación.
    */
-  whatsapp: "https://wa.me/573159864931",
+  whatsapp: 'https://wa.me/573159864931',
 
   /**
    * Correo de soporte. Sale de la Política de Tratamiento de Datos, donde
    * VOLTOP S.A.S. lo declara como su dato de contacto — no de una suposición.
    */
-  soporte: "mailto:soporte@voltop.co",
-} as const;
+  soporte: 'mailto:soporte@voltop.co',
+} as const
 
 /** El correo en texto, para mostrarlo además de enlazarlo. */
-export const soporteEmail = "soporte@voltop.co";
+export const soporteEmail = 'soporte@voltop.co'
 
 /**
  * Destinatarios de los leads comerciales (definidos el 2026-09-02).
@@ -63,7 +63,7 @@ export const soporteEmail = "soporte@voltop.co";
  * lista desaparece del cliente.
  */
 export const leadRecipients = [
-  "bruno@voltop.co",
-  "juan.ocampo@voltop.co",
-  "camilo.guzman@voltop.co",
-] as const;
+  'bruno@voltop.co',
+  'juan.ocampo@voltop.co',
+  'camilo.guzman@voltop.co',
+] as const

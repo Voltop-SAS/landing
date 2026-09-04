@@ -1,20 +1,20 @@
-import type { Metadata } from "next";
-import Link from "next/link";
-import { notFound } from "next/navigation";
-import { locales, isLocale, localeMeta, t, type Locale } from "@/lib/i18n/config";
-import { href, routes, absoluteUrl, alternatesFor, SITE_URL } from "@/lib/i18n/routes";
-import { novedades } from "@/content/copy/novedades";
-import { a11y, brand } from "@/content/copy/common";
-import { getPostsWithPage, getPost, getStation, getCity } from "@/lib/data";
-import { Section, Container, Rule } from "@/components/ui/layout";
-import { Media } from "@/components/ui/Media";
-import { Button } from "@/components/ui/Button";
-import { PendingTag } from "@/components/ui/data";
-import { PostBody } from "@/components/novedades/PostBody";
-import { TrackView } from "@/components/analytics/TrackView";
-import { formatDate } from "@/lib/dates";
+import type { Metadata } from 'next'
+import Link from 'next/link'
+import { notFound } from 'next/navigation'
+import { locales, isLocale, localeMeta, t, type Locale } from '@/lib/i18n/config'
+import { href, routes, absoluteUrl, alternatesFor, SITE_URL } from '@/lib/i18n/routes'
+import { novedades } from '@/content/copy/novedades'
+import { a11y, brand } from '@/content/copy/common'
+import { getPostsWithPage, getPost, getStation, getCity } from '@/lib/data'
+import { Section, Container, Rule } from '@/components/ui/layout'
+import { Media } from '@/components/ui/Media'
+import { Button } from '@/components/ui/Button'
+import { PendingTag } from '@/components/ui/data'
+import { PostBody } from '@/components/novedades/PostBody'
+import { TrackView } from '@/components/analytics/TrackView'
+import { formatDate } from '@/lib/dates'
 
-type Props = { params: Promise<{ lang: string; slug: string }> };
+type Props = { params: Promise<{ lang: string; slug: string }> }
 
 /**
  * /NOVEDADES/[SLUG] · una entrada del registro.
@@ -29,43 +29,43 @@ type Props = { params: Promise<{ lang: string; slug: string }> };
  * desde prensa o desde una búsqueda entra a la red en lugar de salirse.
  */
 
-export const dynamicParams = false;
+export const dynamicParams = false
 
 export async function generateStaticParams() {
-  const withPage = await getPostsWithPage();
-  return locales.flatMap((lang) => withPage.map((p) => ({ lang, slug: p.slug })));
+  const withPage = await getPostsWithPage()
+  return locales.flatMap((lang) => withPage.map((p) => ({ lang, slug: p.slug })))
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { lang, slug } = await params;
-  if (!isLocale(lang)) return {};
-  const post = await getPost(slug);
-  if (!post) return {};
+  const { lang, slug } = await params
+  if (!isLocale(lang)) return {}
+  const post = await getPost(slug)
+  if (!post) return {}
 
   return {
     title: t(post.title, lang),
     description: t(post.summary, lang),
     alternates: alternatesFor(lang, routes.post(post.slug)),
     openGraph: {
-      type: "article",
+      type: 'article',
       publishedTime: post.date,
       title: t(post.title, lang),
       description: t(post.summary, lang),
       url: absoluteUrl(lang, routes.post(post.slug)),
     },
-  };
+  }
 }
 
 export default async function PostPage({ params }: Props) {
-  const { lang: raw, slug } = await params;
-  if (!isLocale(raw)) notFound();
-  const lang = raw as Locale;
+  const { lang: raw, slug } = await params
+  if (!isLocale(raw)) notFound()
+  const lang = raw as Locale
 
-  const post = await getPost(slug);
-  if (!post) notFound();
+  const post = await getPost(slug)
+  if (!post) notFound()
 
-  const station = post.stationSlug ? getStation(post.stationSlug) : undefined;
-  const city = post.citySlug ? getCity(post.citySlug) : undefined;
+  const station = post.stationSlug ? getStation(post.stationSlug) : undefined
+  const city = post.citySlug ? getCity(post.citySlug) : undefined
 
   /**
    * Datos estructurados de artículo (§29).
@@ -75,25 +75,38 @@ export default async function PostPage({ params }: Props) {
    * sirve — la misma falta que inventar una métrica.
    */
   const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "NewsArticle",
+    '@context': 'https://schema.org',
+    '@type': 'NewsArticle',
     headline: t(post.title, lang),
     description: t(post.summary, lang),
     datePublished: post.date,
     inLanguage: localeMeta[lang].hreflang,
     url: absoluteUrl(lang, routes.post(post.slug)),
-    author: { "@type": "Organization", name: brand.name, url: SITE_URL },
-    publisher: { "@type": "Organization", name: brand.name, url: SITE_URL },
+    author: { '@type': 'Organization', name: brand.name, url: SITE_URL },
+    publisher: { '@type': 'Organization', name: brand.name, url: SITE_URL },
     ...(post.cover?.src ? { image: `${SITE_URL}${post.cover.src}` } : {}),
-  };
+  }
 
   return (
-    <TrackView event="novedad_vista" props={{ slug: post.slug, tipo: post.type }} threshold={0}>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+    <TrackView
+      event="novedad_vista"
+      props={{ slug: post.slug, tipo: post.type }}
+      threshold={0}
+    >
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
 
-      <Section space="none" className="pb-8 pt-32 md:pt-40">
+      <Section
+        space="none"
+        className="pb-8 pt-32 md:pt-40"
+      >
         <Container width="narrow">
-          <nav aria-label={t(a11y.breadcrumb, lang)} className="font-mono text-mono text-ink-3">
+          <nav
+            aria-label={t(a11y.breadcrumb, lang)}
+            className="font-mono text-mono text-ink-3"
+          >
             <ol className="flex flex-wrap items-center gap-2">
               <li>
                 <Link
@@ -117,7 +130,7 @@ export default async function PostPage({ params }: Props) {
             >
               {formatDate(post.date, lang)}
             </time>
-            {post.dataStatus === "placeholder" && (
+            {post.dataStatus === 'placeholder' && (
               <PendingTag>{t(novedades.provisionalTag, lang)}</PendingTag>
             )}
           </div>
@@ -127,7 +140,7 @@ export default async function PostPage({ params }: Props) {
           </h1>
           <p className="mt-6 measure text-body-l text-ink-2">{t(post.summary, lang)}</p>
 
-          {post.dataStatus === "placeholder" && (
+          {post.dataStatus === 'placeholder' && (
             <p className="mt-4 measure text-body-s text-ink-3">
               {t(novedades.provisionalNote, lang)}
             </p>
@@ -135,7 +148,10 @@ export default async function PostPage({ params }: Props) {
         </Container>
       </Section>
 
-      <Section space="none" className="pb-24 md:pb-32">
+      <Section
+        space="none"
+        className="pb-24 md:pb-32"
+      >
         <Container width="narrow">
           {post.cover && (
             /* `controls` cuando la portada es un VÍDEO. Sin él, `VideoMedia` lo
@@ -149,13 +165,16 @@ export default async function PostPage({ params }: Props) {
               lang={lang}
               aspect="16/9"
               corner
-              controls={post.cover.kind === "video"}
+              controls={post.cover.kind === 'video'}
               sizes="(min-width: 768px) 46rem, 100vw"
               priority
             />
           )}
 
-          <PostBody blocks={post.body} lang={lang} />
+          <PostBody
+            blocks={post.body}
+            lang={lang}
+          />
 
           {/* Vuelta al producto: la entrada termina en la red, no en un final ciego. */}
           {(station || city) && (
@@ -202,5 +221,5 @@ export default async function PostPage({ params }: Props) {
         </Container>
       </Section>
     </TrackView>
-  );
+  )
 }

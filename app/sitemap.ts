@@ -1,9 +1,9 @@
-import type { MetadataRoute } from "next";
-import { publishedLocales, defaultLocale, localeMeta } from "@/lib/i18n/config";
-import { routes, absoluteUrl } from "@/lib/i18n/routes";
-import { legalDocs } from "@/content/data/legal-docs";
-import { assertPublishedLocalesComplete } from "@/lib/i18n/audit";
-import { getStations, getCities, getPostsWithPage, getLatestPostDate } from "@/lib/data";
+import type { MetadataRoute } from 'next'
+import { publishedLocales, defaultLocale, localeMeta } from '@/lib/i18n/config'
+import { routes, absoluteUrl } from '@/lib/i18n/routes'
+import { legalDocs } from '@/content/data/legal-docs'
+import { assertPublishedLocalesComplete } from '@/lib/i18n/audit'
+import { getStations, getCities, getPostsWithPage, getLatestPostDate } from '@/lib/data'
 
 /**
  * SITEMAP generado desde los datos (§29).
@@ -23,34 +23,34 @@ import { getStations, getCities, getPostsWithPage, getLatestPostDate } from "@/l
  *   build, que es la única disponible y honesta para ellas.
  */
 type Entry = {
-  path: string;
-  priority: number;
-  lastModified: Date;
-  changeFrequency: MetadataRoute.Sitemap[number]["changeFrequency"];
-};
+  path: string
+  priority: number
+  lastModified: Date
+  changeFrequency: MetadataRoute.Sitemap[number]['changeFrequency']
+}
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   /* El sitemap declara qué idiomas existen de cara al público, así que es su
      trabajo verificar que ninguno se anuncia a medias. Rompe el build si un
      idioma publicado tiene huecos. */
-  assertPublishedLocalesComplete();
+  assertPublishedLocalesComplete()
 
-  const build = new Date();
-  const latestPost = await getLatestPostDate();
+  const build = new Date()
+  const latestPost = await getLatestPostDate()
 
   const entries: Entry[] = [
-    { path: routes.home, priority: 1, lastModified: build, changeFrequency: "monthly" },
-    { path: routes.red, priority: 0.9, lastModified: build, changeFrequency: "monthly" },
-    { path: routes.empresas, priority: 0.9, lastModified: build, changeFrequency: "monthly" },
+    { path: routes.home, priority: 1, lastModified: build, changeFrequency: 'monthly' },
+    { path: routes.red, priority: 0.9, lastModified: build, changeFrequency: 'monthly' },
+    { path: routes.empresas, priority: 0.9, lastModified: build, changeFrequency: 'monthly' },
     {
       path: routes.novedades,
       priority: 0.8,
       lastModified: latestPost ? new Date(latestPost) : build,
       /* El índice sí cambia a menudo: es lo que justifica que se vuelva a
          rastrear. Cada entrada, en cambio, no cambia una vez publicada. */
-      changeFrequency: "weekly",
+      changeFrequency: 'weekly',
     },
-    { path: routes.nosotros, priority: 0.7, lastModified: build, changeFrequency: "monthly" },
+    { path: routes.nosotros, priority: 0.7, lastModified: build, changeFrequency: 'monthly' },
     /* Los legales entran al sitemap desde que tienen texto definitivo, y con
        SU fecha real de emisión —no la del build—, que es justo lo que la
        cabecera de este archivo reprocha. Prioridad baja: existen para ser
@@ -60,25 +60,25 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       path: routes.terms,
       priority: 0.3,
       lastModified: new Date(legalDocs.terms.actualizadoISO),
-      changeFrequency: "yearly",
+      changeFrequency: 'yearly',
     },
     {
       path: routes.privacy,
       priority: 0.3,
       lastModified: new Date(legalDocs.privacy.actualizadoISO),
-      changeFrequency: "yearly",
+      changeFrequency: 'yearly',
     },
     ...getCities().map((c) => ({
       path: routes.city(c.slug),
       priority: 0.8,
       lastModified: build,
-      changeFrequency: "monthly" as const,
+      changeFrequency: 'monthly' as const,
     })),
     ...getStations().map((s) => ({
       path: routes.station(s.slug),
       priority: 0.6,
       lastModified: build,
-      changeFrequency: "monthly" as const,
+      changeFrequency: 'monthly' as const,
     })),
     /* Solo las entradas con página propia: una entrada que vive únicamente en
        el índice no tiene URL que ofrecer. */
@@ -86,11 +86,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       path: routes.post(p.slug),
       priority: 0.6,
       lastModified: new Date(p.date),
-      changeFrequency: "yearly" as const,
+      changeFrequency: 'yearly' as const,
     })),
     /* La política de privacidad se añadirá cuando tenga texto definitivo:
        hasta entonces está marcada como no indexable. */
-  ];
+  ]
 
   return entries.flatMap(({ path, priority, lastModified, changeFrequency }) =>
     publishedLocales.map((lang) => ({
@@ -108,11 +108,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
          */
         languages: {
           ...Object.fromEntries(
-            publishedLocales.map((l) => [localeMeta[l].hreflang, absoluteUrl(l, path)])
+            publishedLocales.map((l) => [localeMeta[l].hreflang, absoluteUrl(l, path)]),
           ),
-          "x-default": absoluteUrl(defaultLocale, path),
+          'x-default': absoluteUrl(defaultLocale, path),
         },
       },
-    }))
-  );
+    })),
+  )
 }

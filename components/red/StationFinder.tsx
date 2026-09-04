@@ -1,25 +1,25 @@
-"use client";
+'use client'
 
-import { useEffect, useId, useMemo, useRef, useState } from "react";
-import Link from "next/link";
-import { t, type Locale } from "@/lib/i18n/config";
-import { href, routes } from "@/lib/i18n/routes";
-import { red } from "@/content/copy/red";
-import { states, units } from "@/content/copy/common";
-import type { Station } from "@/content/data/stations";
-import { formatPowerKw } from "@/content/data/stations";
-import type { City } from "@/content/data/cities";
+import { useEffect, useId, useMemo, useRef, useState } from 'react'
+import Link from 'next/link'
+import { t, type Locale } from '@/lib/i18n/config'
+import { href, routes } from '@/lib/i18n/routes'
+import { red } from '@/content/copy/red'
+import { states, units } from '@/content/copy/common'
+import type { Station } from '@/content/data/stations'
+import { formatPowerKw } from '@/content/data/stations'
+import type { City } from '@/content/data/cities'
 import {
   filterStations,
   sortStations,
   hasCoordinates,
   distanceKm,
   type StationSort,
-} from "@/lib/data";
-import { StatusBadge } from "@/components/ui/data";
-import { Button } from "@/components/ui/Button";
-import { track } from "@/lib/analytics";
-import { cn } from "@/lib/cn";
+} from '@/lib/data'
+import { StatusBadge } from '@/components/ui/data'
+import { Button } from '@/components/ui/Button'
+import { track } from '@/lib/analytics'
+import { cn } from '@/lib/cn'
 
 /**
  * BUSCADOR DE ESTACIONES · isla de cliente
@@ -58,7 +58,7 @@ import { cn } from "@/lib/cn";
  * ──────────────────────────────────────────────────────────────────────────
  */
 
-type Props = { lang: Locale; stations: Station[]; cities: City[] };
+type Props = { lang: Locale; stations: Station[]; cities: City[] }
 
 /**
  * ESCALONES DEL FILTRO DE POTENCIA — derivados del dataset, no escritos.
@@ -74,17 +74,24 @@ type Props = { lang: Locale; stations: Station[]; cities: City[] };
  * 150 kW hace aparecer ese escalón sola; retirarla lo quita.
  */
 function calcularEscalones(stations: Station[]): number[] {
-  const maximos = [...new Set(stations.map((s) => s.powerKw.max))].sort((a, b) => a - b);
+  const maximos = [...new Set(stations.map((s) => s.powerKw.max))].sort((a, b) => a - b)
   /* Si todas las estaciones tuvieran la misma potencia, el filtro no separaría
      nada: mejor un solo escalón "todas" que un control que no reduce. */
-  return maximos.length > 1 ? [0, ...maximos] : [0];
+  return maximos.length > 1 ? [0, ...maximos] : [0]
 }
 
-type Coords = { lat: number; lng: number };
-type GeoState = "idle" | "locating" | "granted" | "denied";
+type Coords = { lat: number; lng: number }
+type GeoState = 'idle' | 'locating' | 'granted' | 'denied'
 
 /** Claves de URL cortas y estables: son parte del enlace que la gente comparte. */
-const PARAM = { q: "q", city: "ciudad", connector: "conector", power: "kw", live: "live", sort: "orden" };
+const PARAM = {
+  q: 'q',
+  city: 'ciudad',
+  connector: 'conector',
+  power: 'kw',
+  live: 'live',
+  sort: 'orden',
+}
 
 /**
  * Todo el criterio de búsqueda en UN objeto.
@@ -95,22 +102,22 @@ const PARAM = { q: "q", city: "ciudad", connector: "conector", power: "kw", live
  * única dependencia.
  */
 type Criteria = {
-  query: string;
-  city: string;
-  connector: string;
-  minPower: number;
-  onlyLive: boolean;
-  sort: StationSort;
-};
+  query: string
+  city: string
+  connector: string
+  minPower: number
+  onlyLive: boolean
+  sort: StationSort
+}
 
 const EMPTY: Criteria = {
-  query: "",
-  city: "",
-  connector: "",
+  query: '',
+  city: '',
+  connector: '',
   minPower: 0,
   onlyLive: false,
-  sort: "relevance",
-};
+  sort: 'relevance',
+}
 
 /**
  * URL → criterio.
@@ -127,40 +134,40 @@ const EMPTY: Criteria = {
  * ciudad ya la dan las rutas `/red/[ciudad]`, que era el motivo SEO original.
  */
 function readCriteria(escalones: number[]): Criteria {
-  const p = new URLSearchParams(window.location.search);
-  const kw = Number(p.get(PARAM.power));
-  const sort = p.get(PARAM.sort);
+  const p = new URLSearchParams(window.location.search)
+  const kw = Number(p.get(PARAM.power))
+  const sort = p.get(PARAM.sort)
   return {
-    query: p.get(PARAM.q) ?? "",
-    city: p.get(PARAM.city) ?? "",
-    connector: p.get(PARAM.connector) ?? "",
+    query: p.get(PARAM.q) ?? '',
+    city: p.get(PARAM.city) ?? '',
+    connector: p.get(PARAM.connector) ?? '',
     minPower: escalones.includes(kw) ? kw : 0,
-    onlyLive: p.get(PARAM.live) === "1",
+    onlyLive: p.get(PARAM.live) === '1',
     /* `distance` no se restaura de la URL: exige permiso de ubicación, y un
        enlace no puede concederlo. */
-    sort: (["power", "status", "city"] as const).includes(sort as never)
+    sort: (['power', 'status', 'city'] as const).includes(sort as never)
       ? (sort as StationSort)
-      : "relevance",
-  };
+      : 'relevance',
+  }
 }
 
 /** Criterio → URL. Claves cortas y estables: son el enlace que la gente comparte. */
 function writeCriteria(c: Criteria) {
-  const p = new URLSearchParams();
-  if (c.query) p.set(PARAM.q, c.query);
-  if (c.city) p.set(PARAM.city, c.city);
-  if (c.connector) p.set(PARAM.connector, c.connector);
-  if (c.minPower) p.set(PARAM.power, String(c.minPower));
-  if (c.onlyLive) p.set(PARAM.live, "1");
+  const p = new URLSearchParams()
+  if (c.query) p.set(PARAM.q, c.query)
+  if (c.city) p.set(PARAM.city, c.city)
+  if (c.connector) p.set(PARAM.connector, c.connector)
+  if (c.minPower) p.set(PARAM.power, String(c.minPower))
+  if (c.onlyLive) p.set(PARAM.live, '1')
   /* `distance` no se escribe: depende de un permiso que un enlace no concede. */
-  if (c.sort !== "relevance" && c.sort !== "distance") p.set(PARAM.sort, c.sort);
-  const qs = p.toString();
-  window.history.replaceState(null, "", qs ? `?${qs}` : window.location.pathname);
+  if (c.sort !== 'relevance' && c.sort !== 'distance') p.set(PARAM.sort, c.sort)
+  const qs = p.toString()
+  window.history.replaceState(null, '', qs ? `?${qs}` : window.location.pathname)
 }
 
 export function StationFinder({ lang, stations, cities }: Props) {
-  const [criteria, setCriteria] = useState<Criteria>(EMPTY);
-  const { query, city, connector, minPower, onlyLive, sort } = criteria;
+  const [criteria, setCriteria] = useState<Criteria>(EMPTY)
+  const { query, city, connector, minPower, onlyLive, sort } = criteria
 
   /**
    * La URL se escribe desde la ACCIÓN, no desde un efecto que observe el
@@ -169,43 +176,43 @@ export function StationFinder({ lang, stations, cities }: Props) {
    * string —con el criterio todavía vacío— antes de que el primero cuajara.
    */
   const apply = (next: Criteria) => {
-    setCriteria(next);
-    writeCriteria(next);
-  };
+    setCriteria(next)
+    writeCriteria(next)
+  }
   const set = <K extends keyof Criteria>(key: K, value: Criteria[K]) =>
-    apply({ ...criteria, [key]: value });
+    apply({ ...criteria, [key]: value })
 
-  const [filtersOpen, setFiltersOpen] = useState(false);
-  const lastTracked = useRef("");
-  const [origin, setOrigin] = useState<Coords | null>(null);
-  const [geoState, setGeoState] = useState<GeoState>("idle");
+  const [filtersOpen, setFiltersOpen] = useState(false)
+  const lastTracked = useRef('')
+  const [origin, setOrigin] = useState<Coords | null>(null)
+  const [geoState, setGeoState] = useState<GeoState>('idle')
 
-  const uid = useId();
-  const searchId = `${uid}-buscar`;
-  const sortId = `${uid}-orden`;
-  const filtersId = `${uid}-filtros`;
+  const uid = useId()
+  const searchId = `${uid}-buscar`
+  const sortId = `${uid}-orden`
+  const filtersId = `${uid}-filtros`
 
   /* La cercanía solo existe si el dataset la sostiene. */
-  const geoAvailable = useMemo(() => hasCoordinates(stations), [stations]);
+  const geoAvailable = useMemo(() => hasCoordinates(stations), [stations])
 
   const cityName = useMemo(
-    () => (slug: string) => cities.find((c) => c.slug === slug)?.name ?? "",
-    [cities]
-  );
+    () => (slug: string) => cities.find((c) => c.slug === slug)?.name ?? '',
+    [cities],
+  )
 
   const connectors = useMemo(
     () => Array.from(new Set(stations.flatMap((s) => s.connectors))).sort(),
-    [stations]
-  );
+    [stations],
+  )
 
   const filters = useMemo(
     () => ({ query, citySlug: city, connector, minPowerKw: minPower, onlyAvailable: onlyLive }),
-    [query, city, connector, minPower, onlyLive]
-  );
-  const hasFilters = Boolean(query || city || connector || minPower || onlyLive);
-  const activeCount = [city, connector, minPower, onlyLive].filter(Boolean).length;
+    [query, city, connector, minPower, onlyLive],
+  )
+  const hasFilters = Boolean(query || city || connector || minPower || onlyLive)
+  const activeCount = [city, connector, minPower, onlyLive].filter(Boolean).length
 
-  const escalones = useMemo(() => calcularEscalones(stations), [stations]);
+  const escalones = useMemo(() => calcularEscalones(stations), [stations])
 
   /* ── URL → criterio, una sola vez al montar.
      `setState` dentro de un efecto es exactamente lo que la regla
@@ -215,38 +222,41 @@ export function StationFinder({ lang, stations, cities }: Props) {
      asignación, sin cascada. */
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    setCriteria(readCriteria(escalones));
-  }, [escalones]);
-
+    setCriteria(readCriteria(escalones))
+  }, [escalones])
 
   const results = useMemo(
-    () => sortStations(filterStations(stations, filters, cityName), sort, { cityNameOf: cityName, origin }),
-    [stations, filters, sort, origin, cityName]
-  );
+    () =>
+      sortStations(filterStations(stations, filters, cityName), sort, {
+        cityNameOf: cityName,
+        origin,
+      }),
+    [stations, filters, sort, origin, cityName],
+  )
 
   const clearAll = () => {
     /* Conserva el orden: limpiar filtros no es reordenar. */
-    apply({ ...EMPTY, sort: criteria.sort });
-    track("red_filtros_limpiados");
-  };
+    apply({ ...EMPTY, sort: criteria.sort })
+    track('red_filtros_limpiados')
+  }
 
   const onFilter = (tipo: string, valor: string | number | boolean) =>
-    track("red_filtro_aplicado", { tipo, valor: String(valor) });
+    track('red_filtro_aplicado', { tipo, valor: String(valor) })
 
   const locate = () => {
-    if (!navigator.geolocation) return setGeoState("denied");
-    setGeoState("locating");
+    if (!navigator.geolocation) return setGeoState('denied')
+    setGeoState('locating')
     navigator.geolocation.getCurrentPosition(
       (pos) => {
-        setOrigin({ lat: pos.coords.latitude, lng: pos.coords.longitude });
-        setGeoState("granted");
-        set("sort", "distance");
-        onFilter("cercania", true);
+        setOrigin({ lat: pos.coords.latitude, lng: pos.coords.longitude })
+        setGeoState('granted')
+        set('sort', 'distance')
+        onFilter('cercania', true)
       },
-      () => setGeoState("denied"),
-      { timeout: 8000 }
-    );
-  };
+      () => setGeoState('denied'),
+      { timeout: 8000 },
+    )
+  }
 
   return (
     <div>
@@ -273,25 +283,44 @@ export function StationFinder({ lang, stations, cities }: Props) {
             {t(red.search.label, lang)}
           </label>
           <div className="relative lg:mt-3">
-            <span aria-hidden="true" className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-ink-3">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="2" />
-                <path d="m20 20-3.5-3.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+            <span
+              aria-hidden="true"
+              className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-ink-3"
+            >
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <circle
+                  cx="11"
+                  cy="11"
+                  r="7"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                />
+                <path
+                  d="m20 20-3.5-3.5"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                />
               </svg>
             </span>
             <input
               id={searchId}
               type="search"
               value={query}
-              onChange={(e) => set("query", e.target.value)}
+              onChange={(e) => set('query', e.target.value)}
               /* Antes se emitía en CADA blur con valor: enfocar y desenfocar
                  tres veces contaba tres búsquedas. Solo se emite si el término
                  cambió desde el último registrado. */
               onBlur={(e) => {
-                const term = e.target.value.trim();
+                const term = e.target.value.trim()
                 if (term && term !== lastTracked.current) {
-                  lastTracked.current = term;
-                  track("red_buscar", { termino: term });
+                  lastTracked.current = term
+                  track('red_buscar', { termino: term })
                 }
               }}
               placeholder={t(red.search.placeholder, lang)}
@@ -301,12 +330,23 @@ export function StationFinder({ lang, stations, cities }: Props) {
             {query && (
               <button
                 type="button"
-                onClick={() => set("query", "")}
+                onClick={() => set('query', '')}
                 aria-label={t(red.search.clear, lang)}
                 className="absolute right-1 top-1/2 grid size-11 -translate-y-1/2 place-items-center text-ink-3 transition-colors hover:text-ink"
               >
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                  <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M6 6l12 12M18 6L6 18"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                  />
                 </svg>
               </button>
             )}
@@ -338,8 +378,8 @@ export function StationFinder({ lang, stations, cities }: Props) {
               id={sortId}
               value={sort}
               onChange={(e) => {
-                set("sort", e.target.value as StationSort);
-                onFilter("orden", e.target.value);
+                set('sort', e.target.value as StationSort)
+                onFilter('orden', e.target.value)
               }}
               className="min-h-11 w-full rounded-(--radius-pill) border border-line-control bg-canvas px-4 pr-9 text-body-s text-ink outline-none transition-colors focus:border-brand lg:mt-3 lg:min-h-12 lg:rounded-(--radius-structural) lg:px-4 lg:pr-10 lg:text-body"
             >
@@ -347,7 +387,9 @@ export function StationFinder({ lang, stations, cities }: Props) {
               <option value="power">{t(red.sort.power, lang)}</option>
               <option value="status">{t(red.sort.status, lang)}</option>
               <option value="city">{t(red.sort.city, lang)}</option>
-              {geoAvailable && origin && <option value="distance">{t(red.sort.distance, lang)}</option>}
+              {geoAvailable && origin && (
+                <option value="distance">{t(red.sort.distance, lang)}</option>
+              )}
             </select>
           </div>
         </div>
@@ -360,27 +402,53 @@ export function StationFinder({ lang, stations, cities }: Props) {
         <div
           id={filtersId}
           className={cn(
-            "gap-6 py-6 sm:grid-cols-2 lg:grid lg:grid-cols-4 lg:gap-8",
-            filtersOpen ? "grid" : "hidden"
+            'gap-6 py-6 sm:grid-cols-2 lg:grid lg:grid-cols-4 lg:gap-8',
+            filtersOpen ? 'grid' : 'hidden',
           )}
         >
           <FilterGroup label={t(red.filters.city, lang)}>
-            <Chip active={!city} onClick={() => { set("city", ""); onFilter("ciudad", "todas"); }}>
+            <Chip
+              active={!city}
+              onClick={() => {
+                set('city', '')
+                onFilter('ciudad', 'todas')
+              }}
+            >
               {t(red.filters.all, lang)}
             </Chip>
             {cities.map((c) => (
-              <Chip key={c.slug} active={city === c.slug} onClick={() => { set("city", c.slug); onFilter("ciudad", c.slug); }}>
+              <Chip
+                key={c.slug}
+                active={city === c.slug}
+                onClick={() => {
+                  set('city', c.slug)
+                  onFilter('ciudad', c.slug)
+                }}
+              >
                 {c.name}
               </Chip>
             ))}
           </FilterGroup>
 
           <FilterGroup label={t(red.filters.connector, lang)}>
-            <Chip active={!connector} onClick={() => { set("connector", ""); onFilter("conector", "todos"); }}>
+            <Chip
+              active={!connector}
+              onClick={() => {
+                set('connector', '')
+                onFilter('conector', 'todos')
+              }}
+            >
               {t(red.filters.allM, lang)}
             </Chip>
             {connectors.map((c) => (
-              <Chip key={c} active={connector === c} onClick={() => { set("connector", c); onFilter("conector", c); }}>
+              <Chip
+                key={c}
+                active={connector === c}
+                onClick={() => {
+                  set('connector', c)
+                  onFilter('conector', c)
+                }}
+              >
                 {c}
               </Chip>
             ))}
@@ -391,7 +459,14 @@ export function StationFinder({ lang, stations, cities }: Props) {
           {escalones.length > 1 && (
             <FilterGroup label={t(red.filters.power, lang)}>
               {escalones.map((p) => (
-                <Chip key={p} active={minPower === p} onClick={() => { set("minPower", p); onFilter("potencia", p); }}>
+                <Chip
+                  key={p}
+                  active={minPower === p}
+                  onClick={() => {
+                    set('minPower', p)
+                    onFilter('potencia', p)
+                  }}
+                >
                   {p === 0 ? t(red.filters.allM, lang) : `${p}+ kW`}
                 </Chip>
               ))}
@@ -401,20 +476,32 @@ export function StationFinder({ lang, stations, cities }: Props) {
           {/* La etiqueta del grupo dice DE QUÉ es; el chip, QUÉ hace. Antes las
               dos decían "Solo en operación". */}
           <FilterGroup label={t(red.filters.availabilityGroup, lang)}>
-            <Chip active={onlyLive} onClick={() => { set("onlyLive", !onlyLive); onFilter("disponibilidad", !onlyLive); }}>
+            <Chip
+              active={onlyLive}
+              onClick={() => {
+                set('onlyLive', !onlyLive)
+                onFilter('disponibilidad', !onlyLive)
+              }}
+            >
               {t(red.filters.availability, lang)}
             </Chip>
-            {geoAvailable && geoState !== "granted" && (
-              <Chip active={false} onClick={locate}>
-                {t(geoState === "locating" ? red.nearby.locating : red.nearby.action, lang)}
+            {geoAvailable && geoState !== 'granted' && (
+              <Chip
+                active={false}
+                onClick={locate}
+              >
+                {t(geoState === 'locating' ? red.nearby.locating : red.nearby.action, lang)}
               </Chip>
             )}
           </FilterGroup>
         </div>
       </div>
 
-      {geoAvailable && geoState === "denied" && (
-        <p role="status" className="mt-4 text-body-s text-ink-2">
+      {geoAvailable && geoState === 'denied' && (
+        <p
+          role="status"
+          className="mt-4 text-body-s text-ink-2"
+        >
           {t(red.nearby.denied, lang)}
         </p>
       )}
@@ -423,8 +510,12 @@ export function StationFinder({ lang, stations, cities }: Props) {
           Es el feedback central de la herramienta y estaba en mono de 12px: el
           texto más discreto de la sección. Ahora tiene el peso que le toca. */}
       <div className="flex flex-wrap items-baseline justify-between gap-4 py-5 lg:py-6">
-        <p role="status" aria-live="polite" className="font-display text-display-s text-ink">
-          {results.length}{" "}
+        <p
+          role="status"
+          aria-live="polite"
+          className="font-display text-display-s text-ink"
+        >
+          {results.length}{' '}
           <span className="text-ink-2">
             {t(results.length === 1 ? red.filters.resultsOne : red.filters.resultsMany, lang)}
           </span>
@@ -445,12 +536,12 @@ export function StationFinder({ lang, stations, cities }: Props) {
       {results.length > 0 ? (
         <ul>
           {results.map((s) => {
-            const km = origin && s.geo ? distanceKm(origin, s.geo) : null;
+            const km = origin && s.geo ? distanceKm(origin, s.geo) : null
             return (
               <li key={s.slug}>
                 <Link
                   href={href(lang, routes.station(s.slug))}
-                  onClick={() => track("estacion_vista", { slug: s.slug, origen: "buscador" })}
+                  onClick={() => track('estacion_vista', { slug: s.slug, origen: 'buscador' })}
                   /* Cuatro columnas desde `lg`, no desde `md`: a 768px metía
                      cuatro celdas en el ancho de tablet y "En operación"
                      quedaba tocando el borde del contenedor (§22). */
@@ -462,32 +553,44 @@ export function StationFinder({ lang, stations, cities }: Props) {
                     </h3>
                     <p className="mt-0.5 text-body-s text-ink-3">
                       {cityName(s.citySlug)}
-                      {km !== null && ` · ${km < 10 ? km.toFixed(1) : Math.round(km)} ${t(red.nearby.unit, lang)}`}
+                      {km !== null &&
+                        ` · ${km < 10 ? km.toFixed(1) : Math.round(km)} ${t(red.nearby.unit, lang)}`}
                     </p>
                   </div>
                   <p className="font-mono text-mono text-ink-2">
                     {formatPowerKw(s.powerKw)} · {s.points} {t(units.pointsShort, lang)}
                   </p>
-                  <p className="font-mono text-mono text-ink-3">{s.connectors.join(" / ")}</p>
-                  <StatusBadge status={s.status} lang={lang} className="justify-self-start lg:justify-self-end" />
+                  <p className="font-mono text-mono text-ink-3">{s.connectors.join(' / ')}</p>
+                  <StatusBadge
+                    status={s.status}
+                    lang={lang}
+                    className="justify-self-start lg:justify-self-end"
+                  />
                 </Link>
               </li>
-            );
+            )
           })}
         </ul>
       ) : (
         <div className="border-b border-line py-16 text-center">
-          <h3 className="font-display text-display-s font-semibold text-ink">{t(states.noResults.title, lang)}</h3>
-          <p className="mx-auto mt-3 max-w-[46ch] text-body-s text-ink-2">{t(states.noResults.body, lang)}</p>
+          <h3 className="font-display text-display-s font-semibold text-ink">
+            {t(states.noResults.title, lang)}
+          </h3>
+          <p className="mx-auto mt-3 max-w-[46ch] text-body-s text-ink-2">
+            {t(states.noResults.body, lang)}
+          </p>
           <div className="mt-7">
-            <Button variant="ghost" onClick={clearAll}>
+            <Button
+              variant="ghost"
+              onClick={clearAll}
+            >
               {t(states.noResults.action, lang)}
             </Button>
           </div>
         </div>
       )}
     </div>
-  );
+  )
 }
 
 /** Disparador de los filtros en móvil. Lleva el recuento de activos para que
@@ -500,11 +603,11 @@ function FiltersToggle({
   label,
   count,
 }: {
-  open: boolean;
-  onToggle: () => void;
-  controls: string;
-  label: string;
-  count: number;
+  open: boolean
+  onToggle: () => void
+  controls: string
+  label: string
+  count: number
 }) {
   return (
     <button
@@ -521,22 +624,33 @@ function FiltersToggle({
         </span>
       )}
       <svg
-        width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"
-        className={cn("transition-transform", open && "rotate-180")}
+        width="14"
+        height="14"
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden="true"
+        className={cn('transition-transform', open && 'rotate-180')}
       >
-        <path d="m6 9 6 6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+        <path
+          d="m6 9 6 6 6-6"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+        />
       </svg>
     </button>
-  );
+  )
 }
 
 function FilterGroup({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <fieldset className="min-w-0">
-      <legend className="mb-3 font-mono text-mono uppercase tracking-wider text-ink-3">{label}</legend>
+      <legend className="mb-3 font-mono text-mono uppercase tracking-wider text-ink-3">
+        {label}
+      </legend>
       <div className="flex flex-wrap gap-2">{children}</div>
     </fieldset>
-  );
+  )
 }
 
 /**
@@ -557,9 +671,9 @@ function Chip({
   active,
   onClick,
 }: {
-  children: React.ReactNode;
-  active: boolean;
-  onClick: () => void;
+  children: React.ReactNode
+  active: boolean
+  onClick: () => void
 }) {
   return (
     <button
@@ -567,13 +681,13 @@ function Chip({
       onClick={onClick}
       aria-pressed={active}
       className={cn(
-        "inline-flex min-h-11 items-center rounded-(--radius-pill) border px-4 text-body-s transition-colors",
+        'inline-flex min-h-11 items-center rounded-(--radius-pill) border px-4 text-body-s transition-colors',
         active
-          ? "border-brand/60 bg-brand/12 text-ink"
-          : "border-line-control text-ink-2 hover:border-line-strong hover:text-ink"
+          ? 'border-brand/60 bg-brand/12 text-ink'
+          : 'border-line-control text-ink-2 hover:border-line-strong hover:text-ink',
       )}
     >
       {children}
     </button>
-  );
+  )
 }

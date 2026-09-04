@@ -1,10 +1,10 @@
-import type { Metadata } from "next";
-import { Poppins, Manrope, JetBrains_Mono } from "next/font/google";
-import "./globals.css";
+import type { Metadata } from 'next'
+import { Poppins, Manrope, JetBrains_Mono } from 'next/font/google'
+import './globals.css'
 
-import { defaultLocale, localeMeta, t } from "@/lib/i18n/config";
-import { SITE_URL } from "@/lib/i18n/routes";
-import { brand } from "@/content/copy/common";
+import { defaultLocale, localeMeta, t } from '@/lib/i18n/config'
+import { SITE_URL } from '@/lib/i18n/routes'
+import { brand } from '@/content/copy/common'
 
 /**
  * LAYOUT RAÍZ · emite el documento
@@ -61,11 +61,11 @@ import { brand } from "@/content/copy/common";
  * algún día se quieren titulares más rotundos, se vuelve a añadir aquí.
  */
 const display = Poppins({
-  variable: "--font-display-raw",
-  subsets: ["latin"],
-  weight: ["500", "600"],
-  display: "swap",
-});
+  variable: '--font-display-raw',
+  subsets: ['latin'],
+  weight: ['500', '600'],
+  display: 'swap',
+})
 /**
  * MANROPE · interfaz y texto corrido.
  *
@@ -78,17 +78,17 @@ const display = Poppins({
  * —una fracción del peso del TrueType— y sin la petición a un tercero.
  */
 const sans = Manrope({
-  variable: "--font-sans-raw",
-  subsets: ["latin"],
-  display: "swap",
-});
-const mono = JetBrains_Mono({ variable: "--font-mono-raw", subsets: ["latin"], display: "swap" });
+  variable: '--font-sans-raw',
+  subsets: ['latin'],
+  display: 'swap',
+})
+const mono = JetBrains_Mono({ variable: '--font-mono-raw', subsets: ['latin'], display: 'swap' })
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: `${brand.name} — ${t(brand.tagline, defaultLocale)}`,
   description: t(brand.tagline, defaultLocale),
-};
+}
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -96,9 +96,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       lang={localeMeta[defaultLocale].htmlLang}
       className={`${display.variable} ${sans.variable} ${mono.variable}`}
     >
-      <body className="min-h-dvh bg-canvas text-ink antialiased">
-        {children}
-      </body>
+      <body className="min-h-dvh bg-canvas text-ink antialiased">{children}</body>
     </html>
-  );
+  )
 }

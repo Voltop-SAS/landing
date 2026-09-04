@@ -1,12 +1,12 @@
-import { t, type Locale } from "@/lib/i18n/config";
-import { href, routes } from "@/lib/i18n/routes";
-import { formatDate } from "@/lib/dates";
-import { novedades, novedadesInline } from "@/content/copy/novedades";
-import { PostLink } from "@/components/novedades/PostLink";
-import { getLatestPosts } from "@/lib/data";
-import { Section, Container, SectionHeading } from "@/components/ui/layout";
-import { Button } from "@/components/ui/Button";
-import { Reveal } from "@/components/ui/Reveal";
+import { t, type Locale } from '@/lib/i18n/config'
+import { href, routes } from '@/lib/i18n/routes'
+import { formatDate } from '@/lib/dates'
+import { novedades, novedadesInline } from '@/content/copy/novedades'
+import { PostLink } from '@/components/novedades/PostLink'
+import { getLatestPosts } from '@/lib/data'
+import { Section, Container, SectionHeading } from '@/components/ui/layout'
+import { Button } from '@/components/ui/Button'
+import { Reveal } from '@/components/ui/Reveal'
 
 /**
  * BEAT · LO ÚLTIMO DE LA RED
@@ -32,18 +32,32 @@ import { Reveal } from "@/components/ui/Reveal";
  * renderiza, en lugar de dejar un titular sobre un hueco.
  */
 export async function NetworkNews({ lang }: { lang: Locale }) {
-  const posts = await getLatestPosts(3);
-  if (posts.length === 0) return null;
+  const posts = await getLatestPosts(3)
+  if (posts.length === 0) return null
 
   return (
-    <Section id="novedades" space="tight" className="border-t border-line" ariaLabelledby="novedades-home">
+    <Section
+      id="novedades"
+      space="tight"
+      className="border-t border-line"
+      ariaLabelledby="novedades-home"
+    >
       <Container>
         <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-          <SectionHeading id="novedades-home" size="m" kicker={t(novedadesInline.home.eyebrow, lang)} kickerTone="brand">
+          <SectionHeading
+            id="novedades-home"
+            size="m"
+            kicker={t(novedadesInline.home.eyebrow, lang)}
+            kickerTone="brand"
+          >
             {t(novedadesInline.home.title, lang)}
           </SectionHeading>
           <div className="md:pb-1">
-            <Button variant="link" arrow href={href(lang, routes.novedades)}>
+            <Button
+              variant="link"
+              arrow
+              href={href(lang, routes.novedades)}
+            >
               {t(novedadesInline.home.action, lang)}
             </Button>
           </div>
@@ -51,7 +65,12 @@ export async function NetworkNews({ lang }: { lang: Locale }) {
 
         <ul className="mt-10 border-t border-line">
           {posts.map((post, i) => (
-            <Reveal as="li" key={post.slug} index={i} className="border-b border-line">
+            <Reveal
+              as="li"
+              key={post.slug}
+              index={i}
+              className="border-b border-line"
+            >
               <PostLink
                 post={post}
                 lang={lang}
@@ -75,5 +94,5 @@ export async function NetworkNews({ lang }: { lang: Locale }) {
         </ul>
       </Container>
     </Section>
-  );
+  )
 }

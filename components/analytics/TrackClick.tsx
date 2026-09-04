@@ -1,6 +1,6 @@
-"use client";
+'use client'
 
-import { track, type EventName, type EventProps } from "@/lib/analytics";
+import { track, type EventName, type EventProps } from '@/lib/analytics'
 
 /**
  * Emite un evento cuando se hace clic en lo que envuelve.
@@ -24,13 +24,16 @@ export function TrackClick({
   props,
   children,
 }: {
-  event: EventName;
-  props?: EventProps;
-  children: React.ReactNode;
+  event: EventName
+  props?: EventProps
+  children: React.ReactNode
 }) {
   return (
-    <span className="contents" onClick={() => track(event, props)}>
+    <span
+      className="contents"
+      onClick={() => track(event, props)}
+    >
       {children}
     </span>
-  );
+  )
 }

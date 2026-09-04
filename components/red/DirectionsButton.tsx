@@ -1,9 +1,9 @@
-"use client";
+'use client'
 
-import { t, type Locale } from "@/lib/i18n/config";
-import { actions } from "@/content/copy/common";
-import { Button } from "@/components/ui/Button";
-import { track } from "@/lib/analytics";
+import { t, type Locale } from '@/lib/i18n/config'
+import { actions } from '@/content/copy/common'
+import { Button } from '@/components/ui/Button'
+import { track } from '@/lib/analytics'
 
 /**
  * "CÓMO LLEGAR" · isla de cliente mínima
@@ -22,9 +22,9 @@ export function DirectionsButton({
   href,
   slug,
 }: {
-  lang: Locale;
-  href: string;
-  slug: string;
+  lang: Locale
+  href: string
+  slug: string
 }) {
   return (
     <Button
@@ -34,9 +34,9 @@ export function DirectionsButton({
       lang={lang}
       href={href}
       className="w-full"
-      onClick={() => track("estacion_como_llegar", { slug, destino: "google-maps" })}
+      onClick={() => track('estacion_como_llegar', { slug, destino: 'google-maps' })}
     >
       {t(actions.getDirections, lang)}
     </Button>
-  );
+  )
 }

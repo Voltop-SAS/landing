@@ -1,9 +1,9 @@
-import Link from "next/link";
-import { type Locale } from "@/lib/i18n/config";
-import { href, routes } from "@/lib/i18n/routes";
-import { hasPage } from "@/lib/data";
-import type { Post } from "@/lib/data";
-import { cn } from "@/lib/cn";
+import Link from 'next/link'
+import { type Locale } from '@/lib/i18n/config'
+import { href, routes } from '@/lib/i18n/routes'
+import { hasPage } from '@/lib/data'
+import type { Post } from '@/lib/data'
+import { cn } from '@/lib/cn'
 
 /**
  * ENVOLTORIO DE UNA ENTRADA · enlaza solo si hay dónde ir.
@@ -33,16 +33,19 @@ export function PostLink({
   className,
   children,
 }: {
-  post: Post;
-  lang: Locale;
-  className?: string;
-  children: React.ReactNode;
+  post: Post
+  lang: Locale
+  className?: string
+  children: React.ReactNode
 }) {
-  if (!hasPage(post)) return <div className={className}>{children}</div>;
+  if (!hasPage(post)) return <div className={className}>{children}</div>
 
   return (
-    <Link href={href(lang, routes.post(post.slug))} className={cn("group press", className)}>
+    <Link
+      href={href(lang, routes.post(post.slug))}
+      className={cn('group press', className)}
+    >
       {children}
     </Link>
-  );
+  )
 }

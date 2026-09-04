@@ -1,7 +1,7 @@
-import Image from "next/image";
-import { t, type Locale } from "@/lib/i18n/config";
-import type { MediaAsset } from "@/content/data/media";
-import { cn } from "@/lib/cn";
+import Image from 'next/image'
+import { t, type Locale } from '@/lib/i18n/config'
+import type { MediaAsset } from '@/content/data/media'
+import { cn } from '@/lib/cn'
 
 /**
  * ATRIBUCIÓN DE UNA CITA · retrato + nombre + cargo, como una sola unidad.
@@ -65,21 +65,21 @@ export function QuoteAttribution({
   focus,
   className,
 }: {
-  asset: MediaAsset;
-  lang: Locale;
-  name: string;
+  asset: MediaAsset
+  lang: Locale
+  name: string
   /** Ya traducido por quien llama: el cargo vive en la colección, no aquí. */
-  role: string;
+  role: string
   /**
    * Reencuadre por CSS para retratos que no llegan cortos. Ver la cabecera.
    * Se pasa como clases de escala y origen para que el valor viva en el
    * componente que conoce el asset, no aquí.
    */
-  focus?: string;
-  className?: string;
+  focus?: string
+  className?: string
 }) {
   return (
-    <div className={cn("flex items-center gap-5", className)}>
+    <div className={cn('flex items-center gap-5', className)}>
       <div className="relative size-24 shrink-0 overflow-hidden rounded-(--radius-structural) border border-line bg-surface-1">
         {asset.src && (
           <Image
@@ -89,7 +89,7 @@ export function QuoteAttribution({
             /* Ver la nota de arriba: cubre 96px de caja × 1.75 de zoom × 2 de
                densidad, con margen. */
             sizes="512px"
-            className={cn("object-cover", focus)}
+            className={cn('object-cover', focus)}
           />
         )}
       </div>
@@ -99,5 +99,5 @@ export function QuoteAttribution({
         <span className="block text-ink-3">{role}</span>
       </p>
     </div>
-  );
+  )
 }

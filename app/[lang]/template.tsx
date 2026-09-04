@@ -1,7 +1,7 @@
-"use client";
+'use client'
 
-import { motion, useReducedMotion } from "motion/react";
-import { duration, ease } from "@/lib/motion";
+import { motion, useReducedMotion } from 'motion/react'
+import { duration, ease } from '@/lib/motion'
 
 /**
  * TRANSICIÓN ENTRE PÁGINAS.
@@ -21,7 +21,7 @@ import { duration, ease } from "@/lib/motion";
  * Animar solo el desplazamiento conserva la continuidad sin ese riesgo.
  */
 export default function Template({ children }: { children: React.ReactNode }) {
-  const reduce = useReducedMotion();
+  const reduce = useReducedMotion()
 
   return (
     <motion.div
@@ -31,5 +31,5 @@ export default function Template({ children }: { children: React.ReactNode }) {
     >
       {children}
     </motion.div>
-  );
+  )
 }

@@ -1,8 +1,8 @@
-"use client";
+'use client'
 
-import { useEffect, useRef } from "react";
-import { animate, useInView, useReducedMotion } from "motion/react";
-import { COUNT_DURATION, ease } from "@/lib/motion";
+import { useEffect, useRef } from 'react'
+import { animate, useInView, useReducedMotion } from 'motion/react'
+import { COUNT_DURATION, ease } from '@/lib/motion'
 
 /**
  * CIFRA QUE CUENTA AL ENTRAR EN PANTALLA
@@ -31,42 +31,45 @@ export function CountUp({
   value,
   className,
   /** Sufijo que no se anima (por ejemplo una unidad). */
-  suffix = "",
+  suffix = '',
 }: {
-  value: number;
-  className?: string;
-  suffix?: string;
+  value: number
+  className?: string
+  suffix?: string
 }) {
-  const ref = useRef<HTMLSpanElement>(null);
-  const enVista = useInView(ref, { once: true, margin: "-15%" });
-  const reduce = useReducedMotion();
-  const yaCorrio = useRef(false);
+  const ref = useRef<HTMLSpanElement>(null)
+  const enVista = useInView(ref, { once: true, margin: '-15%' })
+  const reduce = useReducedMotion()
+  const yaCorrio = useRef(false)
 
   useEffect(() => {
-    if (reduce || !enVista || yaCorrio.current) return;
-    const nodo = ref.current;
-    if (!nodo) return;
-    yaCorrio.current = true;
+    if (reduce || !enVista || yaCorrio.current) return
+    const nodo = ref.current
+    if (!nodo) return
+    yaCorrio.current = true
 
     const controles = animate(0, value, {
       duration: COUNT_DURATION,
       ease: ease.standard,
       onUpdate: (v) => {
-        nodo.textContent = `${Math.round(v)}${suffix}`;
+        nodo.textContent = `${Math.round(v)}${suffix}`
       },
       /* Pase lo que pase, el nodo termina con el valor exacto: el redondeo del
          último fotograma no puede dejar la cifra a uno de distancia. */
       onComplete: () => {
-        nodo.textContent = `${value}${suffix}`;
+        nodo.textContent = `${value}${suffix}`
       },
-    });
-    return () => controles.stop();
-  }, [enVista, reduce, value, suffix]);
+    })
+    return () => controles.stop()
+  }, [enVista, reduce, value, suffix])
 
   return (
-    <span ref={ref} className={className}>
+    <span
+      ref={ref}
+      className={className}
+    >
       {value}
       {suffix}
     </span>
-  );
+  )
 }

@@ -1,7 +1,7 @@
-import { t, type Locale } from "@/lib/i18n/config";
-import { a11y, storeBadges } from "@/content/copy/common";
-import { externalLinks } from "@/content/data/links";
-import { TrackClick } from "@/components/analytics/TrackClick";
+import { t, type Locale } from '@/lib/i18n/config'
+import { a11y, storeBadges } from '@/content/copy/common'
+import { externalLinks } from '@/content/data/links'
+import { TrackClick } from '@/components/analytics/TrackClick'
 
 /**
  * BADGES DE TIENDA
@@ -32,23 +32,15 @@ import { TrackClick } from "@/components/analytics/TrackClick";
  */
 
 const insignia =
-  "group press inline-flex h-[3.25rem] items-center gap-3 rounded-(--radius-structural) border border-line-control " +
-  "bg-surface-2 px-4 transition-colors duration-(--duration-fast) hover:border-line-strong hover:bg-surface-3";
+  'group press inline-flex h-[3.25rem] items-center gap-3 rounded-(--radius-structural) border border-line-control ' +
+  'bg-surface-2 px-4 transition-colors duration-(--duration-fast) hover:border-line-strong hover:bg-surface-3'
 
-const rotulo = "flex flex-col leading-none";
-const rotuloSuperior =
-  "font-mono text-[0.5625rem] uppercase tracking-[0.12em] text-ink-3";
-const rotuloInferior =
-  "mt-1 font-display text-[1.0625rem] font-semibold tracking-tight text-ink";
+const rotulo = 'flex flex-col leading-none'
+const rotuloSuperior = 'font-mono text-[0.5625rem] uppercase tracking-[0.12em] text-ink-3'
+const rotuloInferior = 'mt-1 font-display text-[1.0625rem] font-semibold tracking-tight text-ink'
 
-export function StoreBadges({
-  lang,
-  className,
-}: {
-  lang: Locale;
-  className?: string;
-}) {
-  const nuevaPestana = t(a11y.opensInNewTab, lang);
+export function StoreBadges({ lang, className }: { lang: Locale; className?: string }) {
+  const nuevaPestana = t(a11y.opensInNewTab, lang)
 
   return (
     <div className={className}>
@@ -60,7 +52,7 @@ export function StoreBadges({
         <li>
           <TrackClick
             event="app_store_click"
-            props={{ tienda: "app_store", ubicacion: "seccion" }}
+            props={{ tienda: 'app_store', ubicacion: 'seccion' }}
           >
             <a
               href={externalLinks.appStore}
@@ -77,9 +69,7 @@ export function StoreBadges({
                 <path d="M16.36 12.78c.02-2.3 1.88-3.4 1.96-3.45-1.07-1.56-2.73-1.78-3.32-1.8-1.41-.14-2.76.83-3.48.83-.72 0-1.83-.81-3-.79-1.55.02-2.98.9-3.77 2.28-1.61 2.79-.41 6.92 1.15 9.18.76 1.11 1.67 2.35 2.86 2.3 1.15-.04 1.58-.74 2.97-.74 1.39 0 1.78.74 3 .72 1.24-.02 2.02-1.13 2.78-2.24.88-1.28 1.24-2.52 1.26-2.59-.03-.01-2.41-.93-2.43-3.7zM14.1 5.99c.63-.77 1.06-1.83.94-2.9-.91.04-2.02.61-2.67 1.37-.58.68-1.09 1.77-.95 2.81 1.02.08 2.05-.52 2.68-1.28z" />
               </svg>
               <span className={rotulo}>
-                <span className={rotuloSuperior}>
-                  {t(storeBadges.apple, lang)}
-                </span>
+                <span className={rotuloSuperior}>{t(storeBadges.apple, lang)}</span>
                 <span className={rotuloInferior}>App Store</span>
               </span>
               <span className="sr-only"> · {nuevaPestana}</span>
@@ -90,7 +80,7 @@ export function StoreBadges({
         <li>
           <TrackClick
             event="app_store_click"
-            props={{ tienda: "google_play", ubicacion: "seccion" }}
+            props={{ tienda: 'google_play', ubicacion: 'seccion' }}
           >
             <a
               href={externalLinks.googlePlay}
@@ -124,9 +114,7 @@ export function StoreBadges({
                 />
               </svg>
               <span className={rotulo}>
-                <span className={rotuloSuperior}>
-                  {t(storeBadges.google, lang)}
-                </span>
+                <span className={rotuloSuperior}>{t(storeBadges.google, lang)}</span>
                 <span className={rotuloInferior}>Google Play</span>
               </span>
               <span className="sr-only"> · {nuevaPestana}</span>
@@ -135,5 +123,5 @@ export function StoreBadges({
         </li>
       </ul>
     </div>
-  );
+  )
 }

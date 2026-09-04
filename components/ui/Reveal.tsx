@@ -1,8 +1,8 @@
-"use client";
+'use client'
 
-import { useEffect, useRef, useState } from "react";
-import { motion, useReducedMotion } from "motion/react";
-import { depthMotion, useScrolledPast, type DepthLevel } from "@/lib/motion";
+import { useEffect, useRef, useState } from 'react'
+import { motion, useReducedMotion } from 'motion/react'
+import { depthMotion, useScrolledPast, type DepthLevel } from '@/lib/motion'
 
 /**
  * DEPTH · el contenido llega desde el fondo.
@@ -40,53 +40,60 @@ import { depthMotion, useScrolledPast, type DepthLevel } from "@/lib/motion";
  */
 export function Reveal({
   children,
-  level = "standard",
+  level = 'standard',
   index = 0,
   className,
-  as = "div",
+  as = 'div',
 }: {
-  children: React.ReactNode;
+  children: React.ReactNode
   /** `expressive` se reserva a los beats narrativos. Ver el mapa de intensidad. */
-  level?: DepthLevel;
+  level?: DepthLevel
   /** Posición en la lista. El sistema la convierte en retardo. */
-  index?: number;
-  className?: string;
-  as?: "div" | "li" | "span";
+  index?: number
+  className?: string
+  as?: 'div' | 'li' | 'span'
 }) {
-  const reduce = useReducedMotion();
+  const reduce = useReducedMotion()
   /* `HTMLElement` y no `HTMLDivElement`: `as` puede ser div, li o span, y un
      ref tipado al más específico no encaja en los tres. */
-  const ref = useRef<HTMLElement>(null);
-  const yaPasado = useScrolledPast(ref);
-  const [compacto, setCompacto] = useState(false);
-  const Motion = motion[as];
+  const ref = useRef<HTMLElement>(null)
+  const yaPasado = useScrolledPast(ref)
+  const [compacto, setCompacto] = useState(false)
+  const Motion = motion[as]
 
   /* Se resuelve DESPUÉS de montar: en servidor no hay `matchMedia`, y leerlo
      durante el render rompería la hidratación. */
   useEffect(() => {
-    const mq = window.matchMedia("(max-width: 767px)");
-    const leer = () => setCompacto(mq.matches);
-    leer();
-    mq.addEventListener("change", leer);
-    return () => mq.removeEventListener("change", leer);
-  }, []);
+    const mq = window.matchMedia('(max-width: 767px)')
+    const leer = () => setCompacto(mq.matches)
+    leer()
+    mq.addEventListener('change', leer)
+    return () => mq.removeEventListener('change', leer)
+  }, [])
 
   /* Ya lo dejó atrás: se muestra y punto. Animar la entrada de algo que está
      fuera de pantalla no lo ve nadie, y esperar a que intersecte —cosa que no
      va a pasar— es lo que lo dejaba invisible. */
   if (yaPasado) {
     return (
-      <Motion ref={ref as React.Ref<HTMLDivElement & HTMLLIElement & HTMLSpanElement>} className={className}>
+      <Motion
+        ref={ref as React.Ref<HTMLDivElement & HTMLLIElement & HTMLSpanElement>}
+        className={className}
+      >
         {children}
       </Motion>
-    );
+    )
   }
 
-  const efectivo: DepthLevel = compacto && level === "expressive" ? "standard" : level;
+  const efectivo: DepthLevel = compacto && level === 'expressive' ? 'standard' : level
 
   return (
-    <Motion ref={ref as React.Ref<HTMLDivElement & HTMLLIElement & HTMLSpanElement>} className={className} {...depthMotion(efectivo, Boolean(reduce), index)}>
+    <Motion
+      ref={ref as React.Ref<HTMLDivElement & HTMLLIElement & HTMLSpanElement>}
+      className={className}
+      {...depthMotion(efectivo, Boolean(reduce), index)}
+    >
       {children}
     </Motion>
-  );
+  )
 }

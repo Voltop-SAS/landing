@@ -11,25 +11,25 @@
  * dónde estaba escrito el conjunto anterior.
  */
 
-import { locales, publishedLocales, defaultLocale, localeMeta, type Locale } from "./config";
+import { locales, publishedLocales, defaultLocale, localeMeta, type Locale } from './config'
 
 /** Rutas canónicas del sitio, sin prefijo de idioma. */
 export const routes = {
-  home: "",
-  red: "/red",
-  empresas: "/empresas",
-  nosotros: "/nosotros",
-  novedades: "/novedades",
-  privacy: "/legal/privacidad",
-  terms: "/legal/terminos",
+  home: '',
+  red: '/red',
+  empresas: '/empresas',
+  nosotros: '/nosotros',
+  novedades: '/novedades',
+  privacy: '/legal/privacidad',
+  terms: '/legal/terminos',
   post: (slug: string) => `/novedades/${slug}`,
   city: (slug: string) => `/red/${slug}`,
   station: (slug: string) => `/red/estacion/${slug}`,
-} as const;
+} as const
 
 /** Antepone el idioma a una ruta canónica. `path` debe empezar por "/" o ser "". */
 export function href(lang: Locale, path: string): string {
-  return `/${lang}${path}`;
+  return `/${lang}${path}`
 }
 
 /**
@@ -40,11 +40,11 @@ export function href(lang: Locale, path: string): string {
  * sitio empieza así, pero la expresión estaba escrita a mano en dos archivos
  * distintos y una de las dos copias sí carecía del lookahead.
  */
-const LOCALE_PREFIX = new RegExp(`^/(${locales.join("|")})(?=/|$)`);
+const LOCALE_PREFIX = new RegExp(`^/(${locales.join('|')})(?=/|$)`)
 
 /** Quita el prefijo de idioma. Devuelve "" para la home. */
 export function stripLocale(pathname: string): string {
-  return pathname.replace(LOCALE_PREFIX, "");
+  return pathname.replace(LOCALE_PREFIX, '')
 }
 
 /**
@@ -52,7 +52,7 @@ export function stripLocale(pathname: string): string {
  * `pathname` es la ruta completa incluyendo el prefijo de idioma.
  */
 export function switchLocalePath(pathname: string, next: Locale): string {
-  return `/${next}${stripLocale(pathname)}`;
+  return `/${next}${stripLocale(pathname)}`
 }
 
 /**
@@ -68,10 +68,10 @@ export function switchLocalePath(pathname: string, next: Locale): string {
  * El defecto es el dominio real, así que NO definir la variable deja el
  * comportamiento exactamente como estaba. Ver `.env.example`.
  */
-export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://voltop.co";
+export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://voltop.co'
 
 export function absoluteUrl(lang: Locale, path: string): string {
-  return `${SITE_URL}${href(lang, path)}`;
+  return `${SITE_URL}${href(lang, path)}`
 }
 
 /**
@@ -93,9 +93,9 @@ export function alternatesFor(lang: Locale, path: string) {
        precisamente mientras está a medias. */
     languages: {
       ...Object.fromEntries(
-        publishedLocales.map((l) => [localeMeta[l].hreflang, absoluteUrl(l, path)])
+        publishedLocales.map((l) => [localeMeta[l].hreflang, absoluteUrl(l, path)]),
       ),
-      "x-default": absoluteUrl(defaultLocale, path),
+      'x-default': absoluteUrl(defaultLocale, path),
     },
-  };
+  }
 }

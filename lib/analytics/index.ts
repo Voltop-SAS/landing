@@ -13,42 +13,42 @@
 
 export type EventName =
   // B2C
-  | "cta_encontrar_cargador_click"
+  | 'cta_encontrar_cargador_click'
   /* El CTA global del header pasó a ser la descarga de la app. Se conserva
      `cta_encontrar_cargador_click` porque sigue usándose en los CTA de página
      que llevan a /red; el del header ahora emite este. */
-  | "cta_descargar_app_click"
-  | "red_buscar"
-  | "red_filtro_aplicado"
-  | "red_filtros_limpiados"
-  | "ciudad_vista"
-  | "estacion_vista"
-  | "estacion_como_llegar"
-  | "app_store_click"
+  | 'cta_descargar_app_click'
+  | 'red_buscar'
+  | 'red_filtro_aplicado'
+  | 'red_filtros_limpiados'
+  | 'ciudad_vista'
+  | 'estacion_vista'
+  | 'estacion_como_llegar'
+  | 'app_store_click'
   // B2B
-  | "cta_b2b_click"
-  | "empresas_selector_caso"
-  | "lead_form_inicio"
-  | "lead_form_error"
-  | "lead_form_envio"
-  | "lead_form_exito"
+  | 'cta_b2b_click'
+  | 'empresas_selector_caso'
+  | 'lead_form_inicio'
+  | 'lead_form_error'
+  | 'lead_form_envio'
+  | 'lead_form_exito'
   // Novedades
-  | "novedades_vista"
-  | "novedad_vista"
+  | 'novedades_vista'
+  | 'novedad_vista'
   // Idioma
-  | "idioma_cambiado"
+  | 'idioma_cambiado'
   // Marca
-  | "caso_visto"
-  | "impacto_visto"
-  | "media_reproducida";
+  | 'caso_visto'
+  | 'impacto_visto'
+  | 'media_reproducida'
 
-export type EventProps = Record<string, string | number | boolean | null | undefined>;
+export type EventProps = Record<string, string | number | boolean | null | undefined>
 
-type QueuedEvent = { event: EventName; props: EventProps };
+type QueuedEvent = { event: EventName; props: EventProps }
 
 declare global {
   interface Window {
-    dataLayer?: unknown[];
+    dataLayer?: unknown[]
   }
 }
 
@@ -57,18 +57,18 @@ declare global {
  * cuando se resuelva la decisión abierta O4.
  */
 function dispatch({ event, props }: QueuedEvent): void {
-  if (typeof window === "undefined") return;
+  if (typeof window === 'undefined') return
 
-  window.dataLayer = window.dataLayer ?? [];
-  window.dataLayer.push({ event, ...props });
+  window.dataLayer = window.dataLayer ?? []
+  window.dataLayer.push({ event, ...props })
 
-  if (process.env.NODE_ENV === "development") {
+  if (process.env.NODE_ENV === 'development') {
     // Permite verificar la instrumentación en el Review Gate sin plataforma.
-    console.debug(`[analytics] ${event}`, props);
+    console.debug(`[analytics] ${event}`, props)
   }
 }
 
 /** Emite un evento del plan de medición. */
 export function track(event: EventName, props: EventProps = {}): void {
-  dispatch({ event, props });
+  dispatch({ event, props })
 }

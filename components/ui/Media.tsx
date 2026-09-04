@@ -1,9 +1,9 @@
-import Image from "next/image";
-import { cn } from "@/lib/cn";
-import { t, type Locale } from "@/lib/i18n/config";
-import type { MediaAsset } from "@/content/data/media";
-import { a11y, mediaPlaceholder } from "@/content/copy/common";
-import { VideoMedia } from "@/components/ui/VideoMedia";
+import Image from 'next/image'
+import { cn } from '@/lib/cn'
+import { t, type Locale } from '@/lib/i18n/config'
+import type { MediaAsset } from '@/content/data/media'
+import { a11y, mediaPlaceholder } from '@/content/copy/common'
+import { VideoMedia } from '@/components/ui/VideoMedia'
 
 /**
  * MEDIA · punto único de render para fotografía y video narrativo.
@@ -15,37 +15,37 @@ import { VideoMedia } from "@/components/ui/VideoMedia";
  * `src` en content/data/media.ts: ningún componente cambia.
  */
 
-const aspects: Record<MediaAsset["aspect"], string> = {
-  "16/9": "aspect-[16/9]",
-  "4/3": "aspect-[4/3]",
-  "3/2": "aspect-[3/2]",
-  "2/3": "aspect-[2/3]",
-  "1/1": "aspect-square",
-  "21/9": "aspect-[21/9]",
-  "9/16": "aspect-[9/16]",
-};
+const aspects: Record<MediaAsset['aspect'], string> = {
+  '16/9': 'aspect-[16/9]',
+  '4/3': 'aspect-[4/3]',
+  '3/2': 'aspect-[3/2]',
+  '2/3': 'aspect-[2/3]',
+  '1/1': 'aspect-square',
+  '21/9': 'aspect-[21/9]',
+  '9/16': 'aspect-[9/16]',
+}
 
 export function Media({
   asset,
   lang,
   className,
-  sizes = "100vw",
+  sizes = '100vw',
   priority = false,
   fill = false,
   aspect,
   position,
-  fit = "cover",
+  fit = 'cover',
   quality,
   controls,
   corner = false,
 }: {
-  asset: MediaAsset;
-  lang: Locale;
-  className?: string;
-  sizes?: string;
-  priority?: boolean;
+  asset: MediaAsset
+  lang: Locale
+  className?: string
+  sizes?: string
+  priority?: boolean
   /** `true` cuando el contenedor padre define la altura (full-bleed, sticky). */
-  fill?: boolean;
+  fill?: boolean
   /**
    * Recorte de la composición cuando difiere del nativo del asset.
    *
@@ -55,7 +55,7 @@ export function Media({
    * del orden de emisión del CSS, no de la intención. Con una prop, el recorte
    * es una decisión declarada y solo hay una clase.
    */
-  aspect?: MediaAsset["aspect"];
+  aspect?: MediaAsset['aspect']
   /**
    * Punto de anclaje del recorte (`object-position`).
    *
@@ -70,7 +70,7 @@ export function Media({
    * que es lo correcto para el resto de composiciones del sitio y por eso
    * sigue siendo el valor por defecto.
    */
-  position?: string;
+  position?: string
   /**
    * `cover` recorta para llenar; `contain` cabe entero dejando aire.
    *
@@ -88,15 +88,15 @@ export function Media({
    * del beat 3 al bloque de texto en lugar de dejarlo flotando en el centro de
    * su caja.
    */
-  fit?: "cover" | "contain";
+  fit?: 'cover' | 'contain'
   /**
    * Calidad de codificación. Solo se pasa cuando el peso del asset lo exige:
    * una fotografía muy detallada puede superar el presupuesto de §29 a la
    * calidad por defecto. Los valores admitidos se declaran en `next.config.ts`.
    */
-  quality?: number;
+  quality?: number
   /** Ver `VideoMedia`: convierte el vídeo de fondo en pieza con controles. */
-  controls?: boolean;
+  controls?: boolean
   /**
    * Esquina de firma (`--radius-signature`) en la superior derecha.
    *
@@ -104,9 +104,9 @@ export function Media({
    * que redondear, y aplicarlo a todo lo convertiría en textura en lugar de
    * firma. Va en los bloques que viven DENTRO de un contenedor.
    */
-  corner?: boolean;
+  corner?: boolean
 }) {
-  const shape = fill ? "" : aspects[aspect ?? asset.aspect];
+  const shape = fill ? '' : aspects[aspect ?? asset.aspect]
   /**
    * `bg-surface-1` es el fondo que sostiene el hueco mientras la imagen carga,
    * y con `cover` nunca se ve: la foto lo tapa entero.
@@ -118,15 +118,15 @@ export function Media({
    * Un objeto aislado se apoya sobre el fondo que le toque, sin superficie
    * propia detrás.
    */
-  const fondo = fit === "contain" ? "" : "bg-surface-1";
+  const fondo = fit === 'contain' ? '' : 'bg-surface-1'
   /* `overflow-hidden` ya está en los tres envoltorios, así que el recorte de
      la esquina se aplica también al contenido —foto, vídeo o hueco—. */
-  const esquina = corner ? "rounded-tr-(--radius-signature)" : "";
+  const esquina = corner ? 'rounded-tr-(--radius-signature)' : ''
 
   if (asset.src) {
-    if (asset.kind === "photo") {
+    if (asset.kind === 'photo') {
       return (
-        <div className={cn("relative overflow-hidden", fondo, shape, esquina, className)}>
+        <div className={cn('relative overflow-hidden', fondo, shape, esquina, className)}>
           <Image
             src={asset.src}
             alt={t(asset.alt, lang)}
@@ -134,31 +134,38 @@ export function Media({
             sizes={sizes}
             priority={priority}
             quality={quality}
-            className={cn(fit === "contain" ? "object-contain" : "object-cover", position)}
+            className={cn(fit === 'contain' ? 'object-contain' : 'object-cover', position)}
           />
         </div>
-      );
+      )
     }
     /* El video vive en un componente de cliente porque tiene que leer
        `prefers-reduced-motion`, que no es consultable desde el servidor.
        La fotografía —la rama de arriba— sigue siendo servidor puro. */
     return (
-      <div className={cn("relative overflow-hidden", fondo, shape, esquina, className)}>
+      <div className={cn('relative overflow-hidden', fondo, shape, esquina, className)}>
         <VideoMedia
           asset={asset}
           lang={lang}
           controls={controls}
           className={cn(
-            "absolute inset-0 h-full w-full",
-            fit === "contain" ? "object-contain" : "object-cover",
+            'absolute inset-0 h-full w-full',
+            fit === 'contain' ? 'object-contain' : 'object-cover',
             position,
           )}
         />
       </div>
-    );
+    )
   }
 
-  return <MediaPending asset={asset} lang={lang} fill={fill} className={cn(shape, esquina, className)} />;
+  return (
+    <MediaPending
+      asset={asset}
+      lang={lang}
+      fill={fill}
+      className={cn(shape, esquina, className)}
+    />
+  )
 }
 
 /**
@@ -185,26 +192,26 @@ export function MediaPending({
   className,
   fill = false,
 }: {
-  asset: MediaAsset;
-  lang: Locale;
-  className?: string;
+  asset: MediaAsset
+  lang: Locale
+  className?: string
   /** `true` cuando el hueco es el fondo de una composición con contenido encima. */
-  fill?: boolean;
+  fill?: boolean
 }) {
-  const kind = asset.kind === "video" ? mediaPlaceholder.video : mediaPlaceholder.photo;
-  const badge = `${t(kind, lang)}${asset.duration ? ` · ${asset.duration}` : ""} · ${t(
+  const kind = asset.kind === 'video' ? mediaPlaceholder.video : mediaPlaceholder.photo
+  const badge = `${t(kind, lang)}${asset.duration ? ` · ${asset.duration}` : ''} · ${t(
     mediaPlaceholder.pending,
-    lang
-  )}`;
+    lang,
+  )}`
 
   return (
     <div
       role="img"
       aria-label={`${t(a11y.placeholderMedia, lang)}. ${t(asset.alt, lang)}`}
       className={cn(
-        "relative flex overflow-hidden bg-surface-1",
-        fill ? "items-start justify-end p-4 md:p-6" : "items-end p-5",
-        className
+        'relative flex overflow-hidden bg-surface-1',
+        fill ? 'items-start justify-end p-4 md:p-6' : 'items-end p-5',
+        className,
       )}
     >
       {/* Textura estructural discreta: no imita una foto, declara un hueco. */}
@@ -213,7 +220,7 @@ export function MediaPending({
         className="pointer-events-none absolute inset-0 opacity-[0.07]"
         style={{
           backgroundImage:
-            "repeating-linear-gradient(135deg, var(--color-ink-3) 0 1px, transparent 1px 18px)",
+            'repeating-linear-gradient(135deg, var(--color-ink-3) 0 1px, transparent 1px 18px)',
         }}
       />
 
@@ -230,5 +237,5 @@ export function MediaPending({
         </div>
       )}
     </div>
-  );
+  )
 }

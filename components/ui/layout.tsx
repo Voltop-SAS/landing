@@ -1,4 +1,4 @@
-import { cn } from "@/lib/cn";
+import { cn } from '@/lib/cn'
 
 /**
  * PRIMITIVAS DE ESTRUCTURA
@@ -8,7 +8,7 @@ import { cn } from "@/lib/cn";
  * REGLA: dos secciones consecutivas no pueden compartir la misma combinación.
  */
 
-type Width = "content" | "narrow" | "wide" | "full";
+type Width = 'content' | 'narrow' | 'wide' | 'full'
 
 /**
  * ── EL RIEL ───────────────────────────────────────────────────────────────
@@ -39,44 +39,44 @@ type Width = "content" | "narrow" | "wide" | "full";
  * un descuadre accidental.
  * ──────────────────────────────────────────────────────────────────────────
  */
-type Align = "rail" | "center";
+type Align = 'rail' | 'center'
 
 const widths: Record<Width, string> = {
-  narrow: "max-w-(--container-narrow)",
-  content: "max-w-(--container-content)",
-  wide: "max-w-(--container-wide)",
-  full: "max-w-none",
-};
+  narrow: 'max-w-(--container-narrow)',
+  content: 'max-w-(--container-content)',
+  wide: 'max-w-(--container-wide)',
+  full: 'max-w-none',
+}
 
 export function Container({
   children,
-  width = "content",
-  align = "rail",
+  width = 'content',
+  align = 'rail',
   className,
 }: {
-  children: React.ReactNode;
-  width?: Width;
+  children: React.ReactNode
+  width?: Width
   /** `rail` cuelga del borde izquierdo de `content`. `center` centra a propósito. */
-  align?: Align;
-  className?: string;
+  align?: Align
+  className?: string
 }) {
-  const frame = "mx-auto w-full px-(--spacing-gutter)";
+  const frame = 'mx-auto w-full px-(--spacing-gutter)'
 
   /* `narrow` sobre el riel: marco de `content` + medida corta dentro. Es la
      única combinación que necesita dos nodos; el resto es un solo div. */
-  if (width === "narrow" && align === "rail") {
+  if (width === 'narrow' && align === 'rail') {
     return (
       <div className={cn(frame, widths.content, className)}>
         <div className={widths.narrow}>{children}</div>
       </div>
-    );
+    )
   }
 
-  return <div className={cn(frame, widths[width], className)}>{children}</div>;
+  return <div className={cn(frame, widths[width], className)}>{children}</div>
 }
 
-type Space = "tight" | "base" | "loose" | "none";
-type Register = "silencio" | "impacto";
+type Space = 'tight' | 'base' | 'loose' | 'none'
+type Register = 'silencio' | 'impacto'
 
 /**
  * Cada sección aporta la MITAD de la distancia declarada, así que el hueco
@@ -85,11 +85,11 @@ type Register = "silencio" | "impacto";
  * 288px de vacío en cada par de secciones de cada página interna.
  */
 const spaces: Record<Space, string> = {
-  none: "",
-  tight: "py-(--spacing-block-tight)",
-  base: "py-(--spacing-block)",
-  loose: "py-(--spacing-block-loose)",
-};
+  none: '',
+  tight: 'py-(--spacing-block-tight)',
+  base: 'py-(--spacing-block)',
+  loose: 'py-(--spacing-block-loose)',
+}
 
 /**
  * Sección con registro visual e intensidad de ritmo explícitos.
@@ -113,21 +113,21 @@ const spaces: Record<Space, string> = {
 export function Section({
   id,
   children,
-  register = "silencio",
-  space = "base",
+  register = 'silencio',
+  space = 'base',
   className,
-  as: Tag = "section",
+  as: Tag = 'section',
   ariaLabelledby,
   ref,
 }: {
-  id?: string;
-  children: React.ReactNode;
-  register?: Register;
-  space?: Space;
-  className?: string;
-  as?: "section" | "div" | "article";
-  ariaLabelledby?: string;
-  ref?: React.Ref<HTMLElement>;
+  id?: string
+  children: React.ReactNode
+  register?: Register
+  space?: Space
+  className?: string
+  as?: 'section' | 'div' | 'article'
+  ariaLabelledby?: string
+  ref?: React.Ref<HTMLElement>
 }) {
   return (
     <Tag
@@ -135,15 +135,15 @@ export function Section({
       id={id}
       aria-labelledby={ariaLabelledby}
       className={cn(
-        "relative scroll-mt-24",
+        'relative scroll-mt-24',
         spaces[space],
-        register === "impacto" && "grain",
-        className
+        register === 'impacto' && 'grain',
+        className,
       )}
     >
       {children}
     </Tag>
-  );
+  )
 }
 
 /**
@@ -153,23 +153,23 @@ export function Section({
 export function Eyebrow({
   children,
   className,
-  tone = "muted",
+  tone = 'muted',
 }: {
-  children: React.ReactNode;
-  className?: string;
-  tone?: "muted" | "brand";
+  children: React.ReactNode
+  className?: string
+  tone?: 'muted' | 'brand'
 }) {
   return (
     <p
       className={cn(
-        "font-mono text-eyebrow uppercase",
-        tone === "brand" ? "text-brand" : "text-ink-3",
-        className
+        'font-mono text-eyebrow uppercase',
+        tone === 'brand' ? 'text-brand' : 'text-ink-3',
+        className,
       )}
     >
       {children}
     </p>
-  );
+  )
 }
 
 /**
@@ -201,10 +201,10 @@ export function Eyebrow({
  * ──────────────────────────────────────────────────────────────────────────
  */
 const headingSizes = {
-  l: "text-display-l",
-  m: "text-display-m",
-  s: "text-display-s",
-} as const;
+  l: 'text-display-l',
+  m: 'text-display-m',
+  s: 'text-display-s',
+} as const
 
 /**
  * ── EL TONO DEL ANTETÍTULO ES UNA REGLA, NO UN VALOR POR DEFECTO ──────────
@@ -227,22 +227,22 @@ export function SectionHeading({
   children,
   id,
   kicker,
-  kickerTone = "muted",
-  size = "l",
-  as: Tag = "h2",
+  kickerTone = 'muted',
+  size = 'l',
+  as: Tag = 'h2',
   className,
   measure,
 }: {
-  children: React.ReactNode;
-  id?: string;
+  children: React.ReactNode
+  id?: string
   /** Antetítulo. Va ANTES del título en la lectura y en el DOM. */
-  kicker?: React.ReactNode;
-  kickerTone?: "muted" | "brand";
-  size?: keyof typeof headingSizes;
-  as?: "h2" | "h3";
-  className?: string;
+  kicker?: React.ReactNode
+  kickerTone?: 'muted' | 'brand'
+  size?: keyof typeof headingSizes
+  as?: 'h2' | 'h3'
+  className?: string
   /** Limita la medida del titular en caracteres, para titulares largos. */
-  measure?: string;
+  measure?: string
 }) {
   return (
     <div className={className}>
@@ -250,21 +250,21 @@ export function SectionHeading({
       <Tag
         id={id}
         className={cn(
-          "font-display font-semibold text-balance text-ink",
+          'font-display font-semibold text-balance text-ink',
           headingSizes[size],
-          kicker ? "mt-4" : null,
-          measure
+          kicker ? 'mt-4' : null,
+          measure,
         )}
       >
         {children}
       </Tag>
     </div>
-  );
+  )
 }
 
 /** Línea divisoria estructural — el lenguaje de "ficha técnica" de Voltop. */
 export function Rule({ className }: { className?: string }) {
-  return <hr className={cn("border-0 border-t border-line", className)} />;
+  return <hr className={cn('border-0 border-t border-line', className)} />
 }
 
 /**
@@ -291,13 +291,16 @@ export function ProcessList({
   items,
   className,
 }: {
-  items: { step: string; title: string; body: string }[];
-  className?: string;
+  items: { step: string; title: string; body: string }[]
+  className?: string
 }) {
   return (
-    <ol className={cn("grid gap-x-10 gap-y-12", className)}>
+    <ol className={cn('grid gap-x-10 gap-y-12', className)}>
       {items.map((item) => (
-        <li key={item.step} className="relative border-t border-line-strong pt-6">
+        <li
+          key={item.step}
+          className="relative border-t border-line-strong pt-6"
+        >
           <span
             aria-hidden="true"
             className="block font-display text-display-l font-semibold leading-none text-transparent [-webkit-text-stroke:1px_var(--color-line-control)]"
@@ -309,5 +312,5 @@ export function ProcessList({
         </li>
       ))}
     </ol>
-  );
+  )
 }

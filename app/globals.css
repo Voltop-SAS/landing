@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 /* =========================================================================
    VOLTOP · DESIGN TOKENS
@@ -17,7 +17,7 @@
      marca; `surface-1` y `surface-3` se interpolan entre ellos y por encima,
      porque el sistema necesita cuatro niveles de profundidad y la marca
      define dos. Si mañana se fijan oficialmente, se sustituyen aquí. */
-  --color-canvas: #0a0f1a;    /* marca · BG primary */
+  --color-canvas: #0a0f1a; /* marca · BG primary */
   --color-surface-1: #0d1420;
   --color-surface-2: #111827; /* marca · BG secondary */
   --color-surface-3: #1a2334;
@@ -27,8 +27,8 @@
      Todos los tonos de texto cumplen WCAG AA (≥4.5:1) sobre canvas,
      surface-1, surface-2 y surface-3. Verificado, no asumido.
      --------------------------------------------------------------- */
-  --color-ink: #e6e9ee;      /* marca · Text primary   — 15.74:1 sobre canvas */
-  --color-ink-2: #a3b2c3;    /* marca · Text secondary —  8.86:1 sobre canvas */
+  --color-ink: #e6e9ee; /* marca · Text primary   — 15.74:1 sobre canvas */
+  --color-ink-2: #a3b2c3; /* marca · Text secondary —  8.86:1 sobre canvas */
   /* Tercer nivel: la marca define DOS tonos de texto y el sistema usa tres
      (etiquetas mono, pies, metadatos). Se conserva el que ya cumplía —6.35:1
      sobre canvas y 5.88:1 sobre surface-2— en vez de inventar uno nuevo. */
@@ -41,8 +41,8 @@
   /* El gradiente oficial va de `brand-2` (cian) a `brand` (verde). Se
      conserva el orden de las variables para no tocar los componentes: `brand`
      es el color de acento y `brand-2` el segundo punto del gradiente. */
-  --color-brand: #51d9b2;     /* marca · Brand secondary — 10.87:1 sobre canvas */
-  --color-brand-2: #0fc7e1;   /* marca · Brand primary   —  9.38:1 sobre canvas */
+  --color-brand: #51d9b2; /* marca · Brand secondary — 10.87:1 sobre canvas */
+  --color-brand-2: #0fc7e1; /* marca · Brand primary   —  9.38:1 sobre canvas */
   /* Sobre los dos colores de marca el texto tiene que ser OSCURO: el blanco
      da 2.04:1 y el fondo de marca 9.38:1. Medido, no supuesto. */
   --color-on-brand: #0a0f1a;
@@ -50,9 +50,9 @@
   /* ---------------------------------------------------------------
      COLOR · Semántico (estados). Sustituye literales sueltos.
      --------------------------------------------------------------- */
-  --color-live: #38d398;      /* marca · Success — 9.98:1 sobre canvas */
-  --color-error: #e2555a;     /* marca · Error   — 5.18:1 sobre canvas */
-  --color-warn: #f6b756;      /* marca · Warning — 10.79:1 sobre canvas */
+  --color-live: #38d398; /* marca · Success — 9.98:1 sobre canvas */
+  --color-error: #e2555a; /* marca · Error   — 5.18:1 sobre canvas */
+  --color-warn: #f6b756; /* marca · Warning — 10.79:1 sobre canvas */
   --color-idle: #8b95a8;
 
   /* ---------------------------------------------------------------
@@ -162,12 +162,12 @@
   /* ---------------------------------------------------------------
      ESTRUCTURA
      --------------------------------------------------------------- */
-  --container-content: 1240px;   /* contenedor estándar */
-  --container-narrow: 780px;     /* lectura / editorial */
-  --container-wide: 1600px;      /* composiciones amplias */
+  --container-content: 1240px; /* contenedor estándar */
+  --container-narrow: 780px; /* lectura / editorial */
+  --container-wide: 1600px; /* composiciones amplias */
 
-  --radius-structural: 10px;     /* datos, estructura */
-  --radius-pill: 999px;          /* acciones, energía */
+  --radius-structural: 10px; /* datos, estructura */
+  --radius-pill: 999px; /* acciones, energía */
 
   /**
    * RADIO DE FIRMA · una sola esquina, sobredimensionada.
@@ -275,7 +275,19 @@ body {
    lista de `transition-colors` de Tailwind v4, así que el anillo aparecía con
    un fundido de 450ms partiendo del color del texto. Un indicador de foco que
    tarda en llegar no cumple su función, que es decirte DÓNDE ESTÁS ahora. */
-:where(a, button, input, textarea, select, summary, video, audio, iframe, details, [tabindex]):focus-visible {
+:where(
+  a,
+  button,
+  input,
+  textarea,
+  select,
+  summary,
+  video,
+  audio,
+  iframe,
+  details,
+  [tabindex]
+):focus-visible {
   outline: 2px solid var(--color-focus);
   outline-offset: 2px;
   border-radius: 4px;
@@ -313,7 +325,7 @@ body {
 
 /* Grano fino — evita el aspecto plano/"generado". Requiere position:relative. */
 .grain::after {
-  content: "";
+  content: '';
   position: absolute;
   inset: 0;
   pointer-events: none;
@@ -388,7 +400,7 @@ body {
 }
 
 .glass::before {
-  content: "";
+  content: '';
   position: absolute;
   inset: 0;
   border-radius: inherit;

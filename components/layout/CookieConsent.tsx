@@ -1,11 +1,11 @@
-"use client";
+'use client'
 
-import { useEffect, useState } from "react";
-import Link from "next/link";
-import Script from "next/script";
-import { t, type Locale } from "@/lib/i18n/config";
-import { cookies as copy } from "@/content/copy/common";
-import { href, routes } from "@/lib/i18n/routes";
+import { useEffect, useState } from 'react'
+import Link from 'next/link'
+import Script from 'next/script'
+import { t, type Locale } from '@/lib/i18n/config'
+import { cookies as copy } from '@/content/copy/common'
+import { href, routes } from '@/lib/i18n/routes'
 
 /**
  * AVISO DE COOKIES
@@ -57,7 +57,7 @@ import { href, routes } from "@/lib/i18n/routes";
  * consentimiento, así que ese iframe rastrearía a quien no puede decir que no.
  */
 
-const CLAVE = "voltop:cookies";
+const CLAVE = 'voltop:cookies'
 
 /**
  * Contenedor de Google Tag Manager.
@@ -70,44 +70,47 @@ const CLAVE = "voltop:cookies";
  * No es un secreto —un ID de contenedor viaja en el HTML de cualquier sitio
  * que lo use— así que va versionado. Ver `.env.example`.
  */
-const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID ?? "GTM-WJ5S2LBF";
-type Decision = "aceptado" | "rechazado" | null;
+const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID ?? 'GTM-WJ5S2LBF'
+type Decision = 'aceptado' | 'rechazado' | null
 
 export function CookieConsent({ lang }: { lang: Locale }) {
-  const [decision, setDecision] = useState<Decision>(null);
+  const [decision, setDecision] = useState<Decision>(null)
   /* `null` mientras no se ha leído el almacenamiento. Sin este tercer estado
      el aviso parpadearía en cada carga para quien ya decidió. */
-  const [leido, setLeido] = useState(false);
+  const [leido, setLeido] = useState(false)
 
   useEffect(() => {
     const id = requestAnimationFrame(() => {
       try {
-        const v = localStorage.getItem(CLAVE);
-        if (v === "aceptado" || v === "rechazado") setDecision(v);
+        const v = localStorage.getItem(CLAVE)
+        if (v === 'aceptado' || v === 'rechazado') setDecision(v)
       } catch {
         /* Sin almacenamiento no se recuerda la decisión, pero tampoco se
            carga nada: el estado por defecto es "no". */
       }
-      setLeido(true);
-    });
-    return () => cancelAnimationFrame(id);
-  }, []);
+      setLeido(true)
+    })
+    return () => cancelAnimationFrame(id)
+  }, [])
 
   const decidir = (v: Exclude<Decision, null>) => {
-    setDecision(v);
+    setDecision(v)
     try {
-      localStorage.setItem(CLAVE, v);
+      localStorage.setItem(CLAVE, v)
     } catch {
       /* ídem */
     }
-  };
+  }
 
-  const visible = leido && decision === null;
+  const visible = leido && decision === null
 
   return (
     <>
-      {decision === "aceptado" && (
-        <Script id="gtm" strategy="afterInteractive">
+      {decision === 'aceptado' && (
+        <Script
+          id="gtm"
+          strategy="afterInteractive"
+        >
           {`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
 j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
@@ -148,7 +151,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               <div className="grid grid-cols-2 gap-3 md:flex md:items-center">
                 <button
                   type="button"
-                  onClick={() => decidir("aceptado")}
+                  onClick={() => decidir('aceptado')}
                   autoFocus
                   className="brand-gradient inline-flex h-11 items-center justify-center rounded-(--radius-pill) px-5 text-body-s font-semibold text-on-brand transition-[filter] duration-(--duration-fast) hover:brightness-105"
                 >
@@ -156,7 +159,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 </button>
                 <button
                   type="button"
-                  onClick={() => decidir("rechazado")}
+                  onClick={() => decidir('rechazado')}
                   className="inline-flex h-11 flex-1 items-center justify-center rounded-(--radius-pill) border border-line-control px-5 text-body-s font-semibold text-ink transition-colors duration-(--duration-fast) hover:border-line-strong hover:bg-surface-2"
                 >
                   {t(copy.reject, lang)}
@@ -173,5 +176,5 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         </div>
       )}
     </>
-  );
+  )
 }

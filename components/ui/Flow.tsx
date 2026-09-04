@@ -1,8 +1,8 @@
-"use client";
+'use client'
 
-import { useRef } from "react";
-import { motion, useScroll, useTransform, useReducedMotion } from "motion/react";
-import { cn } from "@/lib/cn";
+import { useRef } from 'react'
+import { motion, useScroll, useTransform, useReducedMotion } from 'motion/react'
+import { cn } from '@/lib/cn'
 
 /**
  * FLOW · el material se desplaza dentro de un marco que no se mueve.
@@ -63,29 +63,35 @@ export function Flow({
   /** Recorrido en porcentaje de la altura del material. Ver el cálculo arriba. */
   amount = 6,
 }: {
-  children: React.ReactNode;
-  className?: string;
-  amount?: number;
+  children: React.ReactNode
+  className?: string
+  amount?: number
 }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const reduce = useReducedMotion();
+  const ref = useRef<HTMLDivElement>(null)
+  const reduce = useReducedMotion()
 
   /* `start end` → `end start`: el recorrido cubre desde que la pieza asoma por
      abajo hasta que sale por arriba. Medir contra el viewport y no contra la
      propia sección es lo que hace que el desplazamiento sea constante aunque
      la sección sea más alta o más baja que la pantalla. */
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
+  const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] })
   const y = useTransform(
     scrollYProgress,
     [0, 1],
-    reduce ? ["0%", "0%"] : [`-${amount}%`, `${amount}%`],
-  );
+    reduce ? ['0%', '0%'] : [`-${amount}%`, `${amount}%`],
+  )
 
   return (
-    <div ref={ref} className={cn("relative overflow-hidden", className)}>
-      <motion.div style={{ y }} className="absolute inset-x-0 -inset-y-[12%]">
+    <div
+      ref={ref}
+      className={cn('relative overflow-hidden', className)}
+    >
+      <motion.div
+        style={{ y }}
+        className="absolute inset-x-0 -inset-y-[12%]"
+      >
         {children}
       </motion.div>
     </div>
-  );
+  )
 }

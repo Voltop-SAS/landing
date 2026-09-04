@@ -1,13 +1,20 @@
-"use client";
+'use client'
 
-import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { locales, publishedLocales, localeStatus, localeMeta, t, type Locale } from "@/lib/i18n/config";
-import { switchLocalePath } from "@/lib/i18n/routes";
-import { a11y } from "@/content/copy/common";
-import { track } from "@/lib/analytics";
-import { cn } from "@/lib/cn";
+import { useEffect, useRef, useState } from 'react'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import {
+  locales,
+  publishedLocales,
+  localeStatus,
+  localeMeta,
+  t,
+  type Locale,
+} from '@/lib/i18n/config'
+import { switchLocalePath } from '@/lib/i18n/routes'
+import { a11y } from '@/content/copy/common'
+import { track } from '@/lib/analytics'
+import { cn } from '@/lib/cn'
 
 /**
  * SELECTOR DE IDIOMA
@@ -42,27 +49,27 @@ import { cn } from "@/lib/cn";
  */
 export function LangSwitch({
   lang,
-  placement = "down",
+  placement = 'down',
 }: {
-  lang: Locale;
+  lang: Locale
   /**
    * En el menú móvil el selector vive al fondo del panel: abrir hacia abajo
    * lo dejaría fuera de la pantalla.
    */
-  placement?: "down" | "up";
+  placement?: 'down' | 'up'
 }) {
-  const pathname = usePathname();
+  const pathname = usePathname()
 
   /**
    * Se abre "para una ruta": al navegar cambia `pathname` y el panel se cierra
    * por derivación. Mismo patrón que el menú móvil del header — sin efecto de
    * limpieza ni renders en cascada.
    */
-  const [openedFor, setOpenedFor] = useState<string | null>(null);
-  const open = openedFor === pathname;
+  const [openedFor, setOpenedFor] = useState<string | null>(null)
+  const open = openedFor === pathname
 
-  const rootRef = useRef<HTMLDivElement>(null);
-  const buttonRef = useRef<HTMLButtonElement>(null);
+  const rootRef = useRef<HTMLDivElement>(null)
+  const buttonRef = useRef<HTMLButtonElement>(null)
 
   /**
    * En producción solo se ofrecen los idiomas PUBLICADOS: uno en borrador está
@@ -72,33 +79,36 @@ export function LangSwitch({
    * llegar a un idioma en borrador desde la interfaz habría que escribir la
    * URL a mano para revisarlo — y lo que cuesta revisar no se revisa.
    */
-  const options = process.env.NODE_ENV === "development" ? locales : publishedLocales;
+  const options = process.env.NODE_ENV === 'development' ? locales : publishedLocales
 
   useEffect(() => {
-    if (!open) return;
+    if (!open) return
 
     const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key !== "Escape") return;
-      setOpenedFor(null);
-      buttonRef.current?.focus();
-    };
+      if (e.key !== 'Escape') return
+      setOpenedFor(null)
+      buttonRef.current?.focus()
+    }
 
     /* `pointerdown` y no `click`: cierra al empezar el gesto, sin esperar a que
        se suelte, y no se traga el clic que el usuario dirigía a otro control. */
     const onPointerDown = (e: PointerEvent) => {
-      if (!rootRef.current?.contains(e.target as Node)) setOpenedFor(null);
-    };
+      if (!rootRef.current?.contains(e.target as Node)) setOpenedFor(null)
+    }
 
-    document.addEventListener("keydown", onKeyDown);
-    document.addEventListener("pointerdown", onPointerDown);
+    document.addEventListener('keydown', onKeyDown)
+    document.addEventListener('pointerdown', onPointerDown)
     return () => {
-      document.removeEventListener("keydown", onKeyDown);
-      document.removeEventListener("pointerdown", onPointerDown);
-    };
-  }, [open]);
+      document.removeEventListener('keydown', onKeyDown)
+      document.removeEventListener('pointerdown', onPointerDown)
+    }
+  }, [open])
 
   return (
-    <div ref={rootRef} className="relative">
+    <div
+      ref={rootRef}
+      className="relative"
+    >
       <button
         ref={buttonRef}
         type="button"
@@ -107,9 +117,9 @@ export function LangSwitch({
         aria-controls="selector-idioma"
         onClick={() => setOpenedFor(open ? null : pathname)}
         className={cn(
-          "press inline-flex min-h-11 items-center gap-1.5 rounded-(--radius-pill) border border-line-control px-3.5",
-          "font-mono text-mono uppercase transition-colors",
-          open ? "text-ink" : "text-ink-2 hover:text-ink"
+          'press inline-flex min-h-11 items-center gap-1.5 rounded-(--radius-pill) border border-line-control px-3.5',
+          'font-mono text-mono uppercase transition-colors',
+          open ? 'text-ink' : 'text-ink-2 hover:text-ink',
         )}
       >
         {localeMeta[lang].label}
@@ -117,11 +127,17 @@ export function LangSwitch({
           aria-hidden="true"
           viewBox="0 0 10 6"
           className={cn(
-            "h-1.5 w-2.5 transition-transform duration-(--duration-fast)",
-            open && "rotate-180"
+            'h-1.5 w-2.5 transition-transform duration-(--duration-fast)',
+            open && 'rotate-180',
           )}
         >
-          <path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+          <path
+            d="M1 1l4 4 4-4"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+          />
         </svg>
       </button>
 
@@ -132,28 +148,28 @@ export function LangSwitch({
              `backdrop-blur`, y un panel translúcido sobre un fondo translúcido
              deja el texto ilegible sobre el contenido de la página. */
           className={cn(
-            "absolute right-0 z-10 min-w-44 overflow-hidden rounded-(--radius-structural)",
-            "border border-line-control bg-canvas py-1",
-            placement === "up" ? "bottom-full mb-2" : "top-full mt-2"
+            'absolute right-0 z-10 min-w-44 overflow-hidden rounded-(--radius-structural)',
+            'border border-line-control bg-canvas py-1',
+            placement === 'up' ? 'bottom-full mb-2' : 'top-full mt-2',
           )}
         >
           {options.map((code) => {
-            const active = code === lang;
+            const active = code === lang
             return (
               <li key={code}>
                 <Link
                   href={switchLocalePath(pathname, code)}
                   hrefLang={localeMeta[code].hreflang}
-                  aria-current={active ? "true" : undefined}
+                  aria-current={active ? 'true' : undefined}
                   /* Con tres idiomas, este es el único dato que dirá si el
                      portugués se usa. Sin él, la decisión de mantenerlo se
                      tomaría a ciegas. */
                   onClick={() => {
-                    if (!active) track("idioma_cambiado", { de: lang, a: code });
+                    if (!active) track('idioma_cambiado', { de: lang, a: code })
                   }}
                   className={cn(
-                    "flex min-h-11 items-center justify-between gap-4 px-4 text-body-s transition-colors",
-                    active ? "text-ink" : "text-ink-2 hover:bg-surface-2 hover:text-ink"
+                    'flex min-h-11 items-center justify-between gap-4 px-4 text-body-s transition-colors',
+                    active ? 'text-ink' : 'text-ink-2 hover:bg-surface-2 hover:text-ink',
                   )}
                 >
                   {/* El nombre del idioma NO se traduce: es un nombre propio. */}
@@ -162,15 +178,21 @@ export function LangSwitch({
                     {/* Solo visible en desarrollo, donde `options` incluye
                         borradores. Sin rótulo, un idioma incompleto parecería
                         terminado y sus huecos, erratas. */}
-                    {localeStatus[code] === "borrador" && (
+                    {localeStatus[code] === 'borrador' && (
                       <span className="ml-2 font-mono text-mono uppercase text-warn">borrador</span>
                     )}
                   </span>
                   {/* Ancho reservado siempre: sin esto, la marca de activo
                       desplazaría el texto de las demás filas. */}
-                  <span aria-hidden="true" className="w-3 shrink-0 text-brand">
+                  <span
+                    aria-hidden="true"
+                    className="w-3 shrink-0 text-brand"
+                  >
                     {active && (
-                      <svg viewBox="0 0 12 12" className="h-3 w-3">
+                      <svg
+                        viewBox="0 0 12 12"
+                        className="h-3 w-3"
+                      >
                         <path
                           d="M1.5 6.5l3 3 6-6"
                           fill="none"
@@ -184,10 +206,10 @@ export function LangSwitch({
                   </span>
                 </Link>
               </li>
-            );
+            )
           })}
         </ul>
       )}
     </div>
-  );
+  )
 }

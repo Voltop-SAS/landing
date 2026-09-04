@@ -1,4 +1,4 @@
-import { posts, type Post } from "@/content/data/posts";
+import { posts, type Post } from '@/content/data/posts'
 
 /**
  * ORIGEN DEL REGISTRO · el único punto que cambia al conectar un CMS.
@@ -29,5 +29,5 @@ import { posts, type Post } from "@/content/data/posts";
  * el CMS obligue a reescribir cada página que consume el registro.
  */
 export async function fetchPosts(): Promise<Post[]> {
-  return posts;
+  return posts
 }

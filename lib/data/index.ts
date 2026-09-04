@@ -10,11 +10,11 @@
  * el origen es remoto, estas firmas pasan a `async` y solo cambia este archivo.
  */
 
-import { stations, type Station } from "@/content/data/stations";
-import { cities, type City } from "@/content/data/cities";
-import { type Post, type PostType } from "@/content/data/posts";
-import { faq, type FaqItem } from "@/content/data/faq";
-import { fetchPosts } from "./posts-source";
+import { stations, type Station } from '@/content/data/stations'
+import { cities, type City } from '@/content/data/cities'
+import { type Post, type PostType } from '@/content/data/posts'
+import { faq, type FaqItem } from '@/content/data/faq'
+import { fetchPosts } from './posts-source'
 import {
   metrics,
   businessSegments,
@@ -24,54 +24,63 @@ import {
   founder,
   type Metric,
   type Case,
-} from "@/content/data/company";
+} from '@/content/data/company'
 
 /* ------------------------------- Estaciones ------------------------------ */
 
 /** Preguntas frecuentes de /red (§19). */
 export function getFaq(): FaqItem[] {
-  return faq;
+  return faq
 }
 
 export function getStations(): Station[] {
-  return stations;
+  return stations
 }
 
 export function getStation(slug: string): Station | undefined {
-  return stations.find((s) => s.slug === slug);
+  return stations.find((s) => s.slug === slug)
 }
 
 export function getStationsByCity(citySlug: string): Station[] {
-  return stations.filter((s) => s.citySlug === citySlug);
+  return stations.filter((s) => s.citySlug === citySlug)
 }
 
 /** Filtros de /red. Toda comparación es tolerante a acentos y mayúsculas. */
 export type StationFilters = {
-  query?: string;
-  citySlug?: string;
-  connector?: string;
-  minPowerKw?: number;
-  onlyAvailable?: boolean;
-};
+  query?: string
+  citySlug?: string
+  connector?: string
+  minPowerKw?: number
+  onlyAvailable?: boolean
+}
 
 const normalize = (s: string) =>
-  s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
+  s
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .trim()
 
-export function filterStations(list: Station[], f: StationFilters, cityNameOf: (slug: string) => string): Station[] {
+export function filterStations(
+  list: Station[],
+  f: StationFilters,
+  cityNameOf: (slug: string) => string,
+): Station[] {
   return list.filter((s) => {
-    if (f.citySlug && s.citySlug !== f.citySlug) return false;
-    if (f.connector && !s.connectors.includes(f.connector as Station["connectors"][number])) return false;
+    if (f.citySlug && s.citySlug !== f.citySlug) return false
+    if (f.connector && !s.connectors.includes(f.connector as Station['connectors'][number]))
+      return false
     /* Se compara contra el MÁXIMO: una estación con puntos de 22 y de 80
         entra en el filtro "80+", porque efectivamente puedes cargar a 80 ahí. */
-    if (f.minPowerKw && s.powerKw.max < f.minPowerKw) return false;
-    if (f.onlyAvailable && s.status !== "operativa") return false;
+    if (f.minPowerKw && s.powerKw.max < f.minPowerKw) return false
+    if (f.onlyAvailable && s.status !== 'operativa') return false
     if (f.query) {
-      const q = normalize(f.query);
-      const haystack = normalize(`${s.name} ${cityNameOf(s.citySlug)}`);
-      if (!haystack.includes(q)) return false;
+      const q = normalize(f.query)
+      const haystack = normalize(`${s.name} ${cityNameOf(s.citySlug)}`)
+      if (!haystack.includes(q)) return false
     }
-    return true;
-  });
+    return true
+  })
 }
 
 /* ---------------------------------- Orden -------------------------------- */
@@ -83,73 +92,75 @@ export function filterStations(list: Station[], f: StationFilters, cityNameOf: (
  * coordenadas (ver `hasCoordinates`). No es código muerto: es una rama activada
  * por datos, el mismo patrón que `MetricRow` con las métricas sin validar (§33).
  */
-export type StationSort = "relevance" | "power" | "status" | "city" | "distance";
+export type StationSort = 'relevance' | 'power' | 'status' | 'city' | 'distance'
 
 /** `relevance` = el orden curado del dataset. La curaduría es una decisión. */
-const statusRank: Record<Station["status"], number> = { operativa: 0, mantenimiento: 1, proxima: 2 };
+const statusRank: Record<Station['status'], number> = { operativa: 0, mantenimiento: 1, proxima: 2 }
 
 export function hasCoordinates(list: Station[]): boolean {
-  return list.some((s) => s.geo !== null);
+  return list.some((s) => s.geo !== null)
 }
 
 /**
  * Distancia en línea recta (haversine). No es distancia de ruta y no pretende
  * serlo: sirve para ORDENAR, no para prometer un tiempo de viaje.
  */
-export function distanceKm(a: { lat: number; lng: number }, b: { lat: number; lng: number }): number {
-  const R = 6371;
-  const dLat = ((b.lat - a.lat) * Math.PI) / 180;
-  const dLng = ((b.lng - a.lng) * Math.PI) / 180;
-  const lat1 = (a.lat * Math.PI) / 180;
-  const lat2 = (b.lat * Math.PI) / 180;
-  const h =
-    Math.sin(dLat / 2) ** 2 + Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLng / 2) ** 2;
-  return 2 * R * Math.asin(Math.sqrt(h));
+export function distanceKm(
+  a: { lat: number; lng: number },
+  b: { lat: number; lng: number },
+): number {
+  const R = 6371
+  const dLat = ((b.lat - a.lat) * Math.PI) / 180
+  const dLng = ((b.lng - a.lng) * Math.PI) / 180
+  const lat1 = (a.lat * Math.PI) / 180
+  const lat2 = (b.lat * Math.PI) / 180
+  const h = Math.sin(dLat / 2) ** 2 + Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLng / 2) ** 2
+  return 2 * R * Math.asin(Math.sqrt(h))
 }
 
 export function sortStations(
   list: Station[],
   sort: StationSort,
-  ctx: { cityNameOf: (slug: string) => string; origin?: { lat: number; lng: number } | null }
+  ctx: { cityNameOf: (slug: string) => string; origin?: { lat: number; lng: number } | null },
 ): Station[] {
-  const out = [...list];
+  const out = [...list]
   switch (sort) {
-    case "power":
-      return out.sort((a, b) => b.powerKw.max - a.powerKw.max || a.name.localeCompare(b.name));
-    case "status":
+    case 'power':
+      return out.sort((a, b) => b.powerKw.max - a.powerKw.max || a.name.localeCompare(b.name))
+    case 'status':
       return out.sort(
-        (a, b) => statusRank[a.status] - statusRank[b.status] || b.powerKw.max - a.powerKw.max
-      );
-    case "city":
+        (a, b) => statusRank[a.status] - statusRank[b.status] || b.powerKw.max - a.powerKw.max,
+      )
+    case 'city':
       return out.sort(
         (a, b) =>
           ctx.cityNameOf(a.citySlug).localeCompare(ctx.cityNameOf(b.citySlug)) ||
-          a.name.localeCompare(b.name)
-      );
-    case "distance": {
-      if (!ctx.origin) return out;
-      const o = ctx.origin;
+          a.name.localeCompare(b.name),
+      )
+    case 'distance': {
+      if (!ctx.origin) return out
+      const o = ctx.origin
       /* Sin coordenadas no se puede comparar: esas estaciones van al final en
          lugar de aparecer arbitrariamente cerca. */
       return out.sort((a, b) => {
-        const da = a.geo ? distanceKm(o, a.geo) : Infinity;
-        const db = b.geo ? distanceKm(o, b.geo) : Infinity;
-        return da - db;
-      });
+        const da = a.geo ? distanceKm(o, a.geo) : Infinity
+        const db = b.geo ? distanceKm(o, b.geo) : Infinity
+        return da - db
+      })
     }
     default:
-      return out;
+      return out
   }
 }
 
 /* -------------------------------- Ciudades ------------------------------- */
 
 export function getCities(): City[] {
-  return cities;
+  return cities
 }
 
 export function getCity(slug: string): City | undefined {
-  return cities.find((c) => c.slug === slug);
+  return cities.find((c) => c.slug === slug)
 }
 
 /** Ciudades que efectivamente tienen estaciones, con su conteo. */
@@ -162,12 +173,12 @@ export function getCity(slug: string): City | undefined {
  * Home sola.
  */
 export function getNetworkSummary() {
-  const operativas = stations.filter((s) => s.status === "operativa");
+  const operativas = stations.filter((s) => s.status === 'operativa')
   /* El mínimo de la red es el mínimo de los mínimos y el máximo el de los
      máximos: publicar "80 kW" cuando hay puntos de 22 sería prometer de más. */
-  const minimos = operativas.map((s) => s.powerKw.min);
-  const maximos = operativas.map((s) => s.powerKw.max);
-  const conectores = [...new Set(operativas.flatMap((s) => s.connectors))];
+  const minimos = operativas.map((s) => s.powerKw.min)
+  const maximos = operativas.map((s) => s.powerKw.max)
+  const conectores = [...new Set(operativas.flatMap((s) => s.connectors))]
   return {
     estaciones: operativas.length,
     puntos: operativas.reduce((n, s) => n + (s.points ?? 0), 0),
@@ -175,16 +186,20 @@ export function getNetworkSummary() {
     potenciaMin: minimos.length ? Math.min(...minimos) : null,
     potenciaMax: maximos.length ? Math.max(...maximos) : null,
     conectores,
-  };
+  }
 }
 
 export function getCitiesWithStations(): { city: City; count: number; operational: number }[] {
   return cities
     .map((city) => {
-      const list = getStationsByCity(city.slug);
-      return { city, count: list.length, operational: list.filter((s) => s.status === "operativa").length };
+      const list = getStationsByCity(city.slug)
+      return {
+        city,
+        count: list.length,
+        operational: list.filter((s) => s.status === 'operativa').length,
+      }
     })
-    .filter((c) => c.count > 0);
+    .filter((c) => c.count > 0)
 }
 
 /* -------------------------------- Compañía ------------------------------- */
@@ -195,31 +210,31 @@ export function getCitiesWithStations(): { city: City; count: number; operationa
  * Regla de economía: máximo dos provisionales por página (§33).
  */
 export function getMetrics(opts: { onlyValidated?: boolean; limit?: number } = {}): Metric[] {
-  let list = metrics;
-  if (opts.onlyValidated) list = list.filter((m) => m.validated);
-  if (opts.limit) list = list.slice(0, opts.limit);
-  return list;
+  let list = metrics
+  if (opts.onlyValidated) list = list.filter((m) => m.validated)
+  if (opts.limit) list = list.slice(0, opts.limit)
+  return list
 }
 
 export function getBusinessSegments() {
-  return businessSegments;
+  return businessSegments
 }
 
 export function getFeaturedCase(): Case | undefined {
-  return cases.find((c) => c.featured);
+  return cases.find((c) => c.featured)
 }
 
 /** Vacío mientras no haya logos con permiso de uso: la UI omite la franja. */
 export function getPartners() {
-  return partners;
+  return partners
 }
 
-export function getTestimonials(segment?: "b2c" | "b2b") {
-  return segment ? testimonials.filter((t) => t.segment === segment) : testimonials;
+export function getTestimonials(segment?: 'b2c' | 'b2b') {
+  return segment ? testimonials.filter((t) => t.segment === segment) : testimonials
 }
 
 export function getFounder() {
-  return founder;
+  return founder
 }
 
 /* -------------------------------- Novedades ------------------------------ */
@@ -241,14 +256,12 @@ export function getFounder() {
  * componente, dos superficies acabarían mostrando el mismo registro distinto.
  */
 export async function getPosts(): Promise<Post[]> {
-  const all = await fetchPosts();
-  return all
-    .filter((p) => p.status === "publicado")
-    .sort((a, b) => b.date.localeCompare(a.date));
+  const all = await fetchPosts()
+  return all.filter((p) => p.status === 'publicado').sort((a, b) => b.date.localeCompare(a.date))
 }
 
 export async function getPost(slug: string): Promise<Post | undefined> {
-  return (await getPosts()).find((p) => p.slug === slug);
+  return (await getPosts()).find((p) => p.slug === slug)
 }
 
 /**
@@ -260,11 +273,11 @@ export async function getPost(slug: string): Promise<Post | undefined> {
  * síncrono: no consulta el origen y los componentes lo usan durante el render.
  */
 export function hasPage(post: Post): boolean {
-  return post.body.length > 0;
+  return post.body.length > 0
 }
 
 export async function getPostsWithPage(): Promise<Post[]> {
-  return (await getPosts()).filter(hasPage);
+  return (await getPosts()).filter(hasPage)
 }
 
 /** Portada del registro: la marcada como destacada o, si no hay, la más reciente. */
@@ -281,17 +294,17 @@ export async function getPostsWithPage(): Promise<Post[]> {
  * registro sigue funcionando, solo que sin imagen.
  */
 export async function getFeaturedPost(): Promise<Post | undefined> {
-  const list = await getPosts();
+  const list = await getPosts()
   return (
     list.find((p) => p.featured && p.cover?.src) ??
     list.find((p) => p.cover?.src) ??
     list.find((p) => p.featured) ??
     list[0]
-  );
+  )
 }
 
 export async function getLatestPosts(limit: number): Promise<Post[]> {
-  return (await getPosts()).slice(0, limit);
+  return (await getPosts()).slice(0, limit)
 }
 
 /**
@@ -300,16 +313,16 @@ export async function getLatestPosts(limit: number): Promise<Post[]> {
  * de su ciudad, sin que nadie la coloque a mano en tres sitios.
  */
 export async function getPostsForStation(stationSlug: string): Promise<Post[]> {
-  return (await getPosts()).filter((p) => p.stationSlug === stationSlug);
+  return (await getPosts()).filter((p) => p.stationSlug === stationSlug)
 }
 
 export async function getPostsForCity(citySlug: string): Promise<Post[]> {
-  return (await getPosts()).filter((p) => p.citySlug === citySlug);
+  return (await getPosts()).filter((p) => p.citySlug === citySlug)
 }
 
 /** Fecha de la entrada más reciente. Alimenta `lastModified` del índice. */
 export async function getLatestPostDate(): Promise<string | undefined> {
-  return (await getPosts())[0]?.date;
+  return (await getPosts())[0]?.date
 }
 
-export type { Station, City, Metric, Case, Post, PostType };
+export type { Station, City, Metric, Case, Post, PostType }

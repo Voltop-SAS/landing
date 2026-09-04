@@ -1,10 +1,10 @@
-import { t, type Locale } from "@/lib/i18n/config";
-import { formatDate } from "@/lib/dates";
-import { novedades } from "@/content/copy/novedades";
-import { PostLink } from "@/components/novedades/PostLink";
-import type { Post } from "@/lib/data";
-import { hasPage } from "@/lib/data";
-import { cn } from "@/lib/cn";
+import { t, type Locale } from '@/lib/i18n/config'
+import { formatDate } from '@/lib/dates'
+import { novedades } from '@/content/copy/novedades'
+import { PostLink } from '@/components/novedades/PostLink'
+import type { Post } from '@/lib/data'
+import { hasPage } from '@/lib/data'
+import { cn } from '@/lib/cn'
 
 /**
  * UNA FILA DEL REGISTRO.
@@ -26,7 +26,7 @@ import { cn } from "@/lib/cn";
  * "leer entrada"—, que es otra cosa.
  */
 export function LogEntry({ post, lang }: { post: Post; lang: Locale }) {
-  const linked = hasPage(post);
+  const linked = hasPage(post)
 
   const content = (
     <>
@@ -45,11 +45,11 @@ export function LogEntry({ post, lang }: { post: Post; lang: Locale }) {
       <div>
         <h3
           className={cn(
-            "font-display text-display-s font-semibold text-balance text-ink",
+            'font-display text-display-s font-semibold text-balance text-ink',
             /* La respuesta al hover vive aquí y no en toda la fila: el título
                es lo que se está eligiendo leer (§36.12, la energía es
                respuesta, no ambiente). */
-            linked && "transition-colors group-hover:text-brand"
+            linked && 'transition-colors group-hover:text-brand',
           )}
         >
           {t(post.title, lang)}
@@ -67,7 +67,7 @@ export function LogEntry({ post, lang }: { post: Post; lang: Locale }) {
         )}
       </div>
     </>
-  );
+  )
 
   return (
     <li className="border-t border-line">
@@ -79,5 +79,5 @@ export function LogEntry({ post, lang }: { post: Post; lang: Locale }) {
         {content}
       </PostLink>
     </li>
-  );
+  )
 }

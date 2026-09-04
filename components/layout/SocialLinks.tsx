@@ -1,5 +1,5 @@
-import { t, type Locale } from "@/lib/i18n/config";
-import { a11y, footer } from "@/content/copy/common";
+import { t, type Locale } from '@/lib/i18n/config'
+import { a11y, footer } from '@/content/copy/common'
 
 /**
  * ENLACES A REDES SOCIALES.
@@ -19,9 +19,25 @@ import { a11y, footer } from "@/content/copy/common";
 const iconos: Record<string, React.ReactNode> = {
   Instagram: (
     <>
-      <rect x="3" y="3" width="18" height="18" rx="5" />
-      <circle cx="12" cy="12" r="4" />
-      <circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none" />
+      <rect
+        x="3"
+        y="3"
+        width="18"
+        height="18"
+        rx="5"
+      />
+      <circle
+        cx="12"
+        cy="12"
+        r="4"
+      />
+      <circle
+        cx="17.2"
+        cy="6.8"
+        r="1.1"
+        fill="currentColor"
+        stroke="none"
+      />
     </>
   ),
   /* Los tres iconos son un cuadrado redondeado con su glifo dentro, trazados
@@ -30,20 +46,32 @@ const iconos: Record<string, React.ReactNode> = {
      otros dos. Se redibuja con el mismo lenguaje que Instagram y LinkedIn. */
   Facebook: (
     <>
-      <rect x="3" y="3" width="18" height="18" rx="5" />
+      <rect
+        x="3"
+        y="3"
+        width="18"
+        height="18"
+        rx="5"
+      />
       <path d="M15 8.2h-1.4c-1 0-1.6.6-1.6 1.6V21M9.8 12.6h4.6" />
     </>
   ),
   LinkedIn: (
     <>
-      <rect x="3" y="3" width="18" height="18" rx="3" />
+      <rect
+        x="3"
+        y="3"
+        width="18"
+        height="18"
+        rx="3"
+      />
       <path d="M7.5 10.5v6M7.5 7.4v.1M11 16.5v-6M11 13c0-1.4.9-2.5 2.3-2.5S16 11.4 16 13v3.5" />
     </>
   ),
-};
+}
 
 export function SocialLinks({ lang }: { lang: Locale }) {
-  if (footer.social.length === 0) return null;
+  if (footer.social.length === 0) return null
 
   return (
     <ul className="mt-6 flex items-center gap-1">
@@ -74,5 +102,5 @@ export function SocialLinks({ lang }: { lang: Locale }) {
         </li>
       ))}
     </ul>
-  );
+  )
 }

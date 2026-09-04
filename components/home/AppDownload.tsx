@@ -1,12 +1,12 @@
-import Image from "next/image";
-import { t, type Locale } from "@/lib/i18n/config";
-import { href, routes } from "@/lib/i18n/routes";
-import { home } from "@/content/copy/home";
-import { actions } from "@/content/copy/common";
-import { Section, Container, Eyebrow } from "@/components/ui/layout";
-import { StoreBadges } from "@/components/ui/StoreBadges";
-import { Button } from "@/components/ui/Button";
-import { Reveal } from "@/components/ui/Reveal";
+import Image from 'next/image'
+import { t, type Locale } from '@/lib/i18n/config'
+import { href, routes } from '@/lib/i18n/routes'
+import { home } from '@/content/copy/home'
+import { actions } from '@/content/copy/common'
+import { Section, Container, Eyebrow } from '@/components/ui/layout'
+import { StoreBadges } from '@/components/ui/StoreBadges'
+import { Button } from '@/components/ui/Button'
+import { Reveal } from '@/components/ui/Reveal'
 
 /**
  * BEAT 8 · CÓMO SE CARGA — Intensidad: STANDARD
@@ -44,7 +44,7 @@ import { Reveal } from "@/components/ui/Reveal";
  * y repetiría el split simétrico que §12 prohíbe.
  */
 export function AppDownload({ lang }: { lang: Locale }) {
-  const c = home.app;
+  const c = home.app
 
   return (
     <Section
@@ -62,9 +62,7 @@ export function AppDownload({ lang }: { lang: Locale }) {
             >
               {t(c.title, lang)}
             </h2>
-            <p className="measure-narrow mt-5 text-body-l text-ink-2">
-              {t(c.lead, lang)}
-            </p>
+            <p className="measure-narrow mt-5 text-body-l text-ink-2">{t(c.lead, lang)}</p>
 
             {/* CUATRO PASOS, EN ORDEN. Una lista numerada y no viñetas: el
                 número es información —dice que hay una secuencia y en qué
@@ -84,15 +82,13 @@ export function AppDownload({ lang }: { lang: Locale }) {
                     aria-hidden="true"
                     className="pt-0.5 font-mono text-mono tabular-nums text-ink-3"
                   >
-                    {String(i + 1).padStart(2, "0")}
+                    {String(i + 1).padStart(2, '0')}
                   </span>
                   <span>
                     <span className="font-display text-body font-semibold text-ink">
                       {t(paso.label, lang)}
                     </span>
-                    <span className="mt-1 block text-body-s text-ink-2">
-                      {t(paso.body, lang)}
-                    </span>
+                    <span className="mt-1 block text-body-s text-ink-2">{t(paso.body, lang)}</span>
                   </span>
                 </li>
               ))}
@@ -107,12 +103,19 @@ export function AppDownload({ lang }: { lang: Locale }) {
                 el mismo texto solo multiplica los sitios donde puede divergir.
                 La clave propia `home.app.seeNetwork` se retiró por eso. */}
             <div className="mt-7">
-              <Button variant="link" arrow href={href(lang, routes.red)}>
+              <Button
+                variant="link"
+                arrow
+                href={href(lang, routes.red)}
+              >
                 {t(actions.findCharger, lang)}
               </Button>
             </div>
 
-            <StoreBadges lang={lang} className="mt-9" />
+            <StoreBadges
+              lang={lang}
+              className="mt-9"
+            />
           </div>
 
           {/* Solo escritorio: ver la cabecera del archivo. */}
@@ -136,13 +139,11 @@ export function AppDownload({ lang }: { lang: Locale }) {
                   />
                 </div>
               </div>
-              <p className="font-mono text-mono text-ink-3">
-                {t(c.qrLabel, lang)}
-              </p>
+              <p className="font-mono text-mono text-ink-3">{t(c.qrLabel, lang)}</p>
             </div>
           </Reveal>
         </div>
       </Container>
     </Section>
-  );
+  )
 }

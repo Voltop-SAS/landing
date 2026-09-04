@@ -1,11 +1,11 @@
-import Link from "next/link";
-import { t, type Locale, type Localized } from "@/lib/i18n/config";
-import { href, routes } from "@/lib/i18n/routes";
-import { formatDate } from "@/lib/dates";
-import { novedades } from "@/content/copy/novedades";
-import { Section, Container, SectionHeading } from "@/components/ui/layout";
-import { PostLink } from "@/components/novedades/PostLink";
-import type { Post } from "@/lib/data";
+import Link from 'next/link'
+import { t, type Locale, type Localized } from '@/lib/i18n/config'
+import { href, routes } from '@/lib/i18n/routes'
+import { formatDate } from '@/lib/dates'
+import { novedades } from '@/content/copy/novedades'
+import { Section, Container, SectionHeading } from '@/components/ui/layout'
+import { PostLink } from '@/components/novedades/PostLink'
+import type { Post } from '@/lib/data'
 
 /**
  * RE-SUPERFICIE DEL REGISTRO EN OTRO DESTINO.
@@ -28,22 +28,28 @@ export function PostsInline({
   lang,
   title,
 }: {
-  posts: Post[];
-  lang: Locale;
-  title: Localized;
+  posts: Post[]
+  lang: Locale
+  title: Localized
 }) {
-  if (posts.length === 0) return null;
+  if (posts.length === 0) return null
 
   return (
     <Section space="tight">
       <Container>
-        <SectionHeading size="s" as="h2">
+        <SectionHeading
+          size="s"
+          as="h2"
+        >
           {t(title, lang)}
         </SectionHeading>
 
         <ul className="mt-8 border-t border-line">
           {posts.map((post) => (
-            <li key={post.slug} className="border-b border-line">
+            <li
+              key={post.slug}
+              className="border-b border-line"
+            >
               <PostLink
                 post={post}
                 lang={lang}
@@ -71,5 +77,5 @@ export function PostsInline({
         </Link>
       </Container>
     </Section>
-  );
+  )
 }

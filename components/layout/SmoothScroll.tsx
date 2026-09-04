@@ -1,8 +1,8 @@
-"use client";
+'use client'
 
-import { useEffect } from "react";
-import Lenis from "lenis";
-import { registerScrollEngine } from "@/lib/scroll";
+import { useEffect } from 'react'
+import Lenis from 'lenis'
+import { registerScrollEngine } from '@/lib/scroll'
 
 /**
  * Scroll suavizado. Se desactiva por completo con `prefers-reduced-motion`
@@ -10,26 +10,26 @@ import { registerScrollEngine } from "@/lib/scroll";
  */
 export function SmoothScroll() {
   useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
 
     const lenis = new Lenis({
       duration: 1.05,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
-    });
-    registerScrollEngine(lenis);
+    })
+    registerScrollEngine(lenis)
 
     let rafId = requestAnimationFrame(function raf(time: number) {
-      lenis.raf(time);
-      rafId = requestAnimationFrame(raf);
-    });
+      lenis.raf(time)
+      rafId = requestAnimationFrame(raf)
+    })
 
     return () => {
-      cancelAnimationFrame(rafId);
-      registerScrollEngine(null);
-      lenis.destroy();
-    };
-  }, []);
+      cancelAnimationFrame(rafId)
+      registerScrollEngine(null)
+      lenis.destroy()
+    }
+  }, [])
 
-  return null;
+  return null
 }

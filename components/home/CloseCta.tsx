@@ -1,10 +1,10 @@
-import { t, type Locale } from "@/lib/i18n/config";
-import { href, routes } from "@/lib/i18n/routes";
-import { home } from "@/content/copy/home";
-import { actions } from "@/content/copy/common";
-import { Section, Container, SectionHeading } from "@/components/ui/layout";
-import { Button } from "@/components/ui/Button";
-import { TrackClick } from "@/components/analytics/TrackClick";
+import { t, type Locale } from '@/lib/i18n/config'
+import { href, routes } from '@/lib/i18n/routes'
+import { home } from '@/content/copy/home'
+import { actions } from '@/content/copy/common'
+import { Section, Container, SectionHeading } from '@/components/ui/layout'
+import { Button } from '@/components/ui/Button'
+import { TrackClick } from '@/components/analytics/TrackClick'
 
 /**
  * BEAT 7 · CIERRE — Intensidad: Alta · Registro: Impacto
@@ -26,8 +26,7 @@ export function CloseCta({ lang }: { lang: Locale }) {
         aria-hidden="true"
         className="pointer-events-none absolute -bottom-1/2 left-1/2 size-[42rem] -translate-x-1/2 rounded-full opacity-20 blur-[140px]"
         style={{
-          background:
-            "radial-gradient(circle, var(--color-brand), transparent 70%)",
+          background: 'radial-gradient(circle, var(--color-brand), transparent 70%)',
         }}
       />
 
@@ -39,13 +38,11 @@ export function CloseCta({ lang }: { lang: Locale }) {
             <p className="font-mono text-mono uppercase tracking-wider text-brand">
               {t(home.close.b2c.label, lang)}
             </p>
-            <p className="mt-4 max-w-[34ch] text-body-l text-ink">
-              {t(home.close.b2c.body, lang)}
-            </p>
+            <p className="mt-4 max-w-[34ch] text-body-l text-ink">{t(home.close.b2c.body, lang)}</p>
             <div className="mt-7">
               <TrackClick
                 event="cta_encontrar_cargador_click"
-                props={{ ubicacion: "cierre" }}
+                props={{ ubicacion: 'cierre' }}
               >
                 <Button
                   variant="primary"
@@ -63,9 +60,7 @@ export function CloseCta({ lang }: { lang: Locale }) {
             <p className="font-mono text-mono uppercase tracking-wider text-ink-3">
               {t(home.close.b2b.label, lang)}
             </p>
-            <p className="mt-4 max-w-[34ch] text-body text-ink-2">
-              {t(home.close.b2b.body, lang)}
-            </p>
+            <p className="mt-4 max-w-[34ch] text-body text-ink-2">{t(home.close.b2b.body, lang)}</p>
             <div className="mt-7">
               <Button
                 variant="secondary"
@@ -79,5 +74,5 @@ export function CloseCta({ lang }: { lang: Locale }) {
         </div>
       </Container>
     </Section>
-  );
+  )
 }

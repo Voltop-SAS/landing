@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Image from 'next/image'
 
 /**
  * LOGO OFICIAL DE VOLTOP
@@ -50,7 +50,7 @@ export function Logo({ className }: { className?: string }) {
       height={124}
       priority
       unoptimized
-      className={className ?? "h-8 w-auto shrink-0 object-contain"}
+      className={className ?? 'h-8 w-auto shrink-0 object-contain'}
     />
-  );
+  )
 }

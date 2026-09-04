@@ -1,13 +1,13 @@
-import Image from "next/image";
-import { t, type Locale } from "@/lib/i18n/config";
-import { href, routes } from "@/lib/i18n/routes";
-import { home } from "@/content/copy/home";
-import { actions } from "@/content/copy/common";
-import { media } from "@/content/data/media";
-import { getFounder } from "@/lib/data";
-import { Section, Container, Eyebrow } from "@/components/ui/layout";
-import { Button } from "@/components/ui/Button";
-import { Reveal } from "@/components/ui/Reveal";
+import Image from 'next/image'
+import { t, type Locale } from '@/lib/i18n/config'
+import { href, routes } from '@/lib/i18n/routes'
+import { home } from '@/content/copy/home'
+import { actions } from '@/content/copy/common'
+import { media } from '@/content/data/media'
+import { getFounder } from '@/lib/data'
+import { Section, Container, Eyebrow } from '@/components/ui/layout'
+import { Button } from '@/components/ui/Button'
+import { Reveal } from '@/components/ui/Reveal'
 
 /**
  * BEAT 6 · VISIÓN — Intensidad: Media-alta · Registro: Silencio · Espacio: loose
@@ -37,11 +37,15 @@ import { Reveal } from "@/components/ui/Reveal";
  * editorial y se le da el aire que no tenía.
  */
 export function VisionQuote({ lang }: { lang: Locale }) {
-  const founder = getFounder();
-  if (!founder.quote) return null;
+  const founder = getFounder()
+  if (!founder.quote) return null
 
   return (
-    <Section id="vision" space="loose" ariaLabelledby="vision-title">
+    <Section
+      id="vision"
+      space="loose"
+      ariaLabelledby="vision-title"
+    >
       {/* ── DOS COLUMNAS: LA PERSONA Y SUS PALABRAS ──────────────────────
           Este beat era una columna estrecha con el retrato reducido a una
           miniatura de 96px en la fila de atribución. Ahora el retrato ocupa
@@ -80,20 +84,20 @@ export function VisionQuote({ lang }: { lang: Locale }) {
             )}
           </div>
 
-        <Reveal>
-          <Eyebrow tone="brand">{t(home.vision.eyebrow, lang)}</Eyebrow>
+          <Reveal>
+            <Eyebrow tone="brand">{t(home.vision.eyebrow, lang)}</Eyebrow>
 
-          {/* Nombre y cargo ANTES de la cita. Con el retrato al lado, quién
+            {/* Nombre y cargo ANTES de la cita. Con el retrato al lado, quién
               habla ya está dicho visualmente; ponerlo en texto aquí lo nombra
               antes de que empiecen 280 caracteres en primera persona, que es
               cuando sirve saberlo. En el beat 5 va después, porque allí el
               testimonio se acredita, no se presenta. */}
-          <p className="mt-5 text-body-s">
-            <span className="font-medium text-ink">{founder.name}</span>
-            <span className="text-ink-3"> · {t(founder.role, lang)}</span>
-          </p>
+            <p className="mt-5 text-body-s">
+              <span className="font-medium text-ink">{founder.name}</span>
+              <span className="text-ink-3"> · {t(founder.role, lang)}</span>
+            </p>
 
-          {/* ── LA CITA, A ESCALA ──────────────────────────────────────────
+            {/* ── LA CITA, A ESCALA ──────────────────────────────────────────
               Estaba en `display-m md:display-l`: 52px a 1440 para casi 300
               caracteres, que son diez líneas de tipografía de titular. Con ese
               cuerpo la cita dejaba de leerse y pasaba a mirarse.
@@ -102,22 +106,25 @@ export function VisionQuote({ lang }: { lang: Locale }) {
               menos cuerpo, no más: la presencia de este beat la da la
               composición —columna estrecha, retrato, la película debajo— y no
               el tamaño de la letra. */}
-          <blockquote
-            id="vision-title"
-            className="mt-7 font-display text-display-s font-medium text-balance text-ink md:text-display-m"
-          >
-            {t(founder.quote, lang)}
-          </blockquote>
+            <blockquote
+              id="vision-title"
+              className="mt-7 font-display text-display-s font-medium text-balance text-ink md:text-display-m"
+            >
+              {t(founder.quote, lang)}
+            </blockquote>
 
-          <div className="mt-8 border-t border-line pt-6">
-            <Button variant="link" arrow href={href(lang, routes.nosotros)}>
-              {t(actions.knowVoltop, lang)}
-            </Button>
-          </div>
-        </Reveal>
+            <div className="mt-8 border-t border-line pt-6">
+              <Button
+                variant="link"
+                arrow
+                href={href(lang, routes.nosotros)}
+              >
+                {t(actions.knowVoltop, lang)}
+              </Button>
+            </div>
+          </Reveal>
         </div>
       </Container>
-
     </Section>
-  );
+  )
 }

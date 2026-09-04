@@ -1,4 +1,4 @@
-import { localeMeta, type Locale } from "@/lib/i18n/config";
+import { localeMeta, type Locale } from '@/lib/i18n/config'
 
 /**
  * FORMATO DE FECHAS
@@ -14,11 +14,11 @@ import { localeMeta, type Locale } from "@/lib/i18n/config";
  */
 export function formatDate(iso: string, lang: Locale): string {
   const parts = new Intl.DateTimeFormat(localeMeta[lang].htmlLang, {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-    timeZone: "UTC",
-  }).formatToParts(new Date(iso));
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+    timeZone: 'UTC',
+  }).formatToParts(new Date(iso))
 
   /**
    * Se eliminan los conectores ("de" en español y portugués), no los signos.
@@ -33,15 +33,13 @@ export function formatDate(iso: string, lang: Locale): string {
    * palabras: una lista habría que ampliarla con cada idioma nuevo.
    */
   return parts
-    .map((part) =>
-      part.type === "literal" && /\p{L}/u.test(part.value) ? " " : part.value
-    )
-    .join("")
-    .replace(/\s+/g, " ")
-    .trim();
+    .map((part) => (part.type === 'literal' && /\p{L}/u.test(part.value) ? ' ' : part.value))
+    .join('')
+    .replace(/\s+/g, ' ')
+    .trim()
 }
 
 /** Año de una fecha ISO, para los separadores del registro. */
 export function yearOf(iso: string): string {
-  return iso.slice(0, 4);
+  return iso.slice(0, 4)
 }

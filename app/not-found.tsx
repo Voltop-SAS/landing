@@ -1,10 +1,10 @@
-import { defaultLocale, localeMeta, t } from "@/lib/i18n/config";
-import { href, routes } from "@/lib/i18n/routes";
-import { states, a11y } from "@/content/copy/common";
-import { Container } from "@/components/ui/layout";
-import { Button } from "@/components/ui/Button";
-import { Header } from "@/components/layout/Header";
-import { Footer } from "@/components/layout/Footer";
+import { defaultLocale, localeMeta, t } from '@/lib/i18n/config'
+import { href, routes } from '@/lib/i18n/routes'
+import { states, a11y } from '@/content/copy/common'
+import { Container } from '@/components/ui/layout'
+import { Button } from '@/components/ui/Button'
+import { Header } from '@/components/layout/Header'
+import { Footer } from '@/components/layout/Footer'
 
 /**
  * PÁGINA NO ENCONTRADA · única del sitio
@@ -38,13 +38,13 @@ import { Footer } from "@/components/layout/Footer";
  */
 
 export const metadata = {
-  title: "404",
+  title: '404',
   /* Una ruta inexistente no entra en el índice. */
   robots: { index: false, follow: true },
-};
+}
 
 export default function NotFound() {
-  const lang = defaultLocale;
+  const lang = defaultLocale
 
   return (
     <div lang={localeMeta[lang].htmlLang}>
@@ -57,7 +57,10 @@ export default function NotFound() {
       <Header lang={lang} />
 
       <main id="contenido">
-        <Container width="narrow" className="flex min-h-[72dvh] flex-col justify-center py-32">
+        <Container
+          width="narrow"
+          className="flex min-h-[72dvh] flex-col justify-center py-32"
+        >
           <p className="font-mono text-mono uppercase tracking-wider text-ink-3">404</p>
           <h1 className="mt-5 font-display text-display-l font-semibold text-balance text-ink">
             {t(states.notFound.title, lang)}
@@ -65,10 +68,17 @@ export default function NotFound() {
           <p className="mt-5 measure text-body-l text-ink-2">{t(states.notFound.body, lang)}</p>
 
           <div className="mt-10 flex flex-wrap items-center gap-4">
-            <Button variant="primary" arrow href={href(lang, routes.red)}>
+            <Button
+              variant="primary"
+              arrow
+              href={href(lang, routes.red)}
+            >
               {t(states.notFound.action, lang)}
             </Button>
-            <Button variant="ghost" href={href(lang, routes.home)}>
+            <Button
+              variant="ghost"
+              href={href(lang, routes.home)}
+            >
               {t(states.notFound.home, lang)}
             </Button>
           </div>
@@ -77,5 +87,5 @@ export default function NotFound() {
 
       <Footer lang={lang} />
     </div>
-  );
+  )
 }

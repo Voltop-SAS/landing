@@ -1,8 +1,8 @@
-import { t, defaultLocale, type Locale } from "@/lib/i18n/config";
-import { legalDoc } from "@/content/copy/legal";
-import type { LegalDoc } from "@/content/data/legal-docs";
-import { formatDate } from "@/lib/dates";
-import { Section, Container } from "@/components/ui/layout";
+import { t, defaultLocale, type Locale } from '@/lib/i18n/config'
+import { legalDoc } from '@/content/copy/legal'
+import type { LegalDoc } from '@/content/data/legal-docs'
+import { formatDate } from '@/lib/dates'
+import { Section, Container } from '@/components/ui/layout'
 
 /**
  * DOCUMENTO LEGAL
@@ -32,12 +32,12 @@ export function LegalDocument({
   titulo,
   lang,
 }: {
-  doc: LegalDoc;
-  titulo: string;
-  lang: Locale;
+  doc: LegalDoc
+  titulo: string
+  lang: Locale
 }) {
   /* El aviso solo aplica donde el documento NO está en el idioma de la página. */
-  const avisoIdioma = lang === defaultLocale ? null : t(legalDoc.spanishOnly, lang);
+  const avisoIdioma = lang === defaultLocale ? null : t(legalDoc.spanishOnly, lang)
 
   const indice = (
     <ol className="space-y-0">
@@ -47,20 +47,26 @@ export function LegalDocument({
             href={`#${s.id}`}
             className="flex gap-3 border-t border-line py-2.5 text-body-s text-ink-2 transition-colors hover:text-brand"
           >
-            <span aria-hidden="true" className="shrink-0 font-mono text-mono text-ink-3">
-              {String(i + 1).padStart(2, "0")}
+            <span
+              aria-hidden="true"
+              className="shrink-0 font-mono text-mono text-ink-3"
+            >
+              {String(i + 1).padStart(2, '0')}
             </span>
             {/* El heading ya trae su número ("1. Quiénes somos"); se retira
                 para no leer "01 1. Quiénes somos". */}
-            <span>{s.heading.replace(/^\d+\.\s*/, "")}</span>
+            <span>{s.heading.replace(/^\d+\.\s*/, '')}</span>
           </a>
         </li>
       ))}
     </ol>
-  );
+  )
 
   return (
-    <Section space="none" className="pb-(--spacing-section) pt-32 md:pt-40">
+    <Section
+      space="none"
+      className="pb-(--spacing-section) pt-32 md:pt-40"
+    >
       {/* `content` y no `wide`: el cuerpo está limitado por la medida de
           línea, así que en un contenedor ancho el texto no crece —solo aparece
           un tercio de pantalla vacío a la derecha del índice. */}
@@ -77,7 +83,7 @@ export function LegalDocument({
               updated: 29 de mayo de 2026" en inglés. El texto legal se queda
               en español a propósito; su metadato, no. */}
           <p className="mt-6 font-mono text-mono text-ink-3">
-            {t(legalDoc.updatedLabel, lang)}:{" "}
+            {t(legalDoc.updatedLabel, lang)}:{' '}
             <time dateTime={doc.actualizadoISO}>{formatDate(doc.actualizadoISO, lang)}</time>
           </p>
 
@@ -85,7 +91,10 @@ export function LegalDocument({
             /* `lang` en el aviso y `lang="es"` en el cuerpo: sin eso un lector
                de pantalla leería el documento entero con la fonética del
                idioma equivocado (§23). */
-            <p lang={lang} className="measure mt-6 border-l-2 border-warn/50 py-1 pl-5 text-body-s text-ink-2">
+            <p
+              lang={lang}
+              className="measure mt-6 border-l-2 border-warn/50 py-1 pl-5 text-body-s text-ink-2"
+            >
               {avisoIdioma}
             </p>
           ) : null}
@@ -96,12 +105,18 @@ export function LegalDocument({
           <details className="group mt-8 border-b border-line pb-6 lg:hidden">
             <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between font-display text-display-s font-semibold text-ink">
               {t(legalDoc.tocTitle, lang)}
-              <span aria-hidden="true" className="relative grid size-6 place-items-center text-ink-3">
+              <span
+                aria-hidden="true"
+                className="relative grid size-6 place-items-center text-ink-3"
+              >
                 <span className="absolute h-px w-4 bg-current" />
                 <span className="absolute h-px w-4 rotate-90 bg-current transition-transform duration-(--duration-base) group-open:rotate-0 motion-reduce:transition-none" />
               </span>
             </summary>
-            <nav className="mt-5" aria-label={t(legalDoc.tocTitle, lang)}>
+            <nav
+              className="mt-5"
+              aria-label={t(legalDoc.tocTitle, lang)}
+            >
               {indice}
             </nav>
           </details>
@@ -117,7 +132,10 @@ export function LegalDocument({
             <div className="mt-4">{indice}</div>
           </nav>
 
-          <div lang={defaultLocale} className="min-w-0 flex-1 pt-10 lg:pt-12">
+          <div
+            lang={defaultLocale}
+            className="min-w-0 flex-1 pt-10 lg:pt-12"
+          >
             {doc.secciones.map((s) => (
               <section
                 key={s.id}
@@ -129,15 +147,27 @@ export function LegalDocument({
                 <h2 className="font-display text-display-m font-semibold text-ink">{s.heading}</h2>
                 <div className="mt-5 space-y-4">
                   {s.body.map((b, i) =>
-                    b.tipo === "parrafo" ? (
-                      <p key={i} className="measure text-body text-ink-2">
+                    b.tipo === 'parrafo' ? (
+                      <p
+                        key={i}
+                        className="measure text-body text-ink-2"
+                      >
                         {b.texto}
                       </p>
                     ) : (
-                      <ul key={i} className="measure space-y-2.5">
+                      <ul
+                        key={i}
+                        className="measure space-y-2.5"
+                      >
                         {b.items.map((item, j) => (
-                          <li key={j} className="flex gap-3 text-body text-ink-2">
-                            <span aria-hidden="true" className="mt-2.5 size-1 shrink-0 rounded-full bg-ink-3" />
+                          <li
+                            key={j}
+                            className="flex gap-3 text-body text-ink-2"
+                          >
+                            <span
+                              aria-hidden="true"
+                              className="mt-2.5 size-1 shrink-0 rounded-full bg-ink-3"
+                            />
                             <span>{item}</span>
                           </li>
                         ))}
@@ -151,5 +181,5 @@ export function LegalDocument({
         </div>
       </Container>
     </Section>
-  );
+  )
 }

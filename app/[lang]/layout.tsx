@@ -1,13 +1,21 @@
-import type { Metadata } from "next";
+import type { Metadata } from 'next'
 
-import { locales, isLocale, isPublished, localeMeta, defaultLocale, t, type Locale } from "@/lib/i18n/config";
-import { absoluteUrl, alternatesFor, routes } from "@/lib/i18n/routes";
-import { a11y, brand } from "@/content/copy/common";
-import { Header } from "@/components/layout/Header";
-import { Footer } from "@/components/layout/Footer";
-import { SmoothScroll } from "@/components/layout/SmoothScroll";
-import { AppFloating } from "@/components/layout/AppFloating";
-import { CookieConsent } from "@/components/layout/CookieConsent";
+import {
+  locales,
+  isLocale,
+  isPublished,
+  localeMeta,
+  defaultLocale,
+  t,
+  type Locale,
+} from '@/lib/i18n/config'
+import { absoluteUrl, alternatesFor, routes } from '@/lib/i18n/routes'
+import { a11y, brand } from '@/content/copy/common'
+import { Header } from '@/components/layout/Header'
+import { Footer } from '@/components/layout/Footer'
+import { SmoothScroll } from '@/components/layout/SmoothScroll'
+import { AppFloating } from '@/components/layout/AppFloating'
+import { CookieConsent } from '@/components/layout/CookieConsent'
 
 /**
  * LAYOUT POR IDIOMA
@@ -44,47 +52,47 @@ import { CookieConsent } from "@/components/layout/CookieConsent";
  * No cuesta flexibilidad: el sitio ya es estático por completo y cualquier
  * cambio en el dataset exige un build.
  */
-export const dynamicParams = false;
+export const dynamicParams = false
 
 export function generateStaticParams() {
-  return locales.map((lang) => ({ lang }));
+  return locales.map((lang) => ({ lang }))
 }
 
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ lang: string }>;
+  params: Promise<{ lang: string }>
 }): Promise<Metadata> {
-  const { lang } = await params;
+  const { lang } = await params
   /* Un idioma inexistente no describe ningún contenido y no debe indexarse. */
-  if (!isLocale(lang)) return { robots: { index: false, follow: true } };
+  if (!isLocale(lang)) return { robots: { index: false, follow: true } }
 
   return {
     title: { default: `${brand.name} — ${t(brand.tagline, lang)}`, template: `%s · ${brand.name}` },
     description: t(brand.tagline, lang),
     alternates: alternatesFor(lang, routes.home),
     openGraph: {
-      type: "website",
+      type: 'website',
       siteName: brand.name,
       locale: localeMeta[lang].htmlLang,
-      url: absoluteUrl(lang, ""),
+      url: absoluteUrl(lang, ''),
     },
     /* Un idioma en BORRADOR es navegable —hay que poder revisarlo— pero no
        entra al índice mientras esté incompleto. Se sigue permitiendo seguir
        los enlaces: la versión publicada de cada página sí debe descubrirse. */
     robots: { index: isPublished(lang), follow: true },
-  };
+  }
 }
 
 export default async function LangLayout({
   children,
   params,
 }: {
-  children: React.ReactNode;
-  params: Promise<{ lang: string }>;
+  children: React.ReactNode
+  params: Promise<{ lang: string }>
 }) {
-  const { lang: raw } = await params;
-  const lang: Locale = isLocale(raw) ? raw : defaultLocale;
+  const { lang: raw } = await params
+  const lang: Locale = isLocale(raw) ? raw : defaultLocale
 
   return (
     <div lang={localeMeta[lang].htmlLang}>
@@ -101,5 +109,5 @@ export default async function LangLayout({
       <CookieConsent lang={lang} />
       <Footer lang={lang} />
     </div>
-  );
+  )
 }

@@ -1,4 +1,4 @@
-import type { Localized } from "@/lib/i18n/config";
+import type { Localized } from '@/lib/i18n/config'
 
 /**
  * REGISTRO DE MEDIA NARRATIVA
@@ -12,13 +12,13 @@ import type { Localized } from "@/lib/i18n/config";
  * `src: null` = asset confirmado como existente pero AÚN NO ENTREGADO.
  */
 
-export type MediaKind = "video" | "photo";
+export type MediaKind = 'video' | 'photo'
 
 export type MediaAsset = {
-  id: string;
-  kind: MediaKind;
+  id: string
+  kind: MediaKind
   /** Ruta del archivo final. `null` mientras no se haya recibido. */
-  src: string | null;
+  src: string | null
   /**
    * Variante ligera para pantallas pequeñas.
    *
@@ -29,22 +29,22 @@ export type MediaAsset = {
    *
    * `null` = no hay variante y todos reciben la única que existe.
    */
-  srcMobile?: string | null;
+  srcMobile?: string | null
   /** Frame de portada — crítico para LCP y para el estado sin reproducir. */
-  poster: string | null;
+  poster: string | null
   /** Texto alternativo / descripción accesible. Obligatorio siempre. */
-  alt: Localized;
+  alt: Localized
   /** Qué hace esta pieza en la narrativa. Guía el diseño y la edición. */
-  role: Localized;
+  role: Localized
   /** Duración conocida o estimada del material original. */
-  duration?: string;
+  duration?: string
   /** Relación de aspecto para reservar espacio y evitar CLS. */
   /* `2/3` entró con el render del cargador: es el retrato moderado que
      faltaba entre `3/2` horizontal y `9/16`, que es formato de historia. */
-  aspect: "16/9" | "4/3" | "3/2" | "2/3" | "1/1" | "21/9" | "9/16";
+  aspect: '16/9' | '4/3' | '3/2' | '2/3' | '1/1' | '21/9' | '9/16'
   /** Disponibilidad declarada del material original. */
-  availability: "confirmado-no-entregado" | "a-producir" | "entregado";
-};
+  availability: 'confirmado-no-entregado' | 'a-producir' | 'entregado'
+}
 
 export const media = {
   /** SIGNATURE MOMENT — prueba de capacidad de construcción. */
@@ -80,126 +80,126 @@ export const media = {
    * lo que queda fijo con `prefers-reduced-motion`.
    */
   estacionMedellin: {
-    id: "estacion-medellin",
-    kind: "video",
-    src: "/estacion-medellin-loop.mp4",
+    id: 'estacion-medellin',
+    kind: 'video',
+    src: '/estacion-medellin-loop.mp4',
     /* 960×540 · 0.66 MB frente a 2.92 MB del máster. */
-    srcMobile: "/estacion-medellin-loop-movil.mp4",
-    poster: "/estacion-medellin-poster.jpg",
+    srcMobile: '/estacion-medellin-loop-movil.mp4',
+    poster: '/estacion-medellin-poster.jpg',
     alt: {
-      es: "Nueva estación de carga Voltop en Medellín, vista general de la infraestructura",
-      en: "New Voltop charging station in Medellín, wide view of the infrastructure",
-      pt: "Nova estação de carregamento Voltop em Medellín, vista geral da infraestrutura",
+      es: 'Nueva estación de carga Voltop en Medellín, vista general de la infraestructura',
+      en: 'New Voltop charging station in Medellín, wide view of the infrastructure',
+      pt: 'Nova estação de carregamento Voltop em Medellín, vista geral da infraestrutura',
     },
     role: {
-      es: "Signature moment. Demuestra que Voltop construye infraestructura real, no puntos de carga.",
-      en: "Signature moment. Proves Voltop builds real infrastructure, not charging points.",
-      pt: "Signature moment. Prova que a Voltop constrói infraestrutura real, não pontos de carregamento.",
+      es: 'Signature moment. Demuestra que Voltop construye infraestructura real, no puntos de carga.',
+      en: 'Signature moment. Proves Voltop builds real infrastructure, not charging points.',
+      pt: 'Signature moment. Prova que a Voltop constrói infraestrutura real, não pontos de carregamento.',
     },
     /** Duración del BUCLE servido, no del corte original. */
-    duration: "0:11",
-    aspect: "16/9",
-    availability: "entregado",
+    duration: '0:11',
+    aspect: '16/9',
+    availability: 'entregado',
   },
 
   /** Prueba de partnership institucional y de personas. */
   aperturaEan: {
-    id: "apertura-ean",
-    kind: "video",
+    id: 'apertura-ean',
+    kind: 'video',
     src: null,
     poster: null,
     alt: {
-      es: "Apertura de la estación Voltop en la Universidad EAN, con directivos de la universidad y el CEO de Voltop",
+      es: 'Apertura de la estación Voltop en la Universidad EAN, con directivos de la universidad y el CEO de Voltop',
       en: "Opening of the Voltop station at EAN University, with university leadership and Voltop's CEO",
-      pt: "Abertura da estação Voltop na Universidade EAN, com diretores da universidade e o CEO da Voltop",
+      pt: 'Abertura da estação Voltop na Universidade EAN, com diretores da universidade e o CEO da Voltop',
     },
     role: {
-      es: "Prueba humana e institucional. Sirve simultáneamente a confianza B2B y a marca.",
-      en: "Human and institutional proof. Serves both B2B trust and brand.",
-      pt: "Prova humana e institucional. Serve à confiança B2B e à marca.",
+      es: 'Prueba humana e institucional. Sirve simultáneamente a confianza B2B y a marca.',
+      en: 'Human and institutional proof. Serves both B2B trust and brand.',
+      pt: 'Prova humana e institucional. Serve à confiança B2B e à marca.',
     },
-    duration: "2:05",
-    aspect: "16/9",
-    availability: "confirmado-no-entregado",
+    duration: '2:05',
+    aspect: '16/9',
+    availability: 'confirmado-no-entregado',
   },
 
   /** Prueba de propósito y liderazgo. */
   visionCeo: {
-    id: "vision-ceo",
-    kind: "video",
+    id: 'vision-ceo',
+    kind: 'video',
     src: null,
     poster: null,
     alt: {
-      es: "Bruno Ocampo, fundador y CEO de Voltop, hablando desde una estación de carga",
-      en: "Bruno Ocampo, founder and CEO of Voltop, speaking from a charging station",
-      pt: "Bruno Ocampo, fundador e CEO da Voltop, falando de uma estação de carregamento",
+      es: 'Bruno Ocampo, fundador y CEO de Voltop, hablando desde una estación de carga',
+      en: 'Bruno Ocampo, founder and CEO of Voltop, speaking from a charging station',
+      pt: 'Bruno Ocampo, fundador e CEO da Voltop, falando de uma estação de carregamento',
     },
     role: {
-      es: "Propósito y liderazgo. Íntimo y breve, no corporativo.",
-      en: "Purpose and leadership. Intimate and brief, not corporate.",
-      pt: "Propósito e liderança. Íntimo e breve, não corporativo.",
+      es: 'Propósito y liderazgo. Íntimo y breve, no corporativo.',
+      en: 'Purpose and leadership. Intimate and brief, not corporate.',
+      pt: 'Propósito e liderança. Íntimo e breve, não corporativo.',
     },
-    duration: "0:45",
-    aspect: "16/9",
-    availability: "confirmado-no-entregado",
+    duration: '0:45',
+    aspect: '16/9',
+    availability: 'confirmado-no-entregado',
   },
 
   /** Material de respiración: comunica escala sin una sola cifra. */
   infraestructuraAmplia: {
-    id: "infraestructura-amplia",
-    kind: "photo",
+    id: 'infraestructura-amplia',
+    kind: 'photo',
     src: null,
     poster: null,
     alt: {
-      es: "Estación de carga Voltop en operación, con vehículos conectados",
-      en: "Voltop charging station in operation, with vehicles plugged in",
-      pt: "Estação de carregamento Voltop em operação, com veículos conectados",
+      es: 'Estación de carga Voltop en operación, con vehículos conectados',
+      en: 'Voltop charging station in operation, with vehicles plugged in',
+      pt: 'Estação de carregamento Voltop em operação, com veículos conectados',
     },
     role: {
-      es: "Respiración y contraste. Escala física sin datos.",
-      en: "Breathing room and contrast. Physical scale without data.",
-      pt: "Respiro e contraste. Escala física sem dados.",
+      es: 'Respiración y contraste. Escala física sin datos.',
+      en: 'Breathing room and contrast. Physical scale without data.',
+      pt: 'Respiro e contraste. Escala física sem dados.',
     },
-    aspect: "21/9",
-    availability: "confirmado-no-entregado",
+    aspect: '21/9',
+    availability: 'confirmado-no-entregado',
   },
 
   espacioComercial: {
-    id: "espacio-comercial",
-    kind: "photo",
+    id: 'espacio-comercial',
+    kind: 'photo',
     src: null,
     poster: null,
     alt: {
-      es: "Puntos de carga Voltop integrados en el parqueadero de un espacio comercial",
+      es: 'Puntos de carga Voltop integrados en el parqueadero de un espacio comercial',
       en: "Voltop charging points integrated into a commercial space's parking area",
-      pt: "Pontos de carregamento Voltop integrados ao estacionamento de um espaço comercial",
+      pt: 'Pontos de carregamento Voltop integrados ao estacionamento de um espaço comercial',
     },
     role: {
-      es: "Evidencia B2B: la infraestructura dentro de un negocio real.",
-      en: "B2B evidence: infrastructure inside a real business.",
-      pt: "Evidência B2B: infraestrutura dentro de um negócio real.",
+      es: 'Evidencia B2B: la infraestructura dentro de un negocio real.',
+      en: 'B2B evidence: infrastructure inside a real business.',
+      pt: 'Evidência B2B: infraestrutura dentro de um negócio real.',
     },
-    aspect: "4/3",
-    availability: "confirmado-no-entregado",
+    aspect: '4/3',
+    availability: 'confirmado-no-entregado',
   },
 
   detalleCarga: {
-    id: "detalle-carga",
-    kind: "photo",
+    id: 'detalle-carga',
+    kind: 'photo',
     src: null,
     poster: null,
     alt: {
-      es: "Detalle de un conector de carga Voltop acoplado a un vehículo eléctrico",
-      en: "Close-up of a Voltop connector plugged into an electric vehicle",
-      pt: "Detalhe de um conector Voltop plugado em um veículo elétrico",
+      es: 'Detalle de un conector de carga Voltop acoplado a un vehículo eléctrico',
+      en: 'Close-up of a Voltop connector plugged into an electric vehicle',
+      pt: 'Detalhe de um conector Voltop plugado em um veículo elétrico',
     },
     role: {
-      es: "Textura y precisión: el detalle físico que hace tangible la tecnología.",
-      en: "Texture and precision: the physical detail that makes the technology tangible.",
-      pt: "Textura e precisão: o detalhe físico que torna a tecnologia tangível.",
+      es: 'Textura y precisión: el detalle físico que hace tangible la tecnología.',
+      en: 'Texture and precision: the physical detail that makes the technology tangible.',
+      pt: 'Textura e precisão: o detalhe físico que torna a tecnologia tangível.',
     },
-    aspect: "3/2",
-    availability: "confirmado-no-entregado",
+    aspect: '3/2',
+    availability: 'confirmado-no-entregado',
   },
 
   /**
@@ -220,22 +220,22 @@ export const media = {
 
   /** BEAT 1 · HERO. Vehículo conectado: la carga ocurriendo, no el equipo vacío. */
   heroVehiculoCargando: {
-    id: "hero-vehiculo-cargando",
-    kind: "photo",
-    src: "/hero-vehiculo-cargando.jpg",
+    id: 'hero-vehiculo-cargando',
+    kind: 'photo',
+    src: '/hero-vehiculo-cargando.jpg',
     poster: null,
     alt: {
-      es: "Vehículo eléctrico conectado a un cargador Voltop en un parqueadero cubierto",
-      en: "Electric vehicle plugged into a Voltop charger in a covered parking facility",
-      pt: "Veículo elétrico conectado a um carregador Voltop em um estacionamento coberto",
+      es: 'Vehículo eléctrico conectado a un cargador Voltop en un parqueadero cubierto',
+      en: 'Electric vehicle plugged into a Voltop charger in a covered parking facility',
+      pt: 'Veículo elétrico conectado a um carregador Voltop em um estacionamento coberto',
     },
     role: {
-      es: "Fondo del beat 1. Muestra el servicio en uso —el cable conectado, el equipo con marca— en lugar de infraestructura vacía. Es el elemento LCP de la Home.",
+      es: 'Fondo del beat 1. Muestra el servicio en uso —el cable conectado, el equipo con marca— en lugar de infraestructura vacía. Es el elemento LCP de la Home.',
       en: "Beat 1 background. Shows the service in use — cable connected, branded hardware — rather than empty infrastructure. It is the Home's LCP element.",
-      pt: "Fundo do beat 1. Mostra o serviço em uso — cabo conectado, equipamento com marca — em vez de infraestrutura vazia. É o elemento LCP da Home.",
+      pt: 'Fundo do beat 1. Mostra o serviço em uso — cabo conectado, equipamento com marca — em vez de infraestrutura vazia. É o elemento LCP da Home.',
     },
-    aspect: "3/2",
-    availability: "entregado",
+    aspect: '3/2',
+    availability: 'entregado',
   },
 
   /**
@@ -248,22 +248,22 @@ export const media = {
    * equipo aislado.
    */
   estacionInfraestructura: {
-    id: "estacion-infraestructura",
-    kind: "photo",
-    src: "/estacion-infraestructura.jpg",
+    id: 'estacion-infraestructura',
+    kind: 'photo',
+    src: '/estacion-infraestructura.jpg',
     poster: null,
     alt: {
-      es: "Estaciones de carga Voltop en operación en un parqueadero cubierto, con vehículos conectados",
-      en: "Voltop charging stations in service in a covered parking facility, with vehicles plugged in",
-      pt: "Estações de carregamento Voltop em operação em um estacionamento coberto, com veículos conectados",
+      es: 'Estaciones de carga Voltop en operación en un parqueadero cubierto, con vehículos conectados',
+      en: 'Voltop charging stations in service in a covered parking facility, with vehicles plugged in',
+      pt: 'Estações de carregamento Voltop em operação em um estacionamento coberto, com veículos conectados',
     },
     role: {
-      es: "Fondo del beat 2. Varias estaciones en un mismo espacio: la prueba de que Voltop construye lugares y no puntos sueltos.",
-      en: "Beat 2 background. Several stations in one space: proof that Voltop builds places, not isolated points.",
-      pt: "Fundo do beat 2. Várias estações em um mesmo espaço: a prova de que a Voltop constrói lugares e não pontos isolados.",
+      es: 'Fondo del beat 2. Varias estaciones en un mismo espacio: la prueba de que Voltop construye lugares y no puntos sueltos.',
+      en: 'Beat 2 background. Several stations in one space: proof that Voltop builds places, not isolated points.',
+      pt: 'Fundo do beat 2. Várias estações em um mesmo espaço: a prova de que a Voltop constrói lugares e não pontos isolados.',
     },
-    aspect: "3/2",
-    availability: "entregado",
+    aspect: '3/2',
+    availability: 'entregado',
   },
 
   /**
@@ -284,41 +284,41 @@ export const media = {
    * rectángulo gris.
    */
   ciudadBogota: {
-    id: "ciudad-bogota",
-    kind: "photo",
-    src: "/ciudad-bogota.jpg",
+    id: 'ciudad-bogota',
+    kind: 'photo',
+    src: '/ciudad-bogota.jpg',
     poster: null,
     alt: {
-      es: "Vista de Bogotá, ciudad donde Voltop tiene estaciones de carga en operación",
-      en: "View of Bogotá, a city where Voltop has charging stations in service",
-      pt: "Vista de Bogotá, cidade onde a Voltop tem estações de carregamento em operação",
+      es: 'Vista de Bogotá, ciudad donde Voltop tiene estaciones de carga en operación',
+      en: 'View of Bogotá, a city where Voltop has charging stations in service',
+      pt: 'Vista de Bogotá, cidade onde a Voltop tem estações de carregamento em operação',
     },
     role: {
-      es: "Tarjeta de cobertura del beat 3. Da lugar real a la cifra de estaciones de Bogotá.",
+      es: 'Tarjeta de cobertura del beat 3. Da lugar real a la cifra de estaciones de Bogotá.',
       en: "Beat 3 coverage card. Gives a real place to Bogotá's station count.",
-      pt: "Cartão de cobertura do beat 3. Dá um lugar real à contagem de estações de Bogotá.",
+      pt: 'Cartão de cobertura do beat 3. Dá um lugar real à contagem de estações de Bogotá.',
     },
-    aspect: "16/9",
-    availability: "entregado",
+    aspect: '16/9',
+    availability: 'entregado',
   },
 
   ciudadMedellin: {
-    id: "ciudad-medellin",
-    kind: "photo",
-    src: "/ciudad-medellin.jpg",
+    id: 'ciudad-medellin',
+    kind: 'photo',
+    src: '/ciudad-medellin.jpg',
     poster: null,
     alt: {
-      es: "Vista de Medellín, ciudad donde Voltop tiene estaciones de carga en operación",
-      en: "View of Medellín, a city where Voltop has charging stations in service",
-      pt: "Vista de Medellín, cidade onde a Voltop tem estações de carregamento em operação",
+      es: 'Vista de Medellín, ciudad donde Voltop tiene estaciones de carga en operación',
+      en: 'View of Medellín, a city where Voltop has charging stations in service',
+      pt: 'Vista de Medellín, cidade onde a Voltop tem estações de carregamento em operação',
     },
     role: {
-      es: "Tarjeta de cobertura del beat 3. Da lugar real a la cifra de estaciones de Medellín.",
+      es: 'Tarjeta de cobertura del beat 3. Da lugar real a la cifra de estaciones de Medellín.',
       en: "Beat 3 coverage card. Gives a real place to Medellín's station count.",
-      pt: "Cartão de cobertura do beat 3. Dá um lugar real à contagem de estações de Medellín.",
+      pt: 'Cartão de cobertura do beat 3. Dá um lugar real à contagem de estações de Medellín.',
     },
-    aspect: "16/9",
-    availability: "entregado",
+    aspect: '16/9',
+    availability: 'entregado',
   },
 
   /**
@@ -361,41 +361,41 @@ export const media = {
    * alguna vez se produce una versión con fondo oscuro, entra aquí sin más.
    */
   retratoTestimonioEan: {
-    id: "retrato-testimonio-ean",
-    kind: "photo",
-    src: "/retrato-herbert-perico.jpg",
+    id: 'retrato-testimonio-ean',
+    kind: 'photo',
+    src: '/retrato-herbert-perico.jpg',
     poster: null,
     alt: {
-      es: "Retrato de Helbert Perico, de la Universidad EAN",
-      en: "Portrait of Helbert Perico, from EAN University",
-      pt: "Retrato de Helbert Perico, da Universidade EAN",
+      es: 'Retrato de Helbert Perico, de la Universidad EAN',
+      en: 'Portrait of Helbert Perico, from EAN University',
+      pt: 'Retrato de Helbert Perico, da Universidade EAN',
     },
     role: {
-      es: "Atribución del beat 5. Pone cara al testimonio que sostiene la prueba institucional.",
-      en: "Beat 5 attribution. Puts a face to the testimonial that carries the institutional proof.",
-      pt: "Atribuição do beat 5. Dá um rosto ao depoimento que sustenta a prova institucional.",
+      es: 'Atribución del beat 5. Pone cara al testimonio que sostiene la prueba institucional.',
+      en: 'Beat 5 attribution. Puts a face to the testimonial that carries the institutional proof.',
+      pt: 'Atribuição do beat 5. Dá um rosto ao depoimento que sustenta a prova institucional.',
     },
-    aspect: "1/1",
-    availability: "entregado",
+    aspect: '1/1',
+    availability: 'entregado',
   },
 
   retratoFundador: {
-    id: "retrato-fundador",
-    kind: "photo",
-    src: "/retrato-bruno-ocampo.jpg",
+    id: 'retrato-fundador',
+    kind: 'photo',
+    src: '/retrato-bruno-ocampo.jpg',
     poster: null,
     alt: {
-      es: "Retrato de Bruno Ocampo, fundador y CEO de Voltop",
-      en: "Portrait of Bruno Ocampo, founder and CEO of Voltop",
-      pt: "Retrato de Bruno Ocampo, fundador e CEO da Voltop",
+      es: 'Retrato de Bruno Ocampo, fundador y CEO de Voltop',
+      en: 'Portrait of Bruno Ocampo, founder and CEO of Voltop',
+      pt: 'Retrato de Bruno Ocampo, fundador e CEO da Voltop',
     },
     role: {
-      es: "Protagonista del beat 7, a media columna. Presenta a quien habla ANTES de la cita: es su visión, no un testimonio de cliente, así que la persona pesa tanto como sus palabras.",
+      es: 'Protagonista del beat 7, a media columna. Presenta a quien habla ANTES de la cita: es su visión, no un testimonio de cliente, así que la persona pesa tanto como sus palabras.',
       en: "Beat 7 attribution. Introduces the speaker BEFORE the quote: it's his vision, not a client testimonial.",
-      pt: "Atribuição do beat 7. Apresenta quem fala ANTES da citação: é a visão dele, não um depoimento de cliente.",
+      pt: 'Atribuição do beat 7. Apresenta quem fala ANTES da citação: é a visão dele, não um depoimento de cliente.',
     },
-    aspect: "2/3",
-    availability: "entregado",
+    aspect: '2/3',
+    availability: 'entregado',
   },
 
   /**
@@ -417,22 +417,22 @@ export const media = {
    * archivo no es información para quien lo escucha.
    */
   renderCargador: {
-    id: "render-cargador",
-    kind: "photo",
-    src: "/render-cargador.png",
+    id: 'render-cargador',
+    kind: 'photo',
+    src: '/render-cargador.png',
     poster: null,
     alt: {
-      es: "Estación de carga rápida Voltop con dos conectores, GB/T y CCS2, y pantalla de operación",
-      en: "Voltop fast-charging station with two connectors, GB/T and CCS2, and an operating screen",
-      pt: "Estação de carregamento rápido Voltop com dois conectores, GB/T e CCS2, e tela de operação",
+      es: 'Estación de carga rápida Voltop con dos conectores, GB/T y CCS2, y pantalla de operación',
+      en: 'Voltop fast-charging station with two connectors, GB/T and CCS2, and an operating screen',
+      pt: 'Estação de carregamento rápido Voltop com dois conectores, GB/T e CCS2, e tela de operação',
     },
     role: {
-      es: "Sujeto de la mitad derecha del beat 3. Pone el equipo real al lado de las cifras de la red.",
+      es: 'Sujeto de la mitad derecha del beat 3. Pone el equipo real al lado de las cifras de la red.',
       en: "Subject of beat 3's right half. Puts the real hardware next to the network figures.",
-      pt: "Sujeito da metade direita do beat 3. Coloca o equipamento real ao lado dos números da rede.",
+      pt: 'Sujeito da metade direita do beat 3. Coloca o equipamento real ao lado dos números da rede.',
     },
-    aspect: "2/3",
-    availability: "entregado",
+    aspect: '2/3',
+    availability: 'entregado',
   },
 
   /**
@@ -481,23 +481,23 @@ export const media = {
    * Conviene confirmar que es lo que se quiere, o entregar piezas separadas.
    */
   aperturaWake: {
-    id: "apertura-wake",
-    kind: "video",
-    src: "/voltop-film.mp4",
-    poster: "/voltop-film-poster.jpg",
+    id: 'apertura-wake',
+    kind: 'video',
+    src: '/voltop-film.mp4',
+    poster: '/voltop-film-poster.jpg',
     alt: {
-      es: "Apertura de la estación Voltop en Wake, Medellín: el equipo y los cargadores entrando en operación",
-      en: "Opening of the Voltop station at Wake, Medellín: the team and the chargers entering service",
-      pt: "Abertura da estação Voltop no Wake, Medellín: a equipe e os carregadores entrando em operação",
+      es: 'Apertura de la estación Voltop en Wake, Medellín: el equipo y los cargadores entrando en operación',
+      en: 'Opening of the Voltop station at Wake, Medellín: the team and the chargers entering service',
+      pt: 'Abertura da estação Voltop no Wake, Medellín: a equipe e os carregadores entrando em operação',
     },
     role: {
-      es: "Registro de la apertura de Wake. Documenta un hecho concreto, no la marca en general.",
-      en: "Record of the Wake opening. Documents a specific event, not the brand at large.",
-      pt: "Registro da abertura do Wake. Documenta um fato concreto, não a marca em geral.",
+      es: 'Registro de la apertura de Wake. Documenta un hecho concreto, no la marca en general.',
+      en: 'Record of the Wake opening. Documents a specific event, not the brand at large.',
+      pt: 'Registro da abertura do Wake. Documenta um fato concreto, não a marca em geral.',
     },
-    duration: "1:05",
-    aspect: "16/9",
-    availability: "entregado",
+    duration: '1:05',
+    aspect: '16/9',
+    availability: 'entregado',
   },
 
   /* NO LO RENDERIZA NADIE desde el 2026-09-04, y el archivo sigue en uso.
@@ -508,24 +508,24 @@ export const media = {
      información no está en `aperturaWake`, que la describe como material de
      una apertura concreta. */
   filmVoltop: {
-    id: "film-voltop",
-    kind: "video",
-    src: "/voltop-film.mp4",
-    poster: "/voltop-film-poster.jpg",
+    id: 'film-voltop',
+    kind: 'video',
+    src: '/voltop-film.mp4',
+    poster: '/voltop-film-poster.jpg',
     alt: {
-      es: "Película de marca de Voltop: la red de carga en Medellín, con el equipo y las estaciones en operación",
-      en: "Voltop brand film: the charging network in Medellín, with the team and stations in service",
-      pt: "Filme institucional da Voltop: a rede de carregamento em Medellín, com a equipe e as estações em operação",
+      es: 'Película de marca de Voltop: la red de carga en Medellín, con el equipo y las estaciones en operación',
+      en: 'Voltop brand film: the charging network in Medellín, with the team and stations in service',
+      pt: 'Filme institucional da Voltop: a rede de carregamento em Medellín, com a equipe e as estações em operação',
     },
     role: {
-      es: "Beat 7. Pieza que se ve, no fondo: cierra la narrativa de la Home con la visión de la compañía en voz propia.",
+      es: 'Beat 7. Pieza que se ve, no fondo: cierra la narrativa de la Home con la visión de la compañía en voz propia.',
       en: "Beat 7. A piece to be watched, not a background: closes the Home narrative with the company's vision in its own voice.",
-      pt: "Beat 7. Peça para assistir, não fundo: fecha a narrativa da Home com a visão da empresa em sua própria voz.",
+      pt: 'Beat 7. Peça para assistir, não fundo: fecha a narrativa da Home com a visão da empresa em sua própria voz.',
     },
-    duration: "1:05",
-    aspect: "16/9",
-    availability: "entregado",
+    duration: '1:05',
+    aspect: '16/9',
+    availability: 'entregado',
   },
-} satisfies Record<string, MediaAsset>;
+} satisfies Record<string, MediaAsset>
 
-export type MediaKey = keyof typeof media;
+export type MediaKey = keyof typeof media

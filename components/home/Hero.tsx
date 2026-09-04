@@ -1,15 +1,15 @@
-import Link from "next/link";
-import { t, type Locale } from "@/lib/i18n/config";
-import { href, routes } from "@/lib/i18n/routes";
-import { home } from "@/content/copy/home";
-import { red } from "@/content/copy/red";
-import { actions } from "@/content/copy/common";
-import { media } from "@/content/data/media";
-import { getCitiesWithStations } from "@/lib/data";
-import { Section, Container, Eyebrow } from "@/components/ui/layout";
-import { Media } from "@/components/ui/Media";
-import { Button } from "@/components/ui/Button";
-import { TrackClick } from "@/components/analytics/TrackClick";
+import Link from 'next/link'
+import { t, type Locale } from '@/lib/i18n/config'
+import { href, routes } from '@/lib/i18n/routes'
+import { home } from '@/content/copy/home'
+import { red } from '@/content/copy/red'
+import { actions } from '@/content/copy/common'
+import { media } from '@/content/data/media'
+import { getCitiesWithStations } from '@/lib/data'
+import { Section, Container, Eyebrow } from '@/components/ui/layout'
+import { Media } from '@/components/ui/Media'
+import { Button } from '@/components/ui/Button'
+import { TrackClick } from '@/components/analytics/TrackClick'
 
 /**
  * BEAT 1 · HERO — Intensidad: Alta · Registro: Impacto
@@ -30,8 +30,8 @@ import { TrackClick } from "@/components/analytics/TrackClick";
  */
 const canvas = (pct: number) =>
   pct >= 100
-    ? "var(--color-canvas)"
-    : `color-mix(in srgb, var(--color-canvas) ${pct}%, transparent)`;
+    ? 'var(--color-canvas)'
+    : `color-mix(in srgb, var(--color-canvas) ${pct}%, transparent)`
 
 const VEIL = {
   /**
@@ -67,10 +67,10 @@ const VEIL = {
      */
     superior: `linear-gradient(to bottom, ${canvas(80)} 0%, ${canvas(50)} 12%, transparent 22%)`,
   },
-} as const;
+} as const
 
 export function Hero({ lang }: { lang: Locale }) {
-  const coverage = getCitiesWithStations();
+  const coverage = getCitiesWithStations()
 
   return (
     <Section
@@ -174,9 +174,7 @@ export function Hero({ lang }: { lang: Locale }) {
           {t(home.hero.title, lang)}
         </h1>
 
-        <p className="mt-7 measure text-body-l text-ink-2">
-          {t(home.hero.lead, lang)}
-        </p>
+        <p className="mt-7 measure text-body-l text-ink-2">{t(home.hero.lead, lang)}</p>
 
         <div className="mt-10">
           {/* El evento estaba declarado en §31 y no lo emitía nadie: el header
@@ -184,7 +182,7 @@ export function Hero({ lang }: { lang: Locale }) {
               la entrada a la red. */}
           <TrackClick
             event="cta_encontrar_cargador_click"
-            props={{ ubicacion: "hero" }}
+            props={{ ubicacion: 'hero' }}
           >
             <Button
               variant="primary"
@@ -252,5 +250,5 @@ export function Hero({ lang }: { lang: Locale }) {
         )}
       </Container>
     </Section>
-  );
+  )
 }
