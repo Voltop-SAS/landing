@@ -1,7 +1,10 @@
 'use client'
 
-import { useEffect, useId, useRef, useState } from 'react'
+import { useEffect, useId, useMemo, useRef, useState } from 'react'
 import Link from 'next/link'
+import { useForm, type UseFormRegisterReturn } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from 'zod'
 import { t, type Locale } from '~/core/common/domain/i18n/config'
 import { href, routes } from '~/core/common/domain/i18n/routes'
 import { leadForm } from '~/core/common/domain/consts/copy'
@@ -12,65 +15,76 @@ import { track } from '~/core/common/infrastructure/analytics'
 import { cn } from '@ui/common/lib/cn'
 
 /**
- * FORMULARIO DE LEADS · CRM-ready
- * Ver docs/MASTER-PROJECT-DEFINITION.md §17, §23 y §38.
+ * LEAD FORM · CRM-ready
+ * See docs/MASTER-PROJECT-DEFINITION.md §17, §23 and §38.
  *
- * Correcciones respecto de la versión anterior:
- * - CONSENTIMIENTO EXPLÍCITO obligatorio (Ley 1581 de 2012, habeas data).
- *   Sin él, el formulario no puede publicarse.
- * - Validación con errores accionables asociados por `aria-describedby`.
- * - Resumen de errores anunciado y foco gestionado al primer campo inválido.
- * - Estado de éxito anunciado con `role="status"` Y CON EL FOCO MOVIDO: al
- *   sustituir el formulario, quien navega con teclado se quedaba en un botón
- *   que ya no existía.
- * - Obligatoriedad declarada en el DOM (`required` + `aria-required`), no solo
- *   con un asterisco decorativo, y con leyenda que explica qué significa.
- * - `autocomplete` en todos los campos.
- * - Instrumentación completa del plan de medición.
+ * What this form guarantees, and must keep guaranteeing:
+ * - EXPLICIT CONSENT is mandatory (Ley 1581 de 2012, habeas data). Without it
+ *   the form cannot be published at all.
+ * - Errors are actionable and wired to their field via `aria-describedby`.
+ * - The error summary is announced, and focus lands on the first invalid
+ *   field.
+ * - Success is announced with `role="status"` AND takes focus: replacing the
+ *   form left keyboard users standing on a button that no longer existed.
+ * - Required-ness lives in the DOM (`required` + `aria-required`), not in a
+ *   decorative asterisk, and a legend explains what the asterisk means.
+ * - Every field declares `autocomplete`.
  *
- * La capa de envío está DESACOPLADA: `submitLead` es el único punto a
- * reemplazar cuando se defina el CRM (decisión abierta O3).
+ * Validation is React Hook Form + Zod. The schema is built inside the
+ * component because every message is a translation, so it depends on the
+ * active locale. The form keeps `noValidate`: validation is ours, and the
+ * native `required` attribute stays for semantics only.
+ *
+ * The delivery layer is DECOUPLED: `submitLead` is the single function to
+ * replace once the CRM is chosen (open decision O3).
  */
 
-type Status = 'idle' | 'loading' | 'success'
-type Errors = Partial<Record<'name' | 'email' | 'company' | 'consent', string>>
+type Status = 'idle' | 'success'
 
 /**
- * DESTINO DEL FORMULARIO.
+ * WHERE THE FORM SENDS.
  *
- * - `"ninguno"`: no hay a dónde enviar. El formulario lo DICE y no finge.
- * - `"correo"`: abre el cliente de correo con todo redactado. Es lo que hay
- *   hoy (decisión del 2026-09-02) y funciona sin servidor.
- * - `"crm"`: envío automático. Requiere backend o servicio de formularios.
+ * - `'none'`  — nowhere to send. The form SAYS so instead of pretending.
+ * - `'email'` — opens the mail client with everything drafted. This is what
+ *   ships today (decided 2026-09-02) and needs no server.
+ * - `'crm'`   — automatic delivery. Needs a backend or a form service.
  *
- * POR QUÉ CORREO Y NO UN SERVICIO: el sitio es completamente estático, así que
- * no hay servidor donde recibir un POST. Un `mailto:` es la única vía que
- * funciona HOY sin dar de alta nada. Tiene dos costes que conviene tener
- * presentes: pierde a quien no tenga cliente de correo configurado, y expone
- * las tres direcciones en el HTML. Un servicio de formularios los resuelve
- * ambos y solo cambia esta función.
+ * WHY EMAIL AND NOT A SERVICE: the site is fully static, so there is no server
+ * to receive a POST. A `mailto:` is the only thing that works TODAY without
+ * signing up for anything. It has two costs worth keeping in mind: it loses
+ * anyone without a configured mail client, and it exposes the three addresses
+ * in the HTML. A form service fixes both and changes only this function.
  */
-const DESTINO: 'ninguno' | 'correo' | 'crm' = 'correo'
+const DESTINATION: 'none' | 'email' | 'crm' = 'email'
 
-async function submitLead(payload: Record<string, FormDataEntryValue>): Promise<void> {
-  if (DESTINO !== 'correo') {
+type LeadPayload = {
+  name: string
+  email: string
+  company: string
+  phone?: string
+  message?: string
+  segment: string
+}
+
+async function submitLead(payload: LeadPayload): Promise<void> {
+  if (DESTINATION !== 'email') {
     void payload
     await new Promise((r) => setTimeout(r, 900))
     return
   }
 
-  /* Nombres de campo estables del plan: name, email, company, phone, message,
-     segment. El asunto lleva el segmento para poder filtrar sin abrir. */
-  const v = (k: string) => String(payload[k] ?? '').trim()
-  const asunto = `Voltop · ${v('segment') || 'Contacto'} · ${v('company') || v('name')}`
-  const cuerpo = [
-    `Nombre: ${v('name')}`,
-    `Correo: ${v('email')}`,
-    `Empresa: ${v('company')}`,
-    v('phone') ? `Teléfono: ${v('phone')}` : null,
-    `Segmento: ${v('segment')}`,
+  /* Stable field names from the plan: name, email, company, phone, message,
+     segment. The subject carries the segment so it can be filtered without
+     opening the message. */
+  const subject = `Voltop · ${payload.segment || 'Contacto'} · ${payload.company || payload.name}`
+  const body = [
+    `Nombre: ${payload.name}`,
+    `Correo: ${payload.email}`,
+    `Empresa: ${payload.company}`,
+    payload.phone ? `Teléfono: ${payload.phone}` : null,
+    `Segmento: ${payload.segment}`,
     '',
-    v('message') || '(sin mensaje)',
+    payload.message || '(sin mensaje)',
     '',
     '— Enviado desde el formulario de voltop.co',
   ]
@@ -79,7 +93,7 @@ async function submitLead(payload: Record<string, FormDataEntryValue>): Promise<
 
   window.location.href =
     `mailto:${leadRecipients.join(',')}` +
-    `?subject=${encodeURIComponent(asunto)}&body=${encodeURIComponent(cuerpo)}`
+    `?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
 }
 
 export function LeadForm({
@@ -92,14 +106,36 @@ export function LeadForm({
   segmentLabel: string
 }) {
   const [status, setStatus] = useState<Status>('idle')
-  const [errors, setErrors] = useState<Errors>({})
   const [started, setStarted] = useState(false)
-  const formRef = useRef<HTMLFormElement>(null)
   const confirmationRef = useRef<HTMLDivElement>(null)
   const uid = useId()
 
-  /* Al sustituir el formulario por la confirmación, el foco viajaba a la nada.
-     Se mueve al panel para que el teclado y el lector de pantalla lleguen. */
+  /* Messages are translations, so the schema is per-locale. `consent` is
+     `literal(true)` and not an optional boolean on purpose: an unchecked box
+     has to be a validation failure, not a falsy value that slips through. */
+  const schema = useMemo(
+    () =>
+      z.object({
+        name: z.string().trim().min(2, t(leadForm.fields.name.error, locale)),
+        email: z.email(t(leadForm.fields.email.error, locale)),
+        company: z.string().trim().min(2, t(leadForm.fields.company.error, locale)),
+        phone: z.string().trim().optional(),
+        message: z.string().trim().optional(),
+        consent: z.literal(true, t(leadForm.fields.consent.error, locale)),
+      }),
+    [locale],
+  )
+
+  type FormValues = z.infer<typeof schema>
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<FormValues>({ resolver: zodResolver(schema) })
+
+  /* Replacing the form with the confirmation sent focus nowhere. It moves to
+     the panel so keyboard and screen reader both arrive. */
   useEffect(() => {
     if (status === 'success') confirmationRef.current?.focus()
   }, [status])
@@ -113,42 +149,22 @@ export function LeadForm({
     track('lead_form_inicio', { segmento: segmentKey })
   }
 
-  const validate = (data: FormData): Errors => {
-    const next: Errors = {}
-    const name = String(data.get('name') ?? '').trim()
-    const email = String(data.get('email') ?? '').trim()
-    const company = String(data.get('company') ?? '').trim()
-
-    if (name.length < 2) next.name = t(leadForm.fields.name.error, locale)
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email))
-      next.email = t(leadForm.fields.email.error, locale)
-    if (company.length < 2) next.company = t(leadForm.fields.company.error, locale)
-    if (!data.get('consent')) next.consent = t(leadForm.fields.consent.error, locale)
-    return next
-  }
-
-  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    const data = new FormData(e.currentTarget)
-    const found = validate(data)
-    setErrors(found)
-
-    if (Object.keys(found).length > 0) {
-      track('lead_form_error', { segmento: segmentKey, campos: Object.keys(found).join(',') })
-      const first = Object.keys(found)[0]
-      formRef.current?.querySelector<HTMLElement>(`#${CSS.escape(fieldId(first))}`)?.focus()
-      return
-    }
-
-    setStatus('loading')
+  const onValid = async (values: FormValues) => {
     track('lead_form_envio', { segmento: segmentKey })
-    await submitLead(Object.fromEntries(data))
+    await submitLead({ ...values, segment: segmentKey })
     setStatus('success')
     track('lead_form_exito', { segmento: segmentKey })
   }
 
+  /* React Hook Form moves focus to the first invalid field on its own
+     (`shouldFocusError`), so this only has to report. The event keeps the
+     property names of the measurement plan. */
+  const onInvalid = (found: typeof errors) => {
+    track('lead_form_error', { segmento: segmentKey, campos: Object.keys(found).join(',') })
+  }
+
   if (status === 'success') {
-    const confirmation = DESTINO === 'correo' ? leadForm.successEmail : leadForm.successPending
+    const confirmation = DESTINATION === 'email' ? leadForm.successEmail : leadForm.successPending
 
     return (
       <div
@@ -157,7 +173,7 @@ export function LeadForm({
         role="status"
         className="border border-line bg-surface-1 p-8 md:p-10"
       >
-        {DESTINO !== 'ninguno' ? (
+        {DESTINATION !== 'none' ? (
           <div className="grid size-11 place-items-center rounded-(--radius-pill) brand-gradient text-on-brand">
             <svg
               width="20"
@@ -176,8 +192,8 @@ export function LeadForm({
             </svg>
           </div>
         ) : (
-          /* Sin destino real no se pinta la marca de verificación: el gradiente
-             y el check comunican "hecho", y no está hecho. */
+          /* With no real destination the check mark is not drawn: the gradient
+             and the tick say "done", and it is not done. */
           <PendingTag>{t(leadForm.successPending.tag, locale)}</PendingTag>
         )}
         <h3 className="mt-6 font-display text-display-m font-semibold text-ink">
@@ -192,8 +208,7 @@ export function LeadForm({
 
   return (
     <form
-      ref={formRef}
-      onSubmit={onSubmit}
+      onSubmit={handleSubmit(onValid, onInvalid)}
       onFocusCapture={onFirstInteraction}
       noValidate
       className="border border-line bg-surface-1 p-6 md:p-10"
@@ -208,9 +223,9 @@ export function LeadForm({
       </div>
       <p className="mt-3 measure text-body-s text-ink-2">{t(leadForm.intro, locale)}</p>
 
-      {/* Aviso de demo ANTES de pedir el dato. Estaba en mono de 12px debajo
-          del botón, donde nadie lo lee antes de escribir su correo. */}
-      {DESTINO === 'ninguno' && (
+      {/* Demo notice BEFORE asking for the data. It used to sit in 12px mono
+          under the button, where nobody reads it before typing their email. */}
+      {DESTINATION === 'none' && (
         <p className="mt-6 border-l-2 border-warn/70 bg-warn/8 px-4 py-3 text-body-s text-ink-2">
           {t(leadForm.demoNotice, locale)}
         </p>
@@ -229,36 +244,36 @@ export function LeadForm({
         <Field
           id={fieldId('name')}
           errorId={errorId('name')}
-          name="name"
+          registration={register('name')}
           label={t(leadForm.fields.name.label, locale)}
           autoComplete="name"
           required
-          error={errors.name}
+          error={errors.name?.message}
         />
         <Field
           id={fieldId('email')}
           errorId={errorId('email')}
-          name="email"
+          registration={register('email')}
           type="email"
           label={t(leadForm.fields.email.label, locale)}
           hint={t(leadForm.fields.email.hint, locale)}
           autoComplete="email"
           required
-          error={errors.email}
+          error={errors.email?.message}
         />
         <Field
           id={fieldId('company')}
           errorId={errorId('company')}
-          name="company"
+          registration={register('company')}
           label={t(leadForm.fields.company.label, locale)}
           autoComplete="organization"
           required
-          error={errors.company}
+          error={errors.company?.message}
         />
         <Field
           id={fieldId('phone')}
           errorId={errorId('phone')}
-          name="phone"
+          registration={register('phone')}
           type="tel"
           label={t(leadForm.fields.phone.label, locale)}
           optionalLabel={t(leadForm.fields.phone.optional, locale)}
@@ -274,29 +289,29 @@ export function LeadForm({
           </label>
           <textarea
             id={fieldId('message')}
-            name="message"
             rows={4}
             placeholder={t(leadForm.fields.message.placeholder, locale)}
             className="mt-2 w-full resize-none rounded-(--radius-structural) border border-line-control bg-canvas px-4 py-3 text-body text-ink outline-none transition-colors placeholder:text-ink-3 focus:border-brand"
+            {...register('message')}
           />
         </div>
 
-        {/* Consentimiento — requisito legal, no una casilla opcional */}
+        {/* Consent — a legal requirement, not an optional checkbox */}
         <div>
           <div className="flex items-start gap-1">
-            {/* Área táctil de 44px alrededor de la casilla (§23) */}
+            {/* 44px touch target around the box (§23) */}
             <span className="grid size-11 shrink-0 place-items-center">
               <input
                 id={fieldId('consent')}
-                name="consent"
                 type="checkbox"
                 required
                 aria-required="true"
                 aria-describedby={errors.consent ? errorId('consent') : undefined}
                 aria-invalid={errors.consent ? true : undefined}
-                /* El pseudo-elemento amplía el área de activación a 44px sin
-                   agrandar la casilla visualmente (§23). */
+                /* The pseudo-element widens the activation area to 44px without
+                   making the box visually bigger (§23). */
                 className="relative size-5 accent-[var(--color-brand)] before:absolute before:-inset-3 before:content-['']"
+                {...register('consent')}
               />
             </span>
             <label
@@ -317,16 +332,10 @@ export function LeadForm({
               id={errorId('consent')}
               className="mt-1 pl-12 text-body-s text-warn"
             >
-              {errors.consent}
+              {errors.consent.message}
             </p>
           )}
         </div>
-
-        <input
-          type="hidden"
-          name="segment"
-          value={segmentKey}
-        />
       </div>
 
       <p className="mt-6 text-caption text-ink-3">{t(leadForm.requiredLegend, locale)}</p>
@@ -337,10 +346,10 @@ export function LeadForm({
           variant="primary"
           size="l"
           arrow
-          loading={status === 'loading'}
+          loading={isSubmitting}
           className="w-full sm:w-auto"
         >
-          {status === 'loading' ? t(leadForm.submitting, locale) : t(leadForm.submit, locale)}
+          {isSubmitting ? t(leadForm.submitting, locale) : t(leadForm.submit, locale)}
         </Button>
       </div>
     </form>
@@ -350,7 +359,7 @@ export function LeadForm({
 function Field({
   id,
   errorId,
-  name,
+  registration,
   label,
   type = 'text',
   hint,
@@ -361,7 +370,7 @@ function Field({
 }: {
   id: string
   errorId: string
-  name: string
+  registration: UseFormRegisterReturn
   label: string
   type?: string
   hint?: string
@@ -382,9 +391,9 @@ function Field({
       >
         <span>
           {label}
-          {/* El asterisco es refuerzo VISUAL. La obligatoriedad la comunica el
-              atributo del input, así que aquí se oculta a la asistencia para no
-              leer "asterisco" en cada campo. */}
+          {/* The asterisk is VISUAL reinforcement. Required-ness is announced by
+              the input attribute, so it is hidden from assistive technology to
+              avoid reading "asterisk" on every field. */}
           {required && (
             <span
               aria-hidden="true"
@@ -398,12 +407,11 @@ function Field({
       </label>
       <input
         id={id}
-        name={name}
         type={type}
-        /* `required` faltaba en el DOM: el asterisco era el único indicio y
-           ningún lector de pantalla anunciaba el campo como obligatorio
-           (WCAG 3.3.2). El formulario valida en JS con `noValidate`, así que
-           esto es semántica, no una segunda validación. */
+        /* `required` was missing from the DOM: the asterisk was the only cue
+           and no screen reader announced the field as required (WCAG 3.3.2).
+           The form validates in JS with `noValidate`, so this is semantics,
+           not a second validation. */
         required={required}
         aria-required={required || undefined}
         autoComplete={autoComplete}
@@ -413,6 +421,7 @@ function Field({
           'mt-2 min-h-12 w-full rounded-(--radius-structural) border bg-canvas px-4 py-3 text-body text-ink outline-none transition-colors',
           error ? 'border-warn' : 'border-line-control focus:border-brand',
         )}
+        {...registration}
       />
       {hint && !error && (
         <p
