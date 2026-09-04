@@ -8,6 +8,7 @@ import { Section, Container, Eyebrow } from "@/components/ui/layout";
 import { Media } from "@/components/ui/Media";
 import { Button } from "@/components/ui/Button";
 import { Reveal } from "@/components/ui/Reveal";
+import { FilmStage } from "@/components/ui/FilmStage";
 
 /**
  * BEAT 6 · VISIÓN — Intensidad: Media-alta · Registro: Silencio · Espacio: loose
@@ -48,12 +49,17 @@ export function VisionQuote({ lang }: { lang: Locale }) {
       </Container>
 
       <Container width="wide" className="mt-16">
-        <Reveal delay={0.08}>
-          {/* Pieza con controles, no fondo: lleva narración y subtítulos
-              quemados, así que silenciarla en bucle perdería el mensaje.
-              Ver la cabecera de `filmVoltop` en el registro de media.
-              El `aspect-[16/9]` que aplica `Media` reserva el espacio, así que
-              el póster entra sin desplazar nada. */}
+        {/* SIGNATURE. `FilmStage` sustituye al `Reveal` genérico: el encuadre
+            se abre al entrar y la página se atenúa al reproducir. No puede ir
+            DENTRO de `Reveal` — ver la cabecera de `FilmStage`: el atenuado es
+            `fixed` y un ancestro transformado lo encajaría en su caja.
+
+            Pieza con controles, no fondo: lleva narración y subtítulos
+            quemados, así que silenciarla en bucle perdería el mensaje.
+            Ver la cabecera de `filmVoltop` en el registro de media.
+            El `aspect-[16/9]` que aplica `Media` reserva el espacio, así que
+            el póster entra sin desplazar nada. */}
+        <FilmStage>
           <Media
             asset={media.filmVoltop}
             lang={lang}
@@ -61,7 +67,7 @@ export function VisionQuote({ lang }: { lang: Locale }) {
             corner
             sizes="(min-width: 1600px) 1600px, 100vw"
           />
-        </Reveal>
+        </FilmStage>
       </Container>
     </Section>
   );

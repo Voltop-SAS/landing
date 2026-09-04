@@ -98,7 +98,7 @@ export default async function RedPage({ params }: Props) {
 
           <ul className="mt-10 grid gap-px border border-line bg-line sm:grid-cols-2">
             {coverage.map(({ city, count, operational }, i) => (
-              <Reveal as="li" key={city.slug} delay={i * 0.06} y={12} className="bg-canvas">
+              <Reveal as="li" key={city.slug} index={i} className="bg-canvas">
                 <Link href={href(lang, routes.city(city.slug))} className="group flex h-full flex-col p-7 transition-colors hover:bg-surface-1">
                   <div className="flex items-baseline justify-between gap-4">
                     <h3 className="font-display text-display-m font-semibold text-ink transition-colors group-hover:text-brand">

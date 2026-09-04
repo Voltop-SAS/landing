@@ -69,8 +69,35 @@ export function InfrastructureSignature({ lang }: { lang: Locale }) {
    * cual sea el ancho, y la apertura recupera recorrido —18% en vez de 10%—
    * porque ya no tiene que caber por debajo de un texto.
    */
-  const insetPct = useTransform(scrollYProgress, [0, 0.25], reduce ? [0, 0] : [18, 0]);
-  const clipPath = useTransform(insetPct, (v) => `inset(${v}% ${v}% ${v}% ${v}%)`);
+  /**
+   * ── EL ENCUADRE SE ANCLA ARRIBA, NO FLOTA ────────────────────────────────
+   * El recorte era simétrico —`inset(18%)` por los cuatro lados— y eso hacía
+   * dos cosas malas a la vez. Medido a 1440×900 con la página a 500px:
+   *
+   * 1. Dejaba una BANDA MUERTA de 143px entre el final del hero y el borde
+   *    superior del material. El beat 1 terminaba en una línea y empezaba una
+   *    nada oscura antes de que apareciera nada.
+   * 2. El material se leía como un RECTÁNGULO PEGADO sobre la página: cuatro
+   *    bordes duros flotando en el vacío, que es el aspecto de una imagen
+   *    insertada, no el de un encuadre que se abre.
+   *
+   * Ahora el recorte es asimétrico y el borde superior vale SIEMPRE 0: el
+   * material toca el final del hero desde el primer fotograma, así que no hay
+   * banda que cruzar. Se abre por los lados y por abajo.
+   *
+   * El gesto cambia de sentido y mejora: antes una tarjeta crecía en el centro;
+   * ahora la instalación entra desde arriba y se despliega. Eso es el concepto
+   * —recorrido, descenso— y no una representación literal de nada eléctrico.
+   *
+   * Los dos materiales siguen siendo dos: el hero es una fotografía y esto un
+   * vídeo. No se intenta fingir que son uno. La continuidad la da la
+   * composición —el borde compartido y el fondo que los cose— no el material.
+   */
+  const apertura = useTransform(scrollYProgress, [0, 0.25], reduce ? [0, 0] : [1, 0]);
+  const clipPath = useTransform(
+    apertura,
+    (v) => `inset(0% ${(v * 13).toFixed(2)}% ${(v * 30).toFixed(2)}% ${(v * 13).toFixed(2)}%)`,
+  );
   const scale = useTransform(scrollYProgress, [0, 0.25], reduce ? [1, 1] : [1.06, 1]);
 
   /**
@@ -180,6 +207,20 @@ export function InfrastructureSignature({ lang }: { lang: Locale }) {
           aria-hidden="true"
           style={{ opacity: scrimOpacity }}
           className="absolute inset-0 bg-gradient-to-t from-canvas via-canvas/88 to-canvas/45"
+        />
+
+        {/* PUENTE. El hero termina en `canvas` sólido y el material empieza
+            justo debajo: sin esto, el encuentro es un corte horizontal limpio
+            entre una foto y un vídeo, y el ojo lo lee como dos páginas pegadas.
+            Esta banda devuelve el canvas sobre el primer 14% del panel y lo
+            disuelve, de modo que el material EMERGE del final del beat
+            anterior en lugar de empezar en él.
+
+            Va después del velo y antes del texto: tiñe el material, nunca las
+            palabras. */}
+        <div
+          aria-hidden="true"
+          className="absolute inset-x-0 top-0 h-[22%] bg-gradient-to-b from-canvas via-canvas/55 to-transparent"
         />
 
         <Container className="relative z-(--z-raised) py-(--spacing-section-tight)">

@@ -104,7 +104,7 @@ export default async function NosotrosPage({ params }: Props) {
               es el título, no la cifra. */}
           <ul className="mt-12 grid gap-x-14 gap-y-12 md:grid-cols-2">
             {nosotros.infrastructure.pillars.map((p, i) => (
-              <Reveal as="li" key={i} delay={i * 0.06}>
+              <Reveal as="li" key={i} index={i}>
                 <div className="border-t border-line-strong pt-6">
                   <h3 className="font-display text-display-m font-semibold text-balance text-ink">
                     {t(p.title, lang)}
@@ -182,7 +182,7 @@ export default async function NosotrosPage({ params }: Props) {
 
           <ul className="mt-14 grid gap-x-14 gap-y-12 md:grid-cols-2">
             {testimonials.map((tm, i) => (
-              <Reveal as="li" key={tm.author} delay={i * 0.08}>
+              <Reveal as="li" key={tm.author} index={i}>
                 <figure className="border-t border-line pt-6">
                   <blockquote className="font-display text-display-s text-ink">{t(tm.quote, lang)}</blockquote>
                   <figcaption className="mt-5 text-body-s">

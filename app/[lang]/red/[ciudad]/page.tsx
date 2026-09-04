@@ -107,7 +107,7 @@ export default async function CityPage({ params }: Props) {
 
           <ul className="mt-8">
             {stations.map((s, i) => (
-              <Reveal as="li" key={s.slug} delay={i * 0.05} y={12}>
+              <Reveal as="li" key={s.slug} index={i}>
                 <Link
                   href={href(lang, routes.station(s.slug))}
                   className="group grid gap-x-6 gap-y-2 border-b border-line py-6 transition-colors hover:bg-surface-1 lg:grid-cols-[1.6fr_1fr_1fr_auto] lg:items-center"

@@ -133,43 +133,98 @@ export const home = {
   },
 
   /**
-   * SECCIÓN DE DESCARGA DE LA APP.
+   * CÓMO SE CARGA · el beat del conductor.
    *
    * Lo que promete está tomado de lo que los Términos y Condiciones declaran
    * como servicios de la Plataforma (§4 del documento legal): consultar
    * ubicación y disponibilidad, activar por QR, gestionar sesiones e historial.
    * No se promete nada que el documento legal no reconozca — que es la forma
    * más barata de cumplir §19 ("un titular es un contrato").
+   *
+   * ── POR QUÉ DEJÓ DE SER "LA APP" ─────────────────────────────────────────
+   * El público mayoritario del sitio llega preguntando "¿cómo cargo?", y esa
+   * pregunta tenía UNA FRASE en todo el sitio, escondida dentro de una sección
+   * rotulada "La app". Rotular por el producto en vez de por la tarea deja el
+   * beat invisible justo para quien lo necesita.
+   *
+   * Los tres rasgos sueltos pasan a ser CUATRO PASOS en orden. Un rasgo
+   * responde "qué tiene"; un paso responde "qué me va a pasar", que es la
+   * pregunta real de quien nunca ha cargado un carro eléctrico.
+   *
+   * ── LO QUE NO SE DICE, Y POR QUÉ ─────────────────────────────────────────
+   * El MÉTODO DE PAGO no aparece en ningún sitio: ni en los legales, ni en el
+   * dataset, ni en el copy existente. Así que no se nombra. El paso 4 dice
+   * dónde queda el cobro —eso sí está confirmado— y no cómo se paga.
+   *
+   * La TARIFA tampoco: lo único confirmado es que se ve en la app antes de
+   * iniciar la carga, que es exactamente lo que dice el paso 3 y lo que ya
+   * decía la ficha de estación. Ni cifras ni rangos.
    */
   app: {
-    eyebrow: { es: "La app", en: "The app", pt: "O aplicativo", } satisfies Localized,
+    eyebrow: { es: "Cómo se carga", en: "How charging works", pt: "Como carregar", } satisfies Localized,
     title: {
       es: "Cargar empieza en tu teléfono",
       en: "Charging starts on your phone",
       pt: "Carregar começa no seu celular",
     } satisfies Localized,
+    /**
+     * El lead decía, en una frase, exactamente lo que ahora dicen los cuatro
+     * pasos. Repetido justo encima, no informaba: adelantaba.
+     *
+     * Ahora hace un trabajo que los pasos no pueden hacer — decirle a quien
+     * nunca ha cargado un carro eléctrico que esto es TODO, que no hay un
+     * trámite escondido detrás. Es la respuesta a "¿es difícil?", que es la
+     * pregunta real antes de leer ningún paso.
+     */
     lead: {
-      es: "Encuentra una estación, mira si está libre y activa el cargador escaneando un QR. La sesión y sus cobros quedan ahí, sin papeles y sin llamar a nadie.",
-      en: "Find a station, see whether it's free and start the charger by scanning a QR code. The session and its charges stay there — no paperwork, no phone calls.",
-      pt: "Encontre uma estação, veja se está livre e ative o carregador escaneando um QR. A sessão e as cobranças ficam ali, sem papelada e sem ligar para ninguém.",
+      es: "Si nunca has cargado un carro eléctrico, esto es todo lo que pasa.",
+      en: "Never charged an electric car before? This is all there is to it.",
+      pt: "Se você nunca carregou um carro elétrico, é só isto o que acontece.",
     } satisfies Localized,
-    features: [
+    /**
+     * Cuatro pasos, en el orden en que ocurren. El rótulo es un verbo: lo que
+     * hace el conductor, no lo que hace la app.
+     */
+    steps: [
       {
-        es: "Ubicación y disponibilidad de cada estación",
-        en: "Location and availability of every station",
-        pt: "Localização e disponibilidade de cada estação",
+        label: { es: "Encuentra", en: "Find", pt: "Encontre" } satisfies Localized,
+        body: {
+          es: "Mira en el mapa dónde hay estaciones y cuáles están libres.",
+          en: "Check the map to see where the stations are and which ones are free.",
+          pt: "Veja no mapa onde há estações e quais estão livres.",
+        } satisfies Localized,
       },
       {
-        es: "Activación por QR, sin tarjeta ni membresía",
-        en: "Start by QR, no card or membership",
-        pt: "Ativação por QR, sem cartão nem assinatura",
+        label: { es: "Escanea", en: "Scan", pt: "Escaneie" } satisfies Localized,
+        body: {
+          es: "Activas el cargador con el código QR de la estación. Sin tarjeta y sin membresía.",
+          en: "You start the charger with the station's QR code. No card, no membership.",
+          pt: "Você ativa o carregador com o código QR da estação. Sem cartão e sem assinatura.",
+        } satisfies Localized,
       },
       {
-        es: "Historial de sesiones y cobros en un sitio",
-        en: "Session history and charges in one place",
-        pt: "Histórico de sessões e cobranças em um só lugar",
+        label: { es: "Carga", en: "Charge", pt: "Carregue" } satisfies Localized,
+        body: {
+          es: "Ves la tarifa antes de empezar y sigues la sesión desde el teléfono.",
+          en: "You see the price before you start and follow the session from your phone.",
+          pt: "Você vê a tarifa antes de começar e acompanha a sessão pelo celular.",
+        } satisfies Localized,
       },
-    ] satisfies Localized[],
+      {
+        label: { es: "Listo", en: "Done", pt: "Pronto" } satisfies Localized,
+        body: {
+          es: "Al terminar, la sesión y su cobro quedan en tu historial.",
+          en: "When it's over, the session and its charge stay in your history.",
+          pt: "Ao terminar, a sessão e a cobrança ficam no seu histórico.",
+        } satisfies Localized,
+      },
+    ],
+    /** Salida a la red para quien quiere ver dónde cargar antes de descargar nada. */
+    seeNetwork: {
+      es: "Mira dónde puedes cargar",
+      en: "See where you can charge",
+      pt: "Veja onde você pode carregar",
+    } satisfies Localized,
     qrLabel: {
       es: "Escanea para descargar",
       en: "Scan to download",

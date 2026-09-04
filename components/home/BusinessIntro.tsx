@@ -46,8 +46,7 @@ export function BusinessIntro({ lang }: { lang: Locale }) {
             <Reveal
               as="li"
               key={s.key}
-              delay={i * 0.06}
-              y={12}
+              index={i}
               className={cn(
                 "border-t border-line-strong pt-6 text-left md:border-t-0 md:border-l md:border-line md:pl-6 md:pt-0",
                 i === 0 && "md:border-l-0 md:pl-0"

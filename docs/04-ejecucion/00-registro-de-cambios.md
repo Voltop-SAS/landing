@@ -1849,3 +1849,52 @@ De camino apareció una clase muerta: el enlace del registro llevaba `block` y `
 ### Evidencia
 
 `lint`, `tsc` y build limpios · 50 páginas generadas · el refactor verificado **antes y después en el navegador**: alto, número de enlaces y texto **idénticos** en las tres listas y en el pie · geometría de fila confirmada (`display:grid`, `144px 960px` en el registro; `144px 874px 62px` en la Home) · `app.voltop.co` comprobado con `curl` siguiendo la redirección.
+
+---
+
+## Bloque 47 · El lenguaje de movimiento de Voltop — 2026-09-03
+
+**Por qué:** el sitio tenía UN gesto —`fade + translateY`— repetido en todas partes, con cuatro escalonados distintos (0.05, 0.06, 0.07, 0.08) y tres desplazamientos (12, 14, 20px) repartidos por cuatro archivos. Cuatro valores que nadie distingue no son cuatro decisiones: son la ausencia de una. Y el gesto en sí es el reveal por defecto de cualquier plantilla: se percibe como "la página cargó", no como una intención.
+
+El estudio de Electra —medido en el navegador, 447 mutaciones de estilo durante el scroll— dio la conclusión que ordena todo esto: **su vocabulario son tres técnicas aplicadas sin una sola excepción.** El wow no viene de la variedad, viene de la convicción.
+
+### Las cuatro primitivas
+
+| | Qué hace | Cuándo NO |
+|---|---|---|
+| **DEPTH** | El contenido llega desde el fondo: escala + opacidad | Nunca sobre cifras ni specs. Lo que prueba algo no se anima |
+| **FLOW** | El material se desplaza dentro de un marco que no se mueve | Jamás sobre texto: un titular con parallax se lee como plantilla |
+| **FRAME** | El encuadre se abre y descubre lo que ya estaba | Dos veces en toda la Home. Repetido deja de ser un descubrimiento |
+| **CONTINUITY** | Algo persiste entre dos estados | Entre vistas sin relación real: fingirla desorienta |
+
+Tres intensidades, no cuatro. Se descartó un nivel `subtle`: las microinteracciones no son una versión pequeña de DEPTH sino **otra familia** —se expresan en color, opacidad y dos o tres píxeles, no en escala—, así que viven en CSS (`.press`) y no en el vocabulario de Motion. Y `signature` no es un valor más alto de nada: es una composición ligada al scroll, y por eso son dos y no ocho.
+
+El escalonado pasa a pedirse **por índice, no por retardo**: las listas dicen su posición y el sistema decide el tiempo. Ninguna puede desviarse sin que se note.
+
+### Hero → Infraestructura: el corte
+
+Medido a 1440×900: entre el final del hero y el borde del material había una **banda muerta de 143px**, y el vídeo se leía como un rectángulo pegado —cuatro bordes duros flotando en el vacío—. El recorte era simétrico, `inset(18%)` por los cuatro lados.
+
+Ahora el borde superior vale **siempre 0**: el material toca el final del hero desde el primer fotograma y se abre por los lados y por abajo. Un puente de fondo lo cose. **No se intentó fingir que las dos piezas son una**: el hero es una fotografía y esto un vídeo, y la continuidad la da la composición, no el material.
+
+### Red y película
+
+La **red** pasa a EXPRESSIVE: las ciudades entran escalonadas con escala y la fotografía de fondo hace FLOW dentro de su marco —verificado, `translateY` de −1.9% a 5% a lo largo de la sección—. Las cifras y las specs no se mueven: son la prueba.
+
+La **película** es el segundo signature. FRAME al entrar y, al pulsar play, la página se atenúa y la pieza crece un 4.5%. Es el único sitio donde una expansión es **funcional además de expresiva**: se ve mejor. No es un modal —no atrapa foco, no bloquea scroll— porque el vídeo ya se pausa con sus propios controles.
+
+### El beat del conductor
+
+El público mayoritario llega preguntando "¿cómo cargo?" y esa pregunta tenía **una frase** en todo el sitio, escondida bajo un rótulo que decía "La app". Rotular por el producto en vez de por la tarea deja el beat invisible justo para quien lo necesita.
+
+Ahora son cuatro pasos en orden —encuentra, escanea, carga, listo— más una salida a `/red`. Todo sale de los Términos y Condiciones (§4) y del copy que ya existía en la ficha de estación. **No se nombra el método de pago porque no está confirmado en ninguna parte**: el paso 4 dice dónde queda el cobro, no cómo se paga.
+
+### BLOQUEANTE encontrado y corregido: once bloques invisibles
+
+`whileInView` se apoya en `IntersectionObserver`, que solo informa de lo que intersecta AHORA. Recargando la Home a 5400px —el navegador restaura el scroll— quedaban **once bloques a opacidad 0 para siempre**: el índice de ciudades, los cuatro segmentos de empresas y las tres novedades. Seguían invisibles al volver a subir.
+
+No era un fallo nuevo: el mecanismo venía de antes. Pero es contenido que desaparece, que es exactamente lo que §21 prohíbe, y se detectó porque la validación probó el escenario real —recargar a media página— y no solo el scroll de arriba abajo. `useScrolledPast` lo cubre: lo que ya quedó por encima se renderiza sin animación. De once a cero.
+
+### Evidencia
+
+`lint`, `tsc` y build limpios · 50 páginas · **27 combinaciones de ruta × viewport sin un solo problema**: cero invisibles, cero desbordes, un `h1` por página, cero `img` sin `alt`, cero errores de JS · `prefers-reduced-motion`: 0 invisibles, 0 `clip-path`, 0 `transform`, sección signature colapsada a 557px · **60 fps sostenidos y cero fotogramas largos** en escritorio, en móvil con CPU ×4 y en móvil con CPU ×6 · FLOW y la expansión de la película verificados por sus valores reales en el DOM.

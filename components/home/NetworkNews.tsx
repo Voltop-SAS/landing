@@ -51,7 +51,7 @@ export async function NetworkNews({ lang }: { lang: Locale }) {
 
         <ul className="mt-10 border-t border-line">
           {posts.map((post, i) => (
-            <Reveal as="li" key={post.slug} delay={i * 0.06} y={12} className="border-b border-line">
+            <Reveal as="li" key={post.slug} index={i} className="border-b border-line">
               <PostLink
                 post={post}
                 lang={lang}

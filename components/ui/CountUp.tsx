@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { animate, useInView, useReducedMotion } from "motion/react";
-import { duration, ease } from "@/lib/motion";
+import { COUNT_DURATION, ease } from "@/lib/motion";
 
 /**
  * CIFRA QUE CUENTA AL ENTRAR EN PANTALLA
@@ -49,7 +49,7 @@ export function CountUp({
     yaCorrio.current = true;
 
     const controles = animate(0, value, {
-      duration: duration.slow * 2.2,
+      duration: COUNT_DURATION,
       ease: ease.standard,
       onUpdate: (v) => {
         nodo.textContent = `${Math.round(v)}${suffix}`;

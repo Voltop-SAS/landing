@@ -206,7 +206,7 @@ export function Header({ lang }: { lang: Locale }) {
             <button
               ref={toggleRef}
               type="button"
-              className="grid size-11 place-items-center rounded-(--radius-structural) border border-line-control text-ink nav:hidden"
+              className="press grid size-11 place-items-center rounded-(--radius-structural) border border-line-control text-ink nav:hidden"
               aria-label={open ? t(a11y.closeMenu, lang) : t(a11y.openMenu, lang)}
               aria-expanded={open}
               aria-controls="menu-movil"

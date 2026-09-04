@@ -1,13 +1,28 @@
 import Image from "next/image";
 import { t, type Locale } from "@/lib/i18n/config";
+import { href, routes } from "@/lib/i18n/routes";
 import { home } from "@/content/copy/home";
 import { Section, Container, Eyebrow } from "@/components/ui/layout";
 import { StoreBadges } from "@/components/ui/StoreBadges";
+import { Button } from "@/components/ui/Button";
 import { Reveal } from "@/components/ui/Reveal";
 
 /**
- * HOME · descarga de la app
+ * BEAT 8 · CÓMO SE CARGA — Intensidad: STANDARD
  * Ver docs/MASTER-PROJECT-DEFINITION.md §12 y §15.
+ *
+ * ── DEJÓ DE SER "LA SECCIÓN DE LA APP" ────────────────────────────────────
+ * Este beat es la única respuesta del sitio a la pregunta del público
+ * mayoritario: "¿cómo cargo?". Antes esa respuesta era UNA FRASE dentro de un
+ * bloque rotulado "La app", con tres rasgos sueltos debajo. Rotular por el
+ * producto en vez de por la tarea deja el beat invisible justo para quien lo
+ * necesita, y un rasgo no responde lo que responde un paso.
+ *
+ * Ahora son cuatro pasos en orden —encuentra, escanea, carga, listo— más una
+ * salida a la red para quien quiere ver dónde cargar sin descargar nada. La
+ * intensidad sigue siendo STANDARD a propósito: viene después del momento
+ * signature de la película y antes del cierre. Aquí no se busca impacto, se
+ * busca que se entienda.
  *
  * ── EL QR NO ES DECORACIÓN, RESUELVE UN PROBLEMA CONCRETO ────────────────
  * Esta sección se lee sobre todo en escritorio, y ahí las insignias de tienda
@@ -50,32 +65,52 @@ export function AppDownload({ lang }: { lang: Locale }) {
               {t(c.lead, lang)}
             </p>
 
-            <ul className="mt-8 space-y-0">
-              {c.features.map((f, i) => (
+            {/* CUATRO PASOS, EN ORDEN. Una lista numerada y no viñetas: el
+                número es información —dice que hay una secuencia y en qué
+                punto estás—, mientras que un punto solo dice "otro elemento".
+
+                El número va en mono, en tinta apagada y sin círculo de color:
+                es un rótulo de ficha técnica, no una insignia. §12 reserva el
+                gradiente para UNA acción por vista, y esa acción son las
+                insignias de tienda que vienen justo debajo. */}
+            <ol className="mt-8">
+              {c.steps.map((paso, i) => (
                 <li
                   key={i}
-                  className="flex gap-3 border-t border-line py-3 text-body-s text-ink-2 last:border-b"
+                  className="grid grid-cols-[1.75rem_1fr] gap-x-4 border-t border-line py-4 last:border-b"
                 >
-                  {/* El punto es una marca de lista, no un adorno de marca: en
-                      tinta apagada, no en el gradiente. §12 reserva el
-                      gradiente para UNA acción por vista. */}
                   <span
                     aria-hidden="true"
-                    className="mt-2.5 size-1 shrink-0 rounded-full bg-ink-3"
-                  />
-                  {t(f, lang)}
+                    className="pt-0.5 font-mono text-mono tabular-nums text-ink-3"
+                  >
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <span>
+                    <span className="font-display text-body font-semibold text-ink">
+                      {t(paso.label, lang)}
+                    </span>
+                    <span className="mt-1 block text-body-s text-ink-2">
+                      {t(paso.body, lang)}
+                    </span>
+                  </span>
                 </li>
               ))}
-            </ul>
+            </ol>
+
+            {/* Salida a la red: "¿dónde puedo cargar?" se responde en /red y no
+                exige descargar nada antes. Va como enlace y no como botón para
+                no competir con las insignias, que son la acción de este beat. */}
+            <div className="mt-7">
+              <Button variant="link" arrow href={href(lang, routes.red)}>
+                {t(c.seeNetwork, lang)}
+              </Button>
+            </div>
 
             <StoreBadges lang={lang} className="mt-9" />
           </div>
 
-          <Reveal
-            y={16}
-            className="hidden md:block"
-            /* Solo escritorio: ver la cabecera del archivo. */
-          >
+          {/* Solo escritorio: ver la cabecera del archivo. */}
+          <Reveal className="hidden md:block">
             <div className="flex flex-col items-center gap-4">
               {/* Marco de vidrio con el código sobre blanco dentro: el efecto
                   va en el marco, nunca en el código. Ver `.glass` y la nota de

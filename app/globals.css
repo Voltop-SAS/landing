@@ -417,6 +417,51 @@ body {
   }
 }
 
+/* =========================================================================
+   PRESSED · la respuesta al clic
+   Ver docs/MASTER-PROJECT-DEFINITION.md §21 y `lib/motion.ts`.
+
+   Las microinteracciones son OTRA FAMILIA, no una versión pequeña de DEPTH:
+   se expresan en color, opacidad y dos o tres píxeles, nunca en la escala del
+   sistema narrativo. Por eso viven aquí, en CSS, y no en el vocabulario de
+   Motion: no comparten ni tiempos ni intención con los reveals.
+
+   ── POR QUÉ HACÍA FALTA ──────────────────────────────────────────────────
+   El sitio tenía hover en 19 componentes y respuesta al clic en 2. En un
+   ratón la diferencia se nota poco; en una pantalla táctil NO HAY HOVER, así
+   que hasta ahora tocar una tarjeta de ciudad no producía ninguna señal entre
+   el toque y la carga de la página siguiente. El movimiento aquí no es
+   expresivo: es acuse de recibo.
+
+   Existía además un token `--color-brand-press` declarado y sin usar de una
+   primera intención que nunca aterrizó. Se retiró en la limpieza; esta es la
+   forma que sí aterriza, y es geométrica en vez de cromática, para que sirva
+   igual a una tarjeta de vidrio, a una insignia y a una fila del registro.
+
+   Un solo valor para todo el sitio: 0.98. Dos escalas de presión distintas no
+   son dos decisiones, son la falta de una.
+   ========================================================================= */
+.press {
+  transition: transform var(--duration-fast) var(--ease-standard);
+}
+
+.press:active {
+  transform: scale(0.98);
+}
+
+/* El acuse de recibo se conserva sin movimiento: quien pide menos animación
+   sigue necesitando saber que su toque llegó. La señal pasa al color. */
+@media (prefers-reduced-motion: reduce) {
+  .press {
+    transition: none;
+  }
+
+  .press:active {
+    transform: none;
+    opacity: 0.75;
+  }
+}
+
 /* MEDIDA DE LÍNEA · 45–75 caracteres (§22)
 
    Los valores NO son el número de caracteres. La unidad `ch` es el ancho del
@@ -469,6 +514,9 @@ body {
   [data-reveal] {
     opacity: 1 !important;
     transform: none !important;
+    /* FRAME escribe también `clip-path`. Sin anularlo aquí, la película
+       quedaría recortada por los lados en un navegador sin JavaScript. */
+    clip-path: none !important;
   }
 }
 
@@ -476,5 +524,6 @@ body {
   [data-reveal] {
     opacity: 1 !important;
     transform: none !important;
+    clip-path: none !important;
   }
 }

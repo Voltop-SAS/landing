@@ -24,7 +24,8 @@ import { cn } from "@/lib/cn";
  * decisión de si esto es un enlace o no lo es.
  *
  * `group` se añade únicamente en la rama enlazada: los `group-hover` de los
- * hijos no deben responder cuando no hay nada que abrir.
+ * hijos no deben responder cuando no hay nada que abrir. Lo mismo vale para
+ * `press`: una fila que no lleva a ninguna parte no debe acusar el toque.
  */
 export function PostLink({
   post,
@@ -40,7 +41,7 @@ export function PostLink({
   if (!hasPage(post)) return <div className={className}>{children}</div>;
 
   return (
-    <Link href={href(lang, routes.post(post.slug))} className={cn("group", className)}>
+    <Link href={href(lang, routes.post(post.slug))} className={cn("group press", className)}>
       {children}
     </Link>
   );

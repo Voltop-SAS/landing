@@ -81,7 +81,7 @@ export function Accordion({
                 aria-expanded={abierta}
                 aria-controls={panelId}
                 onClick={() => alternar(item.id)}
-                className="group flex w-full items-start justify-between gap-6 py-6 text-left transition-colors duration-(--duration-fast) hover:text-brand"
+                className="press group flex w-full items-start justify-between gap-6 py-6 text-left transition-colors duration-(--duration-fast) hover:text-brand"
               >
                 <span className="font-display text-display-s font-semibold text-ink transition-colors group-hover:text-brand">
                   {item.question}

@@ -107,7 +107,7 @@ export function LangSwitch({
         aria-controls="selector-idioma"
         onClick={() => setOpenedFor(open ? null : pathname)}
         className={cn(
-          "inline-flex min-h-11 items-center gap-1.5 rounded-(--radius-pill) border border-line-control px-3.5",
+          "press inline-flex min-h-11 items-center gap-1.5 rounded-(--radius-pill) border border-line-control px-3.5",
           "font-mono text-mono uppercase transition-colors",
           open ? "text-ink" : "text-ink-2 hover:text-ink"
         )}

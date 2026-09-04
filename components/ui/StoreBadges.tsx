@@ -32,7 +32,7 @@ import { TrackClick } from "@/components/analytics/TrackClick";
  */
 
 const insignia =
-  "group inline-flex h-[3.25rem] items-center gap-3 rounded-(--radius-structural) border border-line-control " +
+  "group press inline-flex h-[3.25rem] items-center gap-3 rounded-(--radius-structural) border border-line-control " +
   "bg-surface-2 px-4 transition-colors duration-(--duration-fast) hover:border-line-strong hover:bg-surface-3";
 
 const rotulo = "flex flex-col leading-none";

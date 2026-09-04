@@ -92,7 +92,7 @@ export function SegmentSelector({
               tabIndex={i === focusIndex ? 0 : -1}
               onClick={() => select(i)}
               className={cn(
-                "relative inline-flex min-h-12 items-center px-5 text-body-s transition-colors",
+                "press relative inline-flex min-h-12 items-center px-5 text-body-s transition-colors",
                 isActive ? "text-ink" : "text-ink-2 hover:text-ink"
               )}
             >

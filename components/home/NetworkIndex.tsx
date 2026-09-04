@@ -7,6 +7,7 @@ import { media } from "@/content/data/media";
 import { getCitiesWithStations, getNetworkSummary } from "@/lib/data";
 import { Section, Container, Eyebrow } from "@/components/ui/layout";
 import { Media } from "@/components/ui/Media";
+import { Flow } from "@/components/ui/Flow";
 import { Button } from "@/components/ui/Button";
 import { Reveal } from "@/components/ui/Reveal";
 import { CountUp } from "@/components/ui/CountUp";
@@ -66,15 +67,22 @@ export function NetworkIndex({ lang }: { lang: Locale }) {
       {/* Suelo. `aria-hidden` porque no aporta información: lo que hay que leer
           son los datos de encima. */}
       <div aria-hidden="true" className="absolute inset-0 -z-10">
-        <Media
-          asset={media.estacionInfraestructura}
-          lang={lang}
-          fill
-          sizes="100vw"
-          quality={70}
-          position="object-[50%_45%]"
-          className="h-full w-full"
-        />
+        {/* FLOW: el suelo pertenece a otro plano. El marco no se mueve —los
+            velos y la retícula de encima siguen clavados—, solo la fotografía
+            dentro de él. Es lo que separa "una foto de fondo" de "una sección
+            con profundidad", y es el único movimiento de material de este beat:
+            las cifras y las specs de la red no se animan nunca. */}
+        <Flow className="absolute inset-0" amount={5}>
+          <Media
+            asset={media.estacionInfraestructura}
+            lang={lang}
+            fill
+            sizes="100vw"
+            quality={70}
+            position="object-[50%_45%]"
+            className="h-full w-full"
+          />
+        </Flow>
         {/* Dos velos: uno plano que fija el piso de contraste y otro vertical
             que funde la sección con las vecinas para que la foto no aparezca
             recortada por una línea dura. */}
@@ -100,10 +108,10 @@ export function NetworkIndex({ lang }: { lang: Locale }) {
             ciudad, no una por estación — eso es el inventario y vive en /red. */}
         <ul className="mt-12 grid gap-4 sm:grid-cols-2">
           {cobertura.map(({ city, count, operational }, i) => (
-            <Reveal as="li" key={city.slug} delay={i * 0.07} y={14}>
+            <Reveal as="li" key={city.slug} index={i} level="expressive">
               <Link
                 href={href(lang, routes.city(city.slug))}
-                className="glass group relative flex h-full flex-col justify-between gap-14 rounded-(--radius-structural) p-7 sm:gap-20 transition-transform duration-(--duration-base) ease-(--ease-out) hover:-translate-y-1 motion-reduce:hover:translate-y-0"
+                className="glass press group relative flex h-full flex-col justify-between gap-14 rounded-(--radius-structural) p-7 sm:gap-20 hover:-translate-y-1 motion-reduce:hover:translate-y-0"
               >
                 <div className="flex items-start justify-between gap-4">
                   <h3 className="font-display text-display-m font-semibold text-ink transition-colors group-hover:text-brand">
