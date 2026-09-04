@@ -115,7 +115,7 @@ export default async function NosotrosPage({ params }: Props) {
       {/* Real material, full bleed — a breath between blocks of text */}
       <Container width="wide">
         <Media
-          asset={media.infraestructuraAmplia}
+          asset={media.wideInfrastructure}
           locale={locale}
           corner
           sizes="(min-width: 1600px) 1600px, 100vw"
@@ -246,7 +246,7 @@ export default async function NosotrosPage({ params }: Props) {
           className="mt-14"
         >
           <Media
-            asset={media.visionCeo}
+            asset={media.ceoVision}
             locale={locale}
             corner
             sizes="(min-width: 1600px) 1600px, 100vw"

@@ -5,7 +5,7 @@ import { footer, brand, a11y } from '~/core/common/domain/consts/copy'
 import { Container } from '@ui/common/components/ui/LayoutPrimitives'
 import { Logo } from '@ui/common/components/layout/Logo'
 import { SocialLinks } from '@ui/common/components/layout/SocialLinks'
-import { externalLinks, soporteEmail } from '~/core/common/domain/consts/links'
+import { externalLinks, supportEmail } from '~/core/common/domain/consts/links'
 
 /**
  * FOOTER · Server Component
@@ -57,10 +57,10 @@ export function Footer({ locale }: { locale: Locale }) {
                 behind a "Contact us", because an email you can copy at a
                 glance saves a click and a form. */}
             <a
-              href={externalLinks.soporte}
+              href={externalLinks.support}
               className="mt-5 inline-flex min-h-11 items-center font-mono text-mono text-ink-2 transition-colors hover:text-brand"
             >
-              {soporteEmail}
+              {supportEmail}
             </a>
             <SocialLinks locale={locale} />
           </div>

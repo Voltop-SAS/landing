@@ -59,9 +59,9 @@ import { CountUp } from '@ui/common/components/ui/CountUp'
  */
 export function NetworkIndex({ locale }: { locale: Locale }) {
   const summary = getNetworkSummary()
-  const cobertura = getCitiesWithStations()
+  const coverage = getCitiesWithStations()
 
-  const cifras: { label: string; value: React.ReactNode }[] = [
+  const figures: { label: string; value: React.ReactNode }[] = [
     /* The only one that counts up is the one that IS a number. "22–80 kW"
        and the connector list are not quantities: animating them would be
        motion for motion's sake. */
@@ -163,7 +163,7 @@ export function NetworkIndex({ locale }: { locale: Locale }) {
                 becomes a card again; the relationship between the two cities
                 is preserved by adjacency, just vertically. */}
             <ul className="mt-9 grid grid-cols-1 gap-3 sm:grid-cols-2">
-              {cobertura.map(({ city, count, operational }, i) => (
+              {coverage.map(({ city, count, operational }, i) => (
                 <Reveal
                   as="li"
                   key={city.slug}
@@ -271,7 +271,7 @@ export function NetworkIndex({ locale }: { locale: Locale }) {
                 `sm` it stacks with horizontal hairlines, which at 390px is the
                 only way "GB/T · CCS1 · CCS2" does not break. */}
             <dl className="mt-3 flex flex-col gap-px overflow-hidden rounded-(--radius-structural) border border-line bg-line sm:flex-row sm:flex-wrap">
-              {cifras.map((c) => (
+              {figures.map((c) => (
                 <div
                   key={c.label}
                   className="grow bg-canvas px-4 py-4"
@@ -388,7 +388,7 @@ export function NetworkIndex({ locale }: { locale: Locale }) {
             className="mx-auto h-[26rem] w-full max-w-sm sm:h-[32rem] lg:mx-0 lg:h-full lg:max-w-none"
           >
             <Media
-              asset={media.renderCargador}
+              asset={media.chargerRender}
               locale={locale}
               fill
               sizes="(min-width: 1024px) 44vw, 90vw"

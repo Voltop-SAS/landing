@@ -31,7 +31,7 @@ export default async function TermsPage({ params }: Props) {
   return (
     <LegalDocument
       doc={legalDocs.terms}
-      titulo={t(legalDoc.terms.title, locale)}
+      title={t(legalDoc.terms.title, locale)}
       locale={locale}
     />
   )

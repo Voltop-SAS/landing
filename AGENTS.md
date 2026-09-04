@@ -20,6 +20,11 @@ to variables, functions, types, props, hooks, CSS custom properties and every
 comment and doc block, including long explanatory ones. It applies to new code
 and to any code you touch.
 
+Module directories under `src/core` are English too — `network`, `news`,
+`business`, `about` — even though the public URL segments they serve are
+Spanish. The directory is code; the segment is an indexed URL. Both facts are
+true at once and neither is a mistake.
+
 Do not skip this because the file you opened is written in Spanish. Most of
 this codebase predates the rule and is being converted; matching the local
 style perpetuates the thing being removed. If you edit a Spanish-named symbol,

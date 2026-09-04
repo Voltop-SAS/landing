@@ -121,9 +121,9 @@ export function InfrastructureSignature({
    * from the composition —the shared edge and the background that stitches
    * them together— not from the material.
    */
-  const apertura = useTransform(scrollYProgress, [0, 0.25], reduce ? [0, 0] : [1, 0])
+  const opening = useTransform(scrollYProgress, [0, 0.25], reduce ? [0, 0] : [1, 0])
   const clipPath = useTransform(
-    apertura,
+    opening,
     (v) => `inset(0% ${(v * 13).toFixed(2)}% ${(v * 30).toFixed(2)}% ${(v * 13).toFixed(2)}%)`,
   )
   const scale = useTransform(scrollYProgress, [0, 0.25], reduce ? [1, 1] : [1.06, 1])
@@ -171,15 +171,15 @@ export function InfrastructureSignature({
    *
    * No route on the site links to this anchor today, but the URL is public.
    */
-  const enVista = useInView(ref, { amount: 0.5 })
+  const inView = useInView(ref, { amount: 0.5 })
   const [forced, setForced] = useState(false)
   useEffect(() => {
-    if (!enVista) return
+    if (!inView) return
     const id = setTimeout(() => {
       if (scrollYProgress.get() < 0.15) setForced(true)
     }, 1200)
     return () => clearTimeout(id)
-  }, [enVista, scrollYProgress])
+  }, [inView, scrollYProgress])
 
   const visible = reduce || abierto || forced
   /**
@@ -213,7 +213,7 @@ export function InfrastructureSignature({
     <Section
       ref={ref}
       id="infraestructura"
-      register="impacto"
+      register="impact"
       space="none"
       /* `motion-reduce:h-auto` collapses the journey when there is no motion
          to justify it. The panel stops being pinned and the section measures
@@ -229,7 +229,7 @@ export function InfrastructureSignature({
           className="absolute inset-0 transition-[clip-path] duration-500 ease-out"
         >
           <Media
-            asset={media.estacionMedellin}
+            asset={media.stationMedellin}
             locale={locale}
             fill
             sizes="100vw"

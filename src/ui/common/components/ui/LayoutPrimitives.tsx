@@ -77,7 +77,7 @@ export function Container({
 }
 
 type Space = 'tight' | 'base' | 'loose' | 'none'
-type Register = 'silencio' | 'impacto'
+type Register = 'silence' | 'impact'
 
 /**
  * Each section contributes HALF the declared distance, so the gap between two
@@ -119,7 +119,7 @@ const spaces: Record<Space, string> = {
 export function Section({
   id,
   children,
-  register = 'silencio',
+  register = 'silence',
   space = 'base',
   className,
   as: Tag = 'section',
@@ -143,7 +143,7 @@ export function Section({
       className={cn(
         'relative scroll-mt-24',
         spaces[space],
-        register === 'impacto' && 'grain',
+        register === 'impact' && 'grain',
         className,
       )}
     >

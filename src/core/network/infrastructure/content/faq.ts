@@ -137,7 +137,7 @@ export const faq: FaqItem[] = [
            attachment or a written record. Choosing for the user would have
            been worse. */
         label: { es: 'Escríbenos por correo', en: 'Email us', pt: 'Escreva para a gente' },
-        href: externalLinks.soporte,
+        href: externalLinks.support,
         external: true,
       },
     ],

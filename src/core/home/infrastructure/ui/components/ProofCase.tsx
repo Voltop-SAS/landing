@@ -27,14 +27,14 @@ export function ProofCase({ locale }: { locale: Locale }) {
   return (
     <Section
       id="caso"
-      register="impacto"
+      register="impact"
       space="none"
       ariaLabelledby="caso-title"
       className="isolate overflow-hidden"
     >
       <div className="absolute inset-0">
         <Media
-          asset={media.aperturaEan}
+          asset={media.eanOpening}
           locale={locale}
           fill
           sizes="100vw"
@@ -90,7 +90,7 @@ export function ProofCase({ locale }: { locale: Locale }) {
               towards the face without touching the file — see
               `QuoteAttribution`. */}
           <QuoteAttribution
-            asset={media.retratoTestimonioEan}
+            asset={media.eanTestimonialPortrait}
             locale={locale}
             name={featured.author}
             role={t(featured.role, locale)}

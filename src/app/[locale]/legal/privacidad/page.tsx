@@ -36,7 +36,7 @@ export default async function PrivacyPage({ params }: Props) {
   return (
     <LegalDocument
       doc={legalDocs.privacy}
-      titulo={t(legal.privacy.title, locale)}
+      title={t(legal.privacy.title, locale)}
       locale={locale}
     />
   )

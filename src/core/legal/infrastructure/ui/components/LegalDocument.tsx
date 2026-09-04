@@ -30,11 +30,11 @@ import { Section, Container } from '@ui/common/components/ui/LayoutPrimitives'
  */
 export function LegalDocument({
   doc,
-  titulo,
+  title,
   locale,
 }: {
   doc: LegalDoc
-  titulo: string
+  title: string
   locale: Locale
 }) {
   /* The notice only applies where the document is NOT in the page's language. */
@@ -42,7 +42,7 @@ export function LegalDocument({
 
   const indice = (
     <ol className="space-y-0">
-      {doc.secciones.map((s, i) => (
+      {doc.sections.map((s, i) => (
         <li key={s.id}>
           <a
             href={`#${s.id}`}
@@ -77,7 +77,7 @@ export function LegalDocument({
             {t(legalDoc.eyebrow, locale)}
           </p>
           <h1 className="mt-5 max-w-[18ch] font-display text-display-xl font-semibold text-balance text-ink">
-            {titulo}
+            {title}
           </h1>
           {/* The date is FORMATTED per language, like the rest of the site.
               It used to render the document's literal string and read "Last
@@ -85,7 +85,7 @@ export function LegalDocument({
               Spanish on purpose; its metadata does not. */}
           <p className="mt-6 font-mono text-mono text-ink-3">
             {t(legalDoc.updatedLabel, locale)}:{' '}
-            <time dateTime={doc.actualizadoISO}>{formatDate(doc.actualizadoISO, locale)}</time>
+            <time dateTime={doc.updatedISO}>{formatDate(doc.updatedISO, locale)}</time>
           </p>
 
           {languageNotice ? (
@@ -137,7 +137,7 @@ export function LegalDocument({
             lang={defaultLocale}
             className="min-w-0 flex-1 pt-10 lg:pt-12"
           >
-            {doc.secciones.map((s) => (
+            {doc.sections.map((s) => (
               <section
                 key={s.id}
                 id={s.id}
@@ -148,12 +148,12 @@ export function LegalDocument({
                 <h2 className="font-display text-display-m font-semibold text-ink">{s.heading}</h2>
                 <div className="mt-5 space-y-4">
                   {s.body.map((b, i) =>
-                    b.tipo === 'parrafo' ? (
+                    b.type === 'paragraph' ? (
                       <p
                         key={i}
                         className="measure text-body text-ink-2"
                       >
-                        {b.texto}
+                        {b.text}
                       </p>
                     ) : (
                       <ul

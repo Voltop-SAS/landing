@@ -77,7 +77,7 @@ export function Hero({ locale }: { locale: Locale }) {
 
   return (
     <Section
-      register="impacto"
+      register="impact"
       space="none"
       className="flex min-h-[88dvh] flex-col justify-end overflow-hidden"
     >
@@ -98,7 +98,7 @@ export function Hero({ locale }: { locale: Locale }) {
           On desktop the value plays no part: there the full width is kept. */}
       <div className="absolute inset-0">
         <Media
-          asset={media.heroVehiculoCargando}
+          asset={media.heroVehicleCharging}
           locale={locale}
           fill
           priority

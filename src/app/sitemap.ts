@@ -63,13 +63,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     {
       path: routes.terms,
       priority: 0.3,
-      lastModified: new Date(legalDocs.terms.actualizadoISO),
+      lastModified: new Date(legalDocs.terms.updatedISO),
       changeFrequency: 'yearly',
     },
     {
       path: routes.privacy,
       priority: 0.3,
-      lastModified: new Date(legalDocs.privacy.actualizadoISO),
+      lastModified: new Date(legalDocs.privacy.updatedISO),
       changeFrequency: 'yearly',
     },
     ...getCities().map((c) => ({

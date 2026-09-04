@@ -42,7 +42,7 @@ export const media = {
    * MIDDLE of the loop, which is what should be visible while the video loads
    * and what stays fixed under `prefers-reduced-motion`.
    */
-  estacionMedellin: {
+  stationMedellin: {
     id: 'estacion-medellin',
     kind: 'video',
     src: '/estacion-medellin-loop.mp4',
@@ -66,7 +66,7 @@ export const media = {
   },
 
   /** Proof of institutional partnership, and of people. */
-  aperturaEan: {
+  eanOpening: {
     id: 'apertura-ean',
     kind: 'video',
     src: null,
@@ -87,7 +87,7 @@ export const media = {
   },
 
   /** Proof of purpose and leadership. */
-  visionCeo: {
+  ceoVision: {
     id: 'vision-ceo',
     kind: 'video',
     src: null,
@@ -108,7 +108,7 @@ export const media = {
   },
 
   /** Breathing material: it conveys scale without a single figure. */
-  infraestructuraAmplia: {
+  wideInfrastructure: {
     id: 'infraestructura-amplia',
     kind: 'photo',
     src: null,
@@ -127,7 +127,7 @@ export const media = {
     availability: 'confirmado-no-entregado',
   },
 
-  espacioComercial: {
+  retailSpace: {
     id: 'espacio-comercial',
     kind: 'photo',
     src: null,
@@ -146,7 +146,7 @@ export const media = {
     availability: 'confirmado-no-entregado',
   },
 
-  detalleCarga: {
+  chargingDetail: {
     id: 'detalle-carga',
     kind: 'photo',
     src: null,
@@ -182,7 +182,7 @@ export const media = {
    */
 
   /** BEAT 1 · HERO. A connected vehicle: charging happening, not idle hardware. */
-  heroVehiculoCargando: {
+  heroVehicleCharging: {
     id: 'hero-vehiculo-cargando',
     kind: 'photo',
     src: '/hero-vehiculo-cargando.jpg',
@@ -210,7 +210,7 @@ export const media = {
    * lugares" — because it shows several stations in a real space rather than a
    * single isolated unit.
    */
-  estacionInfraestructura: {
+  stationInfrastructure: {
     id: 'estacion-infraestructura',
     kind: 'photo',
     src: '/estacion-infraestructura.jpg',
@@ -323,7 +323,7 @@ export const media = {
    * the dark register is worse than the problem it fixes. If a version with a
    * dark background is ever produced, it drops straight in here.
    */
-  retratoTestimonioEan: {
+  eanTestimonialPortrait: {
     id: 'retrato-testimonio-ean',
     kind: 'photo',
     src: '/retrato-herbert-perico.jpg',
@@ -342,7 +342,7 @@ export const media = {
     availability: 'entregado',
   },
 
-  retratoFundador: {
+  founderPortrait: {
     id: 'retrato-fundador',
     kind: 'photo',
     src: '/retrato-bruno-ocampo.jpg',
@@ -380,7 +380,7 @@ export const media = {
    * reader user needs to know about it; it does not say "render", because the
    * file format is not information for someone listening.
    */
-  renderCargador: {
+  chargerRender: {
     id: 'render-cargador',
     kind: 'photo',
     src: '/render-cargador.png',
@@ -444,7 +444,7 @@ export const media = {
    * NOTE: this means the same video appears in two places on the site. Worth
    * confirming that is intended, or delivering separate pieces.
    */
-  aperturaWake: {
+  wakeOpening: {
     id: 'apertura-wake',
     kind: 'video',
     src: '/voltop-film.mp4',
@@ -470,7 +470,7 @@ export const media = {
      kept because it documents the brand piece — its narrative function, its
      duration, its outstanding subtitles — and that information is not in
      `aperturaWake`, which describes it as material for one specific opening. */
-  filmVoltop: {
+  voltopFilm: {
     id: 'film-voltop',
     kind: 'video',
     src: '/voltop-film.mp4',

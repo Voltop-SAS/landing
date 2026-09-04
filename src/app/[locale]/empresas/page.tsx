@@ -61,7 +61,7 @@ export default async function EmpresasPage({ params }: Props) {
           className="mt-16"
         >
           <Media
-            asset={media.espacioComercial}
+            asset={media.retailSpace}
             locale={locale}
             corner
             sizes="(min-width: 1600px) 1600px, 100vw"

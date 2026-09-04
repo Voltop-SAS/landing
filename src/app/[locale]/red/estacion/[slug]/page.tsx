@@ -283,12 +283,12 @@ export default async function StationPage({ params }: Props) {
             asset={
               s.media.photos[0]
                 ? {
-                    ...media.detalleCarga,
+                    ...media.chargingDetail,
                     src: s.media.photos[0].src,
                     alt: s.media.photos[0].alt,
                   }
                 : {
-                    ...media.detalleCarga,
+                    ...media.chargingDetail,
                     alt: {
                       es: `Fotografía de la estación ${s.name}`,
                       en: `Photo of the ${s.name} station`,

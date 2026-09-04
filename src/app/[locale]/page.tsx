@@ -4,7 +4,7 @@ import { isLocale, t, type Locale } from '~/core/common/domain/i18n/config'
 import { alternatesFor, SITE_URL } from '~/core/common/domain/i18n/routes'
 import { home } from '~/core/home/domain/consts/copy'
 import { brand, footer, empresa } from '~/core/common/domain/consts/copy'
-import { soporteEmail } from '~/core/common/domain/consts/links'
+import { supportEmail } from '~/core/common/domain/consts/links'
 import { getPostsForCity, hasPage } from '~/core/common/infrastructure/data-access'
 
 import { Hero } from '~/core/home/infrastructure/ui/components/Hero'
@@ -76,7 +76,7 @@ export default async function HomePage({ params }: Props) {
     contactPoint: {
       '@type': 'ContactPoint',
       contactType: 'customer support',
-      email: soporteEmail,
+      email: supportEmail,
       availableLanguage: ['es', 'en', 'pt'],
     },
     sameAs: footer.social.map((r) => r.url),

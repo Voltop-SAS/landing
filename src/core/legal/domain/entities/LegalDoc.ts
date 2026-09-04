@@ -1,4 +1,4 @@
-export type LegalBlock = { tipo: 'parrafo'; texto: string } | { tipo: 'lista'; items: string[] }
+export type LegalBlock = { type: 'paragraph'; text: string } | { type: 'list'; items: string[] }
 
 export type LegalSection = {
   /** Stable anchor: the table of contents uses it. */
@@ -8,10 +8,10 @@ export type LegalSection = {
 }
 
 export type LegalDoc = {
-  titulo: string
+  title: string
   /** The date exactly as the legal team issued it. */
-  actualizado: string
+  updated: string
   /** ISO, for `<time dateTime>` and for the sitemap. */
-  actualizadoISO: string
-  secciones: LegalSection[]
+  updatedISO: string
+  sections: LegalSection[]
 }

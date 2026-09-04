@@ -74,10 +74,10 @@ export function VisionQuote({ locale }: { locale: Locale }) {
               is a strong presence without being a wall. From `lg` up the grid
               takes over. */}
           <div className="relative mx-auto aspect-[2/3] w-full max-w-sm overflow-hidden rounded-(--radius-structural) border border-line bg-surface-1 lg:mx-0 lg:max-w-none">
-            {media.retratoFundador.src && (
+            {media.founderPortrait.src && (
               <Image
-                src={media.retratoFundador.src}
-                alt={t(media.retratoFundador.alt, locale)}
+                src={media.founderPortrait.src}
+                alt={t(media.founderPortrait.alt, locale)}
                 fill
                 sizes="(min-width: 1024px) 40vw, 90vw"
                 className="object-cover"

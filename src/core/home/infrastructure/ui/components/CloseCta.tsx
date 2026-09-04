@@ -18,7 +18,7 @@ import { TrackClick } from '@ui/common/components/analytics/TrackClick'
 export function CloseCta({ locale }: { locale: Locale }) {
   return (
     <Section
-      register="impacto"
+      register="impact"
       space="base"
       className="overflow-hidden border-t border-line"
     >

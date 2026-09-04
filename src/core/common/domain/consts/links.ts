@@ -48,11 +48,11 @@ export const externalLinks = {
    * Support email. It comes from the Data Processing Policy, where VOLTOP
    * S.A.S. declares it as its contact address — not from an assumption.
    */
-  soporte: 'mailto:soporte@voltop.co',
+  support: 'mailto:soporte@voltop.co',
 } as const
 
 /** The address as text, to display alongside the link. */
-export const soporteEmail = 'soporte@voltop.co'
+export const supportEmail = 'soporte@voltop.co'
 
 /**
  * Recipients for commercial leads (agreed 2026-09-02).
