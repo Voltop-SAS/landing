@@ -6,11 +6,16 @@ import hexagonalArchitecture from 'eslint-plugin-hexagonal-architecture'
 const eslintConfig = defineConfig([
   ...nextVitals,
   ...nextTs,
-  // El núcleo de dominio no puede depender de infraestructura. La regla es la
-  // del scaffold corporativo y solo aplica a `src/core/**`, que hoy todavía no
-  // existe: queda armada para cuando la capa de dominio aterrice aquí.
+  // The domain core must not depend on infrastructure. The rule comes from the
+  // corporate scaffold and is scoped to `src/core/**`, where the domain layer
+  // now lives.
+  //
+  // `.tsx` is included on purpose. Every module keeps its components under
+  // `infrastructure/ui/components/`, so a `.ts`-only glob would check the
+  // domain — where a violation is least likely — and skip the components,
+  // which is exactly where one module reaching into another would show up.
   {
-    files: ['src/core/**/*.ts'],
+    files: ['src/core/**/*.{ts,tsx}'],
     plugins: {
       'hexagonal-architecture': hexagonalArchitecture,
     },
@@ -26,10 +31,10 @@ const eslintConfig = defineConfig([
     'build/**',
     'next-env.d.ts',
     'coverage/**',
-    // Skills instaladas: código de terceros. `npx eslint .` devolvía 147
-    // warnings suyos y enterraba los del proyecto. Van en dos sitios porque el
-    // instalador cambió de destino: las viejas en `.claude/`, las nuevas en
-    // `.agents/` (con enlace simbólico desde `.claude/skills/`).
+    // Installed skills: third-party code. `npx eslint .` reported 147 warnings
+    // of their own, burying the project's. They live in two places because the
+    // installer changed its target: the old ones under `.claude/`, the new ones
+    // under `.agents/` (symlinked from `.claude/skills/`).
     '.claude/**',
     '.agents/**',
   ]),
