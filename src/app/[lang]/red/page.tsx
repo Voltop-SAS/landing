@@ -17,7 +17,7 @@ import {
   Eyebrow,
   SectionHeading,
   ProcessList,
-} from '@ui/common/components/ui/layout'
+} from '@ui/common/components/ui/LayoutPrimitives'
 import { Button } from '@ui/common/components/ui/Button'
 import { Reveal } from '@ui/common/components/ui/Reveal'
 import { StationFinder } from '~/core/red/infrastructure/ui/components/StationFinder'

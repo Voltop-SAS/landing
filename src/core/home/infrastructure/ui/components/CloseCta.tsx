@@ -2,7 +2,7 @@ import { t, type Locale } from '~/core/common/domain/i18n/config'
 import { href, routes } from '~/core/common/domain/i18n/routes'
 import { home } from '~/core/home/domain/consts/copy'
 import { actions } from '~/core/common/domain/consts/copy'
-import { Section, Container, SectionHeading } from '@ui/common/components/ui/layout'
+import { Section, Container, SectionHeading } from '@ui/common/components/ui/LayoutPrimitives'
 import { Button } from '@ui/common/components/ui/Button'
 import { TrackClick } from '@ui/common/components/analytics/TrackClick'
 

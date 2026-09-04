@@ -7,7 +7,7 @@ import { href, routes } from '~/core/common/domain/i18n/routes'
 import { empresas } from '~/core/empresas/domain/consts/copy'
 import type { BusinessSegment } from '~/core/empresas/domain/entities/BusinessSegment'
 import type { Case } from '~/core/empresas/domain/entities/Case'
-import { Section, Container, SectionHeading } from '@ui/common/components/ui/layout'
+import { Section, Container, SectionHeading } from '@ui/common/components/ui/LayoutPrimitives'
 import { SegmentSelector } from '~/core/empresas/infrastructure/ui/components/SegmentSelector'
 import { LeadForm } from '~/core/empresas/infrastructure/ui/components/LeadForm'
 

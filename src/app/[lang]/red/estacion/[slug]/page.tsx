@@ -21,8 +21,13 @@ import {
 import { novedadesInline } from '~/core/novedades/domain/consts/copy'
 import { PostsInline } from '~/core/novedades/infrastructure/ui/components/PostsInline'
 import { TrackView } from '@ui/common/components/analytics/TrackView'
-import { Section, Container, Eyebrow, SectionHeading } from '@ui/common/components/ui/layout'
-import { StatusBadge, SpecList, PendingTag } from '@ui/common/components/ui/data'
+import {
+  Section,
+  Container,
+  Eyebrow,
+  SectionHeading,
+} from '@ui/common/components/ui/LayoutPrimitives'
+import { StatusBadge, SpecList, PendingTag } from '@ui/common/components/ui/DataPrimitives'
 import { Media } from '@ui/common/components/ui/Media'
 import { Button } from '@ui/common/components/ui/Button'
 import { DirectionsButton } from '~/core/red/infrastructure/ui/components/DirectionsButton'

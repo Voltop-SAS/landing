@@ -7,7 +7,7 @@ import { href, routes } from '~/core/common/domain/i18n/routes'
 import { leadForm } from '~/core/common/domain/consts/copy'
 import { leadRecipients } from '~/core/common/domain/consts/links'
 import { Button } from '@ui/common/components/ui/Button'
-import { PendingTag } from '@ui/common/components/ui/data'
+import { PendingTag } from '@ui/common/components/ui/DataPrimitives'
 import { track } from '~/core/common/infrastructure/analytics'
 import { cn } from '@ui/common/lib/cn'
 

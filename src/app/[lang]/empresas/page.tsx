@@ -11,7 +11,7 @@ import {
   Eyebrow,
   SectionHeading,
   ProcessList,
-} from '@ui/common/components/ui/layout'
+} from '@ui/common/components/ui/LayoutPrimitives'
 import { Media } from '@ui/common/components/ui/Media'
 import { BusinessFlow } from '~/core/empresas/infrastructure/ui/components/BusinessFlow'
 

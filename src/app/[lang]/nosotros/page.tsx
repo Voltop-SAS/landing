@@ -11,8 +11,13 @@ import {
   getTestimonials,
   getPartners,
 } from '~/core/common/infrastructure/data-access'
-import { Section, Container, Eyebrow, SectionHeading } from '@ui/common/components/ui/layout'
-import { MetricRow, PendingTag } from '@ui/common/components/ui/data'
+import {
+  Section,
+  Container,
+  Eyebrow,
+  SectionHeading,
+} from '@ui/common/components/ui/LayoutPrimitives'
+import { MetricRow, PendingTag } from '@ui/common/components/ui/DataPrimitives'
 import { Media } from '@ui/common/components/ui/Media'
 import { Reveal } from '@ui/common/components/ui/Reveal'
 import { TrackView } from '@ui/common/components/analytics/TrackView'

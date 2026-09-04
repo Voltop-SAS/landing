@@ -15,7 +15,7 @@ import { href, routes } from '~/core/common/domain/i18n/routes'
 import { home } from '~/core/home/domain/consts/copy'
 import { actions } from '~/core/common/domain/consts/copy'
 import { media } from '~/core/common/infrastructure/content/media'
-import { Section, Container, Eyebrow } from '@ui/common/components/ui/layout'
+import { Section, Container, Eyebrow } from '@ui/common/components/ui/LayoutPrimitives'
 import { Media } from '@ui/common/components/ui/Media'
 import { Button } from '@ui/common/components/ui/Button'
 

@@ -3,7 +3,7 @@ import { t, type Locale, type Localized } from '~/core/common/domain/i18n/config
 import { href, routes } from '~/core/common/domain/i18n/routes'
 import { formatDate } from '@ui/common/lib/dates'
 import { novedades } from '~/core/novedades/domain/consts/copy'
-import { Section, Container, SectionHeading } from '@ui/common/components/ui/layout'
+import { Section, Container, SectionHeading } from '@ui/common/components/ui/LayoutPrimitives'
 import { PostLink } from '@ui/common/components/ui/PostLink'
 import type { Post } from '~/core/common/infrastructure/data-access'
 

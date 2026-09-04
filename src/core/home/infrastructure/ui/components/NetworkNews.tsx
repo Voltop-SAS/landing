@@ -4,7 +4,7 @@ import { formatDate } from '@ui/common/lib/dates'
 import { novedades, novedadesInline } from '~/core/novedades/domain/consts/copy'
 import { PostLink } from '@ui/common/components/ui/PostLink'
 import { getLatestPosts } from '~/core/common/infrastructure/data-access'
-import { Section, Container, SectionHeading } from '@ui/common/components/ui/layout'
+import { Section, Container, SectionHeading } from '@ui/common/components/ui/LayoutPrimitives'
 import { Button } from '@ui/common/components/ui/Button'
 import { Reveal } from '@ui/common/components/ui/Reveal'
 

@@ -21,11 +21,8 @@
       }
     ],
     "paths": {
-      "@/*": ["./*"],
       "~/*": ["./src/*"],
-      "@ui/*": ["./src/ui/*"],
-      "@core/*": ["./src/core/*"],
-      "@components/*": ["./src/components/*"]
+      "@ui/*": ["./src/ui/*"]
     }
   },
   "include": [

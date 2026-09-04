@@ -2,7 +2,7 @@ import { t, defaultLocale, type Locale } from '~/core/common/domain/i18n/config'
 import { legalDoc } from '~/core/legal/domain/consts/copy'
 import type { LegalDoc } from '~/core/legal/domain/entities/LegalDoc'
 import { formatDate } from '@ui/common/lib/dates'
-import { Section, Container } from '@ui/common/components/ui/layout'
+import { Section, Container } from '@ui/common/components/ui/LayoutPrimitives'
 
 /**
  * DOCUMENTO LEGAL

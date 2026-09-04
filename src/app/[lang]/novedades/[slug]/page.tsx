@@ -17,10 +17,10 @@ import {
   getStation,
   getCity,
 } from '~/core/common/infrastructure/data-access'
-import { Section, Container, Rule } from '@ui/common/components/ui/layout'
+import { Section, Container, Rule } from '@ui/common/components/ui/LayoutPrimitives'
 import { Media } from '@ui/common/components/ui/Media'
 import { Button } from '@ui/common/components/ui/Button'
-import { PendingTag } from '@ui/common/components/ui/data'
+import { PendingTag } from '@ui/common/components/ui/DataPrimitives'
 import { PostBody } from '~/core/novedades/infrastructure/ui/components/PostBody'
 import { TrackView } from '@ui/common/components/analytics/TrackView'
 import { formatDate } from '@ui/common/lib/dates'

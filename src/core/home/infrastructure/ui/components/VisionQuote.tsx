@@ -5,7 +5,7 @@ import { home } from '~/core/home/domain/consts/copy'
 import { actions } from '~/core/common/domain/consts/copy'
 import { media } from '~/core/common/infrastructure/content/media'
 import { getFounder } from '~/core/common/infrastructure/data-access'
-import { Section, Container, Eyebrow } from '@ui/common/components/ui/layout'
+import { Section, Container, Eyebrow } from '@ui/common/components/ui/LayoutPrimitives'
 import { Button } from '@ui/common/components/ui/Button'
 import { Reveal } from '@ui/common/components/ui/Reveal'
 
