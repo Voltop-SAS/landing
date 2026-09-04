@@ -39,7 +39,9 @@ export type MediaAsset = {
   /** Duración conocida o estimada del material original. */
   duration?: string;
   /** Relación de aspecto para reservar espacio y evitar CLS. */
-  aspect: "16/9" | "4/3" | "3/2" | "1/1" | "21/9" | "9/16";
+  /* `2/3` entró con el render del cargador: es el retrato moderado que
+     faltaba entre `3/2` horizontal y `9/16`, que es formato de historia. */
+  aspect: "16/9" | "4/3" | "3/2" | "2/3" | "1/1" | "21/9" | "9/16";
   /** Disponibilidad declarada del material original. */
   availability: "confirmado-no-entregado" | "a-producir" | "entregado";
 };
@@ -271,20 +273,17 @@ export const media = {
    * dominante: es lo que convierte "Bogotá · 2 estaciones" en un sitio real al
    * que se puede ir. Sin ella la tarjeta es una etiqueta con un número.
    *
-   * Ninguna de las dos está entregada, así que la composición se construye
-   * con el hueco declarado (§33): las proporciones, el velo de legibilidad, el
-   * nombre, el contador y el botón circular ya están en su sitio, y el archivo
-   * entra con `object-cover` sin tocar una línea de layout.
-   *
-   * QUÉ HACE FALTA: una vista reconocible de cada ciudad en 16/9 horizontal,
-   * con la zona inferior izquierda despejada —ahí caen el nombre y el
-   * contador— y la inferior derecha también, donde va el botón. Al atardecer o
-   * de noche, para que no rompa el registro oscuro del sitio.
+   * ENTREGADAS el 2026-09-04, y encajaron sin retocar nada: llegaron en
+   * 1672×941 y 1671×941, que es 16/9 exacto, y las dos son vistas al atardecer
+   * con la franja inferior en sombra —justo donde caen el nombre y el
+   * contador—. La composición no cambió una línea al ponerlas: es lo que se
+   * gana declarando el hueco con su forma y su función en lugar de dejar un
+   * rectángulo gris.
    */
   ciudadBogota: {
     id: "ciudad-bogota",
     kind: "photo",
-    src: null,
+    src: "/ciudad-bogota.png",
     poster: null,
     alt: {
       es: "Vista de Bogotá, ciudad donde Voltop tiene estaciones de carga en operación",
@@ -297,13 +296,13 @@ export const media = {
       pt: "Cartão de cobertura do beat 3. Dá um lugar real à contagem de estações de Bogotá.",
     },
     aspect: "16/9",
-    availability: "a-producir",
+    availability: "entregado",
   },
 
   ciudadMedellin: {
     id: "ciudad-medellin",
     kind: "photo",
-    src: null,
+    src: "/ciudad-medellin.png",
     poster: null,
     alt: {
       es: "Vista de Medellín, ciudad donde Voltop tiene estaciones de carga en operación",
@@ -316,7 +315,44 @@ export const media = {
       pt: "Cartão de cobertura do beat 3. Dá um lugar real à contagem de estações de Medellín.",
     },
     aspect: "16/9",
-    availability: "a-producir",
+    availability: "entregado",
+  },
+
+  /**
+   * RENDER DEL CARGADOR · entregado el 2026-09-04.
+   *
+   * Es el sujeto de la mitad derecha del beat 3, y es el único asset del
+   * registro que NO es fotografía de un sitio: es el equipo, aislado.
+   *
+   * ── DOS COSAS QUE DECIDEN CÓMO SE INTEGRA ────────────────────────────────
+   * · Viene con FONDO TRANSPARENTE (PNG RGBA, alfa 0 en los bordes,
+   *   comprobado). Por eso puede ir sobre el `canvas` sólido de la sección sin
+   *   ninguna caja detrás: no hay recorte que disimular ni fondo que igualar.
+   * · Es VERTICAL, 2046×3074 (2/3). Se sirve con `object-contain` y no
+   *   `cover`: un cargador recortado por arriba o por los lados deja de ser el
+   *   retrato de un equipo y pasa a ser una textura.
+   *
+   * El `alt` describe el equipo y sus conectores, que es lo que un lector de
+   * pantalla necesita saber de él; no dice "render" porque el formato del
+   * archivo no es información para quien lo escucha.
+   */
+  renderCargador: {
+    id: "render-cargador",
+    kind: "photo",
+    src: "/render-cargador.png",
+    poster: null,
+    alt: {
+      es: "Estación de carga rápida Voltop con dos conectores, GB/T y CCS2, y pantalla de operación",
+      en: "Voltop fast-charging station with two connectors, GB/T and CCS2, and an operating screen",
+      pt: "Estação de carregamento rápido Voltop com dois conectores, GB/T e CCS2, e tela de operação",
+    },
+    role: {
+      es: "Sujeto de la mitad derecha del beat 3. Pone el equipo real al lado de las cifras de la red.",
+      en: "Subject of beat 3's right half. Puts the real hardware next to the network figures.",
+      pt: "Sujeito da metade direita do beat 3. Coloca o equipamento real ao lado dos números da rede.",
+    },
+    aspect: "2/3",
+    availability: "entregado",
   },
 
   /**

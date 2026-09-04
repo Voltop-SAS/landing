@@ -208,7 +208,7 @@ export function NetworkIndex({ lang }: { lang: Locale }) {
                 referencia la celda de conectores es visiblemente más ancha
                 porque su contenido lo es. `flex` con `divide-x` lo da solo.
                 Por debajo de `sm` se apila con hairlines horizontales, que a
-                390px es la única forma de que "GB-T · CCS1 · CCS2" no se
+                390px es la única forma de que "GB/T · CCS1 · CCS2" no se
                 parta. */}
             <dl className="mt-3 flex flex-col gap-px overflow-hidden rounded-(--radius-structural) border border-line bg-line sm:flex-row sm:flex-wrap">
               {cifras.map((c) => (
@@ -232,7 +232,7 @@ export function NetworkIndex({ lang }: { lang: Locale }) {
                     {c.etiqueta}
                   </dt>
                   {/* El VALOR no se parte nunca: "22–80 / kW" y
-                      "GB-T · CCS1 · / CCS2" son las dos formas de que un dato
+                      "GB/T · CCS1 · / CCS2" son las dos formas de que un dato
                       deje de leerse como un dato. La etiqueta sí puede caer a
                       dos líneas en los anchos más justos —es descripción, no
                       cifra— y `flex-wrap` deja que una celda entera pase a una
@@ -248,8 +248,12 @@ export function NetworkIndex({ lang }: { lang: Locale }) {
                 En una sola fila, como la referencia. El microcopy NO es un
                 segundo CTA: no enlaza a nada y su punto de marca es el único
                 acento de color de la fila, así que no compite. */}
+            {/* `ghost`, la misma variante que el CTA del beat 2. La referencia
+                trae un botón de relleno claro, pero eso obligaba a añadir una
+                quinta variante al sistema para un solo botón, y un lenguaje de
+                botones con una excepción deja de ser un lenguaje. */}
             <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3">
-              <Button variant="light" size="m" arrow href={href(lang, routes.red)}>
+              <Button variant="ghost" arrow href={href(lang, routes.red)}>
                 {t(actions.seeNetwork, lang)}
               </Button>
               {/* Mono en versales: es como el sitio escribe una nota al lado
@@ -265,33 +269,52 @@ export function NetworkIndex({ lang }: { lang: Locale }) {
           </div>
 
           {/* ══════════════════════════════════════════════════════════════
-              DERECHA · AQUÍ VA EL RENDER DEL CARGADOR
+              DERECHA · EL RENDER DEL CARGADOR
               ══════════════════════════════════════════════════════════════
-              Hueco estructural, deliberadamente vacío: sin fondo, sin borde,
-              sin etiqueta y sin contenido, para que la sección se lea como una
-              composición con aire a la derecha y no como una caja esperando
-              una foto.
+              Entregado el 2026-09-04 y colocado en el hueco que esta sección
+              ya tenía reservado: no hubo que mover ni un píxel de la columna
+              izquierda, que era exactamente el objetivo de reservarlo.
 
-              CUANDO LLEGUE EL ASSET:
-              1. Registrarlo en `content/data/media.ts` con su función
-                 narrativa, como el resto (§33). Formato vertical.
-              2. Sustituir este `div` por el `<Media>` correspondiente con
-                 `className="h-full w-full object-contain"`.
-              3. Envolverlo en `<Flow>` — ver la nota de la cabecera: un objeto
-                 grande y vertical dentro de un marco fijo es el caso para el
-                 que existe esa primitiva, y este beat se quedó sin su momento
-                 de profundidad al perder la fotografía de fondo.
-              Nada de eso cambia la posición, el ancho ni la jerarquía de la
-              columna izquierda.
+              SIN CAJA. El PNG viene con fondo transparente (comprobado: alfa 0
+              en los bordes), así que el equipo se apoya directamente sobre el
+              `canvas` de la sección. Nada de fondo propio, borde ni sombra: la
+              mitad derecha sigue siendo aire con un objeto dentro, que es lo
+              que hace que las dos mitades se lean como UNA composición y no
+              como "texto | foto".
 
-              `hidden lg:block`: en móvil y tablet no reserva nada. Un hueco
-              vacío de 500px en un teléfono es scroll muerto, y hasta que el
-              render exista no hay nada que enseñar ahí. */}
+              `object-contain` y no `cover`: un cargador recortado por arriba o
+              por los lados deja de ser el retrato de un equipo.
+
+              SIN FLOW, Y ESO SE PROBÓ. Parecía el sitio ideal para el
+              parallax —un objeto grande y vertical, y este beat se había
+              quedado sin momento de profundidad al perder la fotografía de
+              fondo— pero FLOW RECORTA POR DISEÑO: su marco clipa un interior
+              un 24% más alto, y con `object-contain` eso cortaba el cargador
+              por arriba y por abajo. Medido: 135px de equipo desaparecidos.
+              Un objeto recortado deja de ser el retrato de un objeto, así que
+              el render se queda quieto y entero. La regla general quedó
+              anotada en `Flow`, para que nadie vuelva a intentarlo.
+
+              En móvil pasa DEBAJO del contenido en lugar de esconderse: ya no
+              es un hueco vacío que costaría scroll, es el producto. */}
           <div
-            aria-hidden="true"
             data-charger-visual=""
-            className="hidden lg:block lg:min-h-[32rem]"
-          />
+            /* Altura explícita por debajo de `lg`: `Flow` posiciona su interior
+               en absoluto y `Media fill` necesita un padre con medida, así que
+               sin esto el contenedor colapsaba a 0 en móvil y tablet y el
+               render no aparecía. Desde `lg` la fila manda y solo se garantiza
+               un mínimo. */
+            className="mx-auto h-[26rem] w-full max-w-sm sm:h-[32rem] lg:mx-0 lg:h-auto lg:max-w-none lg:min-h-[32rem]"
+          >
+            <Media
+              asset={media.renderCargador}
+              lang={lang}
+              fill
+              sizes="(min-width: 1024px) 45vw, 90vw"
+              className="h-full w-full"
+              fit="contain"
+            />
+          </div>
         </div>
       </Container>
     </Section>

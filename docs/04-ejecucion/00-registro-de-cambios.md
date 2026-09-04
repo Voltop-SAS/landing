@@ -2019,3 +2019,46 @@ Cinco piezas se alinearon con patrones que el sitio ya tenía, aunque la referen
 ### Evidencia
 
 `lint`, `tsc` y build limpios · medido a 1440, 1280, 768, 390 y 320px: fondo `rgb(10,15,26)`, **cero overflow en todos**, titular en dos líneas, métricas en una sola fila desde 768 hacia arriba y apiladas por debajo, CTA `rgb(230,233,238)` sobre `rgb(10,15,26)` — 15.7:1 · 27 combinaciones de ruta × viewport sin problemas · `prefers-reduced-motion` intacto.
+
+---
+
+## Bloque 51 · Los assets del beat 3, y GB/T — 2026-09-04
+
+Llegaron las tres piezas que este beat esperaba y entraron **sin mover una línea de layout**, que era exactamente el objetivo de haber declarado los huecos con su forma y su función en lugar de dejar rectángulos grises.
+
+| Asset | Entregado | Encaje |
+|---|---|---|
+| `ciudad-bogota.png` | 1672×941 | **16/9 exacto**, atardecer, franja inferior en sombra |
+| `ciudad-medellin.png` | 1671×941 | 16/9 exacto, mismo registro |
+| `render-cargador.png` | 2046×3074 | **2/3 vertical y fondo transparente** (PNG RGBA, alfa 0 comprobado en los bordes) |
+
+Las 9.5 MB de origen llegan al navegador como **70 KB en AVIF** en escritorio y 54 KB en móvil, medido en red. Las dos fotos vienen en PNG, que para una fotografía es un formato caro como origen; solo afecta al peso del repositorio, porque lo que se sirve es AVIF.
+
+### GB-T → GB/T
+
+Corregido en el dataset. El estándar se escribe **GB/T** —la propia serigrafía del render lo confirma— y el `Connector` era un tipo con el valor mal escrito, así que el compilador señaló los tres registros de estación.
+
+### La variante `light` se retira
+
+El CTA vuelve a `ghost`, la misma variante que el beat 2. La referencia trae un botón de relleno claro, pero eso obligaba a añadir una quinta variante al sistema para un único botón, y un lenguaje de botones con una excepción deja de ser un lenguaje.
+
+### El render NO lleva FLOW, y se probó
+
+Parecía el sitio ideal para el parallax: un objeto grande y vertical, en un beat que se había quedado sin momento de profundidad al perder la fotografía de fondo. **Pero FLOW recorta por diseño** —su marco clipa un interior un 24% más alto— y con `object-contain` eso cortaba el cargador por arriba y por abajo: 135px de equipo desaparecidos, medidos. Un objeto recortado deja de ser el retrato de un objeto.
+
+El render se queda quieto y entero, y la regla general quedó escrita en la cabecera de `Flow`: **si el material va en `contain`, esa primitiva no aplica.**
+
+### Dos añadidos pequeños al sistema
+
+- `Media` gana la prop **`fit`** (`cover` por defecto, `contain` opcional). Existía una sola forma de servir material y el sitio ahora tiene dos tipos: fondo que se recorta sin perder nada, y objeto aislado donde el recorte destruye el sujeto.
+- El tipo `aspect` admite **`2/3`**: el retrato moderado que faltaba entre `3/2` horizontal y `9/16`, que es formato de historia.
+
+### La trampa de la medición, otra vez
+
+El contraste del texto de las tarjetas sobre la fotografía dio primero 1.50:1 y 1.17:1 — cifras alarmantes y falsas. `page.screenshot({clip})` usa **coordenadas de página, no de viewport**, así que con la página desplazada 2000px estaba midiendo otra sección. Es la trampa que el bloque 12 ya documentó y en la que se volvió a caer.
+
+Con el clip corregido: **nombre 8.42–10.95:1 y contador 7.66–8.14:1** sobre el píxel compuesto a percentil 99, con el peor píxel individual en 4.99:1. El velo de legibilidad cumple AA con margen en las dos ciudades y en los dos anchos.
+
+### Evidencia
+
+`lint`, `tsc` y build limpios · las tres imágenes sirviéndose en AVIF, 70 KB en escritorio y 54 KB en móvil · contraste del texto sobre foto medido en las dos tarjetas a 1440 y 390px · 27 combinaciones de ruta × viewport sin problemas · `prefers-reduced-motion` intacto · cero overflow a 1440, 1280, 768, 390 y 320px.

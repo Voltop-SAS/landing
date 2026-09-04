@@ -12,7 +12,7 @@ import type { Localized } from "@/lib/i18n/config";
  * Regla del proyecto: no se inventan datos.
  */
 
-export type Connector = "CCS1" | "CCS2" | "GB-T" | "Type2";
+export type Connector = "CCS1" | "CCS2" | "GB/T" | "Type2";
 export type StationStatus = "operativa" | "proxima" | "mantenimiento";
 
 export type StationMedia = {
@@ -82,7 +82,7 @@ export const stations: Station[] = [
     /* Extraídas de los enlaces de Google Maps entregados el 2026-09-02, no
        transcritas a ojo desde un mapa. */
     geo: { lat: 4.6631495, lng: -74.0599846 },
-    connectors: ["GB-T", "CCS1", "CCS2"],
+    connectors: ["GB/T", "CCS1", "CCS2"],
     powerKw: { min: 22, max: 80 },
     points: 18,
     status: "operativa",
@@ -104,7 +104,7 @@ export const stations: Station[] = [
     citySlug: "bogota",
     address: { es: "Calle 24A #57-60, Bogotá", en: "Calle 24A #57-60, Bogotá", pt: "Calle 24A #57-60, Bogotá", },
     geo: { lat: 4.6440714, lng: -74.1026313 },
-    connectors: ["GB-T"],
+    connectors: ["GB/T"],
     powerKw: { min: 30, max: 30 },
     points: 11,
     status: "operativa",
@@ -125,7 +125,7 @@ export const stations: Station[] = [
     citySlug: "medellin",
     address: { es: "Cra. 35 #10b-66, El Poblado, Medellín", en: "Cra. 35 #10b-66, El Poblado, Medellín", pt: "Cra. 35 #10b-66, El Poblado, Medellín", },
     geo: { lat: 6.2096216, lng: -75.5756009 },
-    connectors: ["GB-T", "CCS2"],
+    connectors: ["GB/T", "CCS2"],
     powerKw: { min: 80, max: 80 },
     points: 6,
     status: "operativa",

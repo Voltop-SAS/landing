@@ -19,6 +19,7 @@ const aspects: Record<MediaAsset["aspect"], string> = {
   "16/9": "aspect-[16/9]",
   "4/3": "aspect-[4/3]",
   "3/2": "aspect-[3/2]",
+  "2/3": "aspect-[2/3]",
   "1/1": "aspect-square",
   "21/9": "aspect-[21/9]",
   "9/16": "aspect-[9/16]",
@@ -33,6 +34,7 @@ export function Media({
   fill = false,
   aspect,
   position,
+  fit = "cover",
   quality,
   controls,
   corner = false,
@@ -70,6 +72,19 @@ export function Media({
    */
   position?: string;
   /**
+   * `cover` recorta para llenar; `contain` cabe entero dejando aire.
+   *
+   * Por defecto `cover`, que es lo correcto para todo el material de sitio:
+   * una fotografía de una estación o de una ciudad ES un fondo y se recorta
+   * sin perder nada.
+   *
+   * `contain` existe para el material que es un OBJETO AISLADO —el render del
+   * cargador— donde el recorte destruye el sujeto: un equipo cortado por
+   * arriba o por los lados deja de ser el retrato de un equipo. Con `contain`,
+   * además, el `position` deja de tener efecto: no hay eje que recortar.
+   */
+  fit?: "cover" | "contain";
+  /**
    * Calidad de codificación. Solo se pasa cuando el peso del asset lo exige:
    * una fotografía muy detallada puede superar el presupuesto de §29 a la
    * calidad por defecto. Los valores admitidos se declaran en `next.config.ts`.
@@ -102,7 +117,7 @@ export function Media({
             sizes={sizes}
             priority={priority}
             quality={quality}
-            className={cn("object-cover", position)}
+            className={cn(fit === "contain" ? "object-contain" : "object-cover", position)}
           />
         </div>
       );
@@ -116,7 +131,11 @@ export function Media({
           asset={asset}
           lang={lang}
           controls={controls}
-          className={cn("absolute inset-0 h-full w-full object-cover", position)}
+          className={cn(
+            "absolute inset-0 h-full w-full",
+            fit === "contain" ? "object-contain" : "object-cover",
+            position,
+          )}
         />
       </div>
     );

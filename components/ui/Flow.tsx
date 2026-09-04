@@ -19,6 +19,14 @@ import { cn } from "@/lib/cn";
  * holgura a cada lado. Sin ese margen, el efecto termina enseñando el borde,
  * que es el fallo clásico de los parallax hechos a ojo.
  *
+ * ── SOLO MATERIAL QUE SE RECORTA (`cover`), NUNCA UN OBJETO AISLADO ───────
+ * Esta primitiva RECORTA por definición: el marco clipa un interior más alto.
+ * Con material de fondo eso es justo lo que se busca. Con un objeto aislado
+ * servido en `contain` —un render de producto, un logotipo— es lo contrario:
+ * se probó con el render del cargador del beat 3 y se comió 135px de equipo
+ * por arriba y por abajo. Un objeto recortado deja de ser el retrato de un
+ * objeto. Si el material va en `contain`, esta primitiva no aplica.
+ *
  * ── SOLO MATERIAL, NUNCA TEXTO ────────────────────────────────────────────
  * Es una regla del sistema, no una preferencia de este componente. Un titular
  * que hace parallax se lee como plantilla; y un dato que se mueve mientras se
