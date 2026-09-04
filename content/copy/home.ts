@@ -136,16 +136,16 @@ export const home = {
 
   /* BEAT 4 · EMPRESAS — columna estrecha, respiración. Intensidad: Media-baja */
   business: {
-    eyebrow: { es: "Empresas y espacios", en: "Business and spaces", pt: "Empresas e espaços", } satisfies Localized,
+    eyebrow: { es: "Soluciones para empresas", en: "Business solutions", pt: "Soluções para empresas", } satisfies Localized,
     title: {
-      es: "La misma infraestructura, dentro de tu negocio",
-      en: "The same infrastructure, inside your business",
-      pt: "A mesma infraestrutura, dentro do seu negócio",
+      es: "Llevamos la carga eléctrica a tu negocio",
+      en: "We bring EV charging to your business",
+      pt: "Levamos o carregamento elétrico ao seu negócio",
     } satisfies Localized,
     lead: {
-      es: "Instalamos, operamos y mantenemos. Tu empresa, tu flota o tu espacio suma carga eléctrica sin convertirse en operador de energía.",
-      en: "We install, operate and maintain. Your company, fleet or property gains EV charging without becoming an energy operator.",
-      pt: "Instalamos, operamos e mantemos. Sua empresa, frota ou espaço ganha carregamento elétrico sem virar uma operadora de energia.",
+      es: "Diseñamos, instalamos y operamos infraestructura de carga para empresas, flotas y espacios comerciales. Voltop se encarga de la operación para que tú te enfoques en tu negocio.",
+      en: "We design, install and operate charging infrastructure for companies, fleets and commercial spaces. Voltop runs the operation so you can focus on your business.",
+      pt: "Projetamos, instalamos e operamos infraestrutura de carregamento para empresas, frotas e espaços comerciais. A Voltop cuida da operação para que você foque no seu negócio.",
     } satisfies Localized,
   },
 
@@ -306,6 +306,5 @@ export const home = {
       pt: "Encontre estações e inicie seu carregamento",
     },
     open: { es: "Abrir", en: "Open", pt: "Abrir" },
-    dismiss: { es: "Cerrar", en: "Dismiss", pt: "Fechar" },
   },
 };

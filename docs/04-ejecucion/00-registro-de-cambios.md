@@ -2096,3 +2096,40 @@ La referencia trae un punto de marca delante de "Más ciudades en camino". Se re
 ### Evidencia
 
 `lint`, `tsc` y build limpios · separación equipo/texto medida a 1024, 1100, 1280, 1440 y 1680px: siempre positiva, de 17 a 45px · cero overflow a 1440, 1280, 768, 390 y 320px · 27 combinaciones de ruta × viewport sin problemas · `prefers-reduced-motion` intacto.
+
+---
+
+## Bloque 53 · Equilibrio del beat 3, copy del beat 4, y el flotante sin cierre — 2026-09-04
+
+### El beat 3: las dos quejas estaban en tensión, y la salida era la escala
+
+"El render se ve muy lejos del contenido" y "queda un espacio vacío a la derecha" son incompatibles mientras el objeto sea estrecho: acercarlo abre hueco al borde, alejarlo lo separa del texto. La causa real es geométrica — un objeto de **2:3 servido en `contain` nunca llena una columna del 48%**, así que siempre sobran ~70px que hay que poner en algún lado.
+
+Se calculó el reparto en lugar de tantearlo: al **44%** del ancho útil el render ocupa su columna EXACTA y no queda sobrante. Y vuelve al riel, que es la corrección de fondo — mientras se salía hasta el borde de la ventana era la única sección del sitio cuyo contenido escapaba del contenedor, así que se leía como un bloque ajeno.
+
+Medido después: márgenes de **148/161 a 1440** y **276/288 a 1680** — simétricos, como el resto de las secciones. El bloque de texto conserva su ancho (618px) y el objeto su tamaño; lo único que cambió es que ya no hay aire suelto que colocar. `items-center` centra el texto contra el equipo en lugar de colgarlo arriba.
+
+La sección pasa de 719 a 874px: es la altura que el objeto necesita para llenar 486px de ancho. No es padding por decreto, es la escala del sujeto.
+
+### El beat 4: copy nuevo, y el último anglicismo fuera
+
+Antetítulo, titular, párrafo, los cuatro segmentos y el CTA. Dos notas:
+
+- **"Partner" pasa a "Aliados"**, cerrando el hallazgo de la auditoría del bloque 46: era el único anglicismo del modelo de contenido en un sitio escrito para Colombia que los evita. Los segmentos son datos compartidos, así que `/empresas` hereda el cambio — verificado que sus pestañas renderizan los cuatro rótulos nuevos.
+- El CTA deja de ser "Soluciones para empresas" porque **ese texto pasó a ser el antetítulo del beat**, y un botón que repite el rótulo de su propia sección no dice a dónde lleva.
+
+### El flotante pierde el botón de cerrar
+
+Decisión de producto. La descarga de la app es la conversión primaria del negocio B2C y el componente ya se calla donde estorba —la primera sección, `/empresas`, los legales—, así que la salida es el recorrido y no un botón.
+
+El precio, dicho: quien no quiera la app la tiene delante todo el recorrido, y en móvil son 126px de pantalla que no se recuperan. Lo hace aceptable que el hueco esté RESERVADO donde importa (el pie y el CTA del beat 2 ya lo reservan) y que la barra no tape nada de forma permanente.
+
+Se retiraron con él el estado, la escucha de Escape y el copy `dismiss`, que sin botón era una etiqueta sin elemento.
+
+**Y la tarjeta de escritorio pasa a estar centrada.** Sin el cerrar, la fila superior se quedaba con el icono solo en una esquina y el QR centrado abajo: dos ejes distintos en una tarjeta de 280px, que es lo que la hacía sentir descuadrada. Ahora icono, título, texto y código comparten eje. El centrado es la excepción declarada que el sistema ya admite, y aquí lo justifica el QR: es un objeto simétrico y el ancla visual de la pieza.
+
+En móvil el reparto en dos filas se conserva aunque sobren 56px: es lo que da al texto los 234px que la frase necesita y al CTA un objetivo táctil de ancho completo.
+
+### Evidencia
+
+`lint`, `tsc` y build limpios · márgenes del beat 3 medidos a 1024, 1100, 1280, 1440 y 1680px · `/empresas` sirviendo los cuatro rótulos nuevos · flotante verificado en dos rutas y tres anchos: oculto al cargar, aparece tras la primera sección, nunca se esconde a mitad, oculto de vuelta arriba, sin texto cortado en ningún ancho · 27 combinaciones de ruta × viewport sin problemas · `prefers-reduced-motion` intacto.

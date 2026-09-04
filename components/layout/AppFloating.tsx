@@ -51,13 +51,18 @@ import { cn } from "@/lib/cn";
  *    no había ninguna posición de scroll que lo liberara. Lo resuelve el propio
  *    beat reservando el hueco de la barra por debajo de `lg`.
  *
- * 4. SE CIERRA HASTA LA SIGUIENTE CARGA, NO PARA SIEMPRE. La X lo retira del
- *    resto de la visita, pero la decisión NO se guarda: al recargar vuelve.
- *    A favor: la descarga de la app es el objetivo de la Home, y una sola X
- *    —a menudo un gesto reflejo— no debería apagarla el resto de la vida del
- *    navegador. En contra: a quien lo cerró a propósito se le vuelve a
- *    ofrecer. Lo compensa que el cierre dura toda la lectura: el componente
- *    vive en el layout, que la navegación interna no remonta.
+ * 4. NO SE PUEDE CERRAR, y eso hay que decirlo con su precio. Decisión de
+ *    producto del 2026-09-04: la descarga de la app es la conversión primaria
+ *    del negocio B2C y el componente ya se calla donde estorba —la primera
+ *    sección, /empresas, los legales—, así que la salida no es un botón sino
+ *    el propio recorrido.
+ *
+ *    El precio: quien no quiera la app la tiene delante todo el recorrido, y
+ *    en móvil eso son 126px de pantalla que no se recuperan. Lo que lo hace
+ *    aceptable es que el hueco esté RESERVADO donde importa —el pie y el CTA
+ *    del beat 2 lo reservan— y que la barra no tape nada de forma permanente.
+ *    Si alguna vez se decide devolver el cierre, el sitio donde vivía era una
+ *    X de 44px en la fila superior de cada pieza.
  *
  * 5. ESPERA A QUE SE DECIDA LO DE LAS COOKIES. Los dos son elementos fijos
  *    abajo, así que se taparían. Y el orden no es negociable: primero se
@@ -110,16 +115,11 @@ const CLAVE_COOKIES = "voltop:cookies";
 
 export function AppFloating({ lang }: { lang: Locale }) {
   const c = home.appFloating;
-  /* Estado en memoria y nada más: es lo que hace que vuelva al recargar.
-     Ver la regla 4 — no es un olvido, es la regla. */
-  const [cerrado, setCerrado] = useState(false);
   /* `true` de partida: al cargar, la primera sección está a la vista. */
   const [primeraALaVista, setPrimeraALaVista] = useState(true);
   /* `false` de partida: mientras no se sepa, el flotante no aparece. */
   const [cookiesDecididas, setCookiesDecididas] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
-
-  const descartar = () => setCerrado(true);
 
   const ruta = stripLocale(usePathname()) || "/";
 
@@ -164,16 +164,8 @@ export function AppFloating({ lang }: { lang: Locale }) {
     };
   }, []);
 
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && ref.current?.contains(document.activeElement)) descartar();
-    };
-    document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
-  }, []);
-
   const rutaLoPermite = !ruta.startsWith(routes.empresas) && !ruta.startsWith("/legal");
-  const mostrar = !primeraALaVista && !cerrado && rutaLoPermite && cookiesDecididas;
+  const mostrar = !primeraALaVista && rutaLoPermite && cookiesDecididas;
 
   const transicion =
     "transition-[opacity,transform] duration-(--duration-base) ease-(--ease-out) motion-reduce:transition-none";
@@ -199,20 +191,6 @@ export function AppFloating({ lang }: { lang: Locale }) {
     </span>
   );
 
-  const cerrar = (
-    <button
-      type="button"
-      onClick={descartar}
-      aria-label={t(c.dismiss, lang)}
-      className="press grid size-11 shrink-0 place-items-center rounded-(--radius-pill) text-ink-3 transition-colors duration-(--duration-fast) hover:bg-white/10 hover:text-ink"
-    >
-      <span aria-hidden="true" className="relative block size-3.5">
-        <span className="absolute top-1/2 h-px w-3.5 rotate-45 bg-current" />
-        <span className="absolute top-1/2 h-px w-3.5 -rotate-45 bg-current" />
-      </span>
-    </button>
-  );
-
   return (
     <div ref={ref} aria-hidden={!mostrar} inert={!mostrar}>
       {/* ESCRITORIO — tarjeta con QR */}
@@ -223,19 +201,25 @@ export function AppFloating({ lang }: { lang: Locale }) {
           mostrar ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-3 opacity-0",
         )}
       >
-        {/* Fila superior: el icono ocupa el lado que el botón de cerrar dejaba
-            vacío, así que la identidad no cuesta ni una fila ni un píxel de
-            alto. El cerrar se compensa con `-mr-2 -mt-1` para que su área
-            táctil de 44px no abra un hueco visible en la esquina. */}
-        <div className="flex items-start justify-between gap-3">
-          {icono("size-12")}
-          <div className="-mr-2 -mt-1">{cerrar}</div>
-        </div>
+        {/* CENTRADO, no alineado a la izquierda.
+            Con el botón de cerrar fuera, la fila superior se quedó con el
+            icono solo en una esquina y el QR centrado abajo: dos ejes
+            distintos en una tarjeta de 280px, que es lo que la hacía sentir
+            descuadrada. Ahora los cuatro elementos comparten el mismo eje
+            —icono, título, texto y código— y la pieza se lee como una unidad.
 
-        <p className="mt-4 font-display text-display-s font-semibold text-balance text-ink">
-          {t(c.title, lang)}
-        </p>
-        <p className="measure mt-2 text-body-s text-ink-2">{t(c.body, lang)}</p>
+            El centrado es la excepción declarada que el sistema ya admite
+            (§ el `align="center"` de las primitivas de layout): aquí lo
+            justifica el QR, que es un objeto simétrico y el ancla visual de
+            la tarjeta. Sin él, esta pieza iría alineada al riel como el resto. */}
+        <div className="flex flex-col items-center text-center">
+          {icono("size-12")}
+
+          <p className="mt-4 font-display text-display-s font-semibold text-balance text-ink">
+            {t(c.title, lang)}
+          </p>
+          <p className="mt-2 text-body-s text-ink-2">{t(c.body, lang)}</p>
+        </div>
 
         <a
           href={externalLinks.app}
@@ -276,9 +260,12 @@ export function AppFloating({ lang }: { lang: Locale }) {
             área táctil del botón, para que nadie lo pulse buscando abrir.
 
             ── DOS FILAS POR DEBAJO DE 480px ─────────────────────────────────
-            En una sola fila compiten icono, dos líneas de texto, botón y
-            cerrar. Medido: a 390px al texto le quedan 158px y la segunda línea
-            necesita 227; a 320px le quedan 88 y hasta el título se corta. No
+            En una sola fila compiten icono, dos líneas de texto y botón.
+            Medido cuando aún existía el cerrar: a 390px al texto le quedaban
+            158px y la segunda línea necesita 227; a 320px le quedaban 88 y
+            hasta el título se cortaba. Sin el cerrar sobran 56px, pero el
+            reparto en dos filas se conserva: da al texto los 234px que la
+            frase necesita y al CTA un objetivo táctil de ancho completo. No
             es un problema de copy —acortarlo hasta caber en 88px lo dejaría
             sin mensaje— sino de estructura.
 
@@ -305,7 +292,6 @@ export function AppFloating({ lang }: { lang: Locale }) {
                 que un idioma más largo estire la barra sin control. */}
             <p className="line-clamp-2 text-caption text-ink-2">{t(c.bodyMobile, lang)}</p>
           </div>
-          <div className="order-2 xs:order-3">{cerrar}</div>
           <a
             href={externalLinks.app}
             target="_blank"

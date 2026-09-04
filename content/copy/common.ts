@@ -133,7 +133,10 @@ export const actions = {
      de repetir palabra por palabra el texto que tiene justo encima. */
   findCharger: { es: "Encuentra una estación", en: "Find a station", pt: "Encontre uma estação", } satisfies Localized,
   seeNetwork: { es: "Explora la red completa", en: "Explore the full network", pt: "Explore a rede completa", } satisfies Localized,
-  businessSolutions: { es: "Soluciones para empresas", en: "Business solutions", pt: "Soluções para empresas", } satisfies Localized,
+  /* Dejó de ser "Soluciones para empresas": ese texto pasó a ser el
+     ANTETÍTULO del beat 4, y un botón que repite el rótulo de su propia
+     sección no dice a dónde lleva. */
+  businessSolutions: { es: "Conoce nuestras soluciones", en: "See our solutions", pt: "Conheça nossas soluções", } satisfies Localized,
   talkToTeam: { es: "Hablar con el equipo", en: "Talk to the team", pt: "Falar com o time", } satisfies Localized,
   /* "Conoce" y no "Ver": invita a entrar en la ficha, no a mirar una foto. En
      inglés se queda en "See this station" a propósito — "get to know" suena

@@ -68,8 +68,8 @@ export type BusinessSegment = {
 export const businessSegments: BusinessSegment[] = [
   {
     key: "empresa",
-    label: { es: "Empresa", en: "Company", pt: "Companhia", },
-    headline: { es: "Carga para tu sede y tu equipo", en: "Charging for your site and your team", pt: "Carregamento para a sua sede e a sua equipe", },
+    label: { es: "Empresas", en: "Companies", pt: "Empresas", },
+    headline: { es: "Carga eléctrica para tu equipo y tus instalaciones.", en: "EV charging for your team and your facilities.", pt: "Carregamento elétrico para sua equipe e suas instalações.", },
     proposition: {
       es: "Instalamos, operamos y mantenemos la infraestructura de carga de tus sedes. Tu equipo carga mientras trabaja; tú no operas nada.",
       en: "We install, operate and maintain the charging infrastructure at your sites. Your team charges while they work; you operate nothing.",
@@ -87,8 +87,8 @@ export const businessSegments: BusinessSegment[] = [
   },
   {
     key: "flota",
-    label: { es: "Flota", en: "Fleet", pt: "Frota", },
-    headline: { es: "Infraestructura para que tu flota no pare", en: "Infrastructure that keeps your fleet moving", pt: "Infraestrutura que mantém sua frota rodando", },
+    label: { es: "Flotas", en: "Fleets", pt: "Frotas", },
+    headline: { es: "Infraestructura para mantener tu flota eléctrica en movimiento.", en: "Infrastructure that keeps your electric fleet moving.", pt: "Infraestrutura para manter sua frota elétrica em movimento.", },
     proposition: {
       /* Decía "sin sorpresas de disponibilidad": una GARANTÍA de disponibilidad
          sobre una red que no publica SLA y cuyo propio sitio declara que el
@@ -111,8 +111,8 @@ export const businessSegments: BusinessSegment[] = [
   },
   {
     key: "espacio",
-    label: { es: "Espacio comercial", en: "Property", pt: "Espaço", },
-    headline: { es: "Tu espacio, con carga eléctrica", en: "Your space, with EV charging", pt: "Seu espaço, com carregamento elétrico", },
+    label: { es: "Espacios comerciales", en: "Commercial spaces", pt: "Espaços comerciais", },
+    headline: { es: "Ofrece carga eléctrica a clientes y visitantes.", en: "Offer EV charging to customers and visitors.", pt: "Ofereça carregamento elétrico a clientes e visitantes.", },
     proposition: {
       es: "Llevamos carga a tu hotel, centro comercial, parqueadero o campus. Nosotros invertimos y operamos; tu espacio gana un servicio que atrae y retiene visitantes.",
       en: "We bring charging to your hotel, mall, parking facility or campus. We invest and operate; your space gains a service that attracts and retains visitors.",
@@ -128,8 +128,11 @@ export const businessSegments: BusinessSegment[] = [
   },
   {
     key: "partner",
-    label: { es: "Partner", en: "Partner", pt: "Parceiro", },
-    headline: { es: "Construyamos la red juntos", en: "Let's build the network together", pt: "Vamos construir a rede juntos", },
+    /* "Partner" era el único anglicismo del modelo de contenido, y en un sitio
+       escrito para Colombia que los evita. "Aliados" dice lo mismo y en
+       castellano. */
+    label: { es: "Aliados", en: "Partners", pt: "Parceiros", },
+    headline: { es: "Construyamos juntos nuevos puntos de carga.", en: "Let's build new charge points together.", pt: "Vamos construir novos pontos de carga juntos.", },
     proposition: {
       /* Decía "la red líder de Colombia": un reclamo de liderazgo de mercado
          sin fuente ni métrica validada, en la página que un partner o un
