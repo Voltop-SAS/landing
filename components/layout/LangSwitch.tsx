@@ -10,8 +10,8 @@ import {
   localeMeta,
   t,
   type Locale,
-} from '@/lib/i18n/config'
-import { switchLocalePath } from '@/lib/i18n/routes'
+} from '~/core/common/domain/i18n/config'
+import { switchLocalePath } from '~/core/common/domain/i18n/routes'
 import { a11y } from '@/content/copy/common'
 import { track } from '@/lib/analytics'
 import { cn } from '@ui/common/lib/cn'

@@ -1,5 +1,5 @@
-import { defaultLocale, localeMeta, t } from '@/lib/i18n/config'
-import { href, routes } from '@/lib/i18n/routes'
+import { defaultLocale, localeMeta, t } from '~/core/common/domain/i18n/config'
+import { href, routes } from '~/core/common/domain/i18n/routes'
 import { states, a11y } from '@/content/copy/common'
 import { Container } from '@/components/ui/layout'
 import { Button } from '@/components/ui/Button'

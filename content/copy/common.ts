@@ -1,5 +1,5 @@
-import type { Localized } from '@/lib/i18n/config'
-import { routes } from '@/lib/i18n/routes'
+import type { Localized } from '~/core/common/domain/i18n/config'
+import { routes } from '~/core/common/domain/i18n/routes'
 import { externalLinks } from '@/content/data/links'
 
 /**

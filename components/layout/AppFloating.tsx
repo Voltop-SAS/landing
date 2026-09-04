@@ -3,11 +3,11 @@
 import { useEffect, useRef, useState } from 'react'
 import { usePathname } from 'next/navigation'
 import Image from 'next/image'
-import { t, type Locale } from '@/lib/i18n/config'
+import { t, type Locale } from '~/core/common/domain/i18n/config'
 import { home } from '@/content/copy/home'
 import { a11y } from '@/content/copy/common'
 import { externalLinks } from '@/content/data/links'
-import { stripLocale, routes } from '@/lib/i18n/routes'
+import { stripLocale, routes } from '~/core/common/domain/i18n/routes'
 import { track } from '@/lib/analytics'
 import { cn } from '@ui/common/lib/cn'
 

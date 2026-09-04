@@ -1,4 +1,4 @@
-import { t, type Locale } from '@/lib/i18n/config'
+import { t, type Locale } from '~/core/common/domain/i18n/config'
 import { Media } from '@/components/ui/Media'
 import type { PostBlock } from '@/content/data/posts'
 import { novedades } from '@/content/copy/novedades'

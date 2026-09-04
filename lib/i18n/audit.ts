@@ -30,7 +30,13 @@
 import { readdirSync } from 'node:fs'
 import { join } from 'node:path'
 
-import { locales, defaultLocale, localeStatus, localeMeta, type Locale } from './config'
+import {
+  locales,
+  defaultLocale,
+  localeStatus,
+  localeMeta,
+  type Locale,
+} from '~/core/common/domain/i18n/config'
 
 /* El contenido real del sitio. Añadir un módulo de contenido = añadirlo aquí,
    y `assertAllContentRegistered()` se encarga de que no se olvide. */

@@ -1,4 +1,4 @@
-import { t, defaultLocale, type Locale } from '@/lib/i18n/config'
+import { t, defaultLocale, type Locale } from '~/core/common/domain/i18n/config'
 import { legalDoc } from '@/content/copy/legal'
 import type { LegalDoc } from '@/content/data/legal-docs'
 import { formatDate } from '@ui/common/lib/dates'

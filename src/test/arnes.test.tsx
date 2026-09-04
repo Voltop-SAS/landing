@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
-import { t, defaultLocale } from '@/lib/i18n/config'
+import { t, defaultLocale } from '~/core/common/domain/i18n/config'
 import { home } from '@/content/copy/home'
 
 describe('arnes de test', () => {

@@ -2,8 +2,8 @@ import type { Metadata } from 'next'
 import { Poppins, Manrope, JetBrains_Mono } from 'next/font/google'
 import './globals.css'
 
-import { defaultLocale, localeMeta, t } from '@/lib/i18n/config'
-import { SITE_URL } from '@/lib/i18n/routes'
+import { defaultLocale, localeMeta, t } from '~/core/common/domain/i18n/config'
+import { SITE_URL } from '~/core/common/domain/i18n/routes'
 import { brand } from '@/content/copy/common'
 
 /**

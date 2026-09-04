@@ -1,4 +1,4 @@
-import { localeMeta, type Locale } from '@/lib/i18n/config'
+import { localeMeta, type Locale } from '~/core/common/domain/i18n/config'
 
 /**
  * FORMATO DE FECHAS

@@ -1,7 +1,7 @@
 'use client'
 
 import { useRef, useState } from 'react'
-import { t, type Locale } from '@/lib/i18n/config'
+import { t, type Locale } from '~/core/common/domain/i18n/config'
 import { empresas } from '@/content/copy/empresas'
 import type { BusinessSegment } from '@/content/data/company'
 import { track } from '@/lib/analytics'

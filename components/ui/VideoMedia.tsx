@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from 'react'
 import { useReducedMotion } from 'motion/react'
-import { t, type Locale } from '@/lib/i18n/config'
+import { t, type Locale } from '~/core/common/domain/i18n/config'
 import type { MediaAsset } from '@/content/data/media'
 
 /**

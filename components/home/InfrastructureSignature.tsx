@@ -10,8 +10,8 @@ import {
   useReducedMotion,
 } from 'motion/react'
 import { duration, ease } from '@ui/common/lib/motion'
-import { t, type Locale } from '@/lib/i18n/config'
-import { href, routes } from '@/lib/i18n/routes'
+import { t, type Locale } from '~/core/common/domain/i18n/config'
+import { href, routes } from '~/core/common/domain/i18n/routes'
 import { home } from '@/content/copy/home'
 import { actions } from '@/content/copy/common'
 import { media } from '@/content/data/media'

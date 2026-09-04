@@ -8,8 +8,8 @@ import {
   defaultLocale,
   t,
   type Locale,
-} from '@/lib/i18n/config'
-import { absoluteUrl, alternatesFor, routes } from '@/lib/i18n/routes'
+} from '~/core/common/domain/i18n/config'
+import { absoluteUrl, alternatesFor, routes } from '~/core/common/domain/i18n/routes'
 import { a11y, brand } from '@/content/copy/common'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'

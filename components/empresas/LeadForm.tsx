@@ -2,8 +2,8 @@
 
 import { useEffect, useId, useRef, useState } from 'react'
 import Link from 'next/link'
-import { t, type Locale } from '@/lib/i18n/config'
-import { href, routes } from '@/lib/i18n/routes'
+import { t, type Locale } from '~/core/common/domain/i18n/config'
+import { href, routes } from '~/core/common/domain/i18n/routes'
 import { leadForm } from '@/content/copy/common'
 import { leadRecipients } from '@/content/data/links'
 import { Button } from '@/components/ui/Button'

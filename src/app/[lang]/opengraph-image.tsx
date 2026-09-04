@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 
 import { ImageResponse } from 'next/og'
-import { locales, isLocale, defaultLocale, t, type Locale } from '@/lib/i18n/config'
+import { locales, isLocale, defaultLocale, t, type Locale } from '~/core/common/domain/i18n/config'
 import { brand, og } from '@/content/copy/common'
 
 /** Se prerenderiza una imagen por idioma en lugar de generarla por petición. */

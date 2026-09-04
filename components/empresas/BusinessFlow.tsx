@@ -2,8 +2,8 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { t, type Locale } from '@/lib/i18n/config'
-import { href, routes } from '@/lib/i18n/routes'
+import { t, type Locale } from '~/core/common/domain/i18n/config'
+import { href, routes } from '~/core/common/domain/i18n/routes'
 import { empresas } from '@/content/copy/empresas'
 import type { BusinessSegment, Case } from '@/content/data/company'
 import { Section, Container, SectionHeading } from '@/components/ui/layout'

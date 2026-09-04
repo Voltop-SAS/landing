@@ -1,4 +1,4 @@
-import type { Localized } from '@/lib/i18n/config'
+import type { Localized } from '~/core/common/domain/i18n/config'
 
 /**
  * REGISTRO DE MEDIA NARRATIVA

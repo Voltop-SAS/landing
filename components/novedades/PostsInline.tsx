@@ -1,6 +1,6 @@
 import Link from 'next/link'
-import { t, type Locale, type Localized } from '@/lib/i18n/config'
-import { href, routes } from '@/lib/i18n/routes'
+import { t, type Locale, type Localized } from '~/core/common/domain/i18n/config'
+import { href, routes } from '~/core/common/domain/i18n/routes'
 import { formatDate } from '@ui/common/lib/dates'
 import { novedades } from '@/content/copy/novedades'
 import { Section, Container, SectionHeading } from '@/components/ui/layout'

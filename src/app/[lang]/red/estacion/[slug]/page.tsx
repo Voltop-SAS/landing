@@ -1,8 +1,14 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { locales, isLocale, t, type Locale } from '@/lib/i18n/config'
-import { href, routes, absoluteUrl, alternatesFor, SITE_URL } from '@/lib/i18n/routes'
+import { locales, isLocale, t, type Locale } from '~/core/common/domain/i18n/config'
+import {
+  href,
+  routes,
+  absoluteUrl,
+  alternatesFor,
+  SITE_URL,
+} from '~/core/common/domain/i18n/routes'
 import { red, station as stationCopy, stationMeta } from '@/content/copy/red'
 import { actions, a11y, units } from '@/content/copy/common'
 import { getStations, getStation, getCity, getStationsByCity, getPostsForStation } from '@/lib/data'
