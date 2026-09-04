@@ -1,12 +1,14 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-# IDE
-.idea/
-
 # dependencies
 /node_modules
 /.pnp
-.pnp.js
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
 
 # testing
 /coverage
@@ -20,15 +22,22 @@
 
 # misc
 .DS_Store
+# JetBrains, que venía del .gitignore de staging
+.idea/
 *.pem
 
 # debug
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+.pnpm-debug.log*
 
-# local env files
-.env*.local
+# env files (can opt-in for committing if needed)
+.env*
+# …pero el TEMPLATE sí se versiona: es la única forma de que quien clone sepa
+# qué variables existen. Sin esta excepción, `.env*` se lo tragaba también y el
+# handoff llegaba sin la referencia de configuración.
+!.env.example
 
 # vercel
 .vercel
@@ -36,3 +45,83 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# ── AGENTES Y SKILLS: VIAJAN CON EL PROYECTO ──────────────────────────────
+# Decisión de 2026-09-04: se versionan enteras, propias y de terceros.
+#
+# Antes se ignoraban y se restauraban con `npx skills experimental_install` a
+# partir de `skills-lock.json`. El problema de eso no era técnico: quien clona
+# el repositorio se encontraba el proyecto SIN el criterio con el que se
+# construyó, y tenía que saber que existía un paso extra para recuperarlo. Las
+# skills son parte de cómo se trabaja aquí, así que van dentro.
+#
+# Pesan 644 KB en total (`.agents` 544 KB + `.claude/skills` 100 KB). El
+# `token-optimizer` de 14 MB NO está aquí: vive en `~/.claude/`, fuera del
+# repositorio, y sigue fuera.
+#
+# ── DOS SITIOS Y SIETE ENLACES SIMBÓLICOS ────────────────────────────────
+# El CLI de skills cambió de destino a mitad del proyecto. Las de terceros
+# viven de verdad en `.agents/skills/`, y `.claude/skills/` tiene SIETE ENLACES
+# SIMBÓLICOS RELATIVOS que apuntan a ellas (`../../.agents/skills/…`).
+#
+# Los enlaces se versionan y resuelven bien porque su destino también viaja
+# ahora. Antes eran siete enlaces rotos en cualquier clon, y ESA era la razón
+# de ignorarlos; desapareció al versionar `.agents/`.
+#
+# **En Windows los enlaces simbólicos de git necesitan `core.symlinks=true`**
+# y modo desarrollador activado. Si en un clon en Windows aparecen como
+# ficheros de texto con una ruta dentro, es eso. En macOS y Linux no hay que
+# configurar nada.
+#
+# `skills-lock.json` sigue versionado: ya no hace falta para instalar, pero es
+# lo que dice de qué versión viene cada skill de terceros y permite
+# actualizarlas.
+#
+# Las dos licencias de terceros (`skill-creator`, Apache 2.0; `humanizer`, MIT)
+# viajan junto a su código, que es lo que ambas exigen para redistribuir.
+
+# Permisos de la máquina de quien trabaja, no del proyecto: rutas absolutas de
+# un `$HOME` concreto y de un Chrome instalado en un sitio concreto. Para otro
+# desarrollador no significan nada, y es la convención del propio Claude Code
+# (`settings.json` viaja, `settings.local.json` no).
+/.claude/settings.local.json
+
+# ── MÁSTERES DE MEDIA ─────────────────────────────────────────────────────
+# Los 473 MB de originales YA NO viven en el repositorio: están en
+# `~/Voltop-masters-originales/` con su propio LEEME. Las reglas que los
+# ignoraban por nombre (`/public/Hero.png`, `/public/Video Home.mov`…) se
+# retiraron al quedarse sin objeto — una regla que no protege nada solo hace
+# creer que protege algo.
+#
+# Lo que se sirve son las derivadas optimizadas, que sí están versionadas:
+# hero-vehiculo-cargando.jpg, estacion-infraestructura.jpg,
+# estacion-medellin-loop.mp4 y voltop-film.mp4.
+#
+# SIGUE PENDIENTE subirlos a un almacenamiento compartido: hoy existen en una
+# sola máquina. Y si alguna vez vuelve un máster a `public/`, hay que volver a
+# ignorarlo: `public/` entero SÍ se versiona.
+
+# Scripts de verificación de un solo uso (capturas, contraste, foco). Se
+# escriben, se ejecutan y se tiran: no son código de producto y versionarlos
+# solo ensucia el árbol.
+#
+# La excepción NO es cosmética: `eslint.config.mjs` y `postcss.config.mjs`
+# están en la raíz y la regla se los tragaba. Aquí no se notaba —git ignora el
+# `.gitignore` para lo que YA sigue— pero al recrear el árbol en otro
+# repositorio desaparecieron los dos, y sin `postcss.config.mjs` Tailwind no
+# compila. Un fallo que solo aparece en el CI de otro sitio.
+/*.mjs
+!/*.config.mjs
+
+# `CLAUDE.md` y `AGENTS.md` SÍ se versionan (decisión de 2026-09-04). Los
+# escribe `next dev` en cada arranque —ver
+# `node_modules/next/dist/server/lib/generate-agent-files.js`— y es el propio
+# Next quien recomienda commitearlos: si no, reaparecen como cambio sin
+# seguimiento cada vez que alguien levanta el servidor. `CLAUDE.md` es una sola
+# línea (`@AGENTS.md`) y es el punto de entrada que un agente busca al abrir el
+# proyecto.
+#
+# Contrapartida a saber: quien trabaje con otra versión de Next puede ver ese
+# bloque reescrito y aparecer como diff. No es un conflicto real —se commitea
+# con el trabajo y ya—. Las reglas PROPIAS del proyecto no están ahí, están en
+# `docs/`.
