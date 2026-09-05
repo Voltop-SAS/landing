@@ -1,3 +1,14 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# `runner` MUST REMAIN THE LAST STAGE IN THIS FILE.
+#
+# The three deploy pipelines (.github/workflows) all build with a bare
+# `docker build .` and no `--target`, which builds whatever stage comes last.
+# Nothing names `runner` anywhere, so its position IS the contract: append a
+# stage after it and production silently ships that one instead.
+#
+# The server only ever uses this file. docker-compose.yml is development.
+# ─────────────────────────────────────────────────────────────────────────────
+
 FROM node:20-alpine AS deps
 RUN apk add --no-cache libc6-compat
 RUN apk add --no-cache git
