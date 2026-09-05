@@ -1,12 +1,11 @@
 # ─────────────────────────────────────────────────────────────────────────────
-# `runner` MUST REMAIN THE LAST STAGE IN THIS FILE.
-#
-# The three deploy pipelines (.github/workflows) all build with a bare
-# `docker build .` and no `--target`, which builds whatever stage comes last.
-# Nothing names `runner` anywhere, so its position IS the contract: append a
-# stage after it and production silently ships that one instead.
-#
 # The server only ever uses this file. docker-compose.yml is development.
+#
+# The three deploy pipelines name `runner` explicitly with `--target`, so stage
+# ORDER here carries no meaning: adding a stage, or reordering these, cannot
+# change what production ships. That was not true until the pipelines were
+# fixed — they built with a bare `docker build .`, which takes whatever stage
+# comes last, and `runner` was correct only by position.
 # ─────────────────────────────────────────────────────────────────────────────
 
 FROM node:20-alpine AS deps

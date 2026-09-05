@@ -89,6 +89,7 @@ jobs:
           IMAGE="${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{ steps.meta.outputs.repository_name }}/${{ env.PROJECT_NAME }}"
           TAG="${{ steps.meta.outputs.tag }}"
           docker build \
+            --target runner \
             --build-arg ENV="${{ steps.meta.outputs.environment }}" \
             -t "$IMAGE:$TAG" .
           docker push "$IMAGE:$TAG"
