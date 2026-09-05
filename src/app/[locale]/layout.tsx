@@ -70,9 +70,17 @@ export async function generateMetadata({
   if (!isLocale(locale)) return { robots: { index: false, follow: true } }
 
   return {
+    /**
+     * The brand leads the tab title, and the page's own subject follows.
+     *
+     * `template` only applies to CHILD segments, so the home page keeps the
+     * title it declares for itself — which already opens with the brand. That
+     * is what makes the whole site read the same way instead of leading with
+     * the brand on the home page and trailing it everywhere else.
+     */
     title: {
       default: `${brand.name} — ${t(brand.tagline, locale)}`,
-      template: `%s · ${brand.name}`,
+      template: `${brand.name} · %s`,
     },
     description: t(brand.tagline, locale),
     alternates: alternatesFor(locale, routes.home),
