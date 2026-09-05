@@ -2,6 +2,24 @@ import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
   /**
+   * Ship only what the server actually runs.
+   *
+   * Next traces the modules each route really imports and writes them, plus a
+   * `server.js` of its own, to `.next/standalone/`. The production image stops
+   * carrying the full dependency tree — 646 MB of it — to serve HTML that was
+   * already generated at build time.
+   *
+   * TWO THINGS THIS MAKES THE DOCKERFILE RESPONSIBLE FOR, and both are silent
+   * when forgotten:
+   * · `public/` and `.next/static/` are NOT part of the standalone output.
+   *   They have to be copied next to `server.js`, or the site serves markup
+   *   with no styles and no images while the build stays green.
+   * · The entrypoint is `node server.js`, not `next start`. The `next` CLI is
+   *   not in the traced output at all.
+   */
+  output: 'standalone',
+
+  /**
    * The language lives in the URL (§28). The root redirects to the default
    * one. A temporary redirect is used while the site is unpublished; once it
    * is live, this becomes `permanent: true`.
