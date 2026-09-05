@@ -33,7 +33,7 @@ jobs:
         env:
           ENV: production
         run: |
-          docker build --rm --build-arg ENV=$ENV \
+          docker build --rm --target runner --build-arg ENV=$ENV \
             --tag $ECR_REPOSITORY:prd-${GITHUB_SHA::7} .
           docker push $ECR_REPOSITORY:prd-${GITHUB_SHA::7}
 

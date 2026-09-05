@@ -1,0 +1,35 @@
+'use client'
+
+import { useEffect } from 'react'
+import Lenis from 'lenis'
+import { registerScrollEngine } from '@ui/common/lib/scroll'
+
+/**
+ * Smoothed scrolling. Fully disabled under `prefers-reduced-motion`, and it
+ * does not compete with `scroll-behavior: smooth` (removed from the base CSS).
+ */
+export function SmoothScroll() {
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+
+    const lenis = new Lenis({
+      duration: 1.05,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      smoothWheel: true,
+    })
+    registerScrollEngine(lenis)
+
+    let rafId = requestAnimationFrame(function raf(time: number) {
+      lenis.raf(time)
+      rafId = requestAnimationFrame(raf)
+    })
+
+    return () => {
+      cancelAnimationFrame(rafId)
+      registerScrollEngine(null)
+      lenis.destroy()
+    }
+  }, [])
+
+  return null
+}

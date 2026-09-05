@@ -1,16 +1,25 @@
-version: '3.8'
+# Development only. Production is the `runner` stage of the Dockerfile, built
+# and deployed by the pipeline — `docker compose` never builds it.
+#
+# This used to target `runner` and mount the working copy over it, which meant
+# every `--build` paid for a full `next build` whose output was then hidden by
+# the mount. It also stopped working the moment the production image went
+# standalone: `next dev` needs the CLI and the dev dependencies, and the
+# standalone trace keeps neither.
 services:
   web:
     build:
       context: .
       dockerfile: Dockerfile
-      target: runner
+      target: dev
     volumes:
       - .:/workspace
+      # Anonymous volumes so the container keeps its own node_modules and
+      # .next instead of having the host's shadow them.
       - /workspace/node_modules
       - /workspace/.next
     command: npm run dev
     ports:
-      - "3000:3000"
+      - '3000:3000'
     environment:
       NODE_ENV: development
