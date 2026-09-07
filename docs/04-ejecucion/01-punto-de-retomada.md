@@ -13,11 +13,14 @@ decisiones que parecen fallos y no lo son. Este documento asume contexto.
 
 > **AVISO — 2026-09-07.** El proyecto se integró en `Voltop-SAS/landing` y el
 > desarrollador lo reestructuró a `src/` con arquitectura por dominios.
-> **Las rutas que cita esta documentación ya no existen**: donde dice
-> `components/ui/Reveal.tsx` hoy hay `src/ui/common/components/ui/Reveal.tsx`.
-> La tabla de equivalencias está en `docs/FLUJO-DE-TRABAJO.md`; actualizar los
-> documentos uno a uno sigue pendiente. El *porqué* de cada decisión no cambia,
-> solo dónde vive el fichero.
+> **Los documentos que describen el presente ya citan las rutas nuevas** —48
+> referencias actualizadas y verificadas una a una contra el árbol—. La tabla de
+> equivalencias está en `docs/FLUJO-DE-TRABAJO.md`.
+>
+> `00-registro-de-cambios.md` y los documentos de fase (`00-discovery`, `01-ia`,
+> `02-art-direction`, `03-design-system`) **conservan las rutas viejas a
+> propósito**: son un registro de lo que pasó, y reescribirlos diría que el
+> proyecto estuvo en `src/` cuando no lo estaba.
 
 ---
 
@@ -97,7 +100,7 @@ Cerrado en esta sesión, de un vistazo:
 |---|---|---|
 | 8 | **El vídeo de Wake es el mismo archivo que la película de la Home** | Se ve en dos sitios: bajo "Visión" con la cita de Bruno, y en la noticia. ¿Se acepta la repetición o se separan las piezas? |
 | 9 | **`voltop-film.mp4` (28 MB) versionado en git** | Funciona. Solo compensa moverlo cuando crezca el catálogo de vídeo |
-| ~~10~~ | ~~Poppins Black (900) cargada y sin usar~~ **CERRADO 2026-09-03** | Se retiró en la limpieza: se cargaba sin que ningún componente la usara. Si algún día se quieren titulares más rotundos, se vuelve a añadir en `app/layout.tsx` |
+| ~~10~~ | ~~Poppins Black (900) cargada y sin usar~~ **CERRADO 2026-09-03** | Se retiró en la limpieza: se cargaba sin que ningún componente la usara. Si algún día se quieren titulares más rotundos, se vuelve a añadir en `src/app/layout.tsx` |
 | 11 | **Formulario por `mailto:`** | Funciona sin servidor, pero pierde a quien no tenga cliente de correo y expone las tres direcciones. Un servicio de formularios lo resuelve y solo cambia una función |
 
 ### Descartado conscientemente

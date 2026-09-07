@@ -2,6 +2,11 @@
 
 > Bitácora viva de la transformación. Qué cambió, por qué, y con qué evidencia se validó.
 > La definición normativa vive en `docs/MASTER-PROJECT-DEFINITION.md`.
+>
+> **Las rutas de este documento son las del momento en que se escribió cada bloque.**
+> El proyecto se reestructuró a `src/` con arquitectura por dominios el 2026-09-07 y
+> aquí NO se reescribieron: un registro que cambia el pasado deja de servir para lo
+> único que sirve. La tabla de equivalencias está en `docs/FLUJO-DE-TRABAJO.md`.
 
 ---
 

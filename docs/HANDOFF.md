@@ -82,7 +82,7 @@ npm start            # sirve el último build
 ```
 
 El build **falla a propósito** si un idioma publicado tiene traducciones
-incompletas: `lib/i18n/audit.ts` se ejecuta desde `app/sitemap.ts` en cada
+incompletas: `src/core/common/infrastructure/i18n/audit.ts` se ejecuta desde `src/app/sitemap.ts` en cada
 compilación. Si ves ese error, no es el build: falta copy.
 
 > `next build` y `next dev` comparten `.next`. Si alternas y las rutas de idioma
@@ -102,7 +102,7 @@ compilación. Si ves ese error, no es el build: falta copy.
    |---|---|
    | `.env*` **salvo** `!.env.example` | El ejemplo es el único que debe viajar, y `.env*` se lo traga |
    | `/.claude/settings.local.json` | Permisos de una máquina concreta: rutas absolutas de un `$HOME` y de un Chrome instalado en un sitio concreto. Lo único de `.claude/` que NO viaja |
-   | `/*.mjs` en la raíz | Scripts de verificación de un solo uso |
+   | `/*.mjs` en la raíz, **salvo** `!/*.config.mjs` | Ignora los scripts de verificación desechables. La excepción no es cosmética: sin ella se tragaba `eslint.config.mjs` y `postcss.config.mjs`, y sin el segundo Tailwind no compila |
 
    Aviso al verificar negaciones: **`git check-ignore` devuelve 0 también cuando
    la regla que casa es una negación**, así que un fichero rescatado "parece"
@@ -131,8 +131,8 @@ separado de la integración.
 | Qué | Estado |
 |---|---|
 | `app.voltop.co` | Funcionando. Destino del CTA principal del header |
-| App Store / Google Play | Enlaces reales en `content/data/links.ts` |
-| Google Tag Manager | Contenedor `GTM-WJ5S2LBF`. **La plataforma de destino de los eventos sigue sin definir**: `lib/analytics` solo empuja a `dataLayer` |
+| App Store / Google Play | Enlaces reales en `src/core/common/domain/consts/links.ts` |
+| Google Tag Manager | Contenedor `GTM-WJ5S2LBF`. **La plataforma de destino de los eventos sigue sin definir**: `src/core/common/infrastructure/analytics` solo empuja a `dataLayer` |
 | Formulario B2B | `mailto:` a tres direcciones `@voltop.co`. Sin servidor |
 | Másteres de media (~609 MB) | **NO viajan en el ZIP.** Están en la máquina de origen, pendientes de subir a almacenamiento compartido. Lo que se versiona son las derivadas optimizadas |
 
@@ -170,7 +170,7 @@ está en `docs/ENTORNO-Y-SKILLS.md`. Como mínimo, comprueba a mano:
 - Comportamiento responsive y las excepciones por viewport.
 - Animaciones, transiciones, timings, easings, comportamiento de scroll.
 - Estructura de rutas y navegación.
-- Los tokens de `app/globals.css` y su espejo en `lib/motion.ts`.
+- Los tokens de `src/app/globals.css` y su espejo en `src/ui/common/lib/motion.ts`.
 - El `.gitignore` y sus reglas comentadas (tabla del punto 6).
 - Los comentarios del código.
 

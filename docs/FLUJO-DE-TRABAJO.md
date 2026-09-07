@@ -88,7 +88,9 @@ pista de que no es el código—. Se arregla con `rm -rf .next`.
 ## Dónde está cada cosa después de la reestructuración
 
 El desarrollador movió el proyecto a `src/` con arquitectura por dominios. Los
-documentos de `docs/` **todavía citan las rutas viejas**. La equivalencia:
+documentos que describen el presente **ya citan las rutas nuevas**; esta tabla
+queda como puente para leer el registro de cambios, que conserva las viejas a
+propósito. La equivalencia:
 
 | Antes | Ahora |
 |---|---|
@@ -104,6 +106,7 @@ documentos de `docs/` **todavía citan las rutas viejas**. La equivalencia:
 Los dominios son `home`, `network`, `business`, `news`, `about`, `legal` y
 `common`.
 
-**Esta tabla es un puente, no una actualización.** Los documentos siguen
-diciendo `components/ui/Reveal.tsx` donde hoy hay otra ruta. Actualizarlos es un
-trabajo pendiente y está anotado en el punto de retomada.
+**Por qué el registro conserva las rutas viejas.** `00-registro-de-cambios.md`
+y los documentos de fase cuentan lo que pasó, y en el momento en que pasó los
+ficheros estaban donde dicen. Reescribirlos afirmaría que el proyecto estuvo en
+`src/` cuando no lo estaba: más cómodo de navegar, y menos cierto.

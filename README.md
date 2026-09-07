@@ -102,8 +102,8 @@ Reglas de arquitectura que el proyecto sostiene y conviene no romper:
 
 1. **Server Components por defecto.** Las islas de cliente se limitan a lo que
    tiene interacción real.
-2. **Cero copy literal en el JSX.** Todo el texto vive en `content/copy`.
-3. **Los componentes nunca importan `content/data/*`**: siempre vía `lib/data`.
+2. **Cero copy literal en el JSX.** Todo el texto vive en `src/core/<dominio>/domain/consts/copy.ts`.
+3. **Los componentes nunca importan `src/core/<dominio>/infrastructure/content/*`**: siempre vía `src/core/common/infrastructure/data-access`.
 4. **Las cifras no se escriben a mano.** Puntos de carga, potencias, ciudades y
    conectores se calculan desde el dataset. Añadir una estación actualiza la
    Home sola.

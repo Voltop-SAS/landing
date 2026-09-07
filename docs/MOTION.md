@@ -1,7 +1,7 @@
 # El lenguaje de movimiento de Voltop
 
-Estado a **2026-09-04**. La implementación vive en `lib/motion.ts` (valores de
-JS), `app/globals.css` (tokens y microinteracciones) y los componentes que los
+Estado a **2026-09-04**. La implementación vive en `src/ui/common/lib/motion.ts` (valores de
+JS), `src/app/globals.css` (tokens y microinteracciones) y los componentes que los
 consumen. Referencia normativa: §21.
 
 > **El movimiento forma parte de la experiencia aprobada.** No se sustituye una
@@ -27,7 +27,7 @@ hay un quinto.**
 
 ### DEPTH · el contenido llega desde el fondo
 
-Escala + opacidad. Es el gesto base, implementado en `components/ui/Reveal.tsx`.
+Escala + opacidad. Es el gesto base, implementado en `src/ui/common/components/ui/Reveal.tsx`.
 
 - **Cuándo:** cualquier entrada en viewport.
 - **Cuándo NO:** sobre cifras, specs o datos de estación. Lo que prueba algo no
@@ -37,7 +37,7 @@ Escala + opacidad. Es el gesto base, implementado en `components/ui/Reveal.tsx`.
 
 ### FLOW · el material se desplaza dentro de un marco que no se mueve
 
-`components/ui/Flow.tsx`. De aquí sale la percepción de profundidad.
+`src/ui/common/components/ui/Flow.tsx`. De aquí sale la percepción de profundidad.
 
 - **Cuándo:** solo fotografía y vídeo grandes servidos en `cover`.
 - **Cuándo NO:** jamás sobre texto — un titular con parallax se lee como
@@ -62,7 +62,7 @@ progreso de scroll.
 
 - **Cuándo:** hay una relación real entre lo que se deja y lo que se abre.
 - **Cuándo NO:** entre vistas sin relación — fingir continuidad desorienta.
-- Hoy se limita a la transición de página de `app/[lang]/template.tsx`.
+- Hoy se limita a la transición de página de `src/app/[locale]/template.tsx`.
 
 ## Intensidades: tres, no cuatro
 
@@ -93,7 +93,7 @@ quien mira.
 
 ## Curvas y duraciones
 
-Espejo entre `lib/motion.ts` (JS) y `app/globals.css` (CSS). **Son dos archivos
+Espejo entre `src/ui/common/lib/motion.ts` (JS) y `src/app/globals.css` (CSS). **Son dos archivos
 duplicados a propósito** —Tailwind lee el CSS y Motion necesita valores de JS—
 y se referencian mutuamente. **Si cambias uno, cambia el otro.**
 
@@ -172,7 +172,7 @@ cero `clip-path` en `[data-reveal]`, y la sección signature a 557px.
 1. **`whileInView` no revela lo que ya quedó arriba.** Un `IntersectionObserver`
    solo informa de lo que intersecta AHORA. Recargando la Home a media altura
    quedaban **once bloques a opacidad 0 para siempre** —y seguían invisibles al
-   volver a subir—. Lo cubre `useScrolledPast` en `lib/motion.ts`: lo que ya pasó
+   volver a subir—. Lo cubre `useScrolledPast` en `src/ui/common/lib/motion.ts`: lo que ya pasó
    se renderiza sin animación. **No borrar ese hook.**
 2. **Lenis intercepta el scroll programático.** `window.scrollTo` no dispara las
    animaciones ligadas al scroll. Para medir o automatizar hay que enviar

@@ -43,7 +43,7 @@
 
 **Fuera de alcance en esta etapa:** la app móvil, el backoffice, el sistema de pagos, la API de disponibilidad en tiempo real, página de precios.
 
-`SUPERSEDED` **"blog/editorial" estaba fuera de alcance y entró** (bloque 11). No como blog: como **registro** de aperturas, alianzas, eventos y comunicados. La distinción está razonada en §14 y en la cabecera de `content/data/posts.ts`.
+`SUPERSEDED` **"blog/editorial" estaba fuera de alcance y entró** (bloque 11). No como blog: como **registro** de aperturas, alianzas, eventos y comunicados. La distinción está razonada en §14 y en la cabecera de `src/core/news/infrastructure/content/posts.ts`.
 
 ---
 
@@ -534,7 +534,7 @@ lib/
 **Reglas de arquitectura:**
 
 1. `PRINCIPLE` **Server Components por defecto.** `"use client"` solo donde hay estado, evento o API de navegador. El estado actual (todo cliente) es deuda a revertir.
-2. `PRINCIPLE` **Los componentes nunca importan datos directamente.** Siempre a través de `lib/data`. Es lo que permite cambiar a CMS o API sin tocar la presentación.
+2. `PRINCIPLE` **Los componentes nunca importan datos directamente.** Siempre a través de `src/core/common/infrastructure/data-access`. Es lo que permite cambiar a CMS o API sin tocar la presentación.
 3. `DECISION` **Toda navegación interna usa `next/link`.** Los `<a href>` planos están prohibidos para rutas internas.
 4. `DECISION` **Toda imagen usa `next/image`.** Todo video lleva poster, `preload="none"` y lazy-load.
 5. `PRINCIPLE` Contenido separado de presentación, siempre.
@@ -746,7 +746,7 @@ Resumen a 2026-08-11, antes de la transformación:
 11. **Composiciones consecutivas no pueden repetir estructura.**
 12. **La energía se expresa como respuesta, no como ambiente.**
 13. **Sin constelaciones de nodos ni grafos abstractos de fondo.**
-14. **i18n por ruta estática con prefijo (`/es`, `/en`, `/pt`).** El idioma base es el único obligatorio en el tipo; la cobertura la garantiza la auditoría de build, que **rompe el build si un idioma publicado tiene huecos** (`lib/i18n/audit.ts`). Cada idioma tiene estado `publicado` | `borrador`; un borrador es navegable pero no se indexa, no entra al sitemap ni al selector.
+14. **i18n por ruta estática con prefijo (`/es`, `/en`, `/pt`).** El idioma base es el único obligatorio en el tipo; la cobertura la garantiza la auditoría de build, que **rompe el build si un idioma publicado tiene huecos** (`src/core/common/infrastructure/i18n/audit.ts`). Cada idioma tiene estado `publicado` | `borrador`; un borrador es navegable pero no se indexa, no entra al sitemap ni al selector.
 15. **Todo el copy fuera del JSX.**
 16. **Toda navegación interna con `next/link`.**
 17. **Server Components por defecto.**
@@ -844,11 +844,11 @@ Arquitectura de 4 destinos · estación como página desde datos · componente `
 | Footer | 3 columnas, destinos reales |
 | Selector B2B | Patrón accesible completo |
 | Formulario | Consentimiento, `autocomplete`, errores, anuncios |
-| Componentes en `components/home/` que sirven a otras rutas | Reubicados por dominio |
+| Componentes en `src/core/home/infrastructure/ui/components/` que sirven a otras rutas | Reubicados por dominio |
 
 ### ELIMINA
 
-`components/home/Paths.tsx` (huérfano) · constelación de nodos del hero · pills no funcionales de `/red` · segundo CTA redundante del preview de Red · métricas del footer · puntos de gradiente decorativos de los eyebrows · spans de redes sociales no interactivos · enlaces `#` sin destino · `text-amber-400` fuera de tokens · animaciones ambientales infinitas · `scroll-behavior: smooth` duplicado con Lenis.
+`Paths.tsx` (huérfano — eliminado) · constelación de nodos del hero · pills no funcionales de `/red` · segundo CTA redundante del preview de Red · métricas del footer · puntos de gradiente decorativos de los eyebrows · spans de redes sociales no interactivos · enlaces `#` sin destino · `text-amber-400` fuera de tokens · animaciones ambientales infinitas · `scroll-behavior: smooth` duplicado con Lenis.
 
 ---
 
@@ -871,12 +871,12 @@ Arquitectura de 4 destinos · estación como página desde datos · componente `
 | Texto legal **pendiente**, páginas en `noindex` | §35, §37 (O1) | Texto íntegro publicado e indexable | Entregado el 2026-09-02 (bloque 32) |
 | Logo **pendiente de entrega** | §32 | `Logo_voltop.svg` integrado | Entregado (bloque 13) |
 | Sección de la red en la Home como **índice tipográfico de estaciones** | Narrativa v3, beat 3 | Presentación de cobertura con agregados calculados | Repetía en la Home lo que `/red` hace mejor; §14 invertido (bloque 35) |
-| Red de **4 estaciones**, 60–150 kW | `content/data/stations.ts` | **3 estaciones**, 22–80 kW | Dos no existían y las potencias no correspondían (bloque 39) |
+| Red de **4 estaciones**, 60–150 kW | `src/core/network/infrastructure/content/stations.ts` | **3 estaciones**, 22–80 kW | Dos no existían y las potencias no correspondían (bloque 39) |
 | `powerKw` como **número único** | Modelo de datos | Rango `{ min, max }` | La EAN tiene puntos de 22 a 80: publicar el máximo prometía de más (bloque 39) |
 | Escalones del filtro de potencia **fijos** (50/100/150) | `StationFinder` | Derivados del dataset | Dos escalones no devolvían ninguna estación (bloque 39) |
 | `.measure` en **62ch** con la etiqueta "45–75 caracteres" | §22 | **48ch** ≈ 63 caracteres reales | `ch` mide el glifo "0", ~1.31× el carácter medio: rendía 83 (bloques 28 y 40) |
 | **View Transitions** como fase del plan | Plan Electra, fase 7 | Descartado | Exige React del canal experimental; no se cambia el canal por una animación (bloque 37) |
-| Capacidades B2B publicadas bajo "Qué incluye" | `content/data/company.ts` | Movidas a `benefitsPorConfirmar`, sin renderizar | No constan en los Términos, la única documentación de producto (bloque 40) |
+| Capacidades B2B publicadas bajo "Qué incluye" | `src/core/about/infrastructure/content/company.ts` | Movidas a `benefitsPorConfirmar`, sin renderizar | No constan en los Términos, la única documentación de producto (bloque 40) |
 
 ---
 
