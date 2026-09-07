@@ -11,6 +11,14 @@ La norma sigue siendo `MASTER-PROJECT-DEFINITION.md`, ahora en **v1.2**.
 `README.md` para levantarlo y por `docs/HANDOFF.md`, que trae la lista de
 decisiones que parecen fallos y no lo son. Este documento asume contexto.
 
+> **AVISO — 2026-09-07.** El proyecto se integró en `Voltop-SAS/landing` y el
+> desarrollador lo reestructuró a `src/` con arquitectura por dominios.
+> **Las rutas que cita esta documentación ya no existen**: donde dice
+> `components/ui/Reveal.tsx` hoy hay `src/ui/common/components/ui/Reveal.tsx`.
+> La tabla de equivalencias está en `docs/FLUJO-DE-TRABAJO.md`; actualizar los
+> documentos uno a uno sigue pendiente. El *porqué* de cada decisión no cambia,
+> solo dónde vive el fichero.
+
 ---
 
 ## Cómo levantar el proyecto
