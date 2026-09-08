@@ -2573,6 +2573,12 @@ Quedan anotados como huérfanos, que es como este proyecto ya trata los suyos (B
 
 Comprobado en 1440 y 390: sin restos de la sección en el texto renderizado, jerarquía intacta (1 `h1`, 4 `h2`, 4 `h3`) y el vídeo cerrando contra el pie sin hueco muerto.
 
+### "Tratamiento de datos personales" en el pie
+
+El enlace legal del pie decía "Tratamiento de datos" y el documento al que lleva se titula "Política de Tratamiento de Datos Personales". Ahora coinciden. Los tres idiomas se alargan igual: `Personal data processing`, `Tratamento de dados pessoais`.
+
+Consecuencia medida: por debajo de ~420px los dos enlaces legales **pasan de una fila a dos**. No es un fallo, es el `flex-wrap` haciendo su trabajo —sin recorte, sin desborde, y cada enlace conserva sus 44px de objetivo táctil—, y apilados se tocan mejor con el pulgar que uno al lado del otro. Comprobado en 360, 390 y 1440, y en `es`, `en` y `pt`.
+
 ### Evidencia
 
 Lint 0 · tipos 0 · build limpio · i18n **459/459** en los tres idiomas. `/nosotros` verificada en 390, 768, 1024, 1440 y 1920: sin desborde horizontal, sin texto recortado, sin viudas y **sin elementos invisibles** —lo que confirma que los `Reveal` siguen disparando—. Jerarquía comprobada: 1 `h1`, 5 `h2`, 4 `h3`. Vídeo de la EAN comprobado en los dos usos: con controles y sonido en la entrada, silenciado y en bucle en el beat 5.

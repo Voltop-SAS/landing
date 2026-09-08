@@ -722,9 +722,9 @@ export const footer = {
     pt: 'Termos e condições',
   } satisfies Localized,
   privacy: {
-    es: 'Tratamiento de datos',
-    en: 'Data processing',
-    pt: 'Tratamento de dados',
+    es: 'Tratamiento de datos personales',
+    en: 'Personal data processing',
+    pt: 'Tratamento de dados pessoais',
   } satisfies Localized,
   rights: {
     es: 'Todos los derechos reservados.',
