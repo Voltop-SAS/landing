@@ -3019,3 +3019,67 @@ Ahora que hay tres piezas con controles —la entrada de la EAN, el vídeo del f
 ### Evidencia
 
 Dos flujos completos en contextos de navegador limpios · interceptación de red filtrando `googletagmanager`, `google-analytics` y `/g/collect` · tres pasadas de scroll para provocar repetición · atrás y adelante del navegador · 20 eventos del plan cruzados contra sus emisores.
+
+---
+
+## Bloque 70 · Auditoría de los tres idiomas — 2026-09-08
+
+14 rutas × 3 idiomas recorridas, más los 414 tríos `es`/`en`/`pt` del código cruzados uno a uno. **Dos correcciones y un pendiente que no es mío arreglar.**
+
+### Corregido · el inglés mezclaba británico y americano
+
+Barridas todas las formas `-ise/-isation/-our/-re` de las cadenas inglesas contra sus equivalentes americanas: **dos británicas contra cuatro americanas**.
+
+- `shopping centres` → `shopping centers`
+- `We analyse your space` → `We analyze your space`
+
+Frente a `organization` (×3) y `authorize`, que ya eran americanas. Ni el significado ni el tono cambian; solo deja de haber dos ortografías en el mismo documento.
+
+### PENDIENTE · la 404 sale en español en los tres idiomas
+
+```
+/en/no-existe → "No encontramos esta página"  ·  ["Ir a la red", "Ir al inicio"]
+/pt/no-existe → "No encontramos esta página"  ·  ["Ir a la red", "Ir al inicio"]
+```
+
+Es una **decisión documentada**: `src/app/[locale]/not-found.tsx` existió y NUNCA renderizaba —en Next 16 un `notFound()` lanzado desde una página no resuelve el límite anidado en este árbol, ni con layout raíz—, así que se borró y quedó solo la raíz, que no recibe `params`.
+
+**Pero el razonamiento escrito no cubre todos los casos.** Dice que «un idioma inválido suele ser la causa del 404», y eso vale para `/xx/loquesea`. No vale para `/en/red/estacion/mal-escrito`, donde el idioma es válido y conocido: ahí un usuario inglés recibe una 404 en español con la navegación en español.
+
+**No lo cambio** porque la única salida sería leer la ruta desde las cabeceras de la petición dentro de `not-found`, que no es una API estable de Next, y cambiar eso a ciegas es peor que el problema. Queda para decisión.
+
+### Verificado limpio
+
+|                                        |                                                                                                                                                                                                                      |
+| -------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Traducciones faltantes                 | **Cero.** Los 414 tríos revisados: las 3 direcciones de calle coinciden en los tres idiomas **y así debe ser**; «Filtrar por tipo» coincide con el portugués porque las tres palabras son idénticas en ambos idiomas |
+| Fugas de idioma                        | **Cero** en `/en` y `/pt` a lo largo de 14 rutas, con marcadores fuertes de las tres lenguas                                                                                                                         |
+| Texto técnico visible                  | **Cero** claves, `{placeholders}`, `undefined`, `NaN` o `[object` en 30 combinaciones                                                                                                                                |
+| Roturas por longitud                   | **Cero** desbordes y **cero** recortes en 27 combinaciones × 390, 768 y 1440                                                                                                                                         |
+| Variante del portugués                 | Consistentemente **brasileño**: `usuário`, `celular`, `registro`, `contato`, `acessar`, `shoppings`, y el artículo en «A Voltop». `equipa` era falso positivo — casaba con «equipamentos»                            |
+| Terminología de producto               | Estable en los tres: `charging station` / `estação de carregamento`, `charge point` / `ponto de carga`                                                                                                               |
+| Banner de cookies                      | Localizado entero, incluidos los botones y el **nombre completo del documento** enlazado: «Personal Data Processing Policy», «Política de Tratamento de Dados Pessoais»                                              |
+| Estados                                | Vacío del buscador, resumen de error del formulario y mensaje por campo, los tres traducidos y accionables en cada idioma                                                                                            |
+| Contenido accesible                    | `alt`, `aria-label` y `title` localizados                                                                                                                                                                            |
+| Metadata SEO                           | Título y descripción propios por idioma; ya verificado sin duplicados dentro de un mismo idioma (Bloque 63)                                                                                                          |
+| hreflang, canonical, URLs              | Verificados en el Bloque 63: cuatro etiquetas con autorreferencia y `x-default`, canonical propio en las 42                                                                                                          |
+| Selector de idioma                     | Verificado en el Bloque 66: **conserva la ruta exacta** en ficha de estación, entrada de novedades, ciudad y legal                                                                                                   |
+| URLs directas, refresh, atrás/adelante | Verificados en el Bloque 66 en las 11 rutas                                                                                                                                                                          |
+
+### Naturalidad · leído, no solo medido
+
+El inglés y el portugués no se leen como traducción automática. Ejemplos de decisiones que un traductor literal no habría tomado: `en operación` → **`live`**; `Desplázate` → `Scroll` / `Deslize`; `centros comerciales` → `shopping centers` / **`shoppings`** (brasileño real, no «centros comerciais»); `celular` conservado en portugués; y el artículo obligatorio en **«A Voltop»**, que un traductor automático suele omitir.
+
+### El texto legal, ya reportado
+
+`/en` y `/pt/legal/*` sirven el texto **en español**, con un aviso correctamente localizado en cada idioma que explica que la versión española es la vinculante. Es deliberado —traducir un instrumento jurídico lo convierte en otro instrumento— y ya está reportado como contenido duplicado en el Bloque 63.
+
+### Estado
+
+- **ES — PASS**
+- **EN — ISSUES** · un único punto abierto: la 404 en español
+- **PT — ISSUES** · el mismo y único punto
+
+### Evidencia
+
+414 tríos cruzados en el código · 14 rutas × 3 idiomas para fugas de idioma · 30 combinaciones para texto técnico · 27 × 3 anchos para roturas de longitud · tipos 0 · lint 0 · 58 tests · i18n 459/459.

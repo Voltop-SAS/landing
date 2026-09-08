@@ -108,7 +108,7 @@ export const home = {
          hold up, and §19 does not allow headlines the product cannot meet.
          What is true and does differentiate is WHERE the stations are. */
       es: 'Ubicamos nuestras estaciones de carga en universidades, hoteles y centros comerciales para que puedas cargar tu vehículo eléctrico mientras continúas con tu día.',
-      en: 'We put our charging stations in universities, hotels and shopping centres so you can charge your electric vehicle while you get on with your day.',
+      en: 'We put our charging stations in universities, hotels and shopping centers so you can charge your electric vehicle while you get on with your day.',
       pt: 'Instalamos nossas estações de carregamento em universidades, hotéis e shoppings para que você possa carregar seu veículo elétrico enquanto segue com o seu dia.',
     } satisfies Localized,
     /** The video arrives under the `stationMedellin` key of the media registry. */

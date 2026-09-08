@@ -114,7 +114,7 @@ export const empresas = {
         title: { es: 'Evaluamos', en: 'We assess', pt: 'Avaliamos' } satisfies Localized,
         body: {
           es: 'Analizamos tu espacio, la capacidad eléctrica y las necesidades de operación para definir la solución adecuada.',
-          en: 'We analyse your space, its electrical capacity and your operating needs to define the right solution.',
+          en: 'We analyze your space, its electrical capacity and your operating needs to define the right solution.',
           pt: 'Analisamos seu espaço, a capacidade elétrica e as necessidades de operação para definir a solução adequada.',
         } satisfies Localized,
       },
