@@ -67,8 +67,20 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
-        /* Brand media: delivered once, replaced rarely, never hashed. */
-        source: '/:all*(jpg|jpeg|png|svg|webp|avif|mp4|webm|woff2)',
+        /* Brand media: delivered once, replaced rarely, never hashed.
+         *
+         * `woff2` USED TO BE IN THIS LIST AND HAD TO GO (2026-09-08). There is
+         * not a single font in `public/`; the only `.woff2` files the site
+         * serves are the 21 that `next/font` emits under
+         * `/_next/static/media/`, with TWO content hashes in the name. This
+         * pattern matched them and replaced Next's own header —
+         * `max-age=31536000, immutable` — with seven days.
+         *
+         * Measured: the JS chunks came back immutable and the fonts did not.
+         * A file whose name contains its own hash can never go stale, so a
+         * returning visitor was revalidating 80 KB of typefaces every week for
+         * nothing. Without `woff2` here, Next's default applies again. */
+        source: '/:all*(jpg|jpeg|png|svg|webp|avif|mp4|webm)',
         headers: [
           {
             key: 'Cache-Control',

@@ -2742,3 +2742,51 @@ Queda anotado sin cambiar: `aria-controls` en el menú móvil y el selector de i
 ### Evidencia
 
 9 páginas · 6 anchos · tabulación real en los dos sentidos con muestreo de nueve puntos por elemento · contraste sobre el píxel compuesto · tipos 0 · lint 0 · 58 tests · build limpio · i18n 459/459.
+
+---
+
+## Bloque 65 · Auditoría de rendimiento previa al PR — 2026-09-08
+
+Cinco páginas medidas sobre el build de producción con **4G lento (1,6 Mbps, 150 ms de latencia) y CPU 4× más lenta**, en móvil de 390×844 con DPR 2. Dos optimizaciones, y dos correcciones a mediciones mías que estaban mal.
+
+### Dos mediciones mías que eran falsas alarmas
+
+**«LCP de 2624 ms en la Home»** era el **servidor en frío**. Repetido en caliente, cinco pasadas: **mediana 1108 ms**. No hay problema de LCP en ninguna página.
+
+**«La navegación a `/empresas` tarda 3272 ms»** competía con la carga inicial, que todavía no había terminado. Dejando asentar la página: **990 ms**, de los cuales 99 KB son el bundle propio de esa ruta —formulario y validación—, aislado ahí y que las otras 41 páginas no pagan. Funciona como está diseñado.
+
+### El póster del beat 5 pesaba 264 KB
+
+Con las mismas dimensiones que los otros tres pósters —1920×1080— pesaba **264 KB frente a 93, 111 y 111**. Estaba mal comprimido, y era el 34% del peso de la Home para una imagen que vive **por debajo del pliegue y bajo un velo del 78%**.
+
+Reencodeado a mozjpeg progresivo q55: **161 KB**. Verificado componiendo el velo real sobre las dos versiones: la diferencia media es de **0,88 sobre 255**, un 0,35%. Invisible.
+
+**Lo que NO hace: mover el LCP.** Medido A/B con cinco pasadas por versión: 1108 ms con el póster viejo, 1120 ms con el nuevo — ruido. La razón es que el elemento LCP es la fotografía del hero, que va a prioridad alta con `fetchPriority` desde el Bloque 61, y el póster baja en prioridad baja sin disputarle el camino crítico. **Lo que sí hace es quitar 102 KB de datos móviles**, un 14% de la página, sin coste visual. Se queda por eso, no por el LCP.
+
+### Las tipografías se recacheaban cada semana sin motivo
+
+La regla de `next.config.ts` para media de marca incluía `woff2`, y **no hay ni una sola fuente en `public/`**. Lo único que hacía era capturar los **21 ficheros que emite `next/font` bajo `/_next/static/media/`** —con DOS hashes de contenido en el nombre— y sustituir la cabecera de Next, `max-age=31536000, immutable`, por siete días.
+
+Se vio comparando: los chunks de JS volvían `immutable` y las fuentes no. Un fichero cuyo nombre contiene su propio hash no puede quedar obsoleto nunca. Quitando `woff2` de la lista, vuelve el valor por defecto. Comprobado: fuentes `immutable` a un año, media de marca con sus siete días intactos.
+
+### Lo que se midió y está bien
+
+|                    |                                                                                                                     |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------- |
+| Core Web Vitals    | Las cinco páginas dentro de umbral. **CLS máximo 0,0043** de 0,1                                                    |
+| Fluidez del scroll | **p50 de 16,7 ms = 60 fps** con CPU 4×; p95 21 ms; **5 fotogramas perdidos de 429**; una sola tarea larga, de 86 ms |
+| Navegación         | 442–990 ms, siempre transición de cliente, ninguna recarga completa                                                 |
+| Tipografías        | `font-display: swap` en las 18 caras; no bloquean el pintado                                                        |
+| Imágenes           | AVIF servido; el hero son **27 KB** a 828px                                                                         |
+| Carga diferida     | El vídeo del beat 5 espera al scroll; cero peticiones si no se baja                                                 |
+| Assets duplicados  | Ninguno: cero ficheros con el mismo contenido y distinto nombre                                                     |
+| JavaScript         | 20 componentes de cliente sobre 58, todos con interacción real                                                      |
+
+### Sigue abierto, y es de infraestructura
+
+- **Brotli no está activo.** El JS de la Home son 791 KB sin comprimir y **252 KB con gzip**; con brotli serían unos 44 KB menos. Se activa en el servidor, no en el código.
+- **66 MB de vídeo versionados en git**, ya anotado en el Bloque 62.
+
+### Evidencia
+
+5 páginas · 4G lento + CPU 4× · mediana de 5 pasadas descartando el arranque en frío · comparación A/B del póster con el velo real compuesto · tipos 0 · lint 0 · 58 tests · build limpio · sin regresión visual: 15 de 15 reveals visibles, los dos vídeos reproduciendo, cero imágenes rotas y cero desbordes en 390 y 1440.
