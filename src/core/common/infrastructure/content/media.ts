@@ -122,24 +122,40 @@ export const media = {
     availability: 'confirmado-no-entregado',
   },
 
-  /** Breathing material: it conveys scale without a single figure. */
-  wideInfrastructure: {
-    id: 'infraestructura-amplia',
+  /**
+   * Breathing material on /nosotros, between the story and how we build.
+   *
+   * DELIVERED 2026-09-08 as `Foto_nosotros.png`, 7008×4672 and 38 MB — a master,
+   * not a web asset. Same recipe as `retailSpace`: JPEG q82 at 3200px wide,
+   * 722 KB. The master lives in `~/Voltop-masters-originales/`.
+   *
+   * ── IT USED TO BE CALLED `wideInfrastructure` ────────────────────────────
+   * The slot it fills has not changed —a breath between two blocks of text—
+   * but what is IN it has: the placeholder announced a station with vehicles
+   * plugged in, and what arrived is a handshake. Keeping the old name would
+   * have left the catalogue describing a photograph that does not exist, and
+   * the `alt` lying to whoever cannot see it.
+   *
+   * The 3:2 frame is centre-cropped to 21/9 by the layout. Checked on the
+   * actual crop: both faces, the handshake and the wall stay in frame.
+   */
+  allianceWake: {
+    id: 'alianza-wake',
     kind: 'photo',
-    src: null,
+    src: '/alianza-wake.jpg',
     poster: null,
     alt: {
-      es: 'Estación de carga Voltop en operación, con vehículos conectados',
-      en: 'Voltop charging station in operation, with vehicles plugged in',
-      pt: 'Estação de carregamento Voltop em operação, com veículos conectados',
+      es: 'Dos personas se dan la mano frente al muro de Wake, en Medellín, donde Voltop opera una estación de carga',
+      en: 'Two people shaking hands in front of the Wake wall in Medellín, where Voltop runs a charging station',
+      pt: 'Duas pessoas apertando as mãos diante do muro do Wake, em Medellín, onde a Voltop opera uma estação de carregamento',
     },
     role: {
-      es: 'Respiración y contraste. Escala física sin datos.',
-      en: 'Breathing room and contrast. Physical scale without data.',
-      pt: 'Respiro e contraste. Escala física sem dados.',
+      es: 'Respiración y contraste. Una red se construye con quien aloja cada estación, y eso se ve mejor en un acuerdo que en una cifra.',
+      en: 'Breathing room and contrast. A network is built with whoever hosts each station, and that reads better in an agreement than in a figure.',
+      pt: 'Respiro e contraste. Uma rede se constrói com quem hospeda cada estação, e isso se lê melhor em um acordo do que em um número.',
     },
     aspect: '21/9',
-    availability: 'confirmado-no-entregado',
+    availability: 'entregado',
   },
 
   retailSpace: {

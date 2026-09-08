@@ -133,7 +133,7 @@ export default async function NosotrosPage({ params }: Props) {
       {/* Real material, full bleed — a breath between blocks of text */}
       <Container width="wide">
         <Media
-          asset={media.wideInfrastructure}
+          asset={media.allianceWake}
           locale={locale}
           corner
           sizes="(min-width: 1600px) 1600px, 100vw"

@@ -2524,6 +2524,18 @@ Solo lo recoge la versión **con controles**, y eso no es casual: es la única q
 
 Comprobado con `--autoplay-policy=document-user-activation-required`, que es la política real: clic en la previsualización → **`pausado:false`, `muted:false`, `t:1.34`**; entrada en frío → pausada; llegando por el titular → pausada; clic en el fondo del beat 5 → no arma nada.
 
+### La foto de `/nosotros`, y el nombre que dejó de ser verdad
+
+`Foto_nosotros.png` llegó a 7008×4672 y 38 MB: un máster, no un asset web. Misma receta que `retailSpace` —JPEG q82 a 3200px, 722 KB— y el máster a `~/Voltop-masters-originales/`.
+
+**El asset se llamaba `wideInfrastructure` y ya no podía.** El hueco que rellena no ha cambiado —una respiración entre la historia y cómo construimos— pero lo que hay dentro sí: el marcador anunciaba una estación con vehículos conectados y lo que llegó es un apretón de manos. Conservar el nombre habría dejado el catálogo describiendo una fotografía que no existe y el `alt` mintiéndole a quien no puede verla. Pasa a `allianceWake`, con `alt` y `role` reescritos en los tres idiomas.
+
+El marco es 3:2 y la maqueta lo recorta a 21/9 centrado. Comprobado sobre el recorte real, no sobre el número: las dos caras, el apretón y el muro quedan dentro, en escritorio y en móvil.
+
+**Una medición que me salió mal y conviene anotar.** Leyendo `naturalWidth` desde la página, la imagen parecía servirse a 0,45× de lo necesario. Es falso: cargando esa misma URL del optimizador directamente devuelve **3200×2133** y el navegador solo pide el candidato correcto (`w=3840`, AVIF de 268 KB). `naturalWidth` leído sobre un `<img>` con `srcset` y `decoding="async"` no es de fiar; el optimizador sí.
+
+**Pendiente de saber:** no sé quiénes son las dos personas. El `alt` las describe sin nombrarlas, que es lo correcto mientras no se confirme; si una es Bruno Ocampo, el `alt` debería decirlo.
+
 ### Evidencia
 
 Lint 0 · tipos 0 · build limpio · i18n **459/459** en los tres idiomas. `/nosotros` verificada en 390, 768, 1024, 1440 y 1920: sin desborde horizontal, sin texto recortado, sin viudas y **sin elementos invisibles** —lo que confirma que los `Reveal` siguen disparando—. Jerarquía comprobada: 1 `h1`, 5 `h2`, 4 `h3`. Vídeo de la EAN comprobado en los dos usos: con controles y sonido en la entrada, silenciado y en bucle en el beat 5.
