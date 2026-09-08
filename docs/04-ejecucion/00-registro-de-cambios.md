@@ -2951,3 +2951,71 @@ Los dos rasgos que históricamente rompen en Safari ya venían con su respaldo e
 ### Evidencia
 
 324 combinaciones en el barrido inicial y 189 en el de verificación · bordes de breakpoint a ±1px · nueve altos · cinco orientaciones horizontales · tipos 0 · lint 0 · 58 tests · build limpio.
+
+---
+
+## Bloque 69 · Auditoría de analítica y consentimiento — 2026-09-08
+
+Verificación, sin tocar el plan de medición ni añadir eventos. Los dos flujos completos en contextos de navegador limpios. **Un hallazgo que requiere decisión y un hueco anotado.**
+
+### Los dos flujos, completos
+
+**A · primera visita → RECHAZAR → navegar → refresh → nueva visita**
+
+| Paso           | Banner  | Scripts GTM | `localStorage` |
+| -------------- | ------- | ----------- | -------------- |
+| Primera visita | visible | **0**       | `null`         |
+| Tras rechazar  | oculto  | **0**       | `rechazado`    |
+| Navegando      | oculto  | **0**       | `rechazado`    |
+| Tras refresh   | oculto  | **0**       | `rechazado`    |
+| Nueva visita   | oculto  | **0**       | `rechazado`    |
+
+**Cero peticiones a Google en todo el flujo.** El rechazo se respeta siempre y el banner no vuelve a preguntar.
+
+**B · primera visita → ACEPTAR → navegar → refresh → nueva visita**
+
+GTM carga **exactamente una vez por documento** —nunca dos en la misma página—, la decisión persiste, y el banner no reaparece. Las peticiones crecen de una en una, una por carga de documento, que es lo correcto.
+
+### Sin duplicados, comprobado a conciencia
+
+- **Eventos de vista:** tres pasadas completas de scroll arriba y abajo por la Home entera → `caso_visto` **una sola vez**. No se re-disparan al volver a entrar en la sección.
+- **Clics:** un clic en el CTA → **un** `cta_encontrar_cargador_click`. Ni uno más.
+- **Pageviews:** nadie emite un evento de página propio. Solo los `gtm.js` / `gtm.dom` / `gtm.load` que pone GTM, un juego por documento. **No hay pageviews duplicados.**
+- **Scripts:** un solo `<script>` de googletagmanager por documento.
+
+### La implementación de GTM, correcta
+
+Snippet estándar con `dataLayer` inicializado **antes** de pedir `gtm.js` · `strategy="afterInteractive"` · identificador configurable por `NEXT_PUBLIC_GTM_ID` con respaldo · y la **ausencia deliberada de `<noscript>`**, documentada: sin JavaScript tampoco hay forma de dar ni retirar el consentimiento, así que el iframe de respaldo mediría sin permiso.
+
+### REQUIERE DECISIÓN · los eventos anteriores al consentimiento se reproducen al aceptar
+
+`dispatch` empuja a `window.dataLayer` **sin comprobar el consentimiento**. Con una recarga de por medio no se nota, porque el `dataLayer` se vacía. Pero el recorrido real es otro: los enlaces del sitio son navegación de CLIENTE y el documento no se descarga nunca.
+
+Medido: un usuario que **no decide** y recorre Home → Red → Novedades → Nosotros acumula `caso_visto`, `novedades_vista` e `impacto_visto` en el `dataLayer`. **Cero peticiones a Google mientras tanto** — eso está bien. Pero al pulsar Aceptar, GTM carga y lee el array **desde el principio**:
+
+```
+dataLayer antes de aceptar : ["caso_visto","novedades_vista","impacto_visto"]
+dataLayer tras aceptar     : ["caso_visto","novedades_vista","impacto_visto","gtm.js","gtm.dom","gtm.load"]
+⇒ eventos previos al consentimiento que GTM acaba de leer: 3 de 3
+```
+
+**Qué significa exactamente:** nada sale del navegador antes de aceptar. Lo que sale después incluye el comportamiento **anterior** a la aceptación. El aviso dice «Tú decides si quieres aceptarlas», y quien acepta probablemente no cuenta con que se incluyan los minutos previos.
+
+Si **rechaza**, esos eventos se quedan en memoria y no se envían nunca. Ese caso está bien.
+
+**No lo cambio, y por tres razones:** el encargo de esta auditoría es comprobar, no modificar; es una interpretación legal, no técnica; y ya hay abierta una consulta legal sobre el aviso de cookies (punto 4 del retomada), que es exactamente donde encaja.
+
+Dos salidas, cuando se decida:
+
+1. **Que `dispatch` no recoja nada sin consentimiento.** Tres líneas, lee la misma clave de `localStorage`. Es lo conservador. Coste: se pierde el recorrido de quien acepta tarde.
+2. **Dejarlo como está** y que el abogado confirme que basta con no transmitir nada antes del consentimiento.
+
+### Anotado · un evento del plan sin emisor
+
+`media_reproducida` está declarado en `AnalyticsEvent` y **no lo emite nadie**. Los otros 19 del plan sí tienen emisor —`cta_descargar_app_click` lo emite `Header` dentro de un ternario, por si alguien lo busca y no lo encuentra—.
+
+Ahora que hay tres piezas con controles —la entrada de la EAN, el vídeo del fundador y el de Wake— es justo el evento que tendría datos. **No lo implemento: sería añadir un evento, y el encargo dice que no.**
+
+### Evidencia
+
+Dos flujos completos en contextos de navegador limpios · interceptación de red filtrando `googletagmanager`, `google-analytics` y `/g/collect` · tres pasadas de scroll para provocar repetición · atrás y adelante del navegador · 20 eventos del plan cruzados contra sus emisores.
