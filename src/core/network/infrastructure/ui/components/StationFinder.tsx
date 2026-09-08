@@ -385,23 +385,60 @@ export function StationFinder({ locale, stations, cities }: Props) {
             >
               {t(red.sort.label, locale)}
             </label>
-            <select
-              id={sortId}
-              value={sort}
-              onChange={(e) => {
-                set('sort', e.target.value as StationSort)
-                onFilter('orden', e.target.value)
-              }}
-              className="min-h-11 w-full rounded-(--radius-pill) border border-line-control bg-canvas px-4 pr-9 text-body-s text-ink outline-none transition-colors focus:border-brand lg:mt-3 lg:min-h-12 lg:rounded-(--radius-structural) lg:px-4 lg:pr-10 lg:text-body"
-            >
-              <option value="relevance">{t(red.sort.relevance, locale)}</option>
-              <option value="power">{t(red.sort.power, locale)}</option>
-              <option value="status">{t(red.sort.status, locale)}</option>
-              <option value="city">{t(red.sort.city, locale)}</option>
-              {geoAvailable && origin && (
-                <option value="distance">{t(red.sort.distance, locale)}</option>
-              )}
-            </select>
+            {/* ── EL CHEVRON ES NUESTRO, NO EL DEL NAVEGADOR ─────────────────
+                Antes se veía el que pinta el sistema, y su distancia al borde
+                la fija el navegador: no la mueve ningún `padding`. Medido a
+                1440px, el texto arrancaba a 16px del borde izquierdo y la
+                flecha quedaba a ~12px del derecho — desequilibrio visible en un
+                control de 238px.
+
+                `appearance-none` apaga SOLO el dibujo de la flecha. El
+                `<select>` sigue siendo nativo: teclado, lector de pantalla y la
+                rueda de iOS/Android intactos, que es justo por lo que se eligió
+                un select y no un menú a medida.
+
+                El glifo es el MISMO que usa el selector de idioma —`viewBox
+                0 0 10 6`, trazo 1.5, extremos redondeados— para que el sitio
+                tenga un solo chevron y no dos parecidos.
+
+                `right-4` = 16px, exactamente el `px-4` del lado izquierdo: el
+                aire es ahora el mismo a los dos lados. Y `pr-10` reserva sitio
+                para que el texto largo nunca pase por debajo. */}
+            <div className="relative">
+              <select
+                id={sortId}
+                value={sort}
+                onChange={(e) => {
+                  set('sort', e.target.value as StationSort)
+                  onFilter('orden', e.target.value)
+                }}
+                className="min-h-11 w-full appearance-none rounded-(--radius-pill) border border-line-control bg-canvas px-4 pr-[3.75rem] text-body-s text-ink outline-none transition-colors focus:border-brand lg:mt-3 lg:min-h-12 lg:rounded-(--radius-structural) lg:px-4 lg:pr-[3.75rem] lg:text-body"
+              >
+                <option value="relevance">{t(red.sort.relevance, locale)}</option>
+                <option value="power">{t(red.sort.power, locale)}</option>
+                <option value="status">{t(red.sort.status, locale)}</option>
+                <option value="city">{t(red.sort.city, locale)}</option>
+                {geoAvailable && origin && (
+                  <option value="distance">{t(red.sort.distance, locale)}</option>
+                )}
+              </select>
+              {/* `pointer-events-none`: el clic tiene que llegar al select, que
+                  es quien abre la lista. `lg:top-[calc(50%+0.375rem)]` compensa
+                  el `lg:mt-3` del select, porque el contenedor no lo lleva. */}
+              <svg
+                aria-hidden="true"
+                viewBox="0 0 10 6"
+                className="pointer-events-none absolute right-4 top-1/2 h-1.5 w-2.5 -translate-y-1/2 text-ink-3 lg:top-[calc(50%+0.375rem)]"
+              >
+                <path
+                  d="M1 1l4 4 4-4"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                />
+              </svg>
+            </div>
           </div>
         </div>
       </div>

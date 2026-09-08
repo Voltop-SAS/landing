@@ -19,23 +19,26 @@ import { cn } from '@ui/common/lib/cn'
  * looking good is not enough: it has to justify every second it occupies the
  * screen. The rules are constraints, not decoration:
  *
- * 1. IT APPEARS ONCE THE FIRST SECTION IS PAST, AND IT STAYS. The page's first
- *    section is observed: while it is in view the floating element does not
- *    exist — there is already a large CTA there; as soon as it leaves, the
- *    element appears and does NOT hide again until you come back to it.
+ * 1. ESTÁ VISIBLE SIEMPRE, hasta que se cierra a mano. Decisión de producto
+ *    del 2026-09-08, y sustituye a DOS reglas anteriores del mismo día: la que
+ *    lo escondía sobre la primera sección y la que lo retiraba al llegar a la
+ *    sección de descarga.
  *
- *    The threshold used to be "90% of the viewport height", which is an
- *    approximation of the first section and not the first section: on a page
- *    whose header is shorter than the screen it appeared late, and on one that
- *    is taller, early. Observing the real element works the same across the
- *    site's six templates without a per-page number.
+ *    ── POR QUÉ SE FUERON ─────────────────────────────────────────────────
+ *    Toda condición ligada al scroll produce transiciones, y las transiciones
+ *    en una capa fija se perciben como parpadeo. Medido en un recorrido de la
+ *    Home: con tres zonas mudas eran **5 cambios de estado** (`··███···██·····█`);
+ *    reducidas a una, 2. Cero condiciones, cero cambios.
  *
- *    And it used to DISAPPEAR in three zones of the journey
- *    (`#infraestructura`, `#vision`, the download section). That was removed
- *    as a product decision: an element that leaves and comes back three times
- *    as you scroll down is perceived as a bug, not as tact. The two REAL
- *    collisions those zones were covering up were fixed where they belonged
- *    — see rules 2 and 3 — instead of by hiding the component.
+ *    Se intentó primero acotar dónde tapaba texto. No hay dónde: midiendo los
+ *    glifos reales —no las cajas— la tarjeta se posa sobre texto en casi todas
+ *    las secciones y en todos los anchos (a 1024px, 46.946 px² sobre la cita
+ *    del fundador; 8.768 en empresas; 7.273 en novedades). Una capa fija sobre
+ *    una página larga siempre cae encima de algo, y perseguirlo sección a
+ *    sección exige esconderla casi siempre — que es el parpadeo otra vez.
+ *
+ *    La respuesta a que una capa tape contenido no es esconderla a ratos: es
+ *    que se pueda cerrar. Ver la regla 3.
  *
  * 2. IT DOES NOT STEAL A PLAYER'S CONTROLS. The desktop card overlapped the
  *    playback bar of the beat 7 film, and a click on mute or fullscreen OPENED
@@ -54,18 +57,27 @@ import { cn } from '@ui/common/lib/cn'
  *    top of it and there was no scroll position that would free it. The beat
  *    itself solves this by reserving the bar's space below `lg`.
  *
- * 4. IT CANNOT BE DISMISSED, and that has to be stated along with its price.
- *    Product decision of 2026-09-04: the app download is the primary B2C
- *    conversion and the component already stays quiet where it gets in the way
- *    — the first section, /empresas, the legal pages — so the way out is the
- *    journey itself rather than a button.
+ * 4. IT CAN BE DISMISSED AT ANY TIME, AND COMES BACK ON RELOAD.
+ *    Product decision of 2026-09-08, reversing the one of 2026-09-04 which
+ *    removed the control. The reason it comes back: on mobile the bar takes
+ *    126px of screen that someone who does not want the app never gets back,
+ *    and the previous way out was "keep scrolling", which is not a way out.
  *
- *    The price: anyone who does not want the app has it in front of them for
- *    the whole journey, and on mobile that is 126px of screen they do not get
- *    back. What makes it acceptable is that the space is RESERVED where it
- *    matters — the footer and the beat 2 CTA reserve it — and that the bar
- *    never covers anything permanently. If dismissal is ever brought back, it
- *    used to live as a 44px X in the top row of each piece.
+ *    ── THE DISMISSAL IS NOT PERSISTED, AND THAT IS THE WHOLE POINT ────────
+ *    `dismissed` is React state and nothing else. It is NOT written to
+ *    `localStorage`, and that is not an omission:
+ *
+ *    The first version of this component saved `voltop:app-flotante-cerrado`,
+ *    and the bug it caused is the one that opened this whole line of work — the
+ *    floating element had VANISHED from every page and looked like a code
+ *    fault. It was not: one click months earlier had persisted, and no amount of
+ *    reading the component could show it, because the state lived in the
+ *    browser. Whoever adds persistence here brings that back.
+ *
+ *    So: closing it silences it for the rest of the page view, and a reload
+ *    brings it back. Client navigation does NOT bring it back — the component
+ *    lives in the layout and does not remount — which is the correct reading of
+ *    "for the rest of the visit".
  *
  * 5. IT WAITS FOR THE COOKIE DECISION. Both are fixed elements at the bottom,
  *    so they would cover each other. And the order is not negotiable: first
@@ -110,44 +122,46 @@ import { cn } from '@ui/common/lib/cn'
  *
  * ── ACCESSIBILITY ────────────────────────────────────────────────────────
  * It does not trap focus or block scrolling: it is NOT a modal dialog, it is
- * complementary content. It does respond to Escape, and while hidden it is
- * `inert` so no links stay reachable with Tab inside an invisible card. Only
- * `opacity` and `transform` are animated (§29).
+ * complementary content. While hidden it is `inert`, so no link stays reachable
+ * with Tab inside an invisible card. Only `opacity` and `transform` are
+ * animated (§29).
+ *
+ * **Escape closes it, and until 2026-09-08 this comment said so while no
+ * handler existed.** It was written when the piece was dismissible, survived
+ * the removal of the control, and stayed here describing a mechanism that had
+ * been deleted. Now the listener exists — and it only listens while the piece
+ * is on screen, so it never eats an Escape meant for something else.
+ *
+ * On dismissing, if focus is INSIDE the component it is blurred first, so it
+ * does not stay inside a subtree that is about to become `inert` — a state
+ * where the browser stops reporting focus and assistive technology disagrees
+ * about where it is.
+ *
+ * Measured limit, stated rather than hidden: after the blur, focus sits on
+ * `body` and **the next Tab does start again from the beginning of the
+ * document** — verified, it lands on the header logo. It is not fixed by
+ * guessing a return target: this notice appears on its own, there is no
+ * trigger element to go back to, and inventing one would move focus somewhere
+ * the user never was. It is the accepted behaviour for a self-appearing
+ * notice, not an oversight.
  */
 
 /** The same key `CookieConsent` uses. See rule 5. */
 const COOKIES_KEY = 'voltop:cookies'
 
+
 export function AppFloating({ locale }: { locale: Locale }) {
   const c = home.appFloating
-  /* `true` to begin with: on load, the first section is in view. */
-  const [firstInView, setFirstInView] = useState(true)
-  /* `false` to begin with: until it is known, the floating element stays away. */
+  /* Ya no hay estado ligado al scroll: ver la regla 1. Lo único que decide la
+     visibilidad son tres cosas, y ninguna depende de dónde estés en la página:
+     la ruta, la decisión de cookies y si se cerró a mano. */
   const [cookiesDecided, setCookiesDecided] = useState(false)
+  /* Regla 3 — en memoria y SOLO en memoria. Lee esa regla antes de añadir aquí
+     cualquier tipo de almacenamiento. */
+  const [dismissed, setDismissed] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
 
   const path = stripLocale(usePathname()) || '/'
-
-  /* Rule 1 — the FIRST SECTION is observed, not a fraction of the viewport.
-     It is re-observed on route changes: the component lives in the layout and
-     client navigation does not remount it, so without the dependency it would
-     keep watching the previous page's section, already unmounted. */
-  useEffect(() => {
-    const first = document.querySelector('main section')
-    if (!first) {
-      /* With no reference section there is nothing to wait for: it shows.
-         Deferred by one frame because a synchronous `setState` inside an effect
-         chains renders and React flags it. There is no hurry here: this is the
-         branch that does not happen in any of the site's templates. */
-      const id = requestAnimationFrame(() => setFirstInView(false))
-      return () => cancelAnimationFrame(id)
-    }
-    const io = new IntersectionObserver(([entry]) => setFirstInView(entry.isIntersecting), {
-      threshold: 0,
-    })
-    io.observe(first)
-    return () => io.disconnect()
-  }, [path])
 
   /* Rule 5 — it is read on mount and read again, because the decision can be
      made with this very page open and `localStorage` emits no events within
@@ -170,7 +184,30 @@ export function AppFloating({ locale }: { locale: Locale }) {
   }, [])
 
   const pathAllows = !path.startsWith(routes.business) && !path.startsWith('/legal')
-  const show = !firstInView && pathAllows && cookiesDecided
+  const show = pathAllows && cookiesDecided && !dismissed
+
+  /**
+   * Dismissing. Moves focus out first if it is inside — see the accessibility
+   * note in the header: focus left in an `inert` subtree makes the next Tab
+   * restart from the top of the document.
+   */
+  const dismiss = () => {
+    const active = document.activeElement
+    if (active instanceof HTMLElement && ref.current?.contains(active)) active.blur()
+    setDismissed(true)
+  }
+
+  /* Escape, and only while the piece is on screen: a listener that is always
+     mounted would swallow an Escape meant for the language menu or a future
+     overlay. */
+  useEffect(() => {
+    if (!show) return
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') dismiss()
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [show])
 
   const transition =
     'transition-[opacity,transform] duration-(--duration-base) ease-(--ease-out) motion-reduce:transition-none'
@@ -184,6 +221,41 @@ export function AppFloating({ locale }: { locale: Locale }) {
    * radius: the PNG already comes with its corners rounded and transparent,
    * and the glass border is clipped to follow them without bending them.
    */
+  /**
+   * The dismiss control, one for both pieces.
+   *
+   * ABSOLUTELY POSITIONED, and that is a measurement and not a preference. In
+   * the mobile bar the icon, two lines of text and the CTA already share the
+   * row: the note further down records that at 320px the text had 88px left and
+   * even the title was cut off back when this button was in the flow. Out of
+   * the flow it costs the row nothing, and the text block gets `pr-11` so no
+   * line ever runs underneath it.
+   *
+   * `size-11` is 44px, the minimum touch target, on a glyph that draws much
+   * smaller. `-top-*`/`-right-*` are NOT used: the button stays inside the
+   * panel so the target never falls outside the glass.
+   */
+  const closeButton = (
+    <button
+      type="button"
+      onClick={dismiss}
+      aria-label={t(c.close, locale)}
+      className="press absolute right-1 top-1 z-10 inline-flex size-11 items-center justify-center rounded-(--radius-pill) text-ink-3 transition-colors duration-(--duration-fast) hover:bg-surface-2 hover:text-ink"
+    >
+      <svg
+        aria-hidden="true"
+        viewBox="0 0 24 24"
+        className="size-4"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+      >
+        <path d="M6 6l12 12M18 6L6 18" />
+      </svg>
+    </button>
+  )
+
   const icon = (size: string) => (
     <span
       aria-hidden="true"
@@ -216,6 +288,9 @@ export function AppFloating({ locale }: { locale: Locale }) {
           show ? 'translate-y-0 opacity-100' : 'pointer-events-none translate-y-3 opacity-0',
         )}
       >
+        {/* Out of the flow, so the four centred elements keep the single axis
+            the note below explains. */}
+        {closeButton}
         {/* CENTRED, not left-aligned.
             With the close button gone, the top row was left with the icon
             alone in one corner and the QR centred below: two different axes in
@@ -274,6 +349,7 @@ export function AppFloating({ locale }: { locale: Locale }) {
           show ? 'translate-y-0 opacity-100' : 'pointer-events-none translate-y-4 opacity-0',
         )}
       >
+        {closeButton}
         {/* The icon goes FIRST: what it is → what it does → what I do. And it
             sits outside the button's touch target so nobody taps it trying to
             open the app.
@@ -298,7 +374,13 @@ export function AppFloating({ locale }: { locale: Locale }) {
             One single `<a>` for both layouts, not two hiding each other: it is
             reordered with `order` and wraps with `flex-wrap`. Duplicating the
             link would also duplicate the emitter of the measurement event. */}
-        <div className="flex flex-wrap items-center gap-3 p-3">
+        {/* `pr-14` reserves the dismiss control's column for the WHOLE row and
+            not just for the text, and that was measured: with the padding on
+            the text block alone, from 480px up the bar collapses to a single
+            row, the CTA moves to the right edge and landed UNDER the button —
+            a tap on the corner of "Abrir" closed the bar instead of opening the
+            app. Reserving it on the container clears every child at once. */}
+        <div className="flex flex-wrap items-center gap-3 p-3 pr-14">
           {icon('size-10')}
           <div className="order-1 min-w-0 flex-1">
             <p className="truncate font-display text-body font-semibold text-ink">

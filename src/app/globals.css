@@ -113,17 +113,50 @@
   --text-display-s--line-height: 1.25;
   --text-display-s--letter-spacing: -0.01em;
 
+  /* ── LOS CUATRO TAMAÑOS DE LECTURA · TRACKING · 2026-09-08 ────────────
+     Los cuatro estaban a 0, y ahí se cortaba la curva. La escala display va de
+     −0.03em a 96px hasta −0.01em a 24px: cuanto más pequeño, menos apretado.
+     Pasado el display la progresión se detenía en seco, y un tamaño de lectura
+     no quiere el mismo tracking que un titular pequeño — quiere MÁS.
+
+     Ahora la curva continúa y cierra sobre un valor que ya estaba en el
+     sistema: `mono` a 12px lleva +0.02em desde el primer día, así que la
+     progresión aterriza donde ya estaba puesta en lugar de inventar un extremo.
+
+       24px display-s  −0.010em
+       20px body-l     +0.005em
+       16px body       +0.010em
+       15px body-s     +0.015em
+       13px caption    +0.020em
+       12px mono       +0.020em   ← ya existía
+
+     ── POR QUÉ EN `em` Y NO EN PÍXELES ───────────────────────────────────
+     Tres de los cuatro son `clamp()`: escalan con el viewport. En `em` el
+     tracking escala con ellos y la proporción se mantiene de 360 a 1440px; en
+     píxeles, un valor cómodo a 1440 abre demasiado el texto a 360, que es
+     justo donde el tamaño ya es el mínimo.
+
+     ── Y POR QUÉ AQUÍ IMPORTA MÁS QUE EN FONDO CLARO ─────────────────────
+     El sitio es dark-first. El texto claro sobre fondo oscuro se percibe
+     ópticamente más grueso y más junto que el mismo texto en negativo, así que
+     el mismo cuerpo pide algo más de aire. La magnitud es deliberadamente
+     pequeña: +0.015em a 15px son 0,22px por carácter — unos 13px repartidos en
+     una línea de 60 caracteres. Se nota como respiración, no como espaciado. */
   --text-body-l: clamp(1.0625rem, 1rem + 0.278vw, 1.25rem);
   --text-body-l--line-height: 1.6;
+  --text-body-l--letter-spacing: 0.005em;
 
   --text-body: 1rem;
   --text-body--line-height: 1.65;
+  --text-body--letter-spacing: 0.01em;
 
   --text-body-s: clamp(0.875rem, 0.854rem + 0.093vw, 0.9375rem);
   --text-body-s--line-height: 1.55;
+  --text-body-s--letter-spacing: 0.015em;
 
   --text-caption: 0.8125rem;
   --text-caption--line-height: 1.5;
+  --text-caption--letter-spacing: 0.02em;
 
   --text-mono: 0.75rem;
   --text-mono--line-height: 1.4;
@@ -292,6 +325,29 @@ body {
   outline-offset: 2px;
   border-radius: 4px;
   transition-property: none;
+}
+
+/* CONTENEDORES QUE RECIBEN EL FOCO POR CÓDIGO, NO POR TABULACIÓN.
+   El aviso de cookies mueve el foco a su propia región al aparecer, para que
+   quien navega con teclado aterrice dentro sin tener que buscarla. Esa región
+   tiene `tabIndex={-1}`: está fuera del orden de tabulación y no hace nada.
+
+   La regla de arriba casa `[tabindex]`, así que le dibujaba un anillo de marca
+   de 2px alrededor del aviso entero en cada primera visita — se leía como un
+   estado de error, no como "estás aquí".
+
+   No incumple WCAG 2.4.7: la norma pide indicador visible en componentes
+   OPERABLES por teclado, y este no lo es. Los tres controles que sí lo son —el
+   enlace y los dos botones— conservan el suyo.
+
+   ── POR QUÉ AQUÍ Y NO CON UNA UTILIDAD ────────────────────────────────────
+   Se intentó primero con `focus-visible:outline-none` en el marcado y NO
+   funcionó, aunque su especificidad es mayor: la regla de arriba vive FUERA de
+   `@layer` y las utilidades de Tailwind dentro, y el CSS sin capa gana al de
+   capa pase lo que pase con la especificidad. Por eso la excepción tiene que
+   estar aquí, en el mismo contexto sin capa. */
+[data-focus-silent]:focus-visible {
+  outline: none;
 }
 
 /* Enlace de salto al contenido (WCAG 2.4.1) */

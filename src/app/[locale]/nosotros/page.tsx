@@ -22,6 +22,16 @@ import { Media } from '@ui/common/components/ui/Media'
 import { Reveal } from '@ui/common/components/ui/Reveal'
 import { TrackView } from '@ui/common/components/analytics/TrackView'
 
+/**
+ * El bloque "Cifras en validación" no se publica por ahora (petición de Camilo,
+ * 2026-09-08): mostrar indicadores sin valores restaba más de lo que sumaba.
+ *
+ * La estructura NO se borra —la sección vuelve entera el día que haya datos
+ * verificados—, solo deja de renderizarse. Con `hasValidated` en true el bloque
+ * ni siquiera entra en juego: se pintan las métricas reales, que es el destino.
+ */
+const MOSTRAR_CIFRAS_PENDIENTES = false
+
 type Props = { params: Promise<{ locale: string }> }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -83,7 +93,15 @@ export default async function NosotrosPage({ params }: Props) {
           <h1 className="mt-5 font-display text-display-xl font-semibold text-balance text-ink">
             {t(nosotros.hero.title, locale)}
           </h1>
-          <p className="mt-7 text-body-l text-ink-2">{t(nosotros.hero.lead, locale)}</p>
+          {/* Tres bloques, no uno: el copy entregado marca "Ahí entra Voltop."
+              como destacado. Se distingue subiendo de `text-ink-2` a `text-ink`
+              dentro del mismo tamaño y la misma pila — es énfasis del texto, no
+              un elemento nuevo. */}
+          <div className="mt-7 space-y-5 text-body-l">
+            <p className="text-ink-2">{t(nosotros.hero.lead, locale)}</p>
+            <p className="text-ink">{t(nosotros.hero.highlight, locale)}</p>
+            <p className="text-ink-2">{t(nosotros.hero.leadEnd, locale)}</p>
+          </div>
         </Container>
       </Section>
 
@@ -178,35 +196,34 @@ export default async function NosotrosPage({ params }: Props) {
             </SectionHeading>
           </TrackView>
 
+          <p className="mt-5 measure text-body-l text-ink-2">{t(nosotros.impact.lead, locale)}</p>
+
           {hasValidated ? (
-            <>
-              <p className="mt-5 measure text-body-l text-ink-2">
-                {t(nosotros.impact.lead, locale)}
-              </p>
-              <MetricRow
-                metrics={metrics}
-                locale={locale}
-                className="mt-14"
-              />
-            </>
+            <MetricRow
+              metrics={metrics}
+              locale={locale}
+              className="mt-14"
+            />
           ) : (
-            <div className="mt-10 max-w-2xl border-l-2 border-warn/50 pl-6">
-              <PendingTag>{t(nosotros.impact.pendingTitle, locale)}</PendingTag>
-              <p className="mt-4 text-body-l text-ink-2">
-                {t(nosotros.impact.pendingBody, locale)}
-              </p>
-              <ul className="mt-8 grid gap-x-10 gap-y-3 font-mono text-mono text-ink-3 sm:grid-cols-2">
-                {metrics.map((m) => (
-                  <li
-                    key={m.key}
-                    className="border-t border-line pt-3"
-                  >
-                    {t(m.label, locale)}
-                    {m.unit ? ` · ${m.unit}` : ''}
-                  </li>
-                ))}
-              </ul>
-            </div>
+            MOSTRAR_CIFRAS_PENDIENTES && (
+              <div className="mt-10 max-w-2xl border-l-2 border-warn/50 pl-6">
+                <PendingTag>{t(nosotros.impact.pendingTitle, locale)}</PendingTag>
+                <p className="mt-4 text-body-l text-ink-2">
+                  {t(nosotros.impact.pendingBody, locale)}
+                </p>
+                <ul className="mt-8 grid gap-x-10 gap-y-3 font-mono text-mono text-ink-3 sm:grid-cols-2">
+                  {metrics.map((m) => (
+                    <li
+                      key={m.key}
+                      className="border-t border-line pt-3"
+                    >
+                      {t(m.label, locale)}
+                      {m.unit ? ` · ${m.unit}` : ''}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )
           )}
         </Container>
       </Section>

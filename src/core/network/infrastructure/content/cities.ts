@@ -11,32 +11,26 @@
 
 import type { City } from '~/core/network/domain/entities/City'
 
+/**
+ * ── AQUÍ YA NO HAY DESCRIPCIÓN POR CIUDAD (2026-09-08) ────────────────────
+ * Cada ciudad traía un campo `intro` escrito a mano. Se retiró entero, no solo
+ * su contenido: mientras el campo existiera, cualquiera podía volver a llenarlo
+ * y el texto reaparecería sin que nadie lo pidiera.
+ *
+ * La descripción se compone ahora en `cityCopy.lead` con las cifras que
+ * devuelve `getCitiesWithStations()`. Lee esa nota antes de traerlo de vuelta.
+ */
 export const cities: City[] = [
   {
     slug: 'bogota',
     name: 'Bogotá',
     region: 'Cundinamarca',
-    intro: {
-      es: 'Carga en el norte, el centro financiero y los corredores de salida de la ciudad, en espacios donde ya ibas a estar.',
-      en: "Charge in the north, the financial district and the city's main exit corridors — in places you were already going.",
-      pt: 'Carregue na zona norte, no centro financeiro e nos principais corredores de saída da cidade — em lugares onde você já ia estar.',
-    },
     featured: true,
   },
   {
     slug: 'medellin',
     name: 'Medellín',
     region: 'Antioquia',
-    intro: {
-      /* "Puntos estratégicos" was filler. Bogotá's intro, in this same
-         collection, is concrete and far better; this brings it up to par. */
-      /* Corrected against the real data: the Medellín station is Wake, at
-         80 kW, not San Fernando Plaza at 120. The reference to El Poblado
-         goes as well: there is no address on record. */
-      es: 'Nuestra primera estación en Medellín, con 80 kW y seis puntos de carga.',
-      en: 'Our first station in Medellín, with 80 kW and six charge points.',
-      pt: 'Nossa primeira estação em Medellín, com 80 kW e seis pontos de carga.',
-    },
     featured: true,
   },
 ]

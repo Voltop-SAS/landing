@@ -133,6 +133,27 @@ export function Media({
             fill
             sizes={sizes}
             priority={priority}
+            /**
+             * `fetchPriority` EXPLÍCITO, y no sobra: `priority` NO lo emite.
+             *
+             * Medido el 2026-09-08 sobre el build de producción, red 4G lenta,
+             * escritorio. La fotografía del Hero —que es el elemento LCP y ya
+             * llevaba `priority`— salía en el HTML SIN `fetchpriority`, así que
+             * el navegador la pedía con prioridad BAJA:
+             *
+             *   181 → 3252 ms   168 KB   Low    ← la foto de portada
+             *   176 → 1113 ms    40 KB   High   ← una tipografía
+             *   179 →  826 ms    24 KB   High   ← otra tipografía
+             *
+             * Transferir 168 KB por ese enlace son ~840 ms. Tardaba 3.071. La
+             * diferencia entera es cola: cuatro tipografías en alta y siete
+             * trozos de código por delante.
+             *
+             * `priority` sí genera el `<link rel="preload">`, pero un preload
+             * sin prioridad declarada no adelanta a nada. Esto no cambia ni un
+             * píxel de la imagen: cambia el turno en la cola.
+             */
+            fetchPriority={priority ? 'high' : undefined}
             quality={quality}
             className={cn(fit === 'contain' ? 'object-contain' : 'object-cover', position)}
           />

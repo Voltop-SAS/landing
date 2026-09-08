@@ -6,6 +6,7 @@ import { href, routes, alternatesFor } from '~/core/common/domain/i18n/routes'
 import { red, city as cityCopy } from '~/core/network/domain/consts/copy'
 import { units, a11y } from '~/core/common/domain/consts/copy'
 import {
+  getCitiesWithStations,
   getCities,
   getCity,
   getStationsByCity,
@@ -63,9 +64,23 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const path = routes.city(city.slug)
   return {
     title: `${t(cityCopy.metaTitlePattern, locale)} ${city.name}`,
-    description: t(city.intro, locale),
+    description: leadDeCiudad(city.slug, city.name, locale),
     alternates: alternatesFor(locale, path),
   }
+}
+
+/**
+ * Compone la descripción de la ciudad con las cifras del dataset. Ver la nota
+ * de `cityCopy.lead`: antes cada ciudad traía el texto escrito a mano.
+ */
+function leadDeCiudad(citySlug: string, cityName: string, locale: Locale) {
+  const datos = getCitiesWithStations().find((c) => c.city.slug === citySlug)
+  if (!datos) return ''
+  const plantilla = datos.count === 1 ? cityCopy.lead.one : cityCopy.lead.many
+  return t(plantilla, locale)
+    .replace('{city}', cityName)
+    .replace('{points}', String(datos.points))
+    .replace('{kw}', String(datos.maxKw))
 }
 
 export default async function CityPage({ params }: Props) {
@@ -121,7 +136,9 @@ export default async function CityPage({ params }: Props) {
           <h1 className="mt-4 font-display text-display-xl font-semibold text-ink">
             {t(cityCopy.titlePrefix, locale)} {city.name}
           </h1>
-          <p className="mt-6 measure text-body-l text-ink-2">{t(city.intro, locale)}</p>
+          <p className="mt-6 measure text-body-l text-ink-2">
+            {leadDeCiudad(city.slug, city.name, locale)}
+          </p>
         </Container>
       </Section>
 

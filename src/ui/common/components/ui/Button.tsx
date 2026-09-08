@@ -57,7 +57,14 @@ type AsButton = Common & {
 }
 
 const base =
-  'group relative inline-flex items-center justify-center gap-2 font-medium tracking-tight text-center ' +
+  /* SIN `tracking-tight`. Lo llevaba, y era una inversión de la escala: los
+     botones se pintan a 15–16px y `tracking-tight` son −0.025em, el mismo valor
+     que el titular de 72px del beat 2 y MÁS APRETADO que el de 52px. Un rótulo
+     pequeño quiere más aire que un titular grande, no menos — y este es el
+     texto que se lee para decidir dónde hacer clic.
+     Sin la clase, cada botón hereda el tracking de su tamaño: +0.01em a 16px,
+     +0.015em a 15px. */
+  'group relative inline-flex items-center justify-center gap-2 font-medium text-center ' +
   'transition-[transform,background-color,border-color,box-shadow,color,opacity] ' +
   'duration-(--duration-fast) ease-(--ease-standard) ' +
   'active:scale-[0.98] disabled:pointer-events-none disabled:opacity-40 select-none'

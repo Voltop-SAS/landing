@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import Script from 'next/script'
 import { t, type Locale } from '~/core/common/domain/i18n/config'
@@ -104,6 +104,29 @@ export function CookieConsent({ locale }: { locale: Locale }) {
 
   const visible = read && decision === null
 
+  /**
+   * EL FOCO ENTRA EN LA REGIÓN, NO EN UN BOTÓN.
+   *
+   * "Aceptar" tenía `autoFocus`, y en una carga limpia —sin que nadie toque el
+   * teclado— Chrome le daba `:focus-visible`: medido, anillo de 2px de marca en
+   * "Aceptar" y nada en "Rechazar".
+   *
+   * Dos cosas se rompían con eso. La cabecera de este fichero exige que las dos
+   * salidas pesen lo mismo, y un anillo en una de ellas es una diferencia
+   * visual que ninguna de las otras igualdades compensa. Y peor: se lee como
+   * PRESELECCIONADA — pulsar Enter aceptaba— lo cual es un empujón hacia el sí
+   * en el único sitio del sitio donde la decisión tiene que ser libre.
+   *
+   * Enfocar el contenedor conserva lo que `autoFocus` resolvía: quien navega
+   * con teclado aterriza dentro del aviso y su siguiente Tab es "Aceptar", sin
+   * tener que buscarlo. `tabIndex={-1}` lo hace enfocable por código sin
+   * añadirlo al orden de tabulación.
+   */
+  const region = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    if (visible) region.current?.focus()
+  }, [visible])
+
   return (
     <>
       {decision === 'aceptado' && (
@@ -121,10 +144,16 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
       {visible && (
         <div
+          ref={region}
+          tabIndex={-1}
           role="region"
           aria-label={t(copy.title, locale)}
           /* `z-(--z-overlay)`: above the app floater, which also lives at the
              bottom. The decision comes first. */
+          /* Silencia el anillo de foco de ESTE contenedor. La razón entera
+             está en `globals.css`, junto a la regla: aquí no vale una utilidad
+             de Tailwind porque la regla global vive fuera de `@layer`. */
+          data-focus-silent=""
           className="fixed inset-x-0 bottom-0 z-(--z-overlay) border-t border-line bg-canvas/85 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl"
         >
           {/* Same rail as the Header: `content` container and the system
@@ -138,7 +167,41 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               <p className="font-display text-body font-semibold text-ink">
                 {t(copy.title, locale)}
               </p>
-              <p className="measure mt-1 text-body-s text-ink-2">{t(copy.body, locale)}</p>
+              {/* The policy link lives INSIDE the sentence. See the note on
+                  `cookies.body`: the text is split on `{policy}` and the link
+                  takes its place, carrying the document's full name.
+
+                  If a locale ever lost the token, `split` returns one part and
+                  the sentence renders whole without a link rather than
+                  breaking. The notice staying readable is the one thing that
+                  cannot fail here. */}
+              <p className="measure mt-1 text-body-s text-ink-2">
+                {(() => {
+                  const [before, after] = t(copy.body, locale).split('{policy}')
+                  return (
+                    <>
+                      {before}
+                      {after !== undefined && (
+                        <>
+                          <Link
+                            href={href(locale, routes.privacy)}
+                            /* Subrayado SIEMPRE visible, no solo en hover: dentro de un
+                              párrafo el color no basta para señalar un enlace
+                              —quien no distingue el verde no lo encuentra— y
+                              este es el enlace que hace que el consentimiento
+                              sea informado. El foco lo pone la regla global de
+                              `globals.css`, no hace falta repetirlo aquí. */
+                            className="text-ink underline decoration-line-strong decoration-1 underline-offset-4 transition-colors hover:text-brand hover:decoration-brand"
+                          >
+                            {t(copy.policy, locale)}
+                          </Link>
+                          {after}
+                        </>
+                      )}
+                    </>
+                  )
+                })()}
+              </p>
             </div>
 
             <div className="flex flex-col gap-3 md:shrink-0 md:flex-row md:items-center md:gap-4">
@@ -154,25 +217,18 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 <button
                   type="button"
                   onClick={() => decide('aceptado')}
-                  autoFocus
-                  className="brand-gradient inline-flex h-11 items-center justify-center rounded-(--radius-pill) px-5 text-body-s font-semibold text-on-brand transition-[filter] duration-(--duration-fast) hover:brightness-105"
+                  className="brand-gradient press inline-flex h-11 items-center justify-center rounded-(--radius-pill) px-5 text-body-s font-semibold text-on-brand transition-[filter] duration-(--duration-fast) hover:brightness-105"
                 >
                   {t(copy.accept, locale)}
                 </button>
                 <button
                   type="button"
                   onClick={() => decide('rechazado')}
-                  className="inline-flex h-11 flex-1 items-center justify-center rounded-(--radius-pill) border border-line-control px-5 text-body-s font-semibold text-ink transition-colors duration-(--duration-fast) hover:border-line-strong hover:bg-surface-2"
+                  className="press inline-flex h-11 flex-1 items-center justify-center rounded-(--radius-pill) border border-line-control px-5 text-body-s font-semibold text-ink transition-colors duration-(--duration-fast) hover:border-line-strong hover:bg-surface-2"
                 >
                   {t(copy.reject, locale)}
                 </button>
               </div>
-              <Link
-                href={href(locale, routes.privacy)}
-                className="inline-flex min-h-11 items-center font-mono text-mono text-ink-3 transition-colors hover:text-brand"
-              >
-                {t(copy.policy, locale)}
-              </Link>
             </div>
           </div>
         </div>

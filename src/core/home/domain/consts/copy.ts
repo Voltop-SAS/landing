@@ -325,10 +325,14 @@ export const home = {
       en: 'Scan to download',
       pt: 'Escaneie para baixar',
     } satisfies Localized,
+    /* The alt describes the WHOLE image, not just the code: since 2026-09-08
+       the asset is a phone held in a hand running a charging session, with the
+       QR beside it. An alt that only named the QR would hide from a screen
+       reader the one thing the image shows about the product. */
     qrAlt: {
-      es: 'Código QR que abre la descarga de la app de Voltop',
-      en: 'QR code that opens the Voltop app download',
-      pt: 'Código QR que abre o download do aplicativo da Voltop',
+      es: 'Un teléfono en la mano con la app de Voltop mostrando una carga en curso al 70%, junto al código QR que abre la descarga',
+      en: 'A phone held in a hand with the Voltop app showing a charge in progress at 70%, next to the QR code that opens the download',
+      pt: 'Um telefone na mão com o aplicativo da Voltop mostrando uma carga em andamento a 70%, ao lado do código QR que abre o download',
     } satisfies Localized,
   },
 
@@ -350,10 +354,26 @@ export const home = {
        logo says it. It is the same reason the header lockup does not repeat
        the brand name. */
     titleMobile: { es: 'Descarga la app', en: 'Get the app', pt: 'Baixe o app' },
+    /* The dismiss control came back on 2026-09-08. The label says what
+       disappears, not just "cerrar": on a page with a cookie banner and a
+       header, a bare "Cerrar" does not say which of the three things it
+       closes. */
+    close: {
+      es: 'Cerrar el aviso de descarga',
+      en: 'Dismiss the download notice',
+      pt: 'Fechar o aviso de download',
+    },
+    /* Más corto desde el 2026-09-08. La barra de móvil tiene ~246px de ancho
+       para el texto a 390px y la frase anterior los llenaba justos; a 320px
+       caía a dos líneas y estiraba la barra a 145px, un 33% de la pantalla.
+       Con esta cabe en una sola línea desde 360px y la barra baja de altura.
+
+       Sigue siendo una clave APARTE de `body`: escritorio y tablet conservan la
+       suya, que es la larga. */
     bodyMobile: {
-      es: 'Encuentra estaciones e inicia tu carga',
-      en: 'Find stations and start charging',
-      pt: 'Encontre estações e inicie seu carregamento',
+      es: 'Encuentra dónde cargar.',
+      en: 'Find where to charge.',
+      pt: 'Encontre onde carregar.',
     },
     open: { es: 'Abrir', en: 'Open', pt: 'Abrir' },
   },

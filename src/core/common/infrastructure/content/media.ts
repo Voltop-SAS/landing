@@ -66,11 +66,26 @@ export const media = {
   },
 
   /** Proof of institutional partnership, and of people. */
+  /**
+   * Delivered 2026-09-08. Camilo sent a first cut of 2:21 and then replaced it
+   * with `Video_Ean_Final.MOV` (1:11) because the first one was too long; that
+   * shorter cut is the one served. Both masters live in
+   * `~/Voltop-masters-originales/`, outside the repository.
+   *
+   * Encoded from HEVC 1920×1080 to H.264 CRF 27 (20 MB) plus a 960-wide mobile
+   * variant at CRF 30 (5.3 MB). The piece HAS AUDIO and is the one that plays
+   * with controls in the news entry.
+   *
+   * It is also the background of the home page's beat 5, under a 78% veil and
+   * muted: there it is texture, not a piece to watch. `VideoMedia` only loads it
+   * once it is in view, so those 20 MB never touch the initial load.
+   */
   eanOpening: {
     id: 'apertura-ean',
     kind: 'video',
-    src: null,
-    poster: null,
+    src: '/apertura-ean.mp4',
+    srcMobile: '/apertura-ean-movil.mp4',
+    poster: '/apertura-ean-poster.jpg',
     alt: {
       es: 'Apertura de la estación Voltop en la Universidad EAN, con directivos de la universidad y el CEO de Voltop',
       en: "Opening of the Voltop station at EAN University, with university leadership and Voltop's CEO",
@@ -81,9 +96,9 @@ export const media = {
       en: 'Human and institutional proof. Serves both B2B trust and brand.',
       pt: 'Prova humana e institucional. Serve à confiança B2B e à marca.',
     },
-    duration: '2:05',
+    duration: '1:11',
     aspect: '16/9',
-    availability: 'confirmado-no-entregado',
+    availability: 'entregado',
   },
 
   /** Proof of purpose and leadership. */
@@ -130,7 +145,21 @@ export const media = {
   retailSpace: {
     id: 'espacio-comercial',
     kind: 'photo',
-    src: null,
+    /**
+     * DELIVERED 2026-09-08. It arrived at 6180×4120 and 18.5 MB — a master, not
+     * a web asset. Converted with `sharp` to JPEG q82 at **3200px wide**: 678 KB,
+     * 96% less. The master lives in `~/Voltop-masters-originales/`, outside the
+     * repository, as the project convention requires: 18.5 MB in the git tree
+     * are permanent.
+     *
+     * 3200 and not the 2400 the station photos use, and it was measured: this
+     * band is `width="wide"` and declares `sizes="(min-width: 1600px) 1600px,
+     * 100vw"`, so at DPR 2 the largest box asks for exactly 3200px. The first
+     * conversion went to 2400 and left it at 0.89× — the browser would serve
+     * less image than the box and stretch it, the same defect that showed up in
+     * Helbert's portrait and in the city cards.
+     */
+    src: '/espacio-comercial.jpg',
     poster: null,
     alt: {
       es: 'Puntos de carga Voltop integrados en el parqueadero de un espacio comercial',
@@ -142,8 +171,15 @@ export const media = {
       en: 'B2B evidence: infrastructure inside a real business.',
       pt: 'Evidência B2B: infraestrutura dentro de um negócio real.',
     },
+    /**
+     * `4/3` is what this hole was DECLARED with, and /empresas overrides it to
+     * `21/9`. The override stays: that band under the hero is the page's
+     * composition and the photograph came to fill it, not the other way round.
+     * The figure is left here because it is the ratio in which the asset was
+     * requested, and whoever uses it somewhere else should know that.
+     */
     aspect: '4/3',
-    availability: 'confirmado-no-entregado',
+    availability: 'entregado',
   },
 
   chargingDetail: {
@@ -326,7 +362,7 @@ export const media = {
   eanTestimonialPortrait: {
     id: 'retrato-testimonio-ean',
     kind: 'photo',
-    src: '/retrato-herbert-perico.jpg',
+    src: '/retrato-helbert-perico.jpg',
     poster: null,
     alt: {
       es: 'Retrato de Helbert Perico, de la Universidad EAN',

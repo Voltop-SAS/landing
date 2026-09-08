@@ -40,12 +40,23 @@ export const stations: Station[] = [
     points: 18,
     status: 'operativa',
     hours: { es: 'Abierto 24/7', en: 'Open 24/7', pt: 'Aberto 24/7' },
-    pricing: null,
+    /* Confirmada por Camilo el 2026-09-08. Las tres estaciones comparten
+       tarifa; el campo sigue siendo POR ESTACIÓN a propósito, porque la nota
+       que la acompaña dice que puede variar y el día que una tenga otra, se
+       cambia aquí sin tocar el componente. */
+    pricing: { perKwh: 1780, currency: 'COP' },
+    /* Los mismos dos en las tres estaciones desde el 2026-09-08, por decisión
+       de producto. Antes eran listas distintas por sitio —la EAN tenía techo y
+       cafetería, el Grand Hyatt valet y restaurante— y Wake no tenía ninguna,
+       así que su ficha ni siquiera pintaba la sección. Ahora las tres dicen lo
+       mismo y las tres la pintan.
+
+       Lo que se pierde: los servicios propios de cada lugar dejan de contarse.
+       Si algún día se quieren recuperar, cada estación vuelve a tener su lista
+       y el componente ya los pinta sin tocar nada. */
     services: [
-      { es: 'Techo', en: 'Covered', pt: 'Coberto' },
-      { es: 'Cafetería', en: 'Café', pt: 'Café' },
+      { es: 'WiFi', en: 'Wi-Fi', pt: 'Wi-Fi' },
       { es: 'Baños', en: 'Restrooms', pt: 'Banheiros' },
-      { es: 'Wifi', en: 'Wi-Fi', pt: 'Wi-Fi' },
     ],
     media: {
       photos: [
@@ -77,13 +88,48 @@ export const stations: Station[] = [
     points: 11,
     status: 'operativa',
     hours: { es: 'Abierto 24/7', en: 'Open 24/7', pt: 'Aberto 24/7' },
-    pricing: null,
-    services: [
-      { es: 'Valet', en: 'Valet', pt: 'Manobrista' },
-      { es: 'Restaurante', en: 'Restaurant', pt: 'Restaurante' },
-      { es: 'Parqueadero cubierto', en: 'Covered parking', pt: 'Estacionamento coberto' },
+    /* Confirmada por Camilo el 2026-09-08. Las tres estaciones comparten
+       tarifa; el campo sigue siendo POR ESTACIÓN a propósito, porque la nota
+       que la acompaña dice que puede variar y el día que una tenga otra, se
+       cambia aquí sin tocar el componente. */
+    pricing: { perKwh: 1780, currency: 'COP' },
+        services: [
+      { es: 'WiFi', en: 'Wi-Fi', pt: 'Wi-Fi' },
+      { es: 'Baños', en: 'Restrooms', pt: 'Banheiros' },
     ],
-    media: { photos: [] },
+    media: {
+      /**
+       * DELIVERED 2026-09-08. Grand Hyatt was the last station showing its
+       * declared hole; the page needed no changes, it already read
+       * `media.photos[0]` and fell back to the hole when the array was empty.
+       * Populating the dataset was enough — which is exactly what that branch
+       * was written for.
+       *
+       * The master arrived at 6038×4025 and 21.7 MB and lives in
+       * `~/Voltop-masters-originales/`, outside the repository. Converted with
+       * `sharp` to 2560px and JPEG q82: 530 KB.
+       *
+       * 2560 and not the 2400 of Wake and the EAN: this band declares
+       * `sizes="(min-width: 1280px) 1240px, 100vw"`, so at DPR 2 the declared
+       * box asks for 2480px and 2400 would leave it at 0.97× — serving less
+       * image than the box and stretching it.
+       *
+       * ⚠️ A PERSON APPEARS IN THE FRAME, in profile, starting the charge. §
+       * media asks for the permissions of people who appear in the material.
+       * The photograph came from Voltop, of its own installation, so the
+       * permission is presumed — but it is NOT verified here.
+       */
+      photos: [
+        {
+          src: '/estacion-grand-hyatt.jpg',
+          alt: {
+            es: 'Tres cargadores Voltop en el parqueadero cubierto del Grand Hyatt, con un vehículo eléctrico conectado y una persona iniciando la carga',
+            en: 'Three Voltop chargers in the Grand Hyatt covered parking area, with an electric vehicle plugged in and a person starting the charge',
+            pt: 'Três carregadores Voltop no estacionamento coberto do Grand Hyatt, com um veículo elétrico conectado e uma pessoa iniciando a carga',
+          },
+        },
+      ],
+    },
     featured: true,
     dataStatus: 'verified',
   },
@@ -102,8 +148,15 @@ export const stations: Station[] = [
     points: 6,
     status: 'operativa',
     hours: { es: 'Consultar en la app', en: 'Check in the app', pt: 'Consulte no aplicativo' },
-    pricing: null,
-    services: [],
+    /* Confirmada por Camilo el 2026-09-08. Las tres estaciones comparten
+       tarifa; el campo sigue siendo POR ESTACIÓN a propósito, porque la nota
+       que la acompaña dice que puede variar y el día que una tenga otra, se
+       cambia aquí sin tocar el componente. */
+    pricing: { perKwh: 1780, currency: 'COP' },
+    services: [
+      { es: 'WiFi', en: 'Wi-Fi', pt: 'Wi-Fi' },
+      { es: 'Baños', en: 'Restrooms', pt: 'Banheiros' },
+    ],
     media: {
       photos: [
         {

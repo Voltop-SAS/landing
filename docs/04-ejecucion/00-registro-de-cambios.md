@@ -14,8 +14,8 @@
 
 **Por qué:** el proyecto no estaba bajo control de versiones. Cualquier cambio posterior era irreversible.
 
-| Cambio | Detalle |
-|---|---|
+| Cambio                       | Detalle                                                                                                           |
+| ---------------------------- | ----------------------------------------------------------------------------------------------------------------- |
 | Repositorio Git inicializado | Commit `f4ecc8f` captura el prototipo tal como quedó el 2026-07-24, antes de tocar nada. Punto de retorno seguro. |
 
 ---
@@ -24,16 +24,16 @@
 
 **Por qué:** los tokens condicionan todo lo demás. Cambiarlos después habría obligado a rehacer cada composición.
 
-| Cambio | Razón |
-|---|---|
-| `--color-ink-3`: `#6d7789` → `#8b95a8` | El anterior daba 4.06–4.24:1 sobre las superficies del sistema y fallaba WCAG AA. Se usaba en casi todo el texto secundario del sitio: un solo token causaba entre 28 y 65 violaciones por página. El nuevo cumple ≥4.9:1 sobre canvas, surface-1, surface-2 y surface-3. |
-| Tokens semánticos `--color-live`, `--color-warn`, `--color-idle` | Eliminan el único literal suelto que quedaba (`text-amber-400`) y dan un color legible a los marcadores de contenido provisional, que antes tenían 1.10:1. |
-| Escala tipográfica fluida con `clamp()` | No existía escala: cada componente inventaba su tamaño (`md:text-7xl`, `md:text-6xl`, `md:text-5xl`…). Ahora hay nueve pasos con interlineado y tracking asociados, de 360px a 1440px, sin saltos duros entre breakpoints. |
-| Escala de espaciado de sección (`tight` / `base` / `loose`) | Todas las secciones usaban `py-24 md:py-32`: el ritmo de página era plano por construcción. Ahora la intensidad se compone alternando tres valores. |
-| Tokens de contenedor, z-index y duración | Elimina números mágicos y da una escala explícita. |
-| Variables de tipografía renombradas a `*-raw` | `--font-display: var(--font-display)` era una autorreferencia: valor inválido en tiempo de cómputo. Funcionaba solo por orden de cascada. |
-| `overflow-x: clip` en lugar de `hidden` | `hidden` crea un contenedor de scroll y habría roto el `position: sticky` del signature moment. |
-| Se elimina `scroll-behavior: smooth` | Competía con Lenis: dos motores de scroll simultáneos. |
+| Cambio                                                           | Razón                                                                                                                                                                                                                                                                     |
+| ---------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--color-ink-3`: `#6d7789` → `#8b95a8`                           | El anterior daba 4.06–4.24:1 sobre las superficies del sistema y fallaba WCAG AA. Se usaba en casi todo el texto secundario del sitio: un solo token causaba entre 28 y 65 violaciones por página. El nuevo cumple ≥4.9:1 sobre canvas, surface-1, surface-2 y surface-3. |
+| Tokens semánticos `--color-live`, `--color-warn`, `--color-idle` | Eliminan el único literal suelto que quedaba (`text-amber-400`) y dan un color legible a los marcadores de contenido provisional, que antes tenían 1.10:1.                                                                                                                |
+| Escala tipográfica fluida con `clamp()`                          | No existía escala: cada componente inventaba su tamaño (`md:text-7xl`, `md:text-6xl`, `md:text-5xl`…). Ahora hay nueve pasos con interlineado y tracking asociados, de 360px a 1440px, sin saltos duros entre breakpoints.                                                |
+| Escala de espaciado de sección (`tight` / `base` / `loose`)      | Todas las secciones usaban `py-24 md:py-32`: el ritmo de página era plano por construcción. Ahora la intensidad se compone alternando tres valores.                                                                                                                       |
+| Tokens de contenedor, z-index y duración                         | Elimina números mágicos y da una escala explícita.                                                                                                                                                                                                                        |
+| Variables de tipografía renombradas a `*-raw`                    | `--font-display: var(--font-display)` era una autorreferencia: valor inválido en tiempo de cómputo. Funcionaba solo por orden de cascada.                                                                                                                                 |
+| `overflow-x: clip` en lugar de `hidden`                          | `hidden` crea un contenedor de scroll y habría roto el `position: sticky` del signature moment.                                                                                                                                                                           |
+| Se elimina `scroll-behavior: smooth`                             | Competía con Lenis: dos motores de scroll simultáneos.                                                                                                                                                                                                                    |
 
 ---
 
@@ -63,14 +63,14 @@ Todo el copy sale del JSX a `content/copy/*`. Antes la mayoría de los textos vi
 
 ### Modelo de datos v2
 
-| Añadido | Para qué |
-|---|---|
-| `geo` | Mapa, "cómo llegar" y SEO local. `null` mientras no se reciban las coordenadas: no se inventan. |
-| `media` | Fotografía y video por ubicación. |
-| `pricing` | `null` mientras no esté confirmado comercialmente. |
-| `citySlug` como referencia | La ciudad pasa a ser entidad; antes era texto libre (incluía `"Próximamente"` como si fuera una ciudad). |
-| `dataStatus` | Trazabilidad por registro: nada se presenta como verificado si no lo está. |
-| Colección **Ciudades** | Nueva ruta `/red/[ciudad]`: la búsqueda real del usuario es geográfica. |
+| Añadido                         | Para qué                                                                                                                           |
+| ------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| `geo`                           | Mapa, "cómo llegar" y SEO local. `null` mientras no se reciban las coordenadas: no se inventan.                                    |
+| `media`                         | Fotografía y video por ubicación.                                                                                                  |
+| `pricing`                       | `null` mientras no esté confirmado comercialmente.                                                                                 |
+| `citySlug` como referencia      | La ciudad pasa a ser entidad; antes era texto libre (incluía `"Próximamente"` como si fuera una ciudad).                           |
+| `dataStatus`                    | Trazabilidad por registro: nada se presenta como verificado si no lo está.                                                         |
+| Colección **Ciudades**          | Nueva ruta `/red/[ciudad]`: la búsqueda real del usuario es geográfica.                                                            |
 | Registro de **media narrativa** | Punto único donde conectar los archivos cuando lleguen. Rellenar `src` desactiva todos los placeholders del sitio automáticamente. |
 
 ### Analytics
@@ -91,17 +91,18 @@ El hallazgo central de la auditoría era que cuatro beats consecutivos compartí
 
 Secuencia estructural nueva, sin dos beats consecutivos iguales:
 
-| Beat | Estructura | Intensidad |
-|---|---|---|
-| 1 · Hero | Full-bleed, contenido anclado abajo, columna única | Alta |
-| 2 · Infraestructura | Sticky con scroll-scrub | MUY ALTA |
-| 3 · La red | Índice ancho, denso, sin media | Media |
-| 4 · Empresas | Columna estrecha centrada, aireada | Media-baja |
-| 5 · Caso real | Full-bleed con la cita encima del material | Alta |
-| 6 · Visión | Columna estrecha + franja ancha debajo | Media-alta |
-| 7 · Cierre | Asimétrico, dos audiencias | Alta |
+| Beat                | Estructura                                         | Intensidad |
+| ------------------- | -------------------------------------------------- | ---------- |
+| 1 · Hero            | Full-bleed, contenido anclado abajo, columna única | Alta       |
+| 2 · Infraestructura | Sticky con scroll-scrub                            | MUY ALTA   |
+| 3 · La red          | Índice ancho, denso, sin media                     | Media      |
+| 4 · Empresas        | Columna estrecha centrada, aireada                 | Media-baja |
+| 5 · Caso real       | Full-bleed con la cita encima del material         | Alta       |
+| 6 · Visión          | Columna estrecha + franja ancha debajo             | Media-alta |
+| 7 · Cierre          | Asimétrico, dos audiencias                         | Alta       |
 
 Otros cambios:
+
 - **Constelación de nodos eliminada.** Era el cliché visual del sector, contradecía el reencuadre 70% mundo real / 30% comportamiento, y en tablet vertical se superponía al titular.
 - **Cero placeholders "XX".** Había diez en la Home. Con ninguna métrica validada, mostrarlas destruía la credibilidad. La estructura para mostrarlas sigue lista y se activa sola cuando `validated` pase a `true`.
 - **Franja de cobertura real en el hero.** Sustituye a las cifras inventadas con datos que sí existen (ciudades) y abre una segunda entrada al journey B2C.
@@ -141,17 +142,17 @@ De cinco columnas con quince enlaces (seis apuntaban al mismo destino con etique
 
 ## Bloque 4 · Accesibilidad — 2026-08-12
 
-| Corrección | Antes |
-|---|---|
-| Contraste AA en todo el texto | 28–65 violaciones por página |
-| Skip link | No existía |
-| Objetivos táctiles ≥44px | Enlaces de 17px en el footer, controles de 24–38px |
-| Menú móvil: Escape, foco atrapado, bloqueo de scroll | Nada de lo anterior; `aria-expanded` se quedaba en `true` |
-| Patrón de pestañas ARIA completo | `role="tab"` sin `tabpanel` ni `aria-controls`: peor que no poner ARIA |
-| Formulario: errores asociados, `autocomplete`, resumen anunciado, foco al primer campo inválido | Solo validación nativa |
-| **Consentimiento de datos (Ley 1581 de 2012)** | Se capturaban datos personales sin autorización. Bloqueante legal para publicar. |
-| Jerarquía de encabezados sin saltos | `/red` pasaba de `h1` a `h3` |
-| `lang` correcto en el HTML servido | Se corregía en cliente |
+| Corrección                                                                                      | Antes                                                                            |
+| ----------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| Contraste AA en todo el texto                                                                   | 28–65 violaciones por página                                                     |
+| Skip link                                                                                       | No existía                                                                       |
+| Objetivos táctiles ≥44px                                                                        | Enlaces de 17px en el footer, controles de 24–38px                               |
+| Menú móvil: Escape, foco atrapado, bloqueo de scroll                                            | Nada de lo anterior; `aria-expanded` se quedaba en `true`                        |
+| Patrón de pestañas ARIA completo                                                                | `role="tab"` sin `tabpanel` ni `aria-controls`: peor que no poner ARIA           |
+| Formulario: errores asociados, `autocomplete`, resumen anunciado, foco al primer campo inválido | Solo validación nativa                                                           |
+| **Consentimiento de datos (Ley 1581 de 2012)**                                                  | Se capturaban datos personales sin autorización. Bloqueante legal para publicar. |
+| Jerarquía de encabezados sin saltos                                                             | `/red` pasaba de `h1` a `h3`                                                     |
+| `lang` correcto en el HTML servido                                                              | Se corregía en cliente                                                           |
 
 ---
 
@@ -167,25 +168,25 @@ Cada estación y cada ciudad es una landing de búsqueda local: el canal de adqu
 
 Ejecutada sobre el build de producción, 5 páginas × 5 viewports (1920 / 1440 / 1194 / 834 / 390).
 
-| Comprobación | Resultado |
-|---|---|
-| `npm run build` | ✅ 25 páginas estáticas |
-| `npx eslint .` | ✅ sin errores ni avisos |
-| Contraste WCAG AA | ✅ 0 fallos reales |
-| Objetivos táctiles ≥44px | ✅ |
-| Skip link, landmarks, jerarquía de encabezados | ✅ |
-| Overflow horizontal | ✅ 0 en los 5 viewports |
-| Enlaces sin destino | ✅ 0 |
-| Placeholders "XX" visibles | ✅ 0 |
-| Idioma conservado al navegar | ✅ EN se mantiene entre páginas |
-| Recargas completas de documento | ✅ 0 (navegación de cliente) |
-| CTA contextual por ruta | ✅ presente en Home/Nosotros, ausente en Red, comercial en Empresas |
-| Filtros de /red | ✅ filtran de verdad (4 → 1 al elegir Medellín) |
-| Pestañas ARIA | ✅ completas, con navegación por flechas |
-| Formulario | ✅ valida, anuncia y exige consentimiento |
-| Menú móvil | ✅ foco atrapado, scroll bloqueado, cierra con Escape |
-| `prefers-reduced-motion` | ✅ 0 elementos invisibles en ambos modos |
-| Signature moment | ✅ recorte 12% → 0% con el scroll; el texto aparece y permanece |
+| Comprobación                                   | Resultado                                                           |
+| ---------------------------------------------- | ------------------------------------------------------------------- |
+| `npm run build`                                | ✅ 25 páginas estáticas                                             |
+| `npx eslint .`                                 | ✅ sin errores ni avisos                                            |
+| Contraste WCAG AA                              | ✅ 0 fallos reales                                                  |
+| Objetivos táctiles ≥44px                       | ✅                                                                  |
+| Skip link, landmarks, jerarquía de encabezados | ✅                                                                  |
+| Overflow horizontal                            | ✅ 0 en los 5 viewports                                             |
+| Enlaces sin destino                            | ✅ 0                                                                |
+| Placeholders "XX" visibles                     | ✅ 0                                                                |
+| Idioma conservado al navegar                   | ✅ EN se mantiene entre páginas                                     |
+| Recargas completas de documento                | ✅ 0 (navegación de cliente)                                        |
+| CTA contextual por ruta                        | ✅ presente en Home/Nosotros, ausente en Red, comercial en Empresas |
+| Filtros de /red                                | ✅ filtran de verdad (4 → 1 al elegir Medellín)                     |
+| Pestañas ARIA                                  | ✅ completas, con navegación por flechas                            |
+| Formulario                                     | ✅ valida, anuncia y exige consentimiento                           |
+| Menú móvil                                     | ✅ foco atrapado, scroll bloqueado, cierra con Escape               |
+| `prefers-reduced-motion`                       | ✅ 0 elementos invisibles en ambos modos                            |
+| Signature moment                               | ✅ recorte 12% → 0% con el scroll; el texto aparece y permanece     |
 
 ### Bug encontrado y corregido durante la verificación
 
@@ -198,6 +199,7 @@ La opacidad del texto del signature moment estaba ligada al progreso de scroll y
 **Bloqueado por entrega externa:** archivos de video y fotografía · logo SVG · hex de marca confirmados · tipografías con licencia · métricas validadas · logos de partners con permiso · enlaces de las tiendas · definición del CRM y de la plataforma de analytics.
 
 **No bloqueado, siguiente en la cola:**
+
 - Sincronizar el estado del filtro de `/red` con la URL (compartible e indexable).
 - Transiciones entre páginas ahora que la navegación es de cliente.
 - Página de política de tratamiento de datos, requerida por el enlace del consentimiento.
@@ -211,14 +213,14 @@ La opacidad del texto del signature moment estaba ligada al progreso de scroll y
 
 **Por qué:** las Skills eran ensayos, no reglas. Prohibían explícitamente los chips decorativos, el exceso de cards y los placeholders de plantilla, y el sitio implementado tenía las tres cosas: no impidieron nada porque no contenían un solo criterio verificable.
 
-| Cambio | Detalle |
-|---|---|
-| Los principios salen de las Skills | Viven una sola vez en el Master Project Definition. Las Skills lo referencian en lugar de repetirlo. Se elimina la triple copia de "complejidad detrás / simplicidad delante", de la doble pregunta y del ritmo visual. |
-| Cada checklist pasa a ser verificable | Umbrales numéricos donde antes había adjetivos: contraste, objetivos táctiles, gradientes por vista, placeholders por página, estructuras repetidas, medida de línea, overflow, enlaces muertos, recargas de documento. |
-| `voltop-review-gate` pasa de duplicar a orquestar | Deja de reescribir el contenido de las otras seis. Incorpora los comandos a ejecutar y la tabla de aserciones a medir. |
-| Cuatro huecos sin dueño, cubiertos | Modelo de contenido/datos e i18n → `voltop-design-system`. Cumplimiento legal de datos (Ley 1581) → `voltop-quality-compliance`. Pipeline y función narrativa de assets → `voltop-art-direction-ui`. |
-| Contradicciones skill↔código resueltas | La skill exigía mobile-first y tipografía fluida mientras el código era desktop-first sin `clamp()`. Ahora el código cumple la regla. |
-| Reglas nuevas derivadas de fallos reales | "Ningún control decorativo que simule interacción" · "Nunca ligar la opacidad de contenido a `scrollYProgress`" · "Ninguna interna puede aportar menos que su preview" · "Un titular es un contrato" · "ARIA completa o ninguna" · "Un enlace sin destino no se publica". |
+| Cambio                                            | Detalle                                                                                                                                                                                                                                                                   |
+| ------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Los principios salen de las Skills                | Viven una sola vez en el Master Project Definition. Las Skills lo referencian en lugar de repetirlo. Se elimina la triple copia de "complejidad detrás / simplicidad delante", de la doble pregunta y del ritmo visual.                                                   |
+| Cada checklist pasa a ser verificable             | Umbrales numéricos donde antes había adjetivos: contraste, objetivos táctiles, gradientes por vista, placeholders por página, estructuras repetidas, medida de línea, overflow, enlaces muertos, recargas de documento.                                                   |
+| `voltop-review-gate` pasa de duplicar a orquestar | Deja de reescribir el contenido de las otras seis. Incorpora los comandos a ejecutar y la tabla de aserciones a medir.                                                                                                                                                    |
+| Cuatro huecos sin dueño, cubiertos                | Modelo de contenido/datos e i18n → `voltop-design-system`. Cumplimiento legal de datos (Ley 1581) → `voltop-quality-compliance`. Pipeline y función narrativa de assets → `voltop-art-direction-ui`.                                                                      |
+| Contradicciones skill↔código resueltas            | La skill exigía mobile-first y tipografía fluida mientras el código era desktop-first sin `clamp()`. Ahora el código cumple la regla.                                                                                                                                     |
+| Reglas nuevas derivadas de fallos reales          | "Ningún control decorativo que simule interacción" · "Nunca ligar la opacidad de contenido a `scrollYProgress`" · "Ninguna interna puede aportar menos que su preview" · "Un titular es un contrato" · "ARIA completa o ninguna" · "Un enlace sin destino no se publica". |
 
 De 341 a 480 líneas: la redundancia desapareció, pero la cobertura creció porque cuatro dominios no tenían dueño y ninguna checklist era medible. No era un problema de tamaño, era de eficacia.
 
@@ -230,35 +232,35 @@ De 341 a 480 líneas: la redundancia desapareció, pero la cobertura creció por
 
 ### Lo que estaba roto
 
-| Cambio | Razón |
-|---|---|
-| El panel del menú móvil sale del `<header>` | `backdrop-filter` convierte al header en bloque contenedor de sus descendientes `position: fixed`. Con el panel dentro, `top-16 bottom-0` se resolvía contra los 65px del header: el panel medía **1px de alto**. El menú abría, bloqueaba el scroll y movía el foco a enlaces invisibles. **En móvil no se podía navegar el sitio.** Verificado tras el arreglo: 780px de alto, 4 enlaces visibles, Escape devuelve el foco al botón. |
-| `z-(--z-header)` y `z-(--z-overlay)` en lugar de `z-50` a mano | Los tokens de z-index existían desde el Bloque 1 y no se usaban en ningún componente. Header y panel declaraban ambos `z-50`, que es lo que impedía razonar sobre el orden de pintado y ocultó el fallo anterior. |
-| `template.tsx` anima solo `transform`, sin `opacity` | Motion serializa el estado inicial como estilo EN LÍNEA, así que el HTML servido llevaba `opacity: 0` en el `<div>` que envuelve **todas** las páginas. Si el JS fallaba, el sitio entero era invisible; y el elemento LCP arrancaba a opacidad 0. `useReducedMotion()` devuelve `null` en servidor, así que incluso quien pedía menos movimiento recibía la página invisible hasta la hidratación. |
-| Red de seguridad en CSS para los `Reveal` (`[data-reveal]`) | Mismo mecanismo, 5–12 bloques por página. Dos reglas —`@media (scripting: none)` y `@media (prefers-reduced-motion: reduce)`— garantizan el contenido visible **sin depender de JavaScript**, y quien pide menos movimiento lo ve ya en el HTML servido, sin parpadeo. Verificado: 0 de 5 reveals invisibles con reduced-motion. |
-| Token nuevo `--color-line-control` (blanco 36%) | `--color-line` daba **1.25:1** y `--color-line-strong` **1.68:1**, y eran el límite visual de los 5 inputs, el textarea, el buscador de `/red`, los chips, los tabs y los botones con borde. En un control, el borde ES lo que lo hace reconocible: WCAG 1.4.11 exige ≥3:1. El token nuevo da 3.20–3.32:1 sobre las cuatro superficies. Se creó aparte en lugar de subir `line`: las hairlines estructurales (reglas de tabla, divisorias) no identifican controles y subirlas habría cambiado la textura de todo el sitio para cumplir un umbral que no les aplica. |
-| `PendingTag`: borde `warn/40` → `warn/50` | 2.52:1 → 3.29:1. |
-| `required` y `aria-required` en el formulario de leads | El componente `Field` recibía `required` y **nunca lo pasaba al `<input>`**. El asterisco era decoración pura, sin leyenda que lo explicara, y ningún lector de pantalla anunciaba el campo como obligatorio (WCAG 3.3.2). Se añade leyenda `requiredLegend` y el asterisco pasa a `aria-hidden`: la obligatoriedad la comunica el atributo, no el símbolo. |
-| Foco gestionado al confirmar el envío | El formulario se desmontaba y el foco se quedaba en un botón que ya no existía. |
-| `CRM_ENABLED` y copy de éxito honesto | `submitLead` descarta el payload, y el estado de éxito afirmaba *"un especialista revisará tu caso y te escribirá… respondemos en uno o dos días hábiles"*. Era falso, en el punto de mayor consecuencia comercial, y el aviso de demo estaba en mono de 12px debajo del botón. Ahora el aviso va **antes** de pedir el dato y la confirmación dice lo que de verdad pasó. El copy real ya está escrito y traducido en `leadForm.success`: al conectar el CRM se pone el interruptor en `true`. No se ofrece canal alternativo porque no hay correo ni teléfono confirmados en el dataset (§33). |
-| `aria-pressed` en los cuatro grupos de filtros de `/red` | Se emitía solo en el grupo de disponibilidad: ciudad, conector y potencia comunicaban su selección **únicamente con color** y eran invisibles para un lector de pantalla (WCAG 4.1.2). Verificado: los 12 chips declaran estado. |
-| El rótulo del hueco de media se replantea en composiciones a sangre | A 390px se pintaba centrado arriba, con la descripción en dos líneas, **encima del eyebrow y del titular del hero** — texto sobre texto en la primera pantalla del sitio, que es justo lo que §22 prohíbe. Ahora con `fill` se reduce a la insignia, se ancla a una esquina y desaparece bajo `sm`; el hueco se sigue anunciando por `aria-label`. Sin `fill` conserva insignia y descripción, donde nada compite. |
-| `Media` acepta `aspect` como prop | Pasar el recorte por `className` no sustituía la clase nativa, la acompañaba: `/empresas` servía `aspect-[4/3] aspect-[21/9]` en el mismo elemento y cuál ganaba dependía del orden de emisión del CSS. |
-| `mediaPlaceholder` en la capa de copy | `"Foto"`, `"Video"` y `" · pendiente"` estaban escritos en línea en `Media.tsx`: la versión inglesa mostraba **"FOTO · PENDIENTE"**. Es exactamente el fallo que §36.15 existe para impedir, y era visible en producción. |
-| 404 con marca para rutas sin idioma (`app/not-found.tsx`) | `/es/ruta-inexistente` servía el documento de error interno de Next: sin `<html lang>`, sin estilos, sin header ni footer y sin una sola señal de que el sitio fuese de Voltop. Lo recibía justo quien llega desde un enlace roto de terceros. |
-| `[lang]/layout.tsx` deja de llamar a `notFound()` | Lanzar en el layout significaba lanzar **antes** de emitir el documento, así que Next no tenía dónde montar el 404. Ahora el documento se emite siempre con un idioma seguro, el rechazo lo hace la página (todas conservan su guarda `isLocale`) y la metadata marca `noindex` para el idioma inválido. |
+| Cambio                                                              | Razón                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| ------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| El panel del menú móvil sale del `<header>`                         | `backdrop-filter` convierte al header en bloque contenedor de sus descendientes `position: fixed`. Con el panel dentro, `top-16 bottom-0` se resolvía contra los 65px del header: el panel medía **1px de alto**. El menú abría, bloqueaba el scroll y movía el foco a enlaces invisibles. **En móvil no se podía navegar el sitio.** Verificado tras el arreglo: 780px de alto, 4 enlaces visibles, Escape devuelve el foco al botón.                                                                                                                                                           |
+| `z-(--z-header)` y `z-(--z-overlay)` en lugar de `z-50` a mano      | Los tokens de z-index existían desde el Bloque 1 y no se usaban en ningún componente. Header y panel declaraban ambos `z-50`, que es lo que impedía razonar sobre el orden de pintado y ocultó el fallo anterior.                                                                                                                                                                                                                                                                                                                                                                                |
+| `template.tsx` anima solo `transform`, sin `opacity`                | Motion serializa el estado inicial como estilo EN LÍNEA, así que el HTML servido llevaba `opacity: 0` en el `<div>` que envuelve **todas** las páginas. Si el JS fallaba, el sitio entero era invisible; y el elemento LCP arrancaba a opacidad 0. `useReducedMotion()` devuelve `null` en servidor, así que incluso quien pedía menos movimiento recibía la página invisible hasta la hidratación.                                                                                                                                                                                              |
+| Red de seguridad en CSS para los `Reveal` (`[data-reveal]`)         | Mismo mecanismo, 5–12 bloques por página. Dos reglas —`@media (scripting: none)` y `@media (prefers-reduced-motion: reduce)`— garantizan el contenido visible **sin depender de JavaScript**, y quien pide menos movimiento lo ve ya en el HTML servido, sin parpadeo. Verificado: 0 de 5 reveals invisibles con reduced-motion.                                                                                                                                                                                                                                                                 |
+| Token nuevo `--color-line-control` (blanco 36%)                     | `--color-line` daba **1.25:1** y `--color-line-strong` **1.68:1**, y eran el límite visual de los 5 inputs, el textarea, el buscador de `/red`, los chips, los tabs y los botones con borde. En un control, el borde ES lo que lo hace reconocible: WCAG 1.4.11 exige ≥3:1. El token nuevo da 3.20–3.32:1 sobre las cuatro superficies. Se creó aparte en lugar de subir `line`: las hairlines estructurales (reglas de tabla, divisorias) no identifican controles y subirlas habría cambiado la textura de todo el sitio para cumplir un umbral que no les aplica.                             |
+| `PendingTag`: borde `warn/40` → `warn/50`                           | 2.52:1 → 3.29:1.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| `required` y `aria-required` en el formulario de leads              | El componente `Field` recibía `required` y **nunca lo pasaba al `<input>`**. El asterisco era decoración pura, sin leyenda que lo explicara, y ningún lector de pantalla anunciaba el campo como obligatorio (WCAG 3.3.2). Se añade leyenda `requiredLegend` y el asterisco pasa a `aria-hidden`: la obligatoriedad la comunica el atributo, no el símbolo.                                                                                                                                                                                                                                      |
+| Foco gestionado al confirmar el envío                               | El formulario se desmontaba y el foco se quedaba en un botón que ya no existía.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| `CRM_ENABLED` y copy de éxito honesto                               | `submitLead` descarta el payload, y el estado de éxito afirmaba _"un especialista revisará tu caso y te escribirá… respondemos en uno o dos días hábiles"_. Era falso, en el punto de mayor consecuencia comercial, y el aviso de demo estaba en mono de 12px debajo del botón. Ahora el aviso va **antes** de pedir el dato y la confirmación dice lo que de verdad pasó. El copy real ya está escrito y traducido en `leadForm.success`: al conectar el CRM se pone el interruptor en `true`. No se ofrece canal alternativo porque no hay correo ni teléfono confirmados en el dataset (§33). |
+| `aria-pressed` en los cuatro grupos de filtros de `/red`            | Se emitía solo en el grupo de disponibilidad: ciudad, conector y potencia comunicaban su selección **únicamente con color** y eran invisibles para un lector de pantalla (WCAG 4.1.2). Verificado: los 12 chips declaran estado.                                                                                                                                                                                                                                                                                                                                                                 |
+| El rótulo del hueco de media se replantea en composiciones a sangre | A 390px se pintaba centrado arriba, con la descripción en dos líneas, **encima del eyebrow y del titular del hero** — texto sobre texto en la primera pantalla del sitio, que es justo lo que §22 prohíbe. Ahora con `fill` se reduce a la insignia, se ancla a una esquina y desaparece bajo `sm`; el hueco se sigue anunciando por `aria-label`. Sin `fill` conserva insignia y descripción, donde nada compite.                                                                                                                                                                               |
+| `Media` acepta `aspect` como prop                                   | Pasar el recorte por `className` no sustituía la clase nativa, la acompañaba: `/empresas` servía `aspect-[4/3] aspect-[21/9]` en el mismo elemento y cuál ganaba dependía del orden de emisión del CSS.                                                                                                                                                                                                                                                                                                                                                                                          |
+| `mediaPlaceholder` en la capa de copy                               | `"Foto"`, `"Video"` y `" · pendiente"` estaban escritos en línea en `Media.tsx`: la versión inglesa mostraba **"FOTO · PENDIENTE"**. Es exactamente el fallo que §36.15 existe para impedir, y era visible en producción.                                                                                                                                                                                                                                                                                                                                                                        |
+| 404 con marca para rutas sin idioma (`app/not-found.tsx`)           | `/es/ruta-inexistente` servía el documento de error interno de Next: sin `<html lang>`, sin estilos, sin header ni footer y sin una sola señal de que el sitio fuese de Voltop. Lo recibía justo quien llega desde un enlace roto de terceros.                                                                                                                                                                                                                                                                                                                                                   |
+| `[lang]/layout.tsx` deja de llamar a `notFound()`                   | Lanzar en el layout significaba lanzar **antes** de emitir el documento, así que Next no tenía dónde montar el 404. Ahora el documento se emite siempre con un idioma seguro, el rechazo lo hace la página (todas conservan su guarda `isLocale`) y la metadata marca `noindex` para el idioma inválido.                                                                                                                                                                                                                                                                                         |
 
 ### El 404, completo
 
 Cerrar el 404 obligó a una decisión de arquitectura, tomada explícitamente: **layout raíz con `<html lang>` fijo y el idioma real en un `<div lang>`**.
 
-| Cambio | Razón |
-|---|---|
-| `app/layout.tsx` emite el documento; `[lang]/layout.tsx` deja de emitirlo | Sin layout raíz Next no resuelve los boundaries de `not-found`. El precio es que `<html lang>` no puede ser dinámico —un layout raíz no recibe `params`— y queda en el idioma por defecto. §28 (decisión confirmada nº14) pedía el `lang` correcto en el HTML servido, y esto lo relaja. |
-| El idioma real se declara en un `<div lang>` que envuelve el contenido | Los lectores de pantalla honran el `lang` más cercano al nodo, así que la pronunciación sigue siendo correcta; para buscadores el idioma lo declaran los `hreflang` y las `alternates` de cada ruta, que ya estaban bien. Verificado en `/en`: `<html lang="es-CO">` + `<div lang="en">`. |
+| Cambio                                                                      | Razón                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| --------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `app/layout.tsx` emite el documento; `[lang]/layout.tsx` deja de emitirlo   | Sin layout raíz Next no resuelve los boundaries de `not-found`. El precio es que `<html lang>` no puede ser dinámico —un layout raíz no recibe `params`— y queda en el idioma por defecto. §28 (decisión confirmada nº14) pedía el `lang` correcto en el HTML servido, y esto lo relaja.                                                                                                                                                                                                                                                                                                            |
+| El idioma real se declara en un `<div lang>` que envuelve el contenido      | Los lectores de pantalla honran el `lang` más cercano al nodo, así que la pronunciación sigue siendo correcta; para buscadores el idioma lo declaran los `hreflang` y las `alternates` de cada ruta, que ya estaban bien. Verificado en `/en`: `<html lang="es-CO">` + `<div lang="en">`.                                                                                                                                                                                                                                                                                                           |
 | `dynamicParams = false` en `[lang]`, `red/[ciudad]` y `red/estacion/[slug]` | El layout raíz **no bastó**: en Next 16 un `notFound()` lanzado desde una página no resuelve ningún boundary en este árbol de rutas, ni el anidado ni el de raíz. Servía un documento con el `<body>` VACÍO y el 404 solo aparecía tras hidratar: un crawler veía una página en blanco. Con los params cerrados el rechazo lo hace el ROUTER, antes de renderizar nada, y ese 404 sí aterriza en `app/not-found.tsx`. Es además lo correcto para rutas generadas desde datos: un slug inexistente no debe renderizarse bajo demanda. No cuesta flexibilidad — el sitio ya es estático por completo. |
-| Se elimina `app/[lang]/not-found.tsx` | **Nunca se renderizó.** Con los params cerrados es además inalcanzable. Se borra en lugar de dejarlo como archivo decorativo. |
-| El 404 único monta Header y Footer | En un callejón sin salida no hay `Locale` fiable que deducir —el idioma inválido es a menudo la causa del 404— y tener navegación completa vale más que acertar el idioma: quien escribió mal una URL de estación quiere seguir navegando, no solo dos botones (§10). |
+| Se elimina `app/[lang]/not-found.tsx`                                       | **Nunca se renderizó.** Con los params cerrados es además inalcanzable. Se borra en lugar de dejarlo como archivo decorativo.                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| El 404 único monta Header y Footer                                          | En un callejón sin salida no hay `Locale` fiable que deducir —el idioma inválido es a menudo la causa del 404— y tener navegación completa vale más que acertar el idioma: quien escribió mal una URL de estación quiere seguir navegando, no solo dos botones (§10).                                                                                                                                                                                                                                                                                                                               |
 
 Cinco casos verificados server-side con HTTP 404, contenido real en el HTML, header, footer y `<html lang>` correcto: `/xyz` · `/fr` · `/es/ruta-inexistente` · `/es/red/estacion/no-existe` · `/es/red/no-existe`.
 
@@ -276,41 +278,41 @@ Descubierto de paso: la alternativa sin compromiso —dos raíces reales, `(es)/
 
 ### El riel
 
-| Cambio | Razón |
-|---|---|
+| Cambio                                                          | Razón                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| --------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `Container` gana `align`; `narrow` cuelga del riel de `content` | Cada ancho se centraba de forma independiente. Medido a 1440px: header y `content` en 148px, `wide` en 48px, `narrow` en 380px. En `/nosotros` el riel iba 380 → 148 → 380 → 148 al bajar, y en la ficha de estación el bloque de foto sobresalía 100px a la izquierda del titular. Ahora hay UN riel y `narrow` es una columna de lectura colgada de él, no un bloque flotando en el centro. Verificado: las siete rutas alinean su contenido en 148px, igual que el logo. |
-| `align="center"` como excepción declarada | `BusinessIntro` y `VisionQuote` SÍ están centradas a propósito (§12, contraste compositivo). Al declararlo, se distingue de un descuadre accidental. |
-| `wide` se reserva a MEDIA | Es el único ancho que rompe el riel, y lo hace a los dos lados por igual: un sangrado deliberado. `NetworkIndex` —una tabla de DATOS— estaba en `wide`: era el peor descuadre del sitio y además repartía cuatro columnas en 1500px, dispersando la información. Pasa a `content`. La media de la ficha de estación también baja a `content`. |
+| `align="center"` como excepción declarada                       | `BusinessIntro` y `VisionQuote` SÍ están centradas a propósito (§12, contraste compositivo). Al declararlo, se distingue de un descuadre accidental.                                                                                                                                                                                                                                                                                                                        |
+| `wide` se reserva a MEDIA                                       | Es el único ancho que rompe el riel, y lo hace a los dos lados por igual: un sangrado deliberado. `NetworkIndex` —una tabla de DATOS— estaba en `wide`: era el peor descuadre del sitio y además repartía cuatro columnas en 1500px, dispersando la información. Pasa a `content`. La media de la ficha de estación también baja a `content`.                                                                                                                               |
 
 ### El registro medio
 
-| Cambio | Razón |
-|---|---|
-| Nuevo `SectionHeading` con tres tamaños (`l` 52 / `m` 36 / `s` 24) | Las internas saltaban de un `h1` de 72px a `h2` de **12px**: el encabezado de sección era más pequeño que el párrafo que introducía. Sin registro intermedio no hay jerarquía, solo un título gigante y una lista plana. Verificado tras el cambio: la ficha de estación pasa de `72·12·12·12` a `72·36·24·24`. |
-| Cero encabezados en mono de 12px | Eran doce: `/red/[ciudad]` ×2, `/red/estacion` ×4, `/legal` ×1, `/empresas` ×3, `/nosotros` ×1, footer ×3. |
-| Los títulos de columna del footer pasan de `<h2>` a `<p>` | El mono de 12px es correcto ahí: es una etiqueta, no un encabezado. Como `<h2>` entraba en el outline del documento al mismo nivel que los `h2` de contenido y los enanizaba. La navegación del pie ya se anuncia por el `aria-label` del `<nav>`. |
-| Once `<Eyebrow>` + `<h2 className="mt-4 font-display text-display-l …">` escritos a mano se consolidan | Se repetía con clases ligeramente distintas en cada página. |
+| Cambio                                                                                                 | Razón                                                                                                                                                                                                                                                                                                           |
+| ------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Nuevo `SectionHeading` con tres tamaños (`l` 52 / `m` 36 / `s` 24)                                     | Las internas saltaban de un `h1` de 72px a `h2` de **12px**: el encabezado de sección era más pequeño que el párrafo que introducía. Sin registro intermedio no hay jerarquía, solo un título gigante y una lista plana. Verificado tras el cambio: la ficha de estación pasa de `72·12·12·12` a `72·36·24·24`. |
+| Cero encabezados en mono de 12px                                                                       | Eran doce: `/red/[ciudad]` ×2, `/red/estacion` ×4, `/legal` ×1, `/empresas` ×3, `/nosotros` ×1, footer ×3.                                                                                                                                                                                                      |
+| Los títulos de columna del footer pasan de `<h2>` a `<p>`                                              | El mono de 12px es correcto ahí: es una etiqueta, no un encabezado. Como `<h2>` entraba en el outline del documento al mismo nivel que los `h2` de contenido y los enanizaba. La navegación del pie ya se anuncia por el `aria-label` del `<nav>`.                                                              |
+| Once `<Eyebrow>` + `<h2 className="mt-4 font-display text-display-l …">` escritos a mano se consolidan | Se repetía con clases ligeramente distintas en cada página.                                                                                                                                                                                                                                                     |
 
 El efecto colateral es el que se buscaba: el mono de 12px deja de hacer nueve trabajos y vuelve a ser lo que era, `kicker` y etiqueta de dato.
 
 ### Registro dual, motion y apilado
 
-| Cambio | Razón |
-|---|---|
-| `register="impacto"` en los cuatro beats de impacto | La decisión visual nº8 se aplicaba a mano en `CloseCta` y en ningún otro sitio: el concepto vivía en la documentación, no en el código. Ahora `Hero`, `InfrastructureSignature`, `ProofCase` y `CloseCta` pasan por la API. |
-| `impacto` NO aplica `overflow-hidden` | Al cablearlo se detectó que habría roto el `position: sticky` del signature moment: un `overflow` distinto de `visible` crea un contenedor de scroll. Es el mismo motivo por el que `body` usa `overflow-x: clip` y no `hidden`. Cada sección declara su recorte. Verificado con Lenis desactivado: `overflow: visible` y el panel clavado en 0 en todo el recorrido. |
-| `Section` acepta `ref` | El signature moment necesita medir su propio scroll y por eso era el único beat que no podía usar la primitiva. |
+| Cambio                                                   | Razón                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `register="impacto"` en los cuatro beats de impacto      | La decisión visual nº8 se aplicaba a mano en `CloseCta` y en ningún otro sitio: el concepto vivía en la documentación, no en el código. Ahora `Hero`, `InfrastructureSignature`, `ProofCase` y `CloseCta` pasan por la API.                                                                                                                                                                                                                                              |
+| `impacto` NO aplica `overflow-hidden`                    | Al cablearlo se detectó que habría roto el `position: sticky` del signature moment: un `overflow` distinto de `visible` crea un contenedor de scroll. Es el mismo motivo por el que `body` usa `overflow-x: clip` y no `hidden`. Cada sección declara su recorte. Verificado con Lenis desactivado: `overflow: visible` y el panel clavado en 0 en todo el recorrido.                                                                                                    |
+| `Section` acepta `ref`                                   | El signature moment necesita medir su propio scroll y por eso era el único beat que no podía usar la primitiva.                                                                                                                                                                                                                                                                                                                                                          |
 | Nuevo `lib/motion.ts`; cero curvas a mano en componentes | Había dos sistemas de movimiento en paralelo: `@theme` declaraba tres curvas y cinco duraciones —tres sin usar en ningún sitio— mientras los componentes escribían `[0.22, 1, 0.36, 1]` y `0.6/0.7/0.32` a mano en tres archivos. Cambiar el tempo del sitio exigía editar CSS y JS por separado sin garantía de que coincidieran. **Limitación dicha en el propio archivo:** es un espejo, no una fuente compartida — Tailwind lee CSS y Motion necesita valores de JS. |
-| `z-(--z-raised)` en lugar de `z-10` | Completa el trabajo del Bloque 7: cero `z-index` a mano en el proyecto. |
+| `z-(--z-raised)` en lugar de `z-10`                      | Completa el trabajo del Bloque 7: cero `z-index` a mano en el proyecto.                                                                                                                                                                                                                                                                                                                                                                                                  |
 
 ### Disciplina de CTA
 
-| Cambio | Razón |
-|---|---|
-| El CTA del header pasa a `secondary` | El hero mostraba DOS gradientes primarios con el mismo texto y el mismo destino ("Encontrar cargador"), a 400px de distancia. §12 y §36.9 son explícitos: máximo una acción primaria con gradiente por vista. El header es siempre secundario respecto a la acción de la página, así que no hace falta lógica condicional. Verificado a 1440, 480 y 390px: una sola acción con gradiente en cada vista. |
-| El selector de idioma sale del header móvil y baja al menú | Ocupaba 88px del espacio más valioso de la pantalla para un control de baja frecuencia, y ese espacio lo necesitaba el CTA. |
-| El CTA aparece en el header desde `xs` (480px) | Antes era `hidden md:block`: no había CTA persistente en móvil. Por debajo de 480px no caben logo + CTA + hamburguesa sin apretar, así que ahí vive en el menú —que ahora funciona—. Primer uso real del token `--breakpoint-xs`, que estaba definido y sin usar. |
-| Dentro del menú el CTA sí es primario | No compite con ninguna acción de la página, así que es la única con gradiente en la vista. |
+| Cambio                                                     | Razón                                                                                                                                                                                                                                                                                                                                                                                                   |
+| ---------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| El CTA del header pasa a `secondary`                       | El hero mostraba DOS gradientes primarios con el mismo texto y el mismo destino ("Encontrar cargador"), a 400px de distancia. §12 y §36.9 son explícitos: máximo una acción primaria con gradiente por vista. El header es siempre secundario respecto a la acción de la página, así que no hace falta lógica condicional. Verificado a 1440, 480 y 390px: una sola acción con gradiente en cada vista. |
+| El selector de idioma sale del header móvil y baja al menú | Ocupaba 88px del espacio más valioso de la pantalla para un control de baja frecuencia, y ese espacio lo necesitaba el CTA.                                                                                                                                                                                                                                                                             |
+| El CTA aparece en el header desde `xs` (480px)             | Antes era `hidden md:block`: no había CTA persistente en móvil. Por debajo de 480px no caben logo + CTA + hamburguesa sin apretar, así que ahí vive en el menú —que ahora funciona—. Primer uso real del token `--breakpoint-xs`, que estaba definido y sin usar.                                                                                                                                       |
+| Dentro del menú el CTA sí es primario                      | No compite con ninguna acción de la página, así que es la única con gradiente en la vista.                                                                                                                                                                                                                                                                                                              |
 
 ### Remate
 
@@ -334,17 +336,17 @@ Lo que sí se hizo es dejar la arquitectura lista: `distanceKm`, `sortStations` 
 
 ### La herramienta
 
-| Cambio | Razón |
-|---|---|
-| Filtros colapsados en móvil, siempre abiertos desde `lg` | Los cuatro grupos envuelven a dos filas cada uno. El recuento de activos va en el disparador: colapsar no puede esconder estado. |
-| Reorganización del encabezado de la herramienta | Las etiquetas visibles y el selector de orden en su propia fila costaban 105px en móvil. Ahora: fila 1 el buscador, fila 2 `[Filtros] [Orden]` juntos, con las etiquetas en `sr-only` bajo `lg` —el campo tiene icono y placeholder, el selector muestra su valor— sin perder nada para lectores de pantalla. En desktop las etiquetas vuelven y el orden recupera su sitio junto al buscador vía `lg:contents`, sin duplicar el `<select>`. |
-| `pt-32` → `pt-24` en la apertura de `/red` | 64px de aire muerto bajo un header de 64px en una superficie de producto. El lead pasa a alinearse a la baseline del titular en lugar de flotar a la derecha creando un hueco en L. |
-| **Resultado: el primer resultado pasa de 695px a 502px en móvil** | Se ven dos estaciones completas sobre el fold en lugar de ninguna. |
-| Hay ORDEN: recomendadas / más potencia / en operación primero / ciudad | No existía. Nadie busca "Grand Hyatt": se busca la más potente o la que está operativa. `<select>` nativo a propósito — teclado, lector de pantalla y la rueda de iOS/Android salen gratis. Verificado: los tres criterios reordenan la lista. |
-| El buscador PARECE un buscador | Icono, borde de control a 3:1 y botón de limpiar (que usa `red.search.clear`, un token de copy que llevaba sin usarse). Antes era una hairline de 1.25:1 con un placeholder de 24px en gris: se leía como contenido, no como control. |
-| El recuento sube de 12px mono a `display-s` | Es el feedback central de la herramienta y era el texto más discreto de la sección. |
-| La etiqueta del grupo de disponibilidad deja de duplicar su chip | El `legend` decía "SOLO EN OPERACIÓN" y el único chip dentro decía lo mismo. Ahora el grupo dice de qué es ("Disponibilidad") y el chip qué hace. |
-| Cuatro columnas de resultados desde `lg`, no desde `md` | A 768px metía cuatro celdas en el ancho de tablet y "En operación" quedaba tocando el borde del contenedor (§22). Igual en `/red/[ciudad]`. |
+| Cambio                                                                 | Razón                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| ---------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Filtros colapsados en móvil, siempre abiertos desde `lg`               | Los cuatro grupos envuelven a dos filas cada uno. El recuento de activos va en el disparador: colapsar no puede esconder estado.                                                                                                                                                                                                                                                                                                             |
+| Reorganización del encabezado de la herramienta                        | Las etiquetas visibles y el selector de orden en su propia fila costaban 105px en móvil. Ahora: fila 1 el buscador, fila 2 `[Filtros] [Orden]` juntos, con las etiquetas en `sr-only` bajo `lg` —el campo tiene icono y placeholder, el selector muestra su valor— sin perder nada para lectores de pantalla. En desktop las etiquetas vuelven y el orden recupera su sitio junto al buscador vía `lg:contents`, sin duplicar el `<select>`. |
+| `pt-32` → `pt-24` en la apertura de `/red`                             | 64px de aire muerto bajo un header de 64px en una superficie de producto. El lead pasa a alinearse a la baseline del titular en lugar de flotar a la derecha creando un hueco en L.                                                                                                                                                                                                                                                          |
+| **Resultado: el primer resultado pasa de 695px a 502px en móvil**      | Se ven dos estaciones completas sobre el fold en lugar de ninguna.                                                                                                                                                                                                                                                                                                                                                                           |
+| Hay ORDEN: recomendadas / más potencia / en operación primero / ciudad | No existía. Nadie busca "Grand Hyatt": se busca la más potente o la que está operativa. `<select>` nativo a propósito — teclado, lector de pantalla y la rueda de iOS/Android salen gratis. Verificado: los tres criterios reordenan la lista.                                                                                                                                                                                               |
+| El buscador PARECE un buscador                                         | Icono, borde de control a 3:1 y botón de limpiar (que usa `red.search.clear`, un token de copy que llevaba sin usarse). Antes era una hairline de 1.25:1 con un placeholder de 24px en gris: se leía como contenido, no como control.                                                                                                                                                                                                        |
+| El recuento sube de 12px mono a `display-s`                            | Es el feedback central de la herramienta y era el texto más discreto de la sección.                                                                                                                                                                                                                                                                                                                                                          |
+| La etiqueta del grupo de disponibilidad deja de duplicar su chip       | El `legend` decía "SOLO EN OPERACIÓN" y el único chip dentro decía lo mismo. Ahora el grupo dice de qué es ("Disponibilidad") y el chip qué hace.                                                                                                                                                                                                                                                                                            |
+| Cuatro columnas de resultados desde `lg`, no desde `md`                | A 768px metía cuatro celdas en el ancho de tablet y "En operación" quedaba tocando el borde del contenedor (§22). Igual en `/red/[ciudad]`.                                                                                                                                                                                                                                                                                                  |
 
 ### El estado vive en la URL
 
@@ -366,11 +368,11 @@ Ahora el tab es una lengüeta: se apoya en la misma línea que separa el panel y
 
 ### La conversión final, por fin medida
 
-| Cambio | Razón |
-|---|---|
-| Nuevo `DirectionsButton` que emite `estacion_como_llegar` | Es la conversión final del journey B2C, estaba declarada en el plan de medición y **no se emitía nunca** (§31). La ficha es un Server Component, así que el clic había que aislarlo en una isla mínima. |
+| Cambio                                                        | Razón                                                                                                                                                                                                                                                   |
+| ------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Nuevo `DirectionsButton` que emite `estacion_como_llegar`     | Es la conversión final del journey B2C, estaba declarada en el plan de medición y **no se emitía nunca** (§31). La ficha es un Server Component, así que el clic había que aislarlo en una isla mínima.                                                 |
 | `Button` con `external` anuncia el destino y cambia la flecha | "Cómo llegar" saltaba a Google Maps sin icono, sin texto y sin aviso a lectores de pantalla (WCAG 3.2.5). Ahora la flecha de dirección se convierte en flecha de salida y un `sr-only` lo dice. Aplica a todo enlace externo del sitio, no solo a este. |
-| `filterStations` de la capa de datos sustituye la copia local | `StationFinder` reimplementaba la misma lógica con su propia copia de `normalize`. Era justo la duplicación que la capa existe para evitar. |
+| `filterStations` de la capa de datos sustituye la copia local | `StationFinder` reimplementaba la misma lógica con su propia copia de `normalize`. Era justo la duplicación que la capa existe para evitar.                                                                                                             |
 
 ### Evidencia
 
@@ -386,20 +388,20 @@ Ahora el tab es una lengüeta: se apoya en la misma línea que separa el panel y
 
 `--spacing-section` valía 144px a 1440px y cada sección lo aplicaba **arriba y abajo**, así que dos secciones consecutivas sumaban. El propio comentario de `globals.css` prohibía exactamente eso —"prohibido usar el mismo padding en secciones consecutivas"— mientras el código lo hacía en todas las páginas.
 
-| Cambio | Razón |
-|---|---|
+| Cambio                                                                                                                        | Razón                                                                                                                                                                                                     |
+| ----------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Los tokens de sección pasan a significar **la distancia ENTRE secciones**; cada sección aporta la mitad (`--spacing-block-*`) | Un cambio en el mapa `spaces` de `Section` corrige los ocho huecos identificados. Y la alternancia vuelve a significar algo: `tight` tras `loose` da contraste real en lugar de sumar dos veces lo mismo. |
-| **Medido: todos los huecos sistemáticos pasan de 288/289px a 144/145px** | La Home baja de 9.1 a 7.6 viewports; `/nosotros` de 6.4 a 5.6; `/empresas` de 6.0 a 5.4; `/red` de 3.6 a 3.2. |
-| `--text-display-2xl--line-height`: 0.98 → 1.02 | Un interlineado por debajo de 1 aprieta descendentes y acentos en titulares de tres líneas, que es lo normal en español a 390px. |
+| **Medido: todos los huecos sistemáticos pasan de 288/289px a 144/145px**                                                      | La Home baja de 9.1 a 7.6 viewports; `/nosotros` de 6.4 a 5.6; `/empresas` de 6.0 a 5.4; `/red` de 3.6 a 3.2.                                                                                             |
+| `--text-display-2xl--line-height`: 0.98 → 1.02                                                                                | Un interlineado por debajo de 1 aprieta descendentes y acentos en titulares de tres líneas, que es lo normal en español a 390px.                                                                          |
 
 ### El signature moment
 
-| Antes | Ahora |
-|---|---|
-| 240vh (2160px) = 2.4 viewports | **170vh (1530px) = 1.7** |
-| Recorte del 12%, completo al 45% del recorrido | **28%, completo al 70%** |
-| ~693px de pantalla congelada | ~189px |
-| El comentario prometía "texto por fases"; era un único `Reveal` | Dos fases reales, con desfase |
+| Antes                                                                 | Ahora                                                          |
+| --------------------------------------------------------------------- | -------------------------------------------------------------- |
+| 240vh (2160px) = 2.4 viewports                                        | **170vh (1530px) = 1.7**                                       |
+| Recorte del 12%, completo al 45% del recorrido                        | **28%, completo al 70%**                                       |
+| ~693px de pantalla congelada                                          | ~189px                                                         |
+| El comentario prometía "texto por fases"; era un único `Reveal`       | Dos fases reales, con desfase                                  |
 | Con `prefers-reduced-motion`: 2160px de scroll muerto sin equivalente | **La sección colapsa a 599px y el panel deja de estar pegado** |
 
 **Un intento fallido que conviene dejar escrito:** se probó a ligar la opacidad del texto a `scrollYProgress` para que las fases ocurrieran a lo largo del recorrido. Es justo lo que el comentario original del archivo ya advertía: una opacidad ligada al progreso **vuelve a 0 al retroceder**, así que el texto desaparecería al subir y quien llegara por `#infraestructura` sin desplazarse vería una pantalla vacía. Las fases se resolvieron con desfase temporal sobre un `whileInView` de una sola vez. El scroll largo ya no necesitaba relleno: se acortó.
@@ -410,13 +412,13 @@ El tratamiento hairline + número mono + título + cuerpo se repetía **seis vec
 
 La regla que las separa: **el número solo donde el orden significa algo.**
 
-| Lista | Tratamiento | Por qué |
-|---|---|---|
-| Cómo cargar · Capacidades | Nuevo `ProcessList`: numeral de 52px en contorno como ancla visual | SÍ son secuencias: evaluar precede a instalar. |
-| Pilares de /nosotros | Sin número, título a `display-m` | Cuatro criterios que no se negocian no tienen orden. Numerarlos era una señal falsa. |
-| Beneficios del selector | Sin número, marca de verificación | "Qué incluye" es una lista de inclusión, no una secuencia. |
-| Segmentos de la Home | Columnas separadas por hairlines verticales, sin caja y sin número | El comentario decía "no como tarjetas" y el código pintaba cuatro celdas con borde a los cuatro lados: exactamente las cards que §12 prohíbe. |
-| Contenidos legales | `<ol>` real y más denso | Aquí el número SÍ informa: es un índice que el área legal irá cubriendo. Antes era un `<ul>` con números pintados a mano. |
+| Lista                     | Tratamiento                                                        | Por qué                                                                                                                                       |
+| ------------------------- | ------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| Cómo cargar · Capacidades | Nuevo `ProcessList`: numeral de 52px en contorno como ancla visual | SÍ son secuencias: evaluar precede a instalar.                                                                                                |
+| Pilares de /nosotros      | Sin número, título a `display-m`                                   | Cuatro criterios que no se negocian no tienen orden. Numerarlos era una señal falsa.                                                          |
+| Beneficios del selector   | Sin número, marca de verificación                                  | "Qué incluye" es una lista de inclusión, no una secuencia.                                                                                    |
+| Segmentos de la Home      | Columnas separadas por hairlines verticales, sin caja y sin número | El comentario decía "no como tarjetas" y el código pintaba cuatro celdas con borde a los cuatro lados: exactamente las cards que §12 prohíbe. |
+| Contenidos legales        | `<ol>` real y más denso                                            | Aquí el número SÍ informa: es un índice que el área legal irá cubriendo. Antes era un `<ul>` con números pintados a mano.                     |
 
 ### Contenido donde había vacío
 
@@ -424,10 +426,10 @@ La columna izquierda del bloque de contacto tenía un antetítulo, un titular y 
 
 ### El plan de medición, cerrado
 
-| Cambio | Razón |
-|---|---|
+| Cambio                                                   | Razón                                                                                                                                                                                           |
+| -------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Nuevo `TrackView`: emite un evento de vista una sola vez | `ciudad_vista`, `caso_visto` e `impacto_visto` estaban declarados y no se emitían. Son eventos de vista sobre Server Components, así que hacían falta islas mínimas. Verificado en `dataLayer`. |
-| `red_buscar` deja de duplicarse | Se emitía en CADA blur con valor: enfocar y desenfocar tres veces contaba tres búsquedas. Ahora solo si el término cambió. |
+| `red_buscar` deja de duplicarse                          | Se emitía en CADA blur con valor: enfocar y desenfocar tres veces contaba tres búsquedas. Ahora solo si el término cambió.                                                                      |
 
 Siguen sin emitirse `app_store_click` y `media_reproducida`, y no pueden: no hay enlaces de tienda (O8) ni archivos de video (§32). Quedan declarados para cuando existan.
 
@@ -453,22 +455,22 @@ Siguen sin emitirse `app_store_click` y `media_reproducida`, y no pueden: no hay
 
 ### Idiomas escritos a mano → derivados de `locales`
 
-| Cambio | Razón |
-|---|---|
-| `lib/i18n/routes.ts`: nuevo `stripLocale()`, con el prefijo construido desde `locales` | La expresión `^\/(es\|en)` estaba duplicada en dos archivos y **las dos copias no eran iguales**: la de `Header.tsx` no llevaba el lookahead `(?=\/\|$)`, así que recortaba también el comienzo de cualquier ruta que empezara por "es" o "en" (`/estaciones` → `taciones`). Hoy ninguna ruta empieza así, pero el fallo estaba armado. |
-| `lib/i18n/routes.ts`: nuevo `alternatesFor(lang, path)` | El bloque `canonical` + `languages` estaba copiado **siete veces** —layout de idioma, home, red, ciudad, estación, empresas, privacidad— con `es` y `en` escritos a mano en cada copia. Ninguna se habría enterado de un idioma nuevo: el portugués habría quedado publicado y huérfano de `hreflang`, que es la señal con la que Google decide qué versión sirve a quién. |
-| `app/sitemap.ts`: la clave `hreflang` sale de `localeMeta`, no del segmento de URL | Coincidían en ES/EN, así que la diferencia era invisible. Con un idioma regional dejan de coincidir —URL `/pt`, buscador `pt-BR`— y el sitemap habría declarado sobre la misma URL un idioma distinto del que declara su HTML. Se añade además `x-default`, que el sitemap omitía y el HTML sí emitía. |
-| `localeMeta` separa `htmlLang` de `hreflang` | No siempre coinciden: el español se declara genérico (`es`) para alcanzar a todo hispanohablante, mientras el documento se marca `es-CO`. Sin la separación, `pt-BR` habría forzado a elegir mal en uno de los dos sitios. |
+| Cambio                                                                                 | Razón                                                                                                                                                                                                                                                                                                                                                                      |
+| -------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `lib/i18n/routes.ts`: nuevo `stripLocale()`, con el prefijo construido desde `locales` | La expresión `^\/(es\|en)` estaba duplicada en dos archivos y **las dos copias no eran iguales**: la de `Header.tsx` no llevaba el lookahead `(?=\/\|$)`, así que recortaba también el comienzo de cualquier ruta que empezara por "es" o "en" (`/estaciones` → `taciones`). Hoy ninguna ruta empieza así, pero el fallo estaba armado.                                    |
+| `lib/i18n/routes.ts`: nuevo `alternatesFor(lang, path)`                                | El bloque `canonical` + `languages` estaba copiado **siete veces** —layout de idioma, home, red, ciudad, estación, empresas, privacidad— con `es` y `en` escritos a mano en cada copia. Ninguna se habría enterado de un idioma nuevo: el portugués habría quedado publicado y huérfano de `hreflang`, que es la señal con la que Google decide qué versión sirve a quién. |
+| `app/sitemap.ts`: la clave `hreflang` sale de `localeMeta`, no del segmento de URL     | Coincidían en ES/EN, así que la diferencia era invisible. Con un idioma regional dejan de coincidir —URL `/pt`, buscador `pt-BR`— y el sitemap habría declarado sobre la misma URL un idioma distinto del que declara su HTML. Se añade además `x-default`, que el sitemap omitía y el HTML sí emitía.                                                                     |
+| `localeMeta` separa `htmlLang` de `hreflang`                                           | No siempre coinciden: el español se declara genérico (`es`) para alcanzar a todo hispanohablante, mientras el documento se marca `es-CO`. Sin la separación, `pt-BR` habría forzado a elegir mal en uno de los dos sitios.                                                                                                                                                 |
 
 ### Ternarios de idioma → capa de copy
 
 Un ternario `lang === "es" ? … : …` no tiene tercera rama: con un idioma más sirve la rama inglesa **en silencio**. Quedaban tres, y los tres en superficies que se propagan solas.
 
-| Cambio | Razón |
-|---|---|
-| `opengraph-image.tsx` → `og.eyebrow` / `og.headline` en `content/copy/common.ts` | Es la imagen que se ve al compartir el enlace en WhatsApp, LinkedIn o Slack. Un idioma sin rama propia se anuncia en inglés justo donde el error se replica sin intervención. |
+| Cambio                                                                                       | Razón                                                                                                                                                                                                                        |
+| -------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `opengraph-image.tsx` → `og.eyebrow` / `og.headline` en `content/copy/common.ts`             | Es la imagen que se ve al compartir el enlace en WhatsApp, LinkedIn o Slack. Un idioma sin rama propia se anuncia en inglés justo donde el error se replica sin intervención.                                                |
 | Descripción SEO de la ficha de estación → `stationMeta.description` en `content/copy/red.ts` | Afectaba a **todas** las estaciones del sitio a la vez. Se modela como par `Localized` de **funciones**, no de cadenas con huecos: cada idioma ordena la frase a su manera y la traducción no se reduce a rellenar espacios. |
-| Se corrige de paso `${city?.name}` sin guarda | Una estación sin ciudad resuelta imprimía literalmente `undefined` en la descripción que lee el buscador. |
+| Se corrige de paso `${city?.name}` sin guarda                                                | Una estación sin ciudad resuelta imprimía literalmente `undefined` en la descripción que lee el buscador.                                                                                                                    |
 
 Con esto se cumple §36.15 (todo el copy fuera del JSX) en los últimos tres sitios donde no se cumplía.
 
@@ -479,8 +481,9 @@ Con esto se cumple §36.15 (todo el copy fuera del JSX) en los últimos tres sit
 **Lo que se conserva:** siguen siendo enlaces, no botones de estado. El idioma vive en la URL, y por eso sobrevive a la navegación y todas las versiones son indexables. Un `<select>` con JavaScript habría roto ambas cosas.
 
 **Decisiones de detalle:**
+
 - Cada idioma se nombra **en su propio idioma** (Español · English · Português), con su atributo `lang`. Traducir "Português" a "Portugués" se lo muestra en un idioma que quien busca portugués puede no leer — es decir, precisamente a quien sirve el control.
-- Patrón *disclosure*, no `role="menu"`: el panel contiene enlaces y el Tab natural ya los recorre. Declarar un menú obligaría a navegación por flechas que aquí no aporta nada.
+- Patrón _disclosure_, no `role="menu"`: el panel contiene enlaces y el Tab natural ya los recorre. Declarar un menú obligaría a navegación por flechas que aquí no aporta nada.
 - Cierre por Escape con retorno del foco, al pulsar fuera y al navegar. Se reutiliza el patrón `openedFor === pathname` del menú móvil: cierra por derivación, sin efecto de limpieza.
 - `placement="up"` en el menú móvil, donde el selector vive al fondo del panel y hacia abajo quedaría fuera de la pantalla.
 - Fondo **opaco** (`bg-canvas`): el header es translúcido con `backdrop-blur` y un panel translúcido encima deja el texto ilegible sobre el contenido de la página.
@@ -504,14 +507,14 @@ Con esto se cumple §36.15 (todo el copy fuera del JSX) en los últimos tres sit
 
 **Por qué en borrador y no publicado:** un idioma existe mucho antes de estar listo. Sin un estado intermedio, la única opción era tenerlo traducido al 100% antes del primer commit, o publicarlo a medias.
 
-| Cambio | Razón |
-|---|---|
-| `localeStatus` con `publicado` \| `borrador` | Un idioma en borrador es navegable por URL —hay que poder revisarlo— pero queda fuera del selector, fuera del sitemap, sin `hreflang` y con `noindex`. |
-| `Localized`: el idioma base pasa a ser el único obligatorio | Exigirlos todos impedía avanzar por partes y, sobre todo, no admite contenido que legítimamente no existe en todos los idiomas. Un comunicado sobre una alianza en Bogotá no siempre se traduce al portugués: un tipo que lo exige no consigue una traducción, consigue que alguien pegue el español dentro del campo portugués. Eso es una caída silenciosa igual, pero indetectable. |
-| Nuevo `lib/i18n/audit.ts` | Sustituye la garantía perdida por una **medida**: recorre todo el contenido en cada build, reporta cobertura por idioma y **rompe el build si un idioma PUBLICADO tiene huecos**, con la ruta exacta de cada uno. Sin dependencias nuevas y sin comando que haya que acordarse de lanzar (§38). |
-| La auditoría se invoca desde `app/sitemap.ts` | No es arbitrario: el sitemap es la pieza que DECLARA qué idiomas existen de cara al público. Verificar que un idioma está completo antes de anunciarlo es su propio trabajo. |
-| `defaultLocale` tipado como el literal `"es"` | Anotado como `Locale` (lo que estaba), TypeScript no podía demostrar que el respaldo de `t()` siempre existe, ni resolver `Exclude<Locale, typeof defaultLocale>`. Lo detectó el build, no una revisión. |
-| El selector lista borradores **solo en desarrollo**, rotulados | Sin eso habría que escribir la URL a mano para revisar el idioma, y lo que cuesta revisar no se revisa. Sin el rótulo, un idioma incompleto parecería terminado y sus huecos, erratas. |
+| Cambio                                                         | Razón                                                                                                                                                                                                                                                                                                                                                                                  |
+| -------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `localeStatus` con `publicado` \| `borrador`                   | Un idioma en borrador es navegable por URL —hay que poder revisarlo— pero queda fuera del selector, fuera del sitemap, sin `hreflang` y con `noindex`.                                                                                                                                                                                                                                 |
+| `Localized`: el idioma base pasa a ser el único obligatorio    | Exigirlos todos impedía avanzar por partes y, sobre todo, no admite contenido que legítimamente no existe en todos los idiomas. Un comunicado sobre una alianza en Bogotá no siempre se traduce al portugués: un tipo que lo exige no consigue una traducción, consigue que alguien pegue el español dentro del campo portugués. Eso es una caída silenciosa igual, pero indetectable. |
+| Nuevo `lib/i18n/audit.ts`                                      | Sustituye la garantía perdida por una **medida**: recorre todo el contenido en cada build, reporta cobertura por idioma y **rompe el build si un idioma PUBLICADO tiene huecos**, con la ruta exacta de cada uno. Sin dependencias nuevas y sin comando que haya que acordarse de lanzar (§38).                                                                                        |
+| La auditoría se invoca desde `app/sitemap.ts`                  | No es arbitrario: el sitemap es la pieza que DECLARA qué idiomas existen de cara al público. Verificar que un idioma está completo antes de anunciarlo es su propio trabajo.                                                                                                                                                                                                           |
+| `defaultLocale` tipado como el literal `"es"`                  | Anotado como `Locale` (lo que estaba), TypeScript no podía demostrar que el respaldo de `t()` siempre existe, ni resolver `Exclude<Locale, typeof defaultLocale>`. Lo detectó el build, no una revisión.                                                                                                                                                                               |
+| El selector lista borradores **solo en desarrollo**, rotulados | Sin eso habría que escribir la URL a mano para revisar el idioma, y lo que cuesta revisar no se revisa. Sin el rótulo, un idioma incompleto parecería terminado y sus huecos, erratas.                                                                                                                                                                                                 |
 
 ### Evidencia
 
@@ -527,13 +530,13 @@ Con esto se cumple §36.15 (todo el copy fuera del JSX) en los últimos tres sit
 
 ### No es un blog: es un registro
 
-| Decisión | Razón |
-|---|---|
-| Bitácora cronológica, no revista | Un blog exige contenido que hay que inventar y sin cadencia se ve muerto: tres artículos con fecha vieja comunican que la compañía está parada, justo lo contrario del objetivo §4.1. Un registro se alimenta de lo que la operación ya produce —cada estación que abre es una entrada— y con entradas cada pocas semanas se ve vivo. |
-| **Sin rejilla de tarjetas** | §12 prohíbe el exceso de tarjetas y los layouts previsibles. Una rejilla con foto, titular y "Leer más" no pasa el test del anonimato. Voltop es infraestructura, y la forma nativa de comunicar infraestructura es la bitácora de lo construido: filas de índice con la fecha en mono, separadas por hairlines — el mismo lenguaje de "ficha técnica" que ya usan las specs de estación. |
-| `body` vacío = la entrada NO tiene página propia | Una apertura son dos líneas: obligar a hacer clic para leer un párrafo es fricción sin contrapartida, y multiplica páginas delgadas que compiten entre sí en búsqueda. Solo lo que tiene cuerpo genera ruta. De cuatro entradas de arranque, **una** tiene página. |
-| Cuerpo por **bloques tipados**, no Markdown | Es la forma exacta en que un CMS headless entrega texto enriquecido (Portable Text, rich text), así que migrar será conectar y no reescribir — y no cierra ninguno de los tres caminos de producción de §2. Markdown suelto habría metido formato dentro del dato. |
-| **Sin filtro por tipo** | Con el volumen actual filtraría a una o dos entradas por categoría, y un control que no reduce nada útil es decorativo (§12). Se gana su sitio a partir de ~15 entradas; hasta entonces el tipo se lee en cada fila. |
+| Decisión                                         | Razón                                                                                                                                                                                                                                                                                                                                                                                     |
+| ------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Bitácora cronológica, no revista                 | Un blog exige contenido que hay que inventar y sin cadencia se ve muerto: tres artículos con fecha vieja comunican que la compañía está parada, justo lo contrario del objetivo §4.1. Un registro se alimenta de lo que la operación ya produce —cada estación que abre es una entrada— y con entradas cada pocas semanas se ve vivo.                                                     |
+| **Sin rejilla de tarjetas**                      | §12 prohíbe el exceso de tarjetas y los layouts previsibles. Una rejilla con foto, titular y "Leer más" no pasa el test del anonimato. Voltop es infraestructura, y la forma nativa de comunicar infraestructura es la bitácora de lo construido: filas de índice con la fecha en mono, separadas por hairlines — el mismo lenguaje de "ficha técnica" que ya usan las specs de estación. |
+| `body` vacío = la entrada NO tiene página propia | Una apertura son dos líneas: obligar a hacer clic para leer un párrafo es fricción sin contrapartida, y multiplica páginas delgadas que compiten entre sí en búsqueda. Solo lo que tiene cuerpo genera ruta. De cuatro entradas de arranque, **una** tiene página.                                                                                                                        |
+| Cuerpo por **bloques tipados**, no Markdown      | Es la forma exacta en que un CMS headless entrega texto enriquecido (Portable Text, rich text), así que migrar será conectar y no reescribir — y no cierra ninguno de los tres caminos de producción de §2. Markdown suelto habría metido formato dentro del dato.                                                                                                                        |
+| **Sin filtro por tipo**                          | Con el volumen actual filtraría a una o dos entradas por categoría, y un control que no reduce nada útil es decorativo (§12). Se gana su sitio a partir de ~15 entradas; hasta entonces el tipo se lee en cada fila.                                                                                                                                                                      |
 
 ### Cuarta puerta de navegación: `Red · Empresas · Novedades · Nosotros`
 
@@ -553,12 +556,12 @@ La Home pasa de 7 a 8 beats. El nuevo es deliberadamente el más BAJO de la curv
 
 ### Correcciones que salieron de la revisión visual
 
-| Hallazgo | Corrección |
-|---|---|
+| Hallazgo                                      | Corrección                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| --------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **"FECHA PROVISIONAL" repetida en cada fila** | Cuatro etiquetas ámbar eran lo más llamativo de la página después del titular y llevaban el ojo al dato menos importante: dejaba de ser advertencia y pasaba a ser textura. Ahora se declara **una vez** para todo el registro y **antes** de leer —el precedente es `demoNotice`, que avisa antes de pedir los datos, no en letra pequeña al final—. En la página de una entrada sí va por entrada: ahí hay una sola y califica lo que se lee. |
-| **Separador de año con un solo año** | Un rótulo "2026" que no separa nada. Ahora aparece solo si hay más de un año, activado por los datos, como el orden por distancia de `/red`. |
-| **Fecha con conectores** | `Intl` en español da "18 de jun de 2026", que en mono y mayúsculas se lee "18 DE JUN DE 2026": tres palabras de ruido alrededor del dato. Se eliminan los literales alfabéticos por categoría —no por lista de palabras, que habría que ampliar con cada idioma—. Resultado: `18 jun 2026` · `Jun 18, 2026` · `18 jun. 2026`. |
-| **`timeZone: "UTC"` obligatorio** | Sin él, `"2026-06-18"` se formatea como día 17 en cualquier huso al oeste de Greenwich, Colombia incluida: el registro cambiaría de fecha según dónde se renderice. |
+| **Separador de año con un solo año**          | Un rótulo "2026" que no separa nada. Ahora aparece solo si hay más de un año, activado por los datos, como el orden por distancia de `/red`.                                                                                                                                                                                                                                                                                                    |
+| **Fecha con conectores**                      | `Intl` en español da "18 de jun de 2026", que en mono y mayúsculas se lee "18 DE JUN DE 2026": tres palabras de ruido alrededor del dato. Se eliminan los literales alfabéticos por categoría —no por lista de palabras, que habría que ampliar con cada idioma—. Resultado: `18 jun 2026` · `Jun 18, 2026` · `18 jun. 2026`.                                                                                                                   |
+| **`timeZone: "UTC"` obligatorio**             | Sin él, `"2026-06-18"` se formatea como día 17 en cualquier huso al oeste de Greenwich, Colombia incluida: el registro cambiaría de fecha según dónde se renderice.                                                                                                                                                                                                                                                                             |
 
 ### La auditoría de idiomas mentía
 
@@ -601,16 +604,16 @@ La traducción **no se hizo reescribiendo archivos**. Se extrajeron los 374 valo
 
 ### Decisiones de traducción
 
-| Decisión | Razón |
-|---|---|
-| Registro **você**, no *tu* | Es el estándar de Brasil. `pt-PT` habría exigido reescribir el tratamiento entero. |
-| Direcciones colombianas **sin traducir** | `Calle 79 #11-45, Bogotá` es un dato, no copy. Traducir "Calle" a "Rua" produciría una dirección que no existe. |
-| Nueve cadenas idénticas al inglés, verificadas una a una | `Status`, `Legal`, `km`, `Café`, `Wi-Fi` se escriben igual en portugués; las otras cuatro son las direcciones. Ninguna es un olvido. |
-| `hreflang` **`pt-BR`**, URL `/pt` | No hay versión europea con la que competir, y declarar el genérico `pt` describiría mal un texto escrito en brasileño. La separación `htmlLang`/`hreflang` del Bloque 9 es lo que permite tener las dos cosas. |
+| Decisión                                                 | Razón                                                                                                                                                                                                          |
+| -------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Registro **você**, no _tu_                               | Es el estándar de Brasil. `pt-PT` habría exigido reescribir el tratamiento entero.                                                                                                                             |
+| Direcciones colombianas **sin traducir**                 | `Calle 79 #11-45, Bogotá` es un dato, no copy. Traducir "Calle" a "Rua" produciría una dirección que no existe.                                                                                                |
+| Nueve cadenas idénticas al inglés, verificadas una a una | `Status`, `Legal`, `km`, `Café`, `Wi-Fi` se escriben igual en portugués; las otras cuatro son las direcciones. Ninguna es un olvido.                                                                           |
+| `hreflang` **`pt-BR`**, URL `/pt`                        | No hay versión europea con la que competir, y declarar el genérico `pt` describiría mal un texto escrito en brasileño. La separación `htmlLang`/`hreflang` del Bloque 9 es lo que permite tener las dos cosas. |
 
 ### Corregido en la revisión visual
 
-**"Scroll" se había traducido como "Role"** (imperativo de *rolar*, correcto en aislamiento). Pero el indicador se pinta en mono y MAYÚSCULAS, así que la primera pantalla del sitio en portugués decía **"ROLE ↓"** — que se lee como la palabra inglesa *role* y parece un error de programación. Sustituido por **"Deslize"**, inequívoco en mayúsculas.
+**"Scroll" se había traducido como "Role"** (imperativo de _rolar_, correcto en aislamiento). Pero el indicador se pinta en mono y MAYÚSCULAS, así que la primera pantalla del sitio en portugués decía **"ROLE ↓"** — que se lee como la palabra inglesa _role_ y parece un error de programación. Sustituido por **"Deslize"**, inequívoco en mayúsculas.
 
 Es un fallo que ninguna comprobación automática detecta: la cadena era correcta, el problema era cómo se renderiza. Solo aparece mirando la página.
 
@@ -632,15 +635,15 @@ La insignia de media pendiente del hero (`FOTO · PENDENTE`) se ancla a 24px del
 
 **Entrega:** `public/Logo_voltop.svg`. Cierra la parte de logo de la decisión abierta O1 (§37); los hex y las tipografías siguen pendientes.
 
-| Instancia | Antes | Ahora |
-|---|---|---|
-| Header | Isotipo provisional + `<span>Voltop</span>` | El archivo oficial, 137×32 |
-| Footer | Ídem | El archivo oficial, 137×32 |
+| Instancia         | Antes                                                        | Ahora                                      |
+| ----------------- | ------------------------------------------------------------ | ------------------------------------------ |
+| Header            | Isotipo provisional + `<span>Voltop</span>`                  | El archivo oficial, 137×32                 |
+| Footer            | Ídem                                                         | El archivo oficial, 137×32                 |
 | Imagen Open Graph | Cuadrado con gradiente dibujado a mano + la palabra en texto | El archivo oficial, embebido como data URI |
 
 ### La consecuencia inevitable
 
-El archivo oficial es el **lockup completo**: trae símbolo *y* logotipo. El placeholder era solo el símbolo y la palabra la ponía un `<span>` al lado. Con el asset oficial ese `<span>` pasaba a duplicar la marca —"Voltop Voltop"—, así que se retiró de header y footer. No es un cambio de contenido: es la misma palabra, que ahora aporta el propio logo. Era la única forma de usar el archivo oficial.
+El archivo oficial es el **lockup completo**: trae símbolo _y_ logotipo. El placeholder era solo el símbolo y la palabra la ponía un `<span>` al lado. Con el asset oficial ese `<span>` pasaba a duplicar la marca —"Voltop Voltop"—, así que se retiró de header y footer. No es un cambio de contenido: es la misma palabra, que ahora aporta el propio logo. Era la única forma de usar el archivo oficial.
 
 **El tamaño se conserva:** el símbolo ocupa 123.107 de los 124 de alto del archivo, así que a `h-8` mide 31.8px — exactamente lo que medía el placeholder (`size-8`).
 
@@ -668,13 +671,13 @@ En esa misma franja de ~40px el logo queda a **0px del menú** y se reduce un ~7
 
 ### Lo que se hizo
 
-| Cambio | Razón |
-|---|---|
-| Nuevo `lib/data/posts-source.ts` con `fetchPosts()` | **Único punto que cambia al conectar un CMS.** Todo lo que hay por encima —orden, filtro de publicados, referencias a estación y ciudad, qué entradas tienen página— no depende del origen. |
-| Los accesores del registro pasan a `async` | Es lo ÚNICO que obligaría a tocar cada página que consume el registro. Hecho ahora, conectar el CMS es cambiar el cuerpo de una función; hecho el día de la migración, es un refactor bajo presión. |
-| `hasPage()` se queda síncrono | Es un predicado puro sobre una entrada ya cargada. No consulta el origen. |
-| Estaciones y ciudades **siguen síncronas** | Asimetría deliberada: refleja lo que de verdad va a cambiar. El registro es el piloto, no la migración entera. |
-| Nuevo `docs/06-cms/01-brief-cms.md` | El modelo de contenido exacto, los requisitos que deciden la elección y la comparativa de proveedores. Es el documento que se le pasa a quien se contrate. |
+| Cambio                                              | Razón                                                                                                                                                                                               |
+| --------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Nuevo `lib/data/posts-source.ts` con `fetchPosts()` | **Único punto que cambia al conectar un CMS.** Todo lo que hay por encima —orden, filtro de publicados, referencias a estación y ciudad, qué entradas tienen página— no depende del origen.         |
+| Los accesores del registro pasan a `async`          | Es lo ÚNICO que obligaría a tocar cada página que consume el registro. Hecho ahora, conectar el CMS es cambiar el cuerpo de una función; hecho el día de la migración, es un refactor bajo presión. |
+| `hasPage()` se queda síncrono                       | Es un predicado puro sobre una entrada ya cargada. No consulta el origen.                                                                                                                           |
+| Estaciones y ciudades **siguen síncronas**          | Asimetría deliberada: refleja lo que de verdad va a cambiar. El registro es el piloto, no la migración entera.                                                                                      |
+| Nuevo `docs/06-cms/01-brief-cms.md`                 | El modelo de contenido exacto, los requisitos que deciden la elección y la comparativa de proveedores. Es el documento que se le pasa a quien se contrate.                                          |
 
 ### Recomendación de proveedor
 
@@ -708,44 +711,44 @@ Se derivó `public/hero-banner.jpg` — 2560 × 1706, la anchura que el brief de
 
 ### Qué se cambió
 
-| Cambio | Razón |
-|---|---|
+| Cambio                                                      | Razón                                                                                                                                                                                                                                                                                                              |
+| ----------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | Nueva entrada `heroInfraestructura` en el registro de media | **No se rellenó `infraestructuraAmplia`**: se usa también en la franja 21/9 de `/nosotros`, así que habría cambiado dos superficies cuando el encargo era el hero y nada más. Es además la separación que ya recomendaba la decisión D1 del brief de assets. `infraestructuraAmplia` sigue con su hueco declarado. |
-| `Media` acepta `position` (opcional) | El componente fijaba `object-cover` sin control del anclaje. Prop aditiva: sin ella el comportamiento es el de siempre, centrado, que es el correcto para el resto del sitio. |
-| Hero con `object-[24%_50%]` | Ver abajo. |
+| `Media` acepta `position` (opcional)                        | El componente fijaba `object-cover` sin control del anclaje. Prop aditiva: sin ella el comportamiento es el de siempre, centrado, que es el correcto para el resto del sitio.                                                                                                                                      |
+| Hero con `object-[24%_50%]`                                 | Ver abajo.                                                                                                                                                                                                                                                                                                         |
 
 ### Por qué el anclaje en 24% y no centrado
 
 `object-cover` recorta por el eje que sobra, y ese eje **cambia con el dispositivo**:
 
-| Contexto | Hueco | Qué recorta |
-|---|---|---|
-| Escritorio 1440×800 | 1.80 | Más ancho que la foto (1.50) → conserva todo el ancho, recorta arriba y abajo |
-| Tablet 768×901 | 0.85 | Recorta a los lados, moderado |
-| Móvil 390×829 | 0.47 | Mucho más estrecho → conserva todo el alto, recorta a los lados y **se queda con el 31% del ancho** |
+| Contexto            | Hueco | Qué recorta                                                                                         |
+| ------------------- | ----- | --------------------------------------------------------------------------------------------------- |
+| Escritorio 1440×800 | 1.80  | Más ancho que la foto (1.50) → conserva todo el ancho, recorta arriba y abajo                       |
+| Tablet 768×901      | 0.85  | Recorta a los lados, moderado                                                                       |
+| Móvil 390×829       | 0.47  | Mucho más estrecho → conserva todo el alto, recorta a los lados y **se queda con el 31% del ancho** |
 
 Por eso los dos valores no compiten: cada uno solo actúa donde su eje es el recortado. Centrado, en móvil el encuadre se quedaba con la pared de fondo y **perdía el cargador con la marca**, que está a la izquierda. Se probaron 18%, 24% y 30% sobre el navegador: 18% deja el equipo como sujeto pero apoya el titular sobre el panel claro; 30% conserva el muro oscuro pero el pilar de concreto domina la composición. **24% mantiene el equipo en cuadro sin perder el fondo oscuro que sostiene la legibilidad.**
 
 ### Peso servido
 
-| Ancho | Peso | Formato |
-|---|---|---|
-| 640 (móvil) | **29,1 KB** | AVIF |
-| 1080 | 52,3 KB | AVIF |
-| 1920 (escritorio) | **99,8 KB** | AVIF |
-| 2048 | 108,2 KB | AVIF |
+| Ancho             | Peso        | Formato |
+| ----------------- | ----------- | ------- |
+| 640 (móvil)       | **29,1 KB** | AVIF    |
+| 1080              | 52,3 KB     | AVIF    |
+| 1920 (escritorio) | **99,8 KB** | AVIF    |
+| 2048              | 108,2 KB    | AVIF    |
 
 Presupuesto del brief para el hero: ≤ 250 KB. **Se cumple con holgura en todos los anchos.**
 
 ### Contraste sobre fotografía — la verificación que el brief exigía
 
-`docs/05-assets-todo` avisaba: *"las capas de legibilidad están calibradas contra `surface-1` plano, no contra fotografía. En cuanto entre la primera imagen hay que volver a medir el contraste de todo el texto sobre media."* Medido sobre los píxeles realmente renderizados, ocultando solo el contenido y fotografiando el fondo compuesto:
+`docs/05-assets-todo` avisaba: _"las capas de legibilidad están calibradas contra `surface-1` plano, no contra fotografía. En cuanto entre la primera imagen hay que volver a medir el contraste de todo el texto sobre media."_ Medido sobre los píxeles realmente renderizados, ocultando solo el contenido y fotografiando el fondo compuesto:
 
-| | Titular (umbral 3:1, texto grande) | Párrafo (umbral 4,5:1) |
-|---|---|---|
-| Escritorio | p90 6,31 · p99 4,22 · peor 3,47 → **cumple** | p90 5,55 · p99 4,90 · **peor 3,87** |
-| Tablet | p90 9,05 · p99 7,50 · peor 5,67 → **cumple** | p90 6,33 · p99 5,63 · peor 4,83 → **cumple** |
-| Móvil | p90 4,88 · p99 3,72 · peor 3,24 → **cumple** | p90 4,53 · **p99 3,81** · **peor 2,97** |
+|            | Titular (umbral 3:1, texto grande)           | Párrafo (umbral 4,5:1)                       |
+| ---------- | -------------------------------------------- | -------------------------------------------- |
+| Escritorio | p90 6,31 · p99 4,22 · peor 3,47 → **cumple** | p90 5,55 · p99 4,90 · **peor 3,87**          |
+| Tablet     | p90 9,05 · p99 7,50 · peor 5,67 → **cumple** | p90 6,33 · p99 5,63 · peor 4,83 → **cumple** |
+| Móvil      | p90 4,88 · p99 3,72 · peor 3,24 → **cumple** | p90 4,53 · **p99 3,81** · **peor 2,97**      |
 
 **El titular cumple AA en los tres contextos.** El párrafo cumple en tablet, pero en escritorio y móvil **cae por debajo de 4,5:1 en zonas**: en móvil el 10% más claro del fondo bajo el texto da 3,81:1 y el peor punto 2,97:1.
 
@@ -765,11 +768,11 @@ Presupuesto del brief para el hero: ≤ 250 KB. **Se cumple con holgura en todos
 
 Se midió el contraste de **los seis textos superpuestos** —antetítulo, titular, párrafo, indicador de scroll, etiqueta de cobertura y enlaces de ciudad— sobre los píxeles **realmente renderizados**, en **14 viewports** de 320 a 1920 px.
 
-| Elemento | Resultado con el velo anterior |
-|---|---|
-| **Antetítulo** | **FALLA en 9 de 14 viewports.** Mínimo **1.90:1** a 320–414 px, frente al 4.5:1 que exige AA para 12 px |
-| Párrafo | Falla en 320 (4.39) y 360 (4.46) |
-| Titular, scroll, cobertura, ciudades | Cumplen |
+| Elemento                             | Resultado con el velo anterior                                                                          |
+| ------------------------------------ | ------------------------------------------------------------------------------------------------------- |
+| **Antetítulo**                       | **FALLA en 9 de 14 viewports.** Mínimo **1.90:1** a 320–414 px, frente al 4.5:1 que exige AA para 12 px |
+| Párrafo                              | Falla en 320 (4.39) y 360 (4.46)                                                                        |
+| Titular, scroll, cobertura, ciudades | Cumplen                                                                                                 |
 
 El antetítulo es texto verde de marca a 12 px, y en móvil el recorte lo deja sobre el panel claro del cargador — el peor caso del hero. El velo anterior (`via-canvas/75`, un solo eje) se había calibrado contra fondo plano, tal como `docs/05-assets-todo` advertía que habría que revisar en cuanto entrara material real.
 
@@ -777,10 +780,10 @@ El antetítulo es texto verde de marca a 12 px, y en móvil el recorte lo deja s
 
 No es un ajuste de opacidad, es un cambio de **forma**, y por eso cambia con el breakpoint:
 
-| | Forma del texto | Velo | Resultado |
-|---|---|---|---|
-| **Escritorio** | Columna izquierda | Vertical + **lateral suave** | El lateral protege la columna y deja la mitad derecha del encuadre a la vista |
-| **Móvil** | Ancho completo | **Solo vertical** | Un lateral aquí oscurece el lado donde está el cargador —el sujeto— y aclara el derecho, donde también hay texto |
+|                | Forma del texto   | Velo                         | Resultado                                                                                                        |
+| -------------- | ----------------- | ---------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| **Escritorio** | Columna izquierda | Vertical + **lateral suave** | El lateral protege la columna y deja la mitad derecha del encuadre a la vista                                    |
+| **Móvil**      | Ancho completo    | **Solo vertical**            | Un lateral aquí oscurece el lado donde está el cargador —el sujeto— y aclara el derecho, donde también hay texto |
 
 Se probaron ambas formas en las dos direcciones. En móvil, con lateral **el equipo desaparecía de la foto**; sin él se lee.
 
@@ -794,17 +797,17 @@ Los valores se escriben con `color-mix` sobre `--color-canvas`, no como hex (§2
 
 ### Resultado de la auditoría final
 
-| Comprobación | Resultado |
-|---|---|
-| Contraste, 14 viewports × 6 elementos | **Cero fallos** |
-| Objetivo táctil del CTA | 223 × 52 px en los 16 viewports (mínimo 44) |
-| Recorte de contenido (el hero lleva `overflow-hidden`) | Ninguno, ni en pantallas bajas (320×568, 1024×600) |
-| Overflow horizontal | Ninguno |
-| Solape del header con el antetítulo | Ninguno |
-| Foco del CTA | Outline 2px sólido `--color-focus`, offset 2px |
-| `prefers-reduced-motion` | 0 elementos invisibles, 0 animándose |
-| LCP con 4G lenta y CPU ×4 | **1.25 s móvil · 1.61 s escritorio** (presupuesto < 2.5 s) |
-| Peso de la imagen | 29 KB móvil · 100 KB escritorio · 147 KB Retina (presupuesto ≤ 250 KB) |
+| Comprobación                                           | Resultado                                                              |
+| ------------------------------------------------------ | ---------------------------------------------------------------------- |
+| Contraste, 14 viewports × 6 elementos                  | **Cero fallos**                                                        |
+| Objetivo táctil del CTA                                | 223 × 52 px en los 16 viewports (mínimo 44)                            |
+| Recorte de contenido (el hero lleva `overflow-hidden`) | Ninguno, ni en pantallas bajas (320×568, 1024×600)                     |
+| Overflow horizontal                                    | Ninguno                                                                |
+| Solape del header con el antetítulo                    | Ninguno                                                                |
+| Foco del CTA                                           | Outline 2px sólido `--color-focus`, offset 2px                         |
+| `prefers-reduced-motion`                               | 0 elementos invisibles, 0 animándose                                   |
+| LCP con 4G lenta y CPU ×4                              | **1.25 s móvil · 1.61 s escritorio** (presupuesto < 2.5 s)             |
+| Peso de la imagen                                      | 29 KB móvil · 100 KB escritorio · 147 KB Retina (presupuesto ≤ 250 KB) |
 
 ### Nota de método
 
@@ -818,17 +821,17 @@ Estructura, textos, CTAs, tipografías, jerarquía, animaciones y el resto de se
 
 ## Bloque 17 · Contraste de la navegación sobre el hero — 2026-09-01
 
-**Origen:** observación del usuario — *"en la zona donde está el nav no hay suficiente contraste y se pierde un poco"*. Correcta, y era un **hueco de la auditoría del bloque 16**: se midieron los seis textos del hero, pero el header es otro componente y quedó fuera.
+**Origen:** observación del usuario — _"en la zona donde está el nav no hay suficiente contraste y se pierde un poco"_. Correcta, y era un **hueco de la auditoría del bloque 16**: se midieron los seis textos del hero, pero el header es otro componente y quedó fuera.
 
 ### Por qué el promedio lo escondía
 
 El header es transparente hasta que hay scroll —solo entonces gana `bg-canvas/85` y desenfoque—, así que sobre el hero su texto cae directamente sobre la foto. Medido:
 
-| | p90 (promedio alto) | **p99 (el punto malo)** |
-|---|---|---|
-| `Nosotros` @768px | 5.63 — pasa | **1.75:1** |
-| `Novedades` @1024px | 6.42 — pasa | **2.68:1** |
-| Selector de idioma @1024px | 7.52 — pasa | **2.31:1** |
+|                            | p90 (promedio alto) | **p99 (el punto malo)** |
+| -------------------------- | ------------------- | ----------------------- |
+| `Nosotros` @768px          | 5.63 — pasa         | **1.75:1**              |
+| `Novedades` @1024px        | 6.42 — pasa         | **2.68:1**              |
+| Selector de idioma @1024px | 7.52 — pasa         | **2.31:1**              |
 
 No era un fallo de bloque sino de **manchas**: las luces azules y los tubos del techo quedan detrás de letras concretas. Por eso se percibe como que la navegación "se pierde" aunque el promedio cumpla.
 
@@ -842,11 +845,11 @@ Un detalle del proceso que casi cuesta un error: el barrido inicial tenía las p
 
 ### Resultado
 
-| | Antes | Después |
-|---|---|---|
-| Peor p99 del header | **1.75:1** | **4.68:1** |
-| Fallos en p90 | 1 (`Empresas` @1920) | **0** |
-| Fallos en p99 | varios | **0** |
+|                     | Antes                | Después    |
+| ------------------- | -------------------- | ---------- |
+| Peor p99 del header | **1.75:1**           | **4.68:1** |
+| Fallos en p90       | 1 (`Empresas` @1920) | **0**      |
+| Fallos en p99       | varios               | **0**      |
 
 Verificado en 7 viewports sobre nav, selector de idioma, CTA del header y hamburguesa. El hero conserva sus cero fallos y ninguna incidencia estructural.
 
@@ -861,21 +864,21 @@ Verificado en 7 viewports sobre nav, selector de idioma, CTA del header y hambur
 Se midió el reparto real. Con el espaciado entre entradas reducido:
 
 | Separación entre entradas | Hueco logo→menú a 768px |
-|---|---|
-| 24px (`gap-6`) | 0px |
-| 20px (`gap-5`) | 4px |
-| 16px (`gap-4`) | 10px |
+| ------------------------- | ----------------------- |
+| 24px (`gap-6`)            | 0px                     |
+| 20px (`gap-5`)            | 4px                     |
+| 16px (`gap-4`)            | 10px                    |
 
 Ni al mínimo se llega a una separación aceptable, y a 16px las cuatro entradas quedan apretadas entre sí: se cambia un problema por otro. **El header simplemente no cabe**: logo, cuatro entradas, selector de idioma y CTA suman más que la fila a 768px.
 
 ### La corrección
 
-| Cambio | Razón |
-|---|---|
-| Nuevo token `--breakpoint-nav: 52rem` (832px) | Ancho **medido** al que el reparto respira. El header completo aparece ahí; entre 768 y 832 se usa el menú desplegable, que es el patrón correcto para tablet en vertical y que ya estaba construido, accesible y con el selector de idioma dentro. Mismo precedente que `--breakpoint-xs`, definido en su momento para un caso idéntico. |
-| `shrink-0` en el enlace del logo | El logo es un lockup de proporción fija. Dejarlo encoger lo deformaba. Que ceda el espacio otro elemento, no la marca. |
-| `gap-6` entre `nav` y `lg`, `gap-9` desde `lg` | Da holgura en la franja intermedia sin apretar las entradas donde sobra espacio. |
-| Se retira el `gap-2.5` del enlace del logo | Sobraba desde que el archivo oficial trae símbolo y logotipo en una sola pieza. |
+| Cambio                                         | Razón                                                                                                                                                                                                                                                                                                                                     |
+| ---------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Nuevo token `--breakpoint-nav: 52rem` (832px)  | Ancho **medido** al que el reparto respira. El header completo aparece ahí; entre 768 y 832 se usa el menú desplegable, que es el patrón correcto para tablet en vertical y que ya estaba construido, accesible y con el selector de idioma dentro. Mismo precedente que `--breakpoint-xs`, definido en su momento para un caso idéntico. |
+| `shrink-0` en el enlace del logo               | El logo es un lockup de proporción fija. Dejarlo encoger lo deformaba. Que ceda el espacio otro elemento, no la marca.                                                                                                                                                                                                                    |
+| `gap-6` entre `nav` y `lg`, `gap-9` desde `lg` | Da holgura en la franja intermedia sin apretar las entradas donde sobra espacio.                                                                                                                                                                                                                                                          |
+| Se retira el `gap-2.5` del enlace del logo     | Sobraba desde que el archivo oficial trae símbolo y logotipo en una sola pieza.                                                                                                                                                                                                                                                           |
 
 **Se descartó subir el header completo a `lg` (1024px):** habría quitado la navegación entre 832 y 1023, donde cabe perfectamente. La franja afectada pasa de 256px a 64px.
 
@@ -891,9 +894,9 @@ Las cuatro auditorías del Hero siguen limpias: contraste del hero, estructura, 
 
 **Encargo:** la foto que estaba en el hero pasa al beat 2, y una fotografía nueva ocupa el hero.
 
-| Archivo entregado | Máster web derivado | Dónde |
-|---|---|---|
-| `Hero.png` (60.9 MB) | `hero-vehiculo-cargando.jpg` · 2560 × 1706 | Beat 1 · Hero |
+| Archivo entregado           | Máster web derivado                          | Dónde                     |
+| --------------------------- | -------------------------------------------- | ------------------------- |
+| `Hero.png` (60.9 MB)        | `hero-vehiculo-cargando.jpg` · 2560 × 1706   | Beat 1 · Hero             |
 | `Hero_Banner.png` (50.3 MB) | `estacion-infraestructura.jpg` · 2560 × 1706 | Beat 2 · Signature moment |
 
 **Los dos originales superan el límite de 50 MB del optimizador de Next**, así que ninguno puede servirse directamente. Ambos quedan en `public/` sin commitear: 111 MB de binario no pertenecen a un árbol de git.
@@ -922,11 +925,11 @@ La fotografía nueva tiene mucho más detalle fino (piedra, reflejos) y AVIF la 
 
 Bajar la calidad del máster **no sirvió** —de 330 a 318 KB—: quien manda es el codificador AVIF, no el origen. Se añadió la calidad 70 a `next.config.ts` (Next solo sirve las declaradas) y una prop `quality` en `Media`, aplicada **solo a este asset**.
 
-| | Antes | Después |
-|---|---|---|
-| Móvil | 38.7 KB | **30.3 KB** |
-| Escritorio | 202.3 KB | **147.4 KB** |
-| Retina | **332.1 KB** ✗ | **235.1 KB** ✓ |
+|            | Antes          | Después        |
+| ---------- | -------------- | -------------- |
+| Móvil      | 38.7 KB        | **30.3 KB**    |
+| Escritorio | 202.3 KB       | **147.4 KB**   |
+| Retina     | **332.1 KB** ✗ | **235.1 KB** ✓ |
 
 ### Sobre la medición del LCP
 
@@ -952,11 +955,11 @@ Esta sección costó cuatro intentos de medición fallidos antes de dar un núme
 
 Es un **travelling continuo**: la cámara se mueve entre 3.5 y 14.4 por segundo y **no se detiene en ningún momento** del clip. De ahí se sigue todo lo demás.
 
-| Intento | Resultado | Por qué |
-|---|---|---|
-| Buscar la ventana que cierre | **Ninguna.** Mejor coste 23.8/255, peor 36.7 | Se evaluaron todas las de 10–12 s comparando la secuencia de medio segundo alrededor de cada extremo, para que casara imagen **y** movimiento. Rango estrecho y todo alto: la firma de un plano que avanza sin volver |
-| Fundido cruzado de cola sobre cabeza | **Descartado.** Se estanca en 12.6 | Un fundido disuelve entre dos imágenes distintas, no devuelve la cámara a su origen. Producía una doble exposición de un segundo |
-| Ida y vuelta | **Descartado.** Cierra numéricamente (6.4) pero **se ve mal** | El desenfoque de movimiento va al revés y el ojo lo lee como rebobinado. Lo detectó el usuario mirándolo; la métrica decía que estaba bien |
+| Intento                              | Resultado                                                     | Por qué                                                                                                                                                                                                               |
+| ------------------------------------ | ------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Buscar la ventana que cierre         | **Ninguna.** Mejor coste 23.8/255, peor 36.7                  | Se evaluaron todas las de 10–12 s comparando la secuencia de medio segundo alrededor de cada extremo, para que casara imagen **y** movimiento. Rango estrecho y todo alto: la firma de un plano que avanza sin volver |
+| Fundido cruzado de cola sobre cabeza | **Descartado.** Se estanca en 12.6                            | Un fundido disuelve entre dos imágenes distintas, no devuelve la cámara a su origen. Producía una doble exposición de un segundo                                                                                      |
+| Ida y vuelta                         | **Descartado.** Cierra numéricamente (6.4) pero **se ve mal** | El desenfoque de movimiento va al revés y el ojo lo lee como rebobinado. Lo detectó el usuario mirándolo; la métrica decía que estaba bien                                                                            |
 
 **Lección:** el cierre del bucle se puede medir, pero que el movimiento se sienta natural no. Esa parte hay que verla.
 
@@ -964,14 +967,14 @@ Es un **travelling continuo**: la cámara se mueve entre 3.5 y 14.4 por segundo 
 
 Bucle **recto** —termina y vuelve a empezar— con entrada y salida al color del fondo (`--color-canvas`). Los dos extremos llegan al mismo tono, así que no hay salto, y bajo el velo oscuro de la sección se lee como un respiro del plano y no como un efecto.
 
-| | |
-|---|---|
-| Duración | 11.01 s |
-| Cierre | **3.7/255** (umbral de imperceptible: 8) |
-| Fundido | 0.5 s — cierra tan bien como 0.8 s (2.2) pero interrumpe la mitad de tiempo |
-| Formato | H.264 High, 1920 × 1080, sin audio, `faststart` |
-| Peso | **1.82 MB** |
-| Póster | 90 KB, **del centro del bucle** — con la entrada fundida, el fotograma 0 es casi negro |
+|          |                                                                                        |
+| -------- | -------------------------------------------------------------------------------------- |
+| Duración | 11.01 s                                                                                |
+| Cierre   | **3.7/255** (umbral de imperceptible: 8)                                               |
+| Fundido  | 0.5 s — cierra tan bien como 0.8 s (2.2) pero interrumpe la mitad de tiempo            |
+| Formato  | H.264 High, 1920 × 1080, sin audio, `faststart`                                        |
+| Peso     | **1.82 MB**                                                                            |
+| Póster   | 90 KB, **del centro del bucle** — con la entrada fundida, el fotograma 0 es casi negro |
 
 ### Un fallo de accesibilidad que solo aparece con video
 
@@ -999,19 +1002,19 @@ Durante el primer ~20% del recorrido de la sección el titular **cruza el borde 
 
 ## Bloque 21 · La apertura del beat 2, recalibrada al material real — 2026-09-01
 
-**Origen:** dos observaciones del usuario tras verlo — *"se ve un poco pixelado"* y *"me gusta la animación con el scroll, solo que como está se ve raro"*.
+**Origen:** dos observaciones del usuario tras verlo — _"se ve un poco pixelado"_ y _"me gusta la animación con el scroll, solo que como está se ve raro"_.
 
 Las dos tenían la misma causa de fondo: **los valores de la animación se fijaron contra el hueco del placeholder, que era una superficie quieta.** Con material real dejan de servir.
 
-| Síntoma | Causa medida | Corrección |
-|---|---|---|
-| Video blando | `scale: 1.12` obliga a estirar la fuente hasta ~3226 px en una Retina de 1440. Con la fuente a 1920, un **1.68× de ampliación** | Fuente a **2560** y `scale` a **1.05** → ampliación **1.18×** |
-| La apertura se veía rara | El titular empieza al **14.2%** del ancho y el recorte llegaba al **28%**: durante el primer 20% del recorrido una línea vertical partía las palabras. Medido a 5%, 10% y 15% de scroll | Recorte inicial a **10%**, por debajo del 14.2%. El texto queda dentro del cuadro **en todo el recorrido**, verificado en 8 puntos |
-| Movimiento poco fluido | Una caja creciendo mientras la cámara avanza son dos movimientos compitiendo | 10% en vez de 28% lo vuelve un asentamiento, y termina antes (45% del recorrido en vez de 70%) para no arrastrarse sobre el movimiento del plano |
+| Síntoma                  | Causa medida                                                                                                                                                                            | Corrección                                                                                                                                       |
+| ------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Video blando             | `scale: 1.12` obliga a estirar la fuente hasta ~3226 px en una Retina de 1440. Con la fuente a 1920, un **1.68× de ampliación**                                                         | Fuente a **2560** y `scale` a **1.05** → ampliación **1.18×**                                                                                    |
+| La apertura se veía rara | El titular empieza al **14.2%** del ancho y el recorte llegaba al **28%**: durante el primer 20% del recorrido una línea vertical partía las palabras. Medido a 5%, 10% y 15% de scroll | Recorte inicial a **10%**, por debajo del 14.2%. El texto queda dentro del cuadro **en todo el recorrido**, verificado en 8 puntos               |
+| Movimiento poco fluido   | Una caja creciendo mientras la cámara avanza son dos movimientos compitiendo                                                                                                            | 10% en vez de 28% lo vuelve un asentamiento, y termina antes (45% del recorrido en vez de 70%) para no arrastrarse sobre el movimiento del plano |
 
 **Se probó retirar la apertura por completo** —dejando que el plano fuera el único movimiento— y se descartó: el usuario quiere la animación, y el problema no era que existiera sino su calibración.
 
-**Peso:** 1.82 → 2.92 MB por subir de 1920 a 2560 px. Por encima de los 2 MB del brief, y es una decisión consciente: el video es `preload="none"`, está bajo el pliegue y no es el elemento LCP. La nitidez en el beat que la sección llama *signature* vale ese megabyte.
+**Peso:** 1.82 → 2.92 MB por subir de 1920 a 2560 px. Por encima de los 2 MB del brief, y es una decisión consciente: el video es `preload="none"`, está bajo el pliegue y no es el elemento LCP. La nitidez en el beat que la sección llama _signature_ vale ese megabyte.
 
 ### Evidencia
 
@@ -1021,19 +1024,19 @@ Las dos tenían la misma causa de fondo: **los valores de la animación se fijar
 
 ## Bloque 22 · La apertura del beat 2 solo funcionaba en tres anchos — 2026-09-01
 
-**Origen:** pregunta del usuario, *"¿crees que funciona a la perfección en los diferentes viewports?"*. No lo estaba, y no se sabía porque **la calibración del bloque 21 se hizo solo a 1440 px**.
+**Origen:** pregunta del usuario, _"¿crees que funciona a la perfección en los diferentes viewports?"_. No lo estaba, y no se sabía porque **la calibración del bloque 21 se hizo solo a 1440 px**.
 
 ### El fallo
 
 El recorte es un **porcentaje del ancho**; el texto arranca tras un **margen fijo**. Escalan distinto, así que la distancia del titular al borde cambia con el viewport:
 
 | Viewport | El titular empieza en | Recorte máx. | ¿El borde parte las palabras? |
-|---|---|---|---|
-| 1024 px | **3.8%** | 9.5% | **sí** |
-| 768 px | 4.3% | 9.5% | **sí** |
-| 390 px | 6.3% | 9.5% | **sí** |
-| 1440 px | 10.3% | 9.5% | no |
-| 1920 px | 20.6% | 9.5% | no |
+| -------- | --------------------- | ------------ | ----------------------------- |
+| 1024 px  | **3.8%**              | 9.5%         | **sí**                        |
+| 768 px   | 4.3%                  | 9.5%         | **sí**                        |
+| 390 px   | 6.3%                  | 9.5%         | **sí**                        |
+| 1440 px  | 10.3%                 | 9.5%         | no                            |
+| 1920 px  | 20.6%                 | 9.5%         | no                            |
 
 **Cruzaba en 9 de 12 anchos.** Ajustar el número no lo arregla: no existe un porcentaje que quede por debajo del 3.8% de 1024 y siga siendo una animación visible.
 
@@ -1055,15 +1058,15 @@ Ninguna ruta del sitio enlaza a esa ancla, pero la URL es pública.
 
 ### Verificación
 
-| Caso | Resultado |
-|---|---|
-| Borde coincidiendo con texto visible, **14 viewports × 8 puntos de scroll** | **ninguno** |
-| Texto visible al final del recorrido, 14 viewports | **todos** |
-| Llegada por ancla (390 y 1440) | texto visible, recorte 0% |
-| Recarga a media sección | texto visible |
-| Volver arriba tras bajar | texto sigue visible |
-| Recorrido normal al 3% | texto oculto, recorte 16.8% — la apertura ocurre |
-| `prefers-reduced-motion` | sección 0.67× viewport, texto visible, video pausado, recorte 0% |
+| Caso                                                                        | Resultado                                                        |
+| --------------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| Borde coincidiendo con texto visible, **14 viewports × 8 puntos de scroll** | **ninguno**                                                      |
+| Texto visible al final del recorrido, 14 viewports                          | **todos**                                                        |
+| Llegada por ancla (390 y 1440)                                              | texto visible, recorte 0%                                        |
+| Recarga a media sección                                                     | texto visible                                                    |
+| Volver arriba tras bajar                                                    | texto sigue visible                                              |
+| Recorrido normal al 3%                                                      | texto oculto, recorte 16.8% — la apertura ocurre                 |
+| `prefers-reduced-motion`                                                    | sección 0.67× viewport, texto visible, video pausado, recorte 0% |
 
 Contraste del hero, estructura y header: sin fallos.
 
@@ -1087,7 +1090,7 @@ No es metraje de fondo: es una **pieza terminada** con narración, subtítulos q
 
 Por eso `Media` y `VideoMedia` ganan un modo `controls`: con él no hay reproducción automática, ni bucle, ni silencio. Un fondo se mira sin querer; una pieza con narración se decide ver, y para eso hace falta poder darle play, pausar, buscar y oírla. `prefers-reduced-motion` deja de aplicar en ese modo porque nada arranca solo.
 
-**Ubicación:** beat 7, en la franja ancha bajo la cita del fundador — que ya estaba compuesta como *material presentado*, no como fondo. `visionCeo` sigue registrado y pendiente: es otra pieza.
+**Ubicación:** beat 7, en la franja ancha bajo la cita del fundador — que ya estaba compuesta como _material presentado_, no como fondo. `visionCeo` sigue registrado y pendiente: es otra pieza.
 
 ### El póster, elegido midiendo
 
@@ -1099,12 +1102,12 @@ Los aéreos de Medellín puntuaban más alto en nitidez y se descartaron — **l
 
 ### Rendimiento
 
-| | |
-|---|---|
-| Servido | 1920 × 1080, H.264 High + AAC 128k, `faststart`, **27.6 MB** |
-| **Antes de darle play** | **67 KB** — solo el póster, en los 7 viewports probados |
-| **CLS** | **0** en los 7 viewports |
-| Proporción | 1.776–1.780 (16:9 exacto) en todos los anchos |
+|                         |                                                              |
+| ----------------------- | ------------------------------------------------------------ |
+| Servido                 | 1920 × 1080, H.264 High + AAC 128k, `faststart`, **27.6 MB** |
+| **Antes de darle play** | **67 KB** — solo el póster, en los 7 viewports probados      |
+| **CLS**                 | **0** en los 7 viewports                                     |
+| Proporción              | 1.776–1.780 (16:9 exacto) en todos los anchos                |
 
 El `aspect-[16/9]` que aplica `Media` reserva el espacio, así que el póster entra sin desplazar nada. Los 27.6 MB no viajan hasta que alguien los pide.
 
@@ -1127,6 +1130,7 @@ El `aspect-[16/9]` que aplica `Media` reserva el espacio, así que el póster en
 **Cambio:** el póster pasa del fotograma de 4.0 s —manos conectando el cargador, elegido por medición— al **de 2.0 s**, el vehículo entrando por la rampa del parqueadero. Preferencia del usuario.
 
 **Verificado antes de aplicarlo:**
+
 - El tramo está **limpio de subtítulos quemados** (los primeros aparecen a ~4.2 s).
 - Nitidez **plana entre 1.9 y 2.15 s** (26.2 frente a 25.9): el coche está en movimiento, pero no hay trepidación que evitar. Se usa el 2.0 exacto que se pidió.
 
@@ -1146,13 +1150,13 @@ Build limpio · CLS **0** y proporción 16:9 exacta a 390 y 1440 px · **138.7 K
 
 Es la mejor de las tres candidatas por tres motivos, y dos son medibles:
 
-| | 4.0 s · manos | 2.0 s · rampa | **3.0 s · parqueadero** |
-|---|---|---|---|
-| Peso | 67 KB ✓ | 138.7 KB ✗ | **110.8 KB ✓** |
-| Limpio de subtítulos | sí | sí | **sí** |
-| Marca ajena dominante | no | "PORSCHE EXPERIENCE" en la puerta | insignia trasera, menor |
-| Registro visual | oscuro | claro | **oscuro, como el sitio** |
-| Infraestructura Voltop visible | parcial | no | **sí, dos equipos al fondo** |
+|                                | 4.0 s · manos | 2.0 s · rampa                     | **3.0 s · parqueadero**      |
+| ------------------------------ | ------------- | --------------------------------- | ---------------------------- |
+| Peso                           | 67 KB ✓       | 138.7 KB ✗                        | **110.8 KB ✓**               |
+| Limpio de subtítulos           | sí            | sí                                | **sí**                       |
+| Marca ajena dominante          | no            | "PORSCHE EXPERIENCE" en la puerta | insignia trasera, menor      |
+| Registro visual                | oscuro        | claro                             | **oscuro, como el sitio**    |
+| Infraestructura Voltop visible | parcial       | no                                | **sí, dos equipos al fondo** |
 
 El de 2.0 s no bajaba de 138 KB ni a calidad 13 —plano con mucho detalle fino—; este es más oscuro y comprime mejor, así que **vuelve a entrar en el presupuesto de 120 KB**.
 
@@ -1170,26 +1174,26 @@ Build limpio · CLS **0** y proporción 16:9 exacta a 390 y 1440 px · **110.9 K
 
 Extraídos todos los radios y transiciones del sitio de referencia:
 
-| Radio | Usos | Qué es |
-|---|---|---|
-| `9999px` | 22 | Píldoras de botón |
+| Radio            | Usos   | Qué es                                             |
+| ---------------- | ------ | -------------------------------------------------- |
+| `9999px`         | 22     | Píldoras de botón                                  |
 | **`0 80px 0 0`** | **17** | **Una esquina superior derecha sobredimensionada** |
-| `0 128px 0 0` | 4 | La misma, mayor |
+| `0 128px 0 0`    | 4      | La misma, mayor                                    |
 
-| Movimiento | Valores |
-|---|---|
-| Duraciones | 0.15s ×12 · 0.2s ×35 · 0.4s ×25 |
-| Easing dominante | `cubic-bezier(0.4, 0, 0.2, 1)` ×60 |
+| Movimiento       | Valores                                    |
+| ---------------- | ------------------------------------------ |
+| Duraciones       | 0.15s ×12 · 0.2s ×35 · 0.4s ×25            |
+| Easing dominante | `cubic-bezier(0.4, 0, 0.2, 1)` ×60         |
 | **Sobreimpulso** | **`cubic-bezier(0.34, 1.56, 0.64, 1)` ×4** |
 
 Dos conclusiones: la esquina asimétrica es su firma visual entera, y **el rebote aparece solo cuatro veces en todo el sitio**. La contención es el patrón, no el efecto.
 
 ### Fase 1 · Tokens
 
-| Token | Valor | Criterio |
-|---|---|---|
+| Token                | Valor                                | Criterio                                                                                                                                                                     |
+| -------------------- | ------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `--radius-signature` | `clamp(1.75rem, 1rem + 3.2vw, 4rem)` | Fluido como la tipografía (§22): 64px sobre un bloque de 1440 es el 4.4% de su ancho, pero sobre uno de 360 sería el 18%. Con `clamp` se mantiene la proporción, no el valor |
-| `--ease-overshoot` | `cubic-bezier(0.34, 1.56, 0.64, 1)` | Único easing con sobreimpulso del sistema. Reservado a microinteracciones de control |
+| `--ease-overshoot`   | `cubic-bezier(0.34, 1.56, 0.64, 1)`  | Único easing con sobreimpulso del sistema. Reservado a microinteracciones de control                                                                                         |
 
 **`Media` gana la prop `corner`**, activada por bloque y no por defecto: un fondo a sangre no tiene esquinas que redondear, y aplicarlo a todo lo convertiría en textura en lugar de firma.
 
@@ -1221,11 +1225,11 @@ La primera lectura interpretó el CTA del hero de la referencia como un **buscad
 
 §15 prohíbe publicar un enlace sin destino real, así que los tres se comprobaron con una petición: **los tres responden 200**. Y se guardan las URLs **canónicas**, no las que entrega el botón de compartir:
 
-| Entregado | Publicado | Por qué |
-|---|---|---|
-| `instagram.com/voltop.co?igsi=…` | `instagram.com/voltop.co` | El parámetro es de rastreo y ata el enlace a una sesión |
+| Entregado                                   | Publicado                                    | Por qué                                                                       |
+| ------------------------------------------- | -------------------------------------------- | ----------------------------------------------------------------------------- |
+| `instagram.com/voltop.co?igsi=…`            | `instagram.com/voltop.co`                    | El parámetro es de rastreo y ata el enlace a una sesión                       |
 | `facebook.com/share/18uWjiJFsV/?mibextid=…` | `facebook.com/people/Voltop/61592759125960/` | Era un redirector: resuelve, pero puede caducar y añade un salto en cada clic |
-| `linkedin.com/company/voltop-energy/` | igual | Ya era canónica |
+| `linkedin.com/company/voltop-energy/`       | igual                                        | Ya era canónica                                                               |
 
 ### Accesibilidad
 
@@ -1284,18 +1288,18 @@ El panel llevaba `pr-10` para librar la columna del `+/−`. En móvil la respue
 
 `lint`, `tsc` y build limpios · `ES 396/396 · EN 396/396 · PT 396/396`
 
-| Verificación | Resultado |
-|---|---|
-| Cerradas al cargar · `aria-controls` resuelve | 5/5 |
-| Objetivo táctil (móvil) | 78–98px |
-| Paneles `inert` cerrados | 5/5 |
-| Enter y Espacio abren · varias simultáneas | Sí |
-| Outline de encabezados | h1 → h2 → h3, sin saltos |
-| Caracteres/línea (390/768/1440, ES·EN·PT) | 43–62 |
-| Desbordamiento horizontal | 0px |
+| Verificación                                    | Resultado                  |
+| ----------------------------------------------- | -------------------------- |
+| Cerradas al cargar · `aria-controls` resuelve   | 5/5                        |
+| Objetivo táctil (móvil)                         | 78–98px                    |
+| Paneles `inert` cerrados                        | 5/5                        |
+| Enter y Espacio abren · varias simultáneas      | Sí                         |
+| Outline de encabezados                          | h1 → h2 → h3, sin saltos   |
+| Caracteres/línea (390/768/1440, ES·EN·PT)       | 43–62                      |
+| Desbordamiento horizontal                       | 0px                        |
 | Contraste pregunta / respuesta / enlace / icono | 17.5 · 9.05 · 11.37 · 6.34 |
-| Foco visible | outline 2px sólido |
-| Reduced-motion: elementos invisibles | 0 |
+| Foco visible                                    | outline 2px sólido         |
+| Reduced-motion: elementos invisibles            | 0                          |
 
 ---
 
@@ -1305,11 +1309,11 @@ Las cinco preguntas y respuestas las escribió Camilo. El español va **literal*
 
 El eje cambió: mis cinco preguntas eran técnicas (conectores, potencias, cobertura, B2B); estas cinco son **de experiencia** —cómo cargo, dónde, cuánto cuesta, cómo pago, qué hago si algo falla— y son las que de verdad se hacen. La tarifa dejó de estar bloqueada porque la respuesta describe **el mecanismo, no la cifra**: "antes de iniciar tu carga podrás consultar la tarifa aplicable". Eso se puede publicar hoy sin inventar nada.
 
-El titular de sección pasó de "Lo que preguntan antes de cargar" a **"Antes, durante y después de cargar"**: la última pregunta es sobre ayuda *durante* una carga, y el titular anterior dejaba fuera parte de lo que hay debajo.
+El titular de sección pasó de "Lo que preguntan antes de cargar" a **"Antes, durante y después de cargar"**: la última pregunta es sobre ayuda _durante_ una carga, y el titular anterior dejaba fuera parte de lo que hay debajo.
 
 ### Tres cosas quedan levantadas, no corregidas
 
-**1 · "Disponibilidad" contra la nota de la misma página.** Dos secciones más arriba, bajo el buscador, `/red` muestra: *"La disponibilidad en tiempo real llegará con la integración de datos de operación."* La respuesta 2 ofrece "disponibilidad" entre lo que se consulta antes de llegar. Son afirmaciones que conviven en una sola página y §19 dice que un titular es un contrato. **Decisión de producto**, no de copy.
+**1 · "Disponibilidad" contra la nota de la misma página.** Dos secciones más arriba, bajo el buscador, `/red` muestra: _"La disponibilidad en tiempo real llegará con la integración de datos de operación."_ La respuesta 2 ofrece "disponibilidad" entre lo que se consulta antes de llegar. Son afirmaciones que conviven en una sola página y §19 dice que un titular es un contrato. **Decisión de producto**, no de copy.
 
 **2 · La respuesta 5 no tiene a dónde ir.** Remite a "los canales disponibles en Voltop" y hoy el sitio no nombra ninguno. El único formulario es `/empresas#contacto`, captación B2B para dueños de espacio: destino equivocado para alguien con un problema a mitad de carga. Va **sin enlace** —§15 prohíbe publicar enlaces sin destino real— hasta que exista un canal (WhatsApp, correo, chat en la app).
 
@@ -1329,7 +1333,7 @@ El titular de sección pasó de "Lo que preguntan antes de cargar" a **"Antes, d
 
 **2 · Soporte: WhatsApp +57 315 986 4931**, operado vía Freshchat.
 
-Se publica como **`wa.me/573159864931`, no como `tel:`**. Un `tel:` lanza una **llamada telefónica**; el canal de soporte es la conversación de WhatsApp, y `wa.me` es lo que la abre. Verificado: responde 200 y redirige a `api.whatsapp.com/send/?phone=573159864931`. *(Si además se quiere que llame por teléfono, es otro enlace y se añade aparte.)*
+Se publica como **`wa.me/573159864931`, no como `tel:`**. Un `tel:` lanza una **llamada telefónica**; el canal de soporte es la conversación de WhatsApp, y `wa.me` es lo que la abre. Verificado: responde 200 y redirige a `api.whatsapp.com/send/?phone=573159864931`. _(Si además se quiere que llame por teléfono, es otro enlace y se añade aparte.)_
 
 **3 · Descarga de la app: `https://app.voltop.co/`**
 
@@ -1347,7 +1351,7 @@ Primero usé el glifo `↗`. No funcionaba: en esta mono sale **más pequeño y 
 
 `lint`, `tsc` y build limpios · `ES 395/395 · EN 395/395 · PT 395/395`
 
-Los tres enlaces, en los tres idiomas: los externos con `target="_blank"`, `rel="noopener noreferrer"` y el aviso en el nombre accesible (*"Descargar la app · Se abre en una pestaña nueva"*, *"Escríbenos por WhatsApp · Se abre en una pestaña nueva"*); el interno resuelve a `/es/red#ciudades`, `/en/red#ciudades`, `/pt/red#ciudades`, sin prefijo de idioma pegado a las URLs absolutas.
+Los tres enlaces, en los tres idiomas: los externos con `target="_blank"`, `rel="noopener noreferrer"` y el aviso en el nombre accesible (_"Descargar la app · Se abre en una pestaña nueva"_, _"Escríbenos por WhatsApp · Se abre en una pestaña nueva"_); el interno resuelve a `/es/red#ciudades`, `/en/red#ciudades`, `/pt/red#ciudades`, sin prefijo de idioma pegado a las URLs absolutas.
 
 ---
 
@@ -1376,7 +1380,7 @@ Nuevo `content/data/links.ts` con la URL de la app y la de WhatsApp. Antes viví
 
 ### Evidencia
 
-`lint`, `tsc` y build limpios · `ES 394/394 · EN 394/394 · PT 394/394` · CTA con nombre accesible *"Descargar la app (Se abre en una pestaña nueva)"* y ayuda resolviendo a `/es/red#preguntas`.
+`lint`, `tsc` y build limpios · `ES 394/394 · EN 394/394 · PT 394/394` · CTA con nombre accesible _"Descargar la app (Se abre en una pestaña nueva)"_ y ayuda resolviendo a `/es/red#preguntas`.
 
 ---
 
@@ -1409,7 +1413,7 @@ Las páginas en inglés y portugués muestran el original con un aviso de que la
 
 **1 · Existe un canal de soporte real: `soporte@voltop.co`**, declarado en la política de datos. Pendiente de decidir si se suma al FAQ junto al WhatsApp.
 
-**2 · La contradicción de "disponibilidad" se resuelve sola.** Los términos declaran, entre los servicios de la Plataforma: *"Consultar la ubicación y disponibilidad de las Estaciones de Carga"*. Es decir, el producto **sí** ofrece disponibilidad en la app. La respuesta 2 del FAQ era correcta; la que sobra es la nota `states.pendingRealtime` de `/red`, que habla de la integración de datos de operación del SITIO, no de la app.
+**2 · La contradicción de "disponibilidad" se resuelve sola.** Los términos declaran, entre los servicios de la Plataforma: _"Consultar la ubicación y disponibilidad de las Estaciones de Carga"_. Es decir, el producto **sí** ofrece disponibilidad en la app. La respuesta 2 del FAQ era correcta; la que sobra es la nota `states.pendingRealtime` de `/red`, que habla de la integración de datos de operación del SITIO, no de la app.
 
 ### Evidencia
 
@@ -1447,12 +1451,12 @@ El QR se **oculta por debajo de `md`** en vez de encogerse: en un teléfono el c
 
 Un elemento fijo compite con todo el contenido durante todo el recorrido, así que tiene que justificar cada segundo que ocupa la pantalla.
 
-| Regla | Por qué | Verificado |
-|---|---|---|
-| No aparece sobre el Hero | Ahí ya hay un CTA grande a la vista | opacidad 0 |
+| Regla                                                     | Por qué                                                             | Verificado |
+| --------------------------------------------------------- | ------------------------------------------------------------------- | ---------- |
+| No aparece sobre el Hero                                  | Ahí ya hay un CTA grande a la vista                                 | opacidad 0 |
 | Se aparta cuando la sección de descarga entra en pantalla | Flotar "descarga la app" sobre la sección que ya lo ofrece es ruido | opacidad 0 |
-| Aparece en la zona intermedia | Es donde no compite con nada | opacidad 1 |
-| Se cierra y no vuelve | Un flotante que reaparece tras cerrarlo es una trampa | — |
+| Aparece en la zona intermedia                             | Es donde no compite con nada                                        | opacidad 1 |
+| Se cierra y no vuelve                                     | Un flotante que reaparece tras cerrarlo es una trampa               | —          |
 
 Además se calla en `/empresas` —donde la conversión es el formulario y §15 prohíbe que los CTA compitan— y en los legales, donde tapar contenido durante una lectura larga estorba. Y solo existe en escritorio: en un teléfono el QR no puede escanearse a sí mismo.
 
@@ -1472,7 +1476,7 @@ La tarjeta blanca del QR flotante se estiraba a lo ancho del panel, dejando medi
 
 ### `.glass` — una superficie, no un div translúcido
 
-Tres capas con trabajos distintos: el **medio** (`backdrop-filter` con desenfoque *y* saturación), el **canto especular** (borde de 1px con gradiente, dibujado con dos máscaras en XOR porque CSS no admite `border-image` con radios) y la **profundidad** (sombra amplia + realce interior).
+Tres capas con trabajos distintos: el **medio** (`backdrop-filter` con desenfoque _y_ saturación), el **canto especular** (borde de 1px con gradiente, dibujado con dos máscaras en XOR porque CSS no admite `border-image` con radios) y la **profundidad** (sombra amplia + realce interior).
 
 La parte que casi siempre se olvida es **`brightness`**. Sin atenuar el fondo, un titular claro que pase por detrás se lee A TRAVÉS del panel y compite con el texto de encima. Con ella, lo de atrás sigue insinuándose —que es la gracia— pero ya no disputa la lectura.
 
@@ -1540,17 +1544,17 @@ El sitio estaba bien escrito y era honesto, pero **hablaba como constructora de 
 
 La corrección **no borra la narrativa de infraestructura** —es real, diferencial frente a Electra y honesta— sino que **rebalancea**: mete la capa digital donde no estaba.
 
-| Dónde | Antes | Ahora |
-|---|---|---|
-| Tagline (aparece en `title`, meta y OG) | "Infraestructura de carga para la movilidad eléctrica de Colombia" | "La red de carga eléctrica de Colombia, simple y en tu teléfono" |
-| Lead del Hero — el párrafo más leído | 100% sujeto-Voltop, sin mencionar la app ni al usuario | "Carga rápida donde ya te mueves y una app que la abre con un escaneo. Nosotros construimos y operamos la red; tú solo conectas." |
-| Meta description de la Home | Abría con "Infraestructura", palabra que nadie teclea | Nombra Bogotá, Medellín y la app |
-| Titular de `/nosotros` | "Infraestructura para un país que se está electrificando" | "Un país no se electrifica sin dónde cargar." |
-| Titular de `/empresas` | "Carga eléctrica para tu negocio, operada por nosotros" | "Tú pones el espacio. Nosotros ponemos la red." |
+| Dónde                                   | Antes                                                              | Ahora                                                                                                                             |
+| --------------------------------------- | ------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------- |
+| Tagline (aparece en `title`, meta y OG) | "Infraestructura de carga para la movilidad eléctrica de Colombia" | "La red de carga eléctrica de Colombia, simple y en tu teléfono"                                                                  |
+| Lead del Hero — el párrafo más leído    | 100% sujeto-Voltop, sin mencionar la app ni al usuario             | "Carga rápida donde ya te mueves y una app que la abre con un escaneo. Nosotros construimos y operamos la red; tú solo conectas." |
+| Meta description de la Home             | Abría con "Infraestructura", palabra que nadie teclea              | Nombra Bogotá, Medellín y la app                                                                                                  |
+| Titular de `/nosotros`                  | "Infraestructura para un país que se está electrificando"          | "Un país no se electrifica sin dónde cargar."                                                                                     |
+| Titular de `/empresas`                  | "Carga eléctrica para tu negocio, operada por nosotros"            | "Tú pones el espacio. Nosotros ponemos la red."                                                                                   |
 
 ### Seis promesas que el producto no cumplía (§19 · §33)
 
-1. **"la red líder de Colombia"** — reclamo de liderazgo de mercado sin fuente, en la página que un inversionista lee con más lupa. Pasó a una invitación: *"…que quieren construir la red de carga de Colombia con nosotros"*.
+1. **"la red líder de Colombia"** — reclamo de liderazgo de mercado sin fuente, en la página que un inversionista lee con más lupa. Pasó a una invitación: _"…que quieren construir la red de carga de Colombia con nosotros"_.
 2. **"Recomendadas"** — implicaba un motor de recomendación; `lib/data` documenta que es el orden curado del dataset. Ahora **"Destacadas"**.
 3. **Filtro "Disponibilidad"** — rotulaba como activa la capacidad que la misma página declara no integrada dos secciones más arriba. Ahora **"Estado"**, que es lo que el chip de dentro dice.
 4. **"La red crece cada mes"** — cadencia que nadie validó.
@@ -1559,32 +1563,32 @@ La corrección **no borra la narrativa de infraestructura** —es real, diferenc
 
 ### Vocabulario interno que salía a la interfaz
 
-"Integración de datos de operación", "CRM", "confirmación comercial". Es honesto en un prototipo, pero el usuario lo lee como *"esta gente me habla de sus procesos"*. Dos capas: **honestidad en el mensaje, lenguaje de producto en la superficie**.
+"Integración de datos de operación", "CRM", "confirmación comercial". Es honesto en un prototipo, pero el usuario lo lee como _"esta gente me habla de sus procesos"_. Dos capas: **honestidad en el mensaje, lenguaje de producto en la superficie**.
 
-El peor caso era el **callejón sin salida del formulario B2B**, en el instante de máxima intención: decía que no se había enviado y ahí terminaba. El comentario del archivo justificaba no dar alternativa *"porque no hay correo ni teléfono confirmados"* — **eso dejó de ser cierto**. Ahora ofrece WhatsApp y `soporte@voltop.co`, los dos verificados.
+El peor caso era el **callejón sin salida del formulario B2B**, en el instante de máxima intención: decía que no se había enviado y ahí terminaba. El comentario del archivo justificaba no dar alternativa _"porque no hay correo ni teléfono confirmados"_ — **eso dejó de ser cierto**. Ahora ofrece WhatsApp y `soporte@voltop.co`, los dos verificados.
 
 Y **"Correo corporativo"** pasó a **"Correo"**: imponía un requisito que la validación no exige, en el campo de mayor abandono y justo al perfil que más escribe desde Gmail.
 
 ### Registro de los CTA, unificado
 
-Conversión y marca en **imperativo de segunda persona**; solo las acciones de sistema y los filtros en infinitivo. Estaban mezclados sin criterio: *"Descargar la app"* convivía con *"Descarga la app"* para la misma acción.
+Conversión y marca en **imperativo de segunda persona**; solo las acciones de sistema y los filtros en infinitivo. Estaban mezclados sin criterio: _"Descargar la app"_ convivía con _"Descarga la app"_ para la misma acción.
 
 ### Tres inconsistencias entre idiomas
 
 - **"Nosotros"** era `Company` en el navbar y `About us` en el footer. Una entrada con dos nombres es dos entradas para quien la lee.
 - El paso 03 de "Cómo cargar" se llamaba **"Sigue" / "Go" / "Ir"**: tres palabras vagas y distintas.
-- El portugués de "Tres pasos y sigues tu día" prometía otra cosa: *"y ya estás cargando"*.
+- El portugués de "Tres pasos y sigues tu día" prometía otra cosa: _"y ya estás cargando"_.
 - Y el portugués de la sección de confianza era **agramatical** (*"O que dizem quem…"`).
 
 ### Medición: cuatro eventos declarados y sin un solo emisor
 
 §31 declaraba eventos que nunca se disparaban.
 
-| Evento | Estado | Ahora |
-|---|---|---|
-| `estacion_vista` | **La única vista del plan sin emisor**, y es el final del embudo B2C | `TrackView` en la ficha, con estación, ciudad, potencia, conectores y estado |
-| `app_store_click` | Conversión primaria B2C, sin medir en **tres** superficies | 4 emisores: dos insignias, flotante escritorio, barra móvil |
-| `cta_encontrar_cargador_click` | El registro afirmaba que se emitía; **cero call sites** | Hero y cierre de la Home, distinguidos por ubicación |
+| Evento                         | Estado                                                               | Ahora                                                                        |
+| ------------------------------ | -------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| `estacion_vista`               | **La única vista del plan sin emisor**, y es el final del embudo B2C | `TrackView` en la ficha, con estación, ciudad, potencia, conectores y estado |
+| `app_store_click`              | Conversión primaria B2C, sin medir en **tres** superficies           | 4 emisores: dos insignias, flotante escritorio, barra móvil                  |
+| `cta_encontrar_cargador_click` | El registro afirmaba que se emitía; **cero call sites**              | Hero y cierre de la Home, distinguidos por ubicación                         |
 
 Para poder medir sin convertir páginas enteras a cliente se creó **`TrackClick`**: una isla que envuelve con `display: contents`, de modo que `Button` sigue siendo Server Component y el envoltorio **no existe para el layout** — meter un `<span>` alrededor de un botón habría roto el `flex` del padre.
 
@@ -1648,10 +1652,10 @@ La tarjeta de escritorio se solapaba con la barra de reproducción de la pelícu
 
 **Causa común de los dos:** la regla 2 vigilaba **una sola sección**. Ahora vigila una lista (`app-title`, `infraestructura`, `vision`) contando zonas visibles en un `Set` — con un booleano único, salir de una zona mientras se entra en otra se pisaba a sí mismo.
 
-| | Antes | Ahora |
-|---|---|---|
-| Solape con el CTA del panel fijado | 11/11 posiciones | **0/11** en 375, 390, 768 y 1023 |
-| Controles del vídeo | tarjeta al 85% y 95% del ancho | **vídeo** en 1024, 1280, 1440 y 1920 |
+|                                    | Antes                          | Ahora                                |
+| ---------------------------------- | ------------------------------ | ------------------------------------ |
+| Solape con el CTA del panel fijado | 11/11 posiciones               | **0/11** en 375, 390, 768 y 1023     |
+| Controles del vídeo                | tarjeta al 85% y 95% del ancho | **vídeo** en 1024, 1280, 1440 y 1920 |
 
 ### ALTA · el pie quedaba tapado para siempre en móvil
 
@@ -1659,13 +1663,13 @@ Al llegar al fondo del documento no queda scroll para apartar la barra, así que
 
 ### MEDIA
 
-| Defecto | Medida | Corrección |
-|---|---|---|
-| Marca duplicada en el `<title>` | "Red de carga · Voltop · Voltop" en 3 páginas × 3 idiomas | El `template` ya añade el sufijo; se quitó del copy |
-| El `<video>` sin anillo de foco | Recibía el azul por defecto de Chrome, invisible sobre el vídeo | `video, audio, iframe, details` añadidos a la lista de `:focus-visible` |
-| Fecha legal sin localizar | "Last updated: 29 de mayo de 2026" en inglés | `formatDate` por idioma. El texto legal sigue en español a propósito; su metadato, no |
-| Enlaces del acordeón a **16.8px** | Por debajo de los 24px de WCAG 2.5.8, y no son enlaces en línea | `min-h-11` |
-| "Cerrar menú" inalcanzable con Tab | 14 pulsaciones daban vueltas por los 7 enlaces del panel | Ver abajo |
+| Defecto                            | Medida                                                          | Corrección                                                                            |
+| ---------------------------------- | --------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| Marca duplicada en el `<title>`    | "Red de carga · Voltop · Voltop" en 3 páginas × 3 idiomas       | El `template` ya añade el sufijo; se quitó del copy                                   |
+| El `<video>` sin anillo de foco    | Recibía el azul por defecto de Chrome, invisible sobre el vídeo | `video, audio, iframe, details` añadidos a la lista de `:focus-visible`               |
+| Fecha legal sin localizar          | "Last updated: 29 de mayo de 2026" en inglés                    | `formatDate` por idioma. El texto legal sigue en español a propósito; su metadato, no |
+| Enlaces del acordeón a **16.8px**  | Por debajo de los 24px de WCAG 2.5.8, y no son enlaces en línea | `min-h-11`                                                                            |
+| "Cerrar menú" inalcanzable con Tab | 14 pulsaciones daban vueltas por los 7 enlaces del panel        | Ver abajo                                                                             |
 
 **El caso del botón de cerrar merece explicación.** Vive en la barra, o sea **antes del panel en el DOM**, y el orden de tabulación sigue el DOM: al llegar al último enlace, Tab saltaba fuera. Añadirlo al final de la lista no bastaba —el trampeo por extremos solo cierra el ciclo del último al primero—. Se pasó a **recorrido por índice**, moviendo el foco explícitamente en cada paso, para que el orden lógico mande sobre el del documento. Verificado: el ciclo pasa por CERRAR y Escape sigue cerrando.
 
@@ -1685,14 +1689,14 @@ Y se retiraron del repositorio nueve scripts de verificación que se habían col
 
 **El sitio estaba afirmando una red mayor y más potente de la que existe.** Camilo entregó el dataset real: tres estaciones, no cuatro.
 
-| | Antes (publicado) | Real |
-|---|---|---|
-| Universidad EAN | 10 puntos · 60 kW · CCS1, CCS2, GB-T | **18 puntos · 22–80 kW** · GB/T, CCS1, CCS2 |
-| Grand Hyatt | 11 puntos · 60 kW | 11 puntos · **30 kW** · GB/T |
-| Wake (Medellín) | — | **6 puntos · 80 kW** · GB/T, CCS2 |
-| San Fernando Plaza | 6 puntos · 120 kW | **NO EXISTE** |
-| Corredor Norte | 8 puntos · 150 kW | **NO EXISTE** |
-| Total de la red | 4 estaciones · 27 puntos · 60–150 kW | **3 estaciones · 35 puntos · 22–80 kW** |
+|                    | Antes (publicado)                    | Real                                        |
+| ------------------ | ------------------------------------ | ------------------------------------------- |
+| Universidad EAN    | 10 puntos · 60 kW · CCS1, CCS2, GB-T | **18 puntos · 22–80 kW** · GB/T, CCS1, CCS2 |
+| Grand Hyatt        | 11 puntos · 60 kW                    | 11 puntos · **30 kW** · GB/T                |
+| Wake (Medellín)    | —                                    | **6 puntos · 80 kW** · GB/T, CCS2           |
+| San Fernando Plaza | 6 puntos · 120 kW                    | **NO EXISTE**                               |
+| Corredor Norte     | 8 puntos · 150 kW                    | **NO EXISTE**                               |
+| Total de la red    | 4 estaciones · 27 puntos · 60–150 kW | **3 estaciones · 35 puntos · 22–80 kW**     |
 
 ### La potencia pasa a ser un rango
 
@@ -1727,11 +1731,11 @@ Las tres estaciones pasan a `dataStatus: "verified"`. La dirección de Wake y la
 
 **"Marope" era Manrope**, y eso cambia todo para bien: está en Google Fonts y es **variable**, así que un solo archivo cubre el rango entero de pesos.
 
-| Rol | Familia | Por qué |
-|---|---|---|
-| Titulares | **Poppins** | Es la familia del logotipo: titulares y marca hablan con la misma voz |
-| Interfaz y texto | **Manrope** | Variable: un archivo, todos los pesos, menos peso que tres estáticos |
-| Ficha técnica | JetBrains Mono | No la define la marca; cubre un tercer registro que las otras dos no dan |
+| Rol              | Familia        | Por qué                                                                  |
+| ---------------- | -------------- | ------------------------------------------------------------------------ |
+| Titulares        | **Poppins**    | Es la familia del logotipo: titulares y marca hablan con la misma voz    |
+| Interfaz y texto | **Manrope**    | Variable: un archivo, todos los pesos, menos peso que tres estáticos     |
+| Ficha técnica    | JetBrains Mono | No la define la marca; cubre un tercer registro que las otras dos no dan |
 
 **Se cargan desde Google Fonts, no desde los `.ttf` del sistema.** `next/font` las sirve desde nuestro propio dominio, ya subconjuntadas a latino y en woff2 —una fracción del peso del TrueType— y sin petición a un tercero. De Poppins se piden **solo los pesos que el código usa** (500 y 600, contados) más el 900 del archivo de marca: sin declararlos, el navegador sintetiza el semibold engordando el trazo, y en un titular de 80px eso se ve sucio.
 
@@ -1776,9 +1780,9 @@ porque no se nota.
 
 **Por qué:** el flotante del QR "había desaparecido" del sitio. No estaba roto —medido página por página, aparecía en la Home, `/red` y `/novedades`, en escritorio y en móvil—: estaba cerrado. La regla que el Bloque 36 celebraba como un arreglo ("se cierra y no vuelve — de verdad", con la decisión en `localStorage`) resultó ser la trampa contraria. Una sola X, a menudo un gesto reflejo para despejar la pantalla, apagaba **para siempre** la conversión primaria del negocio B2C, y sin ninguna forma de recuperarla que no fuera abrir la consola del navegador.
 
-| Cambio | Razón |
-|---|---|
-| El cierre del flotante deja de persistirse | Vuelve en la siguiente carga. Ver el precio abajo |
+| Cambio                                                                       | Razón                                                          |
+| ---------------------------------------------------------------------------- | -------------------------------------------------------------- |
+| El cierre del flotante deja de persistirse                                   | Vuelve en la siguiente carga. Ver el precio abajo              |
 | El aviso de cookies pasa de tarjeta en la esquina a franja de ancho completo | La forma con la que un aviso de cookies se reconoce sin leerlo |
 
 ### El cierre dura la lectura, no la vida del navegador
@@ -1814,13 +1818,13 @@ Lo que sí sobraba estaba en tres sitios: las skills instaladas, cuatro funcione
 
 ### Lo retirado
 
-| Qué | Por qué |
-|---|---|
-| `trackClick`, `getCases`, `getPostTypes`, `isReady` | Cero consumidores, verificado símbolo por símbolo. `getPostTypes` alimentaba el filtro de novedades, descartado a conciencia hasta las ~15 entradas |
-| `--color-brand-press`, `--duration-instant`, `--duration-slow` | Tres tokens declarados que no usa nadie |
-| **Poppins 900** | Se cargaba "por si acaso" y ningún componente la usaba: un archivo de fuente que nadie llegaba a ver. El logotipo no la necesita, es un SVG |
-| 4 reglas de `.gitignore` | Protegían másteres que ya viven fuera del repositorio. Una regla que no protege nada hace creer que protege algo |
-| **30 de 47 skills** | Detalle abajo |
+| Qué                                                            | Por qué                                                                                                                                             |
+| -------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `trackClick`, `getCases`, `getPostTypes`, `isReady`            | Cero consumidores, verificado símbolo por símbolo. `getPostTypes` alimentaba el filtro de novedades, descartado a conciencia hasta las ~15 entradas |
+| `--color-brand-press`, `--duration-instant`, `--duration-slow` | Tres tokens declarados que no usa nadie                                                                                                             |
+| **Poppins 900**                                                | Se cargaba "por si acaso" y ningún componente la usaba: un archivo de fuente que nadie llegaba a ver. El logotipo no la necesita, es un SVG         |
+| 4 reglas de `.gitignore`                                       | Protegían másteres que ya viven fuera del repositorio. Una regla que no protege nada hace creer que protege algo                                    |
+| **30 de 47 skills**                                            | Detalle abajo                                                                                                                                       |
 
 ### El sello de prototipo
 
@@ -1865,12 +1869,12 @@ El estudio de Electra —medido en el navegador, 447 mutaciones de estilo durant
 
 ### Las cuatro primitivas
 
-| | Qué hace | Cuándo NO |
-|---|---|---|
-| **DEPTH** | El contenido llega desde el fondo: escala + opacidad | Nunca sobre cifras ni specs. Lo que prueba algo no se anima |
-| **FLOW** | El material se desplaza dentro de un marco que no se mueve | Jamás sobre texto: un titular con parallax se lee como plantilla |
-| **FRAME** | El encuadre se abre y descubre lo que ya estaba | Dos veces en toda la Home. Repetido deja de ser un descubrimiento |
-| **CONTINUITY** | Algo persiste entre dos estados | Entre vistas sin relación real: fingirla desorienta |
+|                | Qué hace                                                   | Cuándo NO                                                         |
+| -------------- | ---------------------------------------------------------- | ----------------------------------------------------------------- |
+| **DEPTH**      | El contenido llega desde el fondo: escala + opacidad       | Nunca sobre cifras ni specs. Lo que prueba algo no se anima       |
+| **FLOW**       | El material se desplaza dentro de un marco que no se mueve | Jamás sobre texto: un titular con parallax se lee como plantilla  |
+| **FRAME**      | El encuadre se abre y descubre lo que ya estaba            | Dos veces en toda la Home. Repetido deja de ser un descubrimiento |
+| **CONTINUITY** | Algo persiste entre dos estados                            | Entre vistas sin relación real: fingirla desorienta               |
 
 Tres intensidades, no cuatro. Se descartó un nivel `subtle`: las microinteracciones no son una versión pequeña de DEPTH sino **otra familia** —se expresan en color, opacidad y dos o tres píxeles, no en escala—, así que viven en CSS (`.press`) y no en el vocabulario de Motion. Y `signature` no es un valor más alto de nada: es una composición ligada al scroll, y por eso son dos y no ocho.
 
@@ -2002,13 +2006,13 @@ Fondo sólido `canvas`. **Sale la fotografía de suelo y con ella el FLOW** que 
 
 Cinco piezas se alinearon con patrones que el sitio ya tenía, aunque la referencia sugiriera otra cosa:
 
-| Pieza | Se ajustó a |
-|---|---|
-| Antetítulo + titular | `SectionHeading`, la primitiva del sistema, en lugar de un `h2` a mano |
-| Contador de estaciones | `font-mono text-mono`, el registro con el que todo el sitio escribe un recuento — ver las tarjetas de `/red` |
-| Acento de hover | El **nombre** pasa a `brand`, como en `/red`. En la referencia el acento está en el contador; dos acentos por tarjeta se leen como un parpadeo |
-| Rejilla de métricas | `gap-px` sobre `bg-line`, la técnica de hairlines del sitio, en lugar de `divide-x` |
-| Microcopy junto al CTA | Mono en versales, como el pie de foto del beat 2. Esa ranura ya tenía registro decidido |
+| Pieza                  | Se ajustó a                                                                                                                                    |
+| ---------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| Antetítulo + titular   | `SectionHeading`, la primitiva del sistema, en lugar de un `h2` a mano                                                                         |
+| Contador de estaciones | `font-mono text-mono`, el registro con el que todo el sitio escribe un recuento — ver las tarjetas de `/red`                                   |
+| Acento de hover        | El **nombre** pasa a `brand`, como en `/red`. En la referencia el acento está en el contador; dos acentos por tarjeta se leen como un parpadeo |
+| Rejilla de métricas    | `gap-px` sobre `bg-line`, la técnica de hairlines del sitio, en lugar de `divide-x`                                                            |
+| Microcopy junto al CTA | Mono en versales, como el pie de foto del beat 2. Esa ranura ya tenía registro decidido                                                        |
 
 ### Una adición al sistema, dicha
 
@@ -2031,10 +2035,10 @@ Cinco piezas se alinearon con patrones que el sitio ya tenía, aunque la referen
 
 Llegaron las tres piezas que este beat esperaba y entraron **sin mover una línea de layout**, que era exactamente el objetivo de haber declarado los huecos con su forma y su función en lugar de dejar rectángulos grises.
 
-| Asset | Entregado | Encaje |
-|---|---|---|
-| `ciudad-bogota.png` | 1672×941 | **16/9 exacto**, atardecer, franja inferior en sombra |
-| `ciudad-medellin.png` | 1671×941 | 16/9 exacto, mismo registro |
+| Asset                 | Entregado | Encaje                                                                            |
+| --------------------- | --------- | --------------------------------------------------------------------------------- |
+| `ciudad-bogota.png`   | 1672×941  | **16/9 exacto**, atardecer, franja inferior en sombra                             |
+| `ciudad-medellin.png` | 1671×941  | 16/9 exacto, mismo registro                                                       |
 | `render-cargador.png` | 2046×3074 | **2/3 vertical y fondo transparente** (PNG RGBA, alfa 0 comprobado en los bordes) |
 
 Las 9.5 MB de origen llegan al navegador como **70 KB en AVIF** en escritorio y 54 KB en móvil, medido en red. Las dos fotos vienen en PNG, que para una fotografía es un formato caro como origen; solo afecta al peso del repositorio, porque lo que se sirve es AVIF.
@@ -2078,7 +2082,7 @@ La composición no convencía y la revisión encontró tres causas concretas, ni
 
 Estaba en una celda de rejilla dentro del contenedor de 1240, así que la sección se leía como **dos cajas**: el cargador centrado en su mitad con ~85px de aire a un lado y ~110 al otro, y **148px de página vacía a su derecha** a 1440 — justo debajo de un beat que sí va a sangre.
 
-Ahora se posiciona contra la sección y corre hasta el borde de la ventana, con `46vw` en lugar de 526px. Un objeto encuadrado por el riel está *colocado*; uno que se sale está *presente*.
+Ahora se posiciona contra la sección y corre hasta el borde de la ventana, con `46vw` en lugar de 526px. Un objeto encuadrado por el riel está _colocado_; uno que se sale está _presente_.
 
 ### 2. `bg-surface-1` pintaba la caja que la composición evitaba
 
@@ -2166,10 +2170,10 @@ Se creó **`QuoteAttribution`**: retrato cuadrado de 96px con hairline, nombre s
 
 **Escala tipográfica, corregida con números:**
 
-| | Antes | Ahora | Por qué |
-|---|---|---|---|
+|        | Antes                                        | Ahora                                           | Por qué                                                                                                      |
+| ------ | -------------------------------------------- | ----------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
 | Beat 5 | `display-xl` · 72px en 6 líneas, medida 20ch | `display-l` · **52px en 4 líneas**, medida 28ch | 72px para 103 caracteres en un beat cuyo titular va a 24px son 3× de diferencia: desproporción, no jerarquía |
-| Beat 7 | `display-l` · 52px en 10 líneas | `display-m` · **36px en 8 líneas** | El texto largo pide menos cuerpo, no más. A 52px la cita dejaba de leerse y pasaba a mirarse |
+| Beat 7 | `display-l` · 52px en 10 líneas              | `display-m` · **36px en 8 líneas**              | El texto largo pide menos cuerpo, no más. A 52px la cita dejaba de leerse y pasaba a mirarse                 |
 
 La presencia del beat 7 la da su composición —columna estrecha, retrato, la película debajo—, no el tamaño de la letra.
 
@@ -2290,10 +2294,10 @@ Las tres fotos llegaron en PNG: **48 MB Wake, 57 MB la EAN y 30 MB el retrato de
 
 Se convirtieron con `sharp`, que ya está en el proyecto porque Next lo usa para optimizar imágenes: reescaladas a 2400px de ancho —el doble de lo que el optimizador llega a pedir— y a JPEG de calidad 82.
 
-| | Antes | Después |
-|---|---|---|
+|               | Antes   | Después     |
+| ------------- | ------- | ----------- |
 | Estación Wake | 48.0 MB | **0.34 MB** |
-| Estación EAN | 57.4 MB | **0.20 MB** |
+| Estación EAN  | 57.4 MB | **0.20 MB** |
 | Retrato Bruno | 29.6 MB | **0.60 MB** |
 
 **135 MB → 1.14 MB, un 99.2% menos**, sin pérdida visible a los tamaños en que se muestran. Los tres másteres se movieron a `~/Voltop-masters-originales/`, que es donde la convención del proyecto dice que viven.
@@ -2346,7 +2350,7 @@ Es el resultado que más tiempo costó y el único que valía la pena: **un borr
 
 ### Secretos: no había ninguno, y ahora tampoco puede haberlos
 
-Cero credenciales en el árbol, cero ficheros `.env`. Sí había **dos valores de producción escritos a mano**: la URL del sitio y el contenedor de Google Tag Manager. Ninguno es un secreto —los dos viajan en el HTML de cualquier visita— pero sí son *del entorno*:
+Cero credenciales en el árbol, cero ficheros `.env`. Sí había **dos valores de producción escritos a mano**: la URL del sitio y el contenedor de Google Tag Manager. Ninguno es un secreto —los dos viajan en el HTML de cualquier visita— pero sí son _del entorno_:
 
 > Un despliegue de pruebas que dispare `GTM-WJ5S2LBF` ensucia la analítica real con tráfico falso, y eso no se deshace una vez enviado.
 
@@ -2364,12 +2368,12 @@ Una subida de framework en la última fase antes de entregar es exactamente dond
 
 Cuatro imágenes iban en PNG haciendo un trabajo de JPEG, o al doble de la resolución que el navegador llega a pedir.
 
-| | Antes | Después |
-|---|---|---|
-| Bogotá | 2.4 MB | **271 KB** |
-| Medellín | 2.4 MB | **309 KB** |
+|                     | Antes  | Después    |
+| ------------------- | ------ | ---------- |
+| Bogotá              | 2.4 MB | **271 KB** |
+| Medellín            | 2.4 MB | **309 KB** |
 | Render del cargador | 4.5 MB | **1.7 MB** |
-| Logo de la app | 657 KB | **140 KB** |
+| Logo de la app      | 657 KB | **140 KB** |
 
 Los dos con transparencia siguen en PNG y **conservan su canal alfa** —el render se recorta sobre el fondo, convertirlo a JPEG le habría puesto una caja negra detrás—.
 
@@ -2435,3 +2439,63 @@ Añadir `husky`, `lint-staged`, `prettier` y `commitizen` metió **5 vulnerabili
 ### Evidencia
 
 En la rama de integración: `npm install` con **0 vulnerabilidades** · lint 0 · tipos 0 · build de 50 páginas · i18n **453/453** en los tres idiomas · las tres etapas del Dockerfile reproducidas, con las 7 rutas comprobadas en 200 y la optimización de imagen devolviendo AVIF.
+
+---
+
+## Bloque 61 · Ajustes posteriores al traspaso — 2026-09-07 / 2026-09-08
+
+Rama `ajustes/post-handoff`, sacada de `staging` ya reestructurado a `src/`. Es un bloque largo porque recoge una tanda de trabajo continuo: copy, assets, rendimiento y arreglos de comportamiento. Se agrupa por tema, no por orden cronológico.
+
+### Copy
+
+Reescrituras completas, con los tres idiomas: `/red` (hero, disponibilidad, cobertura por ciudad, cómo cargar, preguntas frecuentes, banner de anfitrión), `/empresas` (hero, cómo trabajamos, selector de casos, evidencia y contacto), la Home (CTA del beat 4, blurb del pie), el hero de `/red/bogota` y el aviso de cookies.
+
+**`/nosotros` se rehízo entera** (2026-09-08) para que la página sea **una sola narrativa**: por qué existe Voltop → qué aprendimos → cómo construimos → qué estamos logrando → hacia dónde vamos. Tres consecuencias que no son de copy:
+
+- El hero pasa de un párrafo a **tres bloques**, porque el texto entregado marca `Ahí entra Voltop.` como destacado. Se distingue subiendo de `text-ink-2` a `text-ink` dentro de la misma pila y el mismo tamaño: es énfasis del texto, no un elemento nuevo.
+- La sección **LIDERAZGO pasa a VISIÓN** y deja de presentar a una persona para cerrar mirando adelante. La cita del fundador no cambia ni una palabra. **El ancla `#liderazgo` tampoco**: renombrarla rompe enlaces externos sin arreglar nada visible. Lo que sí cambió es la **etiqueta del pie**, que seguía diciendo "Liderazgo" y apuntaba a una sección ya titulada "Visión".
+- El bloque **"Cifras en validación" deja de renderizarse** (`MOSTRAR_CIFRAS_PENDIENTES = false`). Mostrar indicadores sin valores restaba más de lo que sumaba. **La estructura no se borra**: vuelve entera el día que haya datos verificados, y con `hasValidated` en true ni siquiera entra en juego.
+
+### Assets entregados
+
+| Asset              | Origen                    | Servido como                         |
+| ------------------ | ------------------------- | ------------------------------------ |
+| `espacioComercial` | `Cargadores_empresas.jpg` | `/espacio-comercial.jpg`             |
+| Grand Hyatt        | `Hotel_grand_hyatt.jpg`   | `/estacion-grand-hyatt.jpg`          |
+| Descarga de la app | `Imagen_descarga_app.png` | `/descarga-app.png`                  |
+| `eanOpening`       | `Video_Ean_Final.MOV`     | `/apertura-ean.mp4` + variante móvil |
+
+**El vídeo de la EAN llegó dos veces.** El primer envío duraba 2:21; Camilo lo sustituyó por un corte de **1:11** porque el primero era demasiado largo. Se sirve el corto: H.264 CRF 27 a 1920 (20 MB) más una variante de 960 a CRF 30 (5,3 MB) para móvil. Los dos másteres viven en `~/Voltop-masters-originales/`, fuera del repositorio.
+
+El asset **rellena dos huecos a la vez**, y con comportamientos opuestos: en la entrada de novedades es una pieza que se ve —con controles y con audio— y en el beat 5 de la Home es fondo bajo un velo del 78%, silenciado y en bucle. `VideoMedia` solo lo carga cuando entra en viewport, así que esos 20 MB **no tocan la carga inicial**.
+
+También se retiró de la entrada de la EAN un **segundo `eanOpening` en el cuerpo**, duplicado de la portada. Costó verlo porque el asset aún no se había entregado: no había dos `<video>`, había dos huecos declarados.
+
+### Rendimiento
+
+- **`fetchPriority="high"` en la imagen de hero.** `next/image` con `priority` **no lo emite**; el hero salía a prioridad Low y llegaba a los 3252 ms en vez de a los 181. Este es el cuello de botella real del LCP, no el peso.
+- **Carga diferida de vídeo.** `VideoMedia` no pinta los `<source>` hasta que el elemento está a 200 px del viewport **y** la página ya ha pintado. `autoPlay` anula `preload="none"`, así que sin esto el vídeo se descargaba igual.
+- **Recompresión.** `estacion-medellin-loop.mp4` 2,92 → 1,52 MB; la variante móvil 676 → 503 KB.
+- **`sizes` corregidos.** Las tarjetas de ciudad servían la imagen a **0,57×** en un móvil de 390 px —estirada al 175 %—. Tras el arreglo las nueve imágenes del sitio van a ≥1× con DPR 2.
+
+Queda pendiente de infraestructura: **Brotli** (~44 KB) y una medición real contra staging, que necesita una URL.
+
+### Comportamiento
+
+- **Scroll al principio al navegar.** `scrollToTop()` sobre la instancia de Lenis, disparado por cambio de `pathname` y respetando el hash. Sin esto, entrar a `/es/red` desde el beat 3 abría la página al **73 %**.
+- **El flotante de la app se queda quieto.** Se retiró toda la lógica de zonas mudas: `show = pathAllows && cookiesDecided && !dismissed`. La versión anterior cambiaba de estado **cinco veces por scroll** en vez de una, y el parpadeo lo había metido yo al añadir esas zonas. Vuelve al recargar; el descarte vive en memoria, nunca en `localStorage`.
+- **Aviso de cookies:** analítica apagada por defecto, aceptar y rechazar persisten, no se vuelve a preguntar, el rechazo se respeta, ningún script antes del consentimiento.
+- **Chevron de "Ordenar por"** separado del borde con `pr-[3.75rem]`, conservando el ancho original de 238 px.
+
+### Tipografía
+
+Tracking por tamaño de lectura, creciente conforme baja el cuerpo: `body-l` +0.005em, `body` +0.01em, `body-s` +0.015em, `caption` +0.02em. Y `tracking-tight` fuera de `Button`.
+
+### Dos trampas nuevas
+
+- **El CSS sin capa gana a las utilidades de Tailwind**, que sí están en capa, sin importar la especificidad. Vale para todo lo que se escriba suelto en `globals.css`.
+- **`autoPlay` anula `preload="none"`.** Si se quiere de verdad no descargar, hay que no emitir los `<source>`.
+
+### Evidencia
+
+Lint 0 · tipos 0 · build limpio · i18n **459/459** en los tres idiomas. `/nosotros` verificada en 390, 768, 1024, 1440 y 1920: sin desborde horizontal, sin texto recortado, sin viudas y **sin elementos invisibles** —lo que confirma que los `Reveal` siguen disparando—. Jerarquía comprobada: 1 `h1`, 5 `h2`, 4 `h3`. Vídeo de la EAN comprobado en los dos usos: con controles y sonido en la entrada, silenciado y en bucle en el beat 5.

@@ -34,7 +34,6 @@ export function BusinessFlow({
   proofCase: Case | null
 }) {
   const [activeKey, setActiveKey] = useState(segments[0]?.key ?? '')
-  const active = segments.find((s) => s.key === activeKey) ?? segments[0]
 
   return (
     <>
@@ -101,6 +100,17 @@ export function BusinessFlow({
               </div>
 
               <div className="border-l-0 border-t border-line pt-10 lg:border-l lg:border-t-0 lg:pl-16 lg:pt-0">
+                {/* El tercer rótulo. Ver la nota de `proof.testimonialLabel`:
+                    "El reto" y "La solución" se anuncian y la cita no, así que
+                    era el único bloque que llegaba sin nombre. Mismo `size="s"`
+                    que los otros dos para que los tres pesen igual. */}
+                <SectionHeading
+                  as="h3"
+                  size="s"
+                  className="mb-6"
+                >
+                  {t(empresas.proof.testimonialLabel, locale)}
+                </SectionHeading>
                 <blockquote className="font-display text-display-m font-medium text-balance text-ink">
                   {t(proofCase.quote, locale)}
                 </blockquote>
@@ -173,14 +183,10 @@ export function BusinessFlow({
                   </li>
                 ))}
               </ol>
-              <p className="mt-8 text-caption text-ink-3">
-                {t(empresas.contact.privacyNote, locale)}
-              </p>
             </div>
             <LeadForm
               locale={locale}
               segmentKey={activeKey}
-              segmentLabel={active ? t(active.label, locale) : ''}
             />
           </div>
         </Container>

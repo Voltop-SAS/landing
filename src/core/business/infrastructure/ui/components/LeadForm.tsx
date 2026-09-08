@@ -99,11 +99,9 @@ async function submitLead(payload: LeadPayload): Promise<void> {
 export function LeadForm({
   locale,
   segmentKey,
-  segmentLabel,
 }: {
   locale: Locale
   segmentKey: string
-  segmentLabel: string
 }) {
   const [status, setStatus] = useState<Status>('idle')
   const [started, setStarted] = useState(false)
@@ -213,14 +211,13 @@ export function LeadForm({
       noValidate
       className="border border-line bg-surface-1 p-6 md:p-10"
     >
-      <div className="flex flex-wrap items-baseline justify-between gap-3">
-        <h3 className="font-display text-display-m font-semibold text-ink">
-          {t(leadForm.title, locale)}
-        </h3>
-        <p className="font-mono text-mono text-ink-3">
-          {t(leadForm.caseLabel, locale)}: <span className="text-ink-2">{segmentLabel}</span>
-        </p>
-      </div>
+      {/* El rótulo "Tu caso: <segmento>" se retiró el 2026-09-08. Repetía en
+          12px mono la pestaña que el usuario acaba de pulsar y que sigue
+          marcada arriba, y el `segmentKey` viaja igual en el envío: la
+          información no se pierde, solo deja de decirse dos veces. */}
+      <h3 className="font-display text-display-m font-semibold text-ink">
+        {t(leadForm.title, locale)}
+      </h3>
       <p className="mt-3 measure text-body-s text-ink-2">{t(leadForm.intro, locale)}</p>
 
       {/* Demo notice BEFORE asking for the data. It used to sit in 12px mono
@@ -318,13 +315,31 @@ export function LeadForm({
               htmlFor={fieldId('consent')}
               className="py-3 text-body-s text-ink-2"
             >
-              {t(leadForm.fields.consent.label, locale)}{' '}
-              <Link
-                href={href(locale, routes.privacy)}
-                className="text-ink underline underline-offset-4 transition-colors hover:text-brand"
-              >
-                {t(leadForm.fields.consent.policyLink, locale)}
-              </Link>
+              {/* El enlace va DENTRO de la autorización. Ver la nota de
+                  `consent.label`: se parte por `{policy}` y en su hueco entra
+                  el nombre completo del documento. Si un idioma perdiera el
+                  token, la frase se renderiza entera sin enlace en lugar de
+                  romperse — una autorización ilegible es lo único que aquí no
+                  puede pasar. */}
+              {(() => {
+                const [before, after] = t(leadForm.fields.consent.label, locale).split('{policy}')
+                return (
+                  <>
+                    {before}
+                    {after !== undefined && (
+                      <>
+                        <Link
+                          href={href(locale, routes.privacy)}
+                          className="text-ink underline decoration-line-strong decoration-1 underline-offset-4 transition-colors hover:text-brand hover:decoration-brand"
+                        >
+                          {t(leadForm.fields.consent.policyLink, locale)}
+                        </Link>
+                        {after}
+                      </>
+                    )}
+                  </>
+                )
+              })()}
             </label>
           </div>
           {errors.consent && (

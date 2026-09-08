@@ -1,10 +1,10 @@
 # Punto de retomada
 
-> Actualizado: 2026-09-04 · Rama `auditoria/fases-0-3`
-> Estado: **build, lint y tipos limpios · 42 páginas indexables · ES 453 · EN 453 · PT 453 · 0 vulnerabilidades**
+> Actualizado: 2026-09-08 · Rama `ajustes/post-handoff`
+> Estado: **build, lint y tipos limpios · 42 páginas indexables · ES 459 · EN 459 · PT 459 · 0 vulnerabilidades**
 
 Este documento existe para poder cerrar la sesión y volver sin releer nada. El
-*porqué* de cada decisión está en `00-registro-de-cambios.md`, bloques 1 a 59.
+_porqué_ de cada decisión está en `00-registro-de-cambios.md`, bloques 1 a 59.
 La norma sigue siendo `MASTER-PROJECT-DEFINITION.md`, ahora en **v1.2**.
 
 **Si vienes de fuera del proyecto, no empieces por aquí:** empieza por
@@ -45,10 +45,11 @@ y a levantar de nuevo.
 Al entrar sale el **aviso de cookies**, una franja abajo: es correcto, la
 analítica no carga hasta que se responde.
 
-El **flotante del QR** aparece pasado el Hero y vuelve en cada recarga. Si no
+El **flotante de la app** está visible desde el principio y **no se esconde
+solo**: se queda hasta que lo cierres, y vuelve en cada recarga (Bloque 61 — las
+zonas mudas por sección se retiraron, hacían parpadear el componente). Si no
 aparece: o el aviso de cookies sigue sin responder —el flotante espera a que se
-decida—, o estás sobre una de sus zonas mudas (`#infraestructura`, `#vision`,
-la sección de descarga) o en `/empresas` o un legal, donde se calla a propósito.
+decida—, o estás en `/empresas` o un legal, donde se calla a propósito.
 
 Recargar con **Cmd+Shift+R** (el caché del navegador engaña más que el build).
 
@@ -62,16 +63,16 @@ externas**, listadas abajo.
 
 Cerrado en esta sesión, de un vistazo:
 
-| | |
-|---|---|
-| Marca | Paleta oficial completa · Poppins (titulares) + Manrope (interfaz). **Cero marcadores de posición** |
-| Datos de la red | 3 estaciones reales · 35 puntos · 22–80 kW · coordenadas y direcciones |
-| App | Insignias a su tienda · QR verificado · flotante en escritorio y móvil |
-| Legal | Términos y política publicados e indexables · aviso de cookies que **bloquea** la analítica hasta el consentimiento |
-| Medición | Google Tag Manager `GTM-WJ5S2LBF` (configurable, ver `.env.example`) · los 17 eventos del plan con emisor |
-| Formulario B2B | Conectado por correo a los tres destinatarios |
-| Novedades | 3 entradas · la de Wake con vídeo, cuerpo y CTA |
-| Accesibilidad | 110 combinaciones sin desbordes · contraste peor 7.52:1 sobre píxel compuesto · reduced-motion sin elementos invisibles |
+|                 |                                                                                                                         |
+| --------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| Marca           | Paleta oficial completa · Poppins (titulares) + Manrope (interfaz). **Cero marcadores de posición**                     |
+| Datos de la red | 3 estaciones reales · 35 puntos · 22–80 kW · coordenadas y direcciones                                                  |
+| App             | Insignias a su tienda · QR verificado · flotante en escritorio y móvil                                                  |
+| Legal           | Términos y política publicados e indexables · aviso de cookies que **bloquea** la analítica hasta el consentimiento     |
+| Medición        | Google Tag Manager `GTM-WJ5S2LBF` (configurable, ver `.env.example`) · los 17 eventos del plan con emisor               |
+| Formulario B2B  | Conectado por correo a los tres destinatarios                                                                           |
+| Novedades       | 3 entradas · la de Wake con vídeo, cuerpo y CTA                                                                         |
+| Accesibilidad   | 110 combinaciones sin desbordes · contraste peor 7.52:1 sobre píxel compuesto · reduced-motion sin elementos invisibles |
 
 ---
 
@@ -79,36 +80,36 @@ Cerrado en esta sesión, de un vistazo:
 
 ### Bloquea la publicación
 
-| # | Qué | Nota |
-|---|---|---|
-| ~~1~~ | ~~`app.voltop.co` devuelve 503~~ **RESUELTO 2026-09-03** | Comprobado: responde 307 → `/download` y sirve una página real de descarga. El CTA del header siempre apuntó bien; ya no hay nada que decidir |
-| 2 | **Cinco assets** (`aperturaEan`, `visionCeo`, `infraestructuraAmplia`, `espacioComercial`, `detalleCarga`) | `/empresas` y `/nosotros` **abren con un hueco declarado**. Aplazado a propósito |
-| 3 | **Máster de la película sin subtítulos quemados + 3 `.vtt`** | Único incumplimiento WCAG AA vivo. Aplazado a propósito |
-| 4 | **Consulta legal sobre el aviso de cookies** | El aviso está montado y funciona. Falta que un abogado confirme que la redacción y el mecanismo bastan |
+| #     | Qué                                                                                                                                 | Nota                                                                                                                                                                                                                                   |
+| ----- | ----------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| ~~1~~ | ~~`app.voltop.co` devuelve 503~~ **RESUELTO 2026-09-03**                                                                            | Comprobado: responde 307 → `/download` y sirve una página real de descarga. El CTA del header siempre apuntó bien; ya no hay nada que decidir                                                                                          |
+| 2     | **Tres assets** (`ceoVision`, `wideInfrastructure`, `chargingDetail`) — `espacioComercial` y `eanOpening` **ENTREGADOS 2026-09-08** | Los dos huecos de `eanOpening` (portada de la entrada EAN y fondo del beat 5) están llenos. Quedan los dos de `/nosotros`, que es la única página que sigue abriendo con hueco declarado, y `chargingDetail` en las fichas de estación |
+| 3     | **Máster de la película sin subtítulos quemados + 3 `.vtt`**                                                                        | Único incumplimiento WCAG AA vivo. Aplazado a propósito                                                                                                                                                                                |
+| 4     | **Consulta legal sobre el aviso de cookies**                                                                                        | El aviso está montado y funciona. Falta que un abogado confirme que la redacción y el mecanismo bastan                                                                                                                                 |
 
 ### Falta información
 
-| # | Qué | Desbloquea |
-|---|---|---|
-| 5 | Fechas reales de las entradas **EAN** y **Grand Hyatt** | Retira la etiqueta naranja "FECHAS PROVISIONALES" del registro |
-| 6 | Archivos y nombres de los **logos de aliados** (el permiso ya existe) | `partners: []` está vacío y la franja se omite sola |
-| 7 | ¿La **tarifa** se publica algún día? | Hoy el copy describe el mecanismo, no la cifra. Correcto y publicable |
+| #     | Qué                                                                                 | Desbloquea                                                                                |
+| ----- | ----------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| ~~5~~ | ~~Fechas reales de las entradas **EAN** y **Grand Hyatt**~~ **RESUELTO 2026-09-08** | EAN 01/02/2025, Grand Hyatt 01/10/2025. Las dos entradas pasan a `dataStatus: 'verified'` |
+| 6     | Archivos y nombres de los **logos de aliados** (el permiso ya existe)               | `partners: []` está vacío y la franja se omite sola                                       |
+| 7     | ¿La **tarifa** se publica algún día?                                                | Hoy el copy describe el mecanismo, no la cifra. Correcto y publicable                     |
 
 ### Requiere decisión
 
-| # | Qué | Contexto |
-|---|---|---|
-| 8 | **El vídeo de Wake es el mismo archivo que la película de la Home** | Se ve en dos sitios: bajo "Visión" con la cita de Bruno, y en la noticia. ¿Se acepta la repetición o se separan las piezas? |
-| 9 | **`voltop-film.mp4` (28 MB) versionado en git** | Funciona. Solo compensa moverlo cuando crezca el catálogo de vídeo |
-| ~~10~~ | ~~Poppins Black (900) cargada y sin usar~~ **CERRADO 2026-09-03** | Se retiró en la limpieza: se cargaba sin que ningún componente la usara. Si algún día se quieren titulares más rotundos, se vuelve a añadir en `src/app/layout.tsx` |
-| 11 | **Formulario por `mailto:`** | Funciona sin servidor, pero pierde a quien no tenga cliente de correo y expone las tres direcciones. Un servicio de formularios lo resuelve y solo cambia una función |
+| #      | Qué                                                                 | Contexto                                                                                                                                                                                                                                                                                                                              |
+| ------ | ------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 8      | **El vídeo de Wake es el mismo archivo que la película de la Home** | Se ve en dos sitios: bajo "Visión" con la cita de Bruno, y en la noticia. ¿Se acepta la repetición o se separan las piezas? **La previsualización de la lista se queda muda a propósito** (2026-09-08): el autoplay con sonido lo bloquea el navegador y sin controles incumpliría WCAG 1.4.2; el audio está a un clic, en la entrada |
+| 9      | **`voltop-film.mp4` (28 MB) versionado en git**                     | Funciona. Solo compensa moverlo cuando crezca el catálogo de vídeo                                                                                                                                                                                                                                                                    |
+| ~~10~~ | ~~Poppins Black (900) cargada y sin usar~~ **CERRADO 2026-09-03**   | Se retiró en la limpieza: se cargaba sin que ningún componente la usara. Si algún día se quieren titulares más rotundos, se vuelve a añadir en `src/app/layout.tsx`                                                                                                                                                                   |
+| 11     | **Formulario por `mailto:`**                                        | Funciona sin servidor, pero pierde a quien no tenga cliente de correo y expone las tres direcciones. Un servicio de formularios lo resuelve y solo cambia una función                                                                                                                                                                 |
 
 ### Descartado conscientemente
 
 - **View Transitions / React experimental** — verificado: el flag se acepta pero dispara **0 transiciones**; el componente no existe en React estable. No se cambia el canal por una animación.
 - **Filtro de novedades** — con 3 entradas filtraría a una. Umbral: ~15.
 - **Wordmark gigante en el footer** — decoración sin función.
-- **Carga en horario valle** — producto confirmó que no existen tarifas por franja. Se sustituyó por *reserva*, que sí existe.
+- **Carga en horario valle** — producto confirmó que no existen tarifas por franja. Se sustituyó por _reserva_, que sí existe.
 - **"Sin sorpresas de disponibilidad"** — está sujeta a ocupación; no se puede garantizar.
 
 ---
@@ -159,7 +160,7 @@ saber al volver:
 
 ## Lo siguiente, si hubiera que elegir
 
-1. **Conseguir los cinco assets.** Es lo único que deja dos páginas abriendo
+1. **Conseguir los cuatro assets que quedan.** Es lo único que deja una página abriendo
    con un hueco gris, y es la primera pantalla que ve quien entra.
 2. **Arreglar `app.voltop.co`** o aceptar que el CTA del header apunte a la
    sección de descarga de la Home, donde las insignias sí funcionan.

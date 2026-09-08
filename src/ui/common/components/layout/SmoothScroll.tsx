@@ -1,14 +1,30 @@
 'use client'
 
 import { useEffect } from 'react'
+import { usePathname } from 'next/navigation'
 import Lenis from 'lenis'
-import { registerScrollEngine } from '@ui/common/lib/scroll'
+import { registerScrollEngine, scrollToTop } from '@ui/common/lib/scroll'
 
 /**
  * Smoothed scrolling. Fully disabled under `prefers-reduced-motion`, and it
  * does not compete with `scroll-behavior: smooth` (removed from the base CSS).
  */
 export function SmoothScroll() {
+  const pathname = usePathname()
+
+  /**
+   * Cada página nueva empieza arriba. La razón entera está en `scrollToTop`.
+   *
+   * Depende de `pathname` y no de la URL completa a propósito: un enlace a
+   * `#ciudades` cambia el hash pero no la ruta, así que este efecto no se
+   * dispara y el salto al ancla sigue funcionando. Y la primera carga ya está
+   * arriba, de modo que llamarlo entonces no hace nada visible.
+   */
+  useEffect(() => {
+    if (window.location.hash) return
+    scrollToTop()
+  }, [pathname])
+
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
 

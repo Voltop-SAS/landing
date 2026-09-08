@@ -27,7 +27,7 @@ import {
   Eyebrow,
   SectionHeading,
 } from '@ui/common/components/ui/LayoutPrimitives'
-import { StatusBadge, SpecList, PendingTag } from '@ui/common/components/ui/DataPrimitives'
+import { StatusBadge, SpecList } from '@ui/common/components/ui/DataPrimitives'
 import { Media } from '@ui/common/components/ui/Media'
 import { Button } from '@ui/common/components/ui/Button'
 import { DirectionsButton } from '~/core/network/infrastructure/ui/components/DirectionsButton'
@@ -322,19 +322,32 @@ export default async function StationPage({ params }: Props) {
                   <p className="font-mono text-mono uppercase tracking-wider text-ink-3">
                     {t(stationCopy.specs.pricing, locale)}
                   </p>
-                  {s.pricing ? (
-                    <p className="font-display text-display-s text-ink">
-                      {s.pricing.perKwh} {s.pricing.currency}/kWh
-                    </p>
-                  ) : (
-                    <PendingTag>{t(stationCopy.pendingPricingTag, locale)}</PendingTag>
-                  )}
-                </div>
-                {!s.pricing && (
-                  <p className="mt-2 text-caption text-ink-3">
-                    {t(stationCopy.pendingPricing, locale)}
+                  {/* La cifra y, al lado, la cualificación. «IVA incluido» no
+                      va suelto: califica un precio, así que vive pegado a él y
+                      en un peso menor — el número es el dato, el impuesto es la
+                      letra pequeña.
+
+                      El separador de miles es el punto, que es el de Colombia:
+                      `1.780`, no `1,780`. Se formatea con `es-CO` en vez de
+                      escribirlo a mano para que no dependa de dónde se
+                      construya el sitio. */}
+                  <p className="font-display text-display-s text-ink">
+                    {s.pricing ? (
+                      <>
+                        ${new Intl.NumberFormat('es-CO').format(s.pricing.perKwh)}{' '}
+                        {s.pricing.currency}/kWh{' '}
+                        <span className="text-body-s text-ink-3">
+                          {t(stationCopy.pricingTaxNote, locale)}
+                        </span>
+                      </>
+                    ) : (
+                      t(stationCopy.pricingTaxNote, locale)
+                    )}
                   </p>
-                )}
+                </div>
+                <p className="mt-2 text-caption text-ink-3">
+                  {t(stationCopy.pricingVaries, locale)}
+                </p>
               </div>
 
               {s.services.length > 0 && (

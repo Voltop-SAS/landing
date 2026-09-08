@@ -174,6 +174,19 @@ export function Hero({ locale }: { locale: Locale }) {
         className="absolute inset-x-0 bottom-0 h-px brand-gradient opacity-70"
       />
 
+      {/* ── AQUÍ NO SE RESERVA SITIO PARA LA BARRA MÓVIL, Y SE INTENTÓ ─────
+          El beat 2 sí lo hace con `pb-28`, y el 2026-09-08 se probó lo mismo
+          aquí: no sirve. El contenido de este beat FLUYE DESDE ARRIBA —`pt-32`
+          y luego el bloque—, así que un `padding-bottom` alarga la sección sin
+          mover el contenido ni un píxel. Medido: el CTA seguía exactamente en
+          y=483 con y sin los 128px añadidos. En el beat 2 funciona porque allí
+          el contenido está anclado abajo.
+
+          Lo que queda, dicho en vez de escondido: con la barra visible siempre,
+          en pantallas cortas —390×600, 320×568— se posa sobre el CTA del Hero.
+          A 390×844, que es el móvil corriente, solo alcanza los enlaces de
+          ciudad. Es inherente a que la barra no se esconda nunca, y lo que lo
+          compensa es que se puede cerrar. */}
       <Container className="relative z-(--z-raised) pb-(--spacing-section-tight) pt-32">
         <Eyebrow tone="brand">{t(home.hero.eyebrow, locale)}</Eyebrow>
 
@@ -247,7 +260,13 @@ export function Hero({ locale }: { locale: Locale }) {
                 <li key={city.slug}>
                   <Link
                     href={href(locale, routes.city(city.slug))}
-                    className="inline-flex min-h-11 items-center font-display text-display-s text-ink-2 transition-colors hover:text-brand"
+                    /* `press`: these two were the ONLY interactive elements on the Home
+                       without a press acknowledgement — 16 of the other 18 have it,
+                       either through `.press` or through the `active:scale-[0.98]`
+                       that `Button` carries. They are text links, not buttons, but
+                       `Button variant="link"` presses too, so the exception had no
+                       rule behind it. */
+                    className="press inline-flex min-h-11 items-center font-display text-display-s text-ink-2 transition-colors hover:text-brand"
                   >
                     {city.name}
                   </Link>

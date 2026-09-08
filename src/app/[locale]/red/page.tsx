@@ -110,7 +110,7 @@ export default async function RedPage({ params }: Props) {
             stations={stations}
             cities={cities}
           />
-          <p className="mt-6 font-mono text-mono text-ink-3">{t(states.pendingRealtime, locale)}</p>
+          <p className="mt-6 font-mono text-mono text-ink-3">{t(states.realtimeInApp, locale)}</p>
         </Container>
       </Section>
 
@@ -128,7 +128,7 @@ export default async function RedPage({ params }: Props) {
           </div>
 
           <ul className="mt-10 grid gap-px border border-line bg-line sm:grid-cols-2">
-            {coverage.map(({ city, count, operational }, i) => (
+            {coverage.map(({ city, count, operational, points, maxKw }, i) => (
               <Reveal
                 as="li"
                 key={city.slug}
@@ -145,9 +145,23 @@ export default async function RedPage({ params }: Props) {
                     </h3>
                     <span className="font-mono text-mono text-ink-3">{city.region}</span>
                   </div>
-                  <p className="mt-3 measure text-body-s text-ink-2">{t(city.intro, locale)}</p>
+                  {/* La frase se compone con las cifras del dataset. Ver el
+                      comentario de `red.cities.blurb`: antes era `city.intro`,
+                      escrita a mano por ciudad, y una de las dos ya llevaba
+                      tres números metidos en la prosa. */}
+                  <p className="mt-3 measure text-body-s text-ink-2">
+                    {t(count === 1 ? red.cities.blurb.one : red.cities.blurb.many, locale)
+                      .replace('{stations}', String(count))
+                      .replace('{points}', String(points))
+                      .replace('{kw}', String(maxKw))}
+                  </p>
+                  {/* `2/2 estaciones` sobraba: la fracción solo informa cuando
+                      los dos números difieren. Se conserva para ese caso —una
+                      estación anunciada y todavía no operativa es justo lo que
+                      no se puede esconder— y se calla cuando todas operan. */}
                   <p className="mt-6 font-mono text-mono text-ink-3">
-                    {operational}/{count} {t(units.stations, locale)}
+                    {operational === count ? count : `${operational}/${count}`}{' '}
+                    {t(count === 1 ? units.station : units.stations, locale)}
                   </p>
                 </Link>
               </Reveal>

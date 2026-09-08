@@ -26,11 +26,19 @@ import { media } from '~/core/common/infrastructure/content/media'
  * into a page of their own, indexable and shareable. The page is generated if
  * there is material, not because the log entry exists.
  *
- * ⚠️ LAUNCH CONTENT. The entries describe real, verifiable facts from the
- * dataset and the media registry, but **the dates are not confirmed** and are
- * marked `dataStatus: "placeholder"`. Project rule (§33): data is never made
- * up, and whatever is not verified is declared as such. The UI labels every
- * provisional entry. See `docs/05-assets-todo`.
+ * ── LAS TRES FECHAS ESTÁN CONFIRMADAS (2026-09-08) ───────────────────────
+ * Hasta esa fecha, dos de las tres entradas llevaban `dataStatus:
+ * "placeholder"` porque su fecha era una estimación, y la interfaz mostraba el
+ * aviso «Fechas provisionales». Camilo confirmó las dos que faltaban, así que
+ * las tres son ahora `verified` y **ese aviso desaparece solo** — no hay que
+ * retirarlo a mano: la interfaz lo pinta a partir del `dataStatus`.
+ *
+ * ⚠️ Y OJO CON LA CADENCIA, que es lo que este registro mide. Las fechas
+ * confirmadas son de FEBRERO y OCTUBRE de 2025, más una de abril de 2026: la
+ * entrada más reciente tiene ya meses. La nota de arriba lo dice con todas las
+ * letras — «tres artículos con fecha vieja dicen que la empresa se ha
+ * parado»—. Los hechos son ciertos y publicarlos es correcto; lo que hace
+ * falta es la SIGUIENTE entrada, no cambiar estas.
  */
 
 import type { Post } from '~/core/news/domain/entities/Post'
@@ -39,7 +47,9 @@ export const posts: Post[] = [
   {
     slug: 'apertura-universidad-ean',
     type: 'apertura',
-    date: '2026-06-18',
+    /* Confirmada por Camilo el 2026-09-08. Deja de ser provisional: ver
+       `dataStatus` abajo. */
+    date: '2025-02-01',
     title: {
       es: 'Nueva estación en la Universidad EAN',
       en: 'New station at Universidad EAN',
@@ -79,10 +89,19 @@ export const posts: Post[] = [
           pt: 'Um campus concentra permanência: quem chega fica por várias horas. É onde carregar deixa de ser uma parada e passa a acontecer enquanto você faz outra coisa — o critério que a Voltop usa para decidir onde construir.',
         },
       },
-      { kind: 'media', asset: media.eanOpening },
+      /* AQUÍ IBA `eanOpening` OTRA VEZ, y era el mismo material que la portada:
+         la entrada lo mostraba dos veces seguidas. Se quitó el 2026-09-08, el
+         mismo arreglo que ya llevaba la entrada de Wake y por la misma razón —
+         se retira el bloque del cuerpo, NO la portada, porque la portada es
+         además la imagen de metadatos que viaja al compartir el enlace.
+
+         Costó verlo porque `eanOpening` todavía no se ha entregado: sin
+         material no se pintaban dos vídeos sino dos HUECOS declarados, y una
+         búsqueda de `<video>` no encontraba nada. Cuando llegue la fotografía
+         se habría visto duplicada. */
     ],
     status: 'publicado',
-    dataStatus: 'placeholder',
+    dataStatus: 'verified',
   },
   {
     slug: 'apertura-wake-medellin',
@@ -177,7 +196,8 @@ export const posts: Post[] = [
   {
     slug: 'grand-hyatt-bogota',
     type: 'alianza',
-    date: '2026-03-11',
+    /* Confirmada por Camilo el 2026-09-08. Deja de ser provisional. */
+    date: '2025-10-01',
     title: {
       es: 'Voltop llega al Grand Hyatt Bogotá',
       en: 'Voltop arrives at Grand Hyatt Bogotá',
@@ -192,6 +212,6 @@ export const posts: Post[] = [
     citySlug: 'bogota',
     body: [],
     status: 'publicado',
-    dataStatus: 'placeholder',
+    dataStatus: 'verified',
   },
 ]

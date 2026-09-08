@@ -31,7 +31,23 @@ export function getNetworkSummary(list: Station[] = stations) {
 }
 
 /** Cities that actually have stations, with their counts. */
-export function getCitiesWithStations(): { city: City; count: number; operational: number }[] {
+/**
+ * `points` and `maxKw` are computed, NOT written by hand, and that is the whole
+ * reason they are here: the blurb on each city card names those figures, and the
+ * copy of this very page already went stale once — it said "from 60 to 150 kW"
+ * when the real network goes from 22 to 80. A figure typed into a sentence has
+ * no way of noticing that a station came in.
+ *
+ * `maxKw` is the maximum of the maximums: what the fastest point in that city
+ * delivers, which is what "up to N kW" promises.
+ */
+export function getCitiesWithStations(): {
+  city: City
+  count: number
+  operational: number
+  points: number
+  maxKw: number
+}[] {
   return cities
     .map((city) => {
       const list = getStationsByCity(city.slug)
@@ -39,6 +55,8 @@ export function getCitiesWithStations(): { city: City; count: number; operationa
         city,
         count: list.length,
         operational: list.filter((s) => s.status === 'operativa').length,
+        points: list.reduce((total, s) => total + s.points, 0),
+        maxKw: list.reduce((top, s) => Math.max(top, s.powerKw.max), 0),
       }
     })
     .filter((c) => c.count > 0)

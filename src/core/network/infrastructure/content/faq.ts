@@ -9,25 +9,28 @@ import { externalLinks } from '~/core/common/domain/consts/links'
  * and Portuguese are translations of that original, not new versions: if the
  * Spanish changes, the other two change with it.
  *
- * ── AVAILABILITY IS LEFT AS IT IS ────────────────────────────────────────
+ * ── AVAILABILITY: THE CONTRADICTION IS CLOSED ────────────────────────────
  * Answer 2 offers "availability" and answer 1 talks about the session "in real
- * time", while `states.pendingRealtime` warns two sections further up that
- * real-time availability is not integrated yet.
- * CAMILO'S DECISION (2026-09-02): nothing gets wired up in this scope; the
- * text stays in the front end and is edited here when availability changes.
- * Recorded so that whoever reads it tomorrow knows it is deliberate.
+ * time". Until 2026-09-08 that clashed with `states.pendingRealtime`, which
+ * warned two sections up that live status was not integrated: the same page
+ * promised and denied the same thing.
+ * Camilo confirmed the app does show live status, so that warning became
+ * `states.realtimeInApp` and now says the same as these two answers. The three
+ * strings make ONE promise, and if it stops being true all three change.
+ * Nothing is wired to the operation: the text lives in the front end and is
+ * edited here.
  *
  * ── TWO LINKS THAT NOW DO EXIST ──────────────────────────────────────────
  * Support: WhatsApp +57 315 986 4931, operated through Freshchat. It is
  * published as `wa.me`, NOT as `tel:`. A `tel:` starts a phone CALL; the
  * support channel is the WhatsApp conversation, and `wa.me` is what opens it.
  *
- * App download: https://app.voltop.co/ — while implementing this it returned
- * 503 on three consecutive attempts, with a browser user-agent and over both
- * HTTP and HTTPS (`voltop.co` did answer 200, so it was the subdomain). It is
- * published anyway because it is the official domain and the site is not in
- * production, but it REMAINS TO BE VERIFIED BEFORE LAUNCH: §15 does not allow
- * a link that leads nowhere.
+ * App download: https://app.voltop.co/ — RESOLVED. While first implementing
+ * this it returned 503 on three consecutive attempts, and the comment left it
+ * as pending verification before launch. Checked on 2026-09-03 and again on
+ * 2026-09-08: it answers 307 to `/download` and serves a real download page.
+ * Kept written down because the note said the opposite for days, and a stale
+ * warning sends whoever reads it chasing a problem that no longer exists.
  */
 
 import type { FaqItem } from '~/core/network/domain/entities/FaqItem'
@@ -36,14 +39,18 @@ export const faq: FaqItem[] = [
   {
     id: 'como-cargar',
     question: {
-      es: '¿Cómo cargo mi vehículo con Voltop?',
-      en: 'How do I charge my vehicle with Voltop?',
-      pt: 'Como carrego meu veículo com a Voltop?',
+      /* "carro eléctrico" and not "vehículo": the second is fleet vocabulary,
+         and this page answers someone who drives one car. */
+      es: '¿Cómo cargo mi carro eléctrico con Voltop?',
+      en: 'How do I charge my electric car with Voltop?',
+      pt: 'Como carrego meu carro elétrico com a Voltop?',
     },
     answer: {
-      es: 'Descarga la app de Voltop, encuentra una estación cercana, conecta tu vehículo y sigue los pasos para iniciar la carga. Desde la app puedes gestionar y consultar tu sesión en tiempo real.',
-      en: 'Download the Voltop app, find a station nearby, plug in your vehicle and follow the steps to start charging. From the app you can manage and check your session in real time.',
-      pt: 'Baixe o aplicativo da Voltop, encontre uma estação por perto, conecte seu veículo e siga os passos para iniciar o carregamento. Pelo aplicativo você acompanha e gerencia sua sessão em tempo real.',
+      /* Names the QR, which is the actual gesture at the station and what
+         step 02 of "cómo cargar" says two sections up. Same act, same words. */
+      es: 'Encuentra una estación, conecta tu carro y escanea el código QR del cargador desde la app Voltop. Desde ahí puedes iniciar y seguir tu sesión de carga.',
+      en: "Find a station, plug in your car and scan the charger's QR code from the Voltop app. From there you can start and track your charging session.",
+      pt: 'Encontre uma estação, conecte seu carro e escaneie o código QR do carregador pelo aplicativo Voltop. De lá você inicia e acompanha sua sessão de carga.',
     },
     links: [
       {
@@ -60,14 +67,18 @@ export const faq: FaqItem[] = [
   {
     id: 'donde',
     question: {
-      es: '¿Dónde puedo encontrar estaciones Voltop?',
-      en: 'Where can I find Voltop stations?',
-      pt: 'Onde posso encontrar estações Voltop?',
+      es: '¿Dónde encuentro las estaciones de carga Voltop?',
+      en: 'Where can I find Voltop charging stations?',
+      pt: 'Onde encontro as estações de carregamento Voltop?',
     },
     answer: {
-      es: 'Puedes consultar todas nuestras estaciones disponibles directamente en la app de Voltop, junto con su ubicación, conectores y disponibilidad para que sepas dónde cargar antes de llegar.',
-      en: 'You can see all our available stations right in the Voltop app, along with their location, connectors and availability, so you know where to charge before you arrive.',
-      pt: 'Você pode consultar todas as nossas estações disponíveis diretamente no aplicativo da Voltop, junto com a localização, os conectores e a disponibilidade, para saber onde carregar antes de chegar.',
+      /* ⚠️ THIRD PLACE where the cities are hand-written, with `hero.lead` and
+         `cities.lead`. The day a third one opens, the three say there are two.
+         `getCitiesWithStations()` has the real list. Editorial decision of
+         2026-09-08; whoever opens that city comes back to the three strings. */
+      es: 'Puedes consultar nuestra red de estaciones en Bogotá y Medellín desde la sección Red. En la app Voltop también puedes consultar la disponibilidad antes de dirigirte a una estación.',
+      en: 'You can browse our network of stations in Bogotá and Medellín in the Network section. In the Voltop app you can also check availability before heading to a station.',
+      pt: 'Você pode consultar nossa rede de estações em Bogotá e Medellín na seção Rede. No aplicativo Voltop também pode consultar a disponibilidade antes de ir a uma estação.',
     },
     /* The answer points to the app, but whoever reads this is standing on
        the web finder. The link keeps the only way out from being an app
@@ -91,22 +102,30 @@ export const faq: FaqItem[] = [
       pt: 'Quanto custa carregar na Voltop?',
     },
     answer: {
-      es: 'El precio puede variar según la estación. Antes de iniciar tu carga podrás consultar la tarifa aplicable para saber cuánto cuesta cargar.',
-      en: "The price can vary by station. Before you start charging you'll be able to check the applicable rate, so you know what it costs.",
-      pt: 'O preço pode variar conforme a estação. Antes de iniciar o carregamento você poderá consultar a tarifa aplicável para saber quanto vai custar.',
+      /* NO FIGURE, and that is not a gap: the tariff is not published (see the
+         pending list in the punto de retomada). It describes where to look it
+         up, which is the only thing that is true today. */
+      es: 'El costo de la carga puede variar según la estación. Puedes consultar la información correspondiente desde la app Voltop.',
+      en: 'The cost of a charge can vary by station. You can check the details in the Voltop app.',
+      pt: 'O custo da carga pode variar conforme a estação. Você pode consultar a informação no aplicativo Voltop.',
     },
   },
   {
     id: 'pago',
     question: {
-      es: '¿Cómo puedo pagar una carga?',
+      es: '¿Cómo pago una carga?',
       en: 'How do I pay for a charge?',
-      pt: 'Como faço para pagar um carregamento?',
+      pt: 'Como pago uma carga?',
     },
     answer: {
-      es: 'Puedes gestionar tus pagos directamente desde la app de Voltop. Nuestra experiencia está diseñada para que cargar y pagar sea simple, digital y sin procesos innecesarios.',
-      en: 'You can manage your payments right from the Voltop app. Our experience is built so that charging and paying is simple, digital and free of unnecessary steps.',
-      pt: 'Você gerencia seus pagamentos diretamente no aplicativo da Voltop. Nossa experiência é feita para que carregar e pagar seja simples, digital e sem processos desnecessários.',
+      /* It used to close with "simple, digital y sin procesos innecesarios" —
+         three adjectives about ourselves inside an answer about a mechanism.
+         Someone asking how they pay wants the mechanism. Now that is all it
+         gives, and it matches §19: the registered payment method, confirmed by
+         product. */
+      es: 'El pago se realiza desde la app Voltop con el método de pago que tengas registrado.',
+      en: 'Payment is made in the Voltop app with the payment method you have on file.',
+      pt: 'O pagamento é feito no aplicativo Voltop com o método de pagamento que você tiver cadastrado.',
     },
   },
   {
@@ -117,9 +136,12 @@ export const faq: FaqItem[] = [
       pt: 'O que faço se precisar de ajuda durante um carregamento?',
     },
     answer: {
-      es: 'Estamos para ayudarte. Si tienes algún inconveniente antes, durante o después de una carga, puedes comunicarte con nuestro equipo de soporte a través de los canales disponibles en Voltop.',
-      en: "We're here for you. If anything comes up before, during or after a charge, you can reach our support team through Voltop's available channels.",
-      pt: 'Estamos aqui para ajudar. Se tiver algum problema antes, durante ou depois de um carregamento, você pode falar com nosso time de suporte pelos canais disponíveis da Voltop.',
+      /* "los canales disponibles en Voltop" named nothing: the two links below
+         ARE the channels, and the sentence was describing them instead of
+         letting them work. §19 asks that help be actionable. */
+      es: 'Si tienes algún inconveniente durante tu sesión, puedes comunicarte con nuestro equipo de soporte para recibir ayuda.',
+      en: 'If you run into any trouble during your session, you can contact our support team for help.',
+      pt: 'Se tiver algum problema durante sua sessão, você pode falar com nosso time de suporte para receber ajuda.',
     },
     links: [
       {
