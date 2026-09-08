@@ -3083,3 +3083,52 @@ El inglés y el portugués no se leen como traducción automática. Ejemplos de 
 ### Evidencia
 
 414 tríos cruzados en el código · 14 rutas × 3 idiomas para fugas de idioma · 30 combinaciones para texto técnico · 27 × 3 anchos para roturas de longitud · tipos 0 · lint 0 · 58 tests · i18n 459/459.
+
+---
+
+## Bloque 71 · Intento de localizar la 404, y por qué se revirtió — 2026-09-08
+
+Camilo pidió que la 404 salga en el idioma correcto. **Se implementó entero, se midió, y se revirtió: el arreglo cuesta más que el defecto.** Queda escrito para que nadie repita el camino.
+
+### Lo que se construyó
+
+`app/not-found.tsx` es el límite raíz y no recibe `params`. Medido antes de empezar: **ninguna cabecera que llega ahí lleva la ruta** —se instrumentó el componente y se imprimieron todas las que casaban con `path|url|invoke|referer|matched`: objeto vacío en los tres idiomas—. Así que la única vía es inyectarla.
+
+Se escribió `src/proxy.ts` —y **es `proxy`, no `middleware`: la convención `middleware.ts` está DEPRECADA en Next 16 y renombrada**, lo dice su propia documentación— que escribe `x-voltop-pathname` en las cabeceras de la petición, y `not-found` lo leía con `headers()` para sacar el idioma del primer segmento.
+
+Funcionalmente correcto. Tipos y lint en verde.
+
+### Por qué se revirtió: 42 páginas dejaron de prerenderizarse
+
+```
+antes:            con headers() en not-found:
+├   /[locale]     ├ ƒ /[locale]
+│ ├ ● /es         ├ ƒ /[locale]/empresas
+│ ├ ● /en         ├ ƒ /[locale]/red
+│ └ ● /pt         └ ƒ …todas
+```
+
+`not-found` forma parte del árbol de render de TODAS las rutas, así que una API dinámica ahí dentro saca del prerenderizado al sitio entero. **Las 42 páginas estáticas pasan a renderizarse por petición**, que es justo lo que el Bloque 65 midió y protegió.
+
+Comprobado por partes, para no acusar al culpable equivocado:
+
+- **El proxy solo, sin `headers()`: no rompe nada.** Las 42 siguen `●`. El proxy es inocente.
+- **`export const dynamic = 'force-dynamic'` en `not-found` no lo aísla.** Todo sigue en `ƒ`.
+
+### La otra salida, y su precio
+
+Detectar el idioma en cliente. **`Header` ya es componente de cliente, pero `Footer` no**, y el pie se renderiza en TODAS las páginas: convertirlo mandaría su JavaScript a todo el sitio para arreglar una página de error. Y quedaría un parpadeo de hidratación.
+
+La variante barata —traducir solo el texto propio del 404 y dejar cabecera y pie en español— produce una página medio traducida, que es peor que una coherente.
+
+### Estado
+
+**Revertido a cero.** `git status` limpio, 42 rutas prerenderizadas, tipos 0, lint 0.
+
+**Sigue abierto** y es decisión de producto. Lo que hay sobre la mesa:
+
+1. **Dejarlo.** Un visitante inglés que teclea mal una URL recibe una 404 en español **con navegación completa y funcionando**. Es `noindex` y es un callejón sin salida del que se sale por cualquiera de sus dos botones.
+2. **Aceptar el render dinámico** de las 42 páginas a cambio del idioma correcto. No lo recomiendo: se cambia el rendimiento de todo el sitio por una página de error.
+3. **Llevar `Footer` a cliente** y detectar el idioma en el navegador, con parpadeo. Tampoco lo recomiendo por la misma razón, a menor escala.
+
+Lo único que cambiaría la ecuación es que Next permitiese un límite `not-found` por segmento que sí renderice, o un `global-not-found` estable que no salte el layout. Hoy `global-not-found` es experimental y **se salta el layout a propósito**, así que perdería cabecera y pie.
