@@ -5,12 +5,7 @@ import { routes, alternatesFor, SITE_URL } from '~/core/common/domain/i18n/route
 import { nosotros } from '~/core/about/domain/consts/copy'
 import { brand } from '~/core/common/domain/consts/copy'
 import { media } from '~/core/common/infrastructure/content/media'
-import {
-  getMetrics,
-  getFounder,
-  getTestimonials,
-  getPartners,
-} from '~/core/common/infrastructure/data-access'
+import { getMetrics, getFounder } from '~/core/common/infrastructure/data-access'
 import {
   Section,
   Container,
@@ -63,8 +58,6 @@ export default async function NosotrosPage({ params }: Props) {
   const metrics = getMetrics()
   const hasValidated = metrics.some((m) => m.validated && m.value)
   const founder = getFounder()
-  const testimonials = getTestimonials()
-  const partners = getPartners()
 
   const orgJsonLd = {
     '@context': 'https://schema.org',
@@ -277,54 +270,12 @@ export default async function NosotrosPage({ params }: Props) {
         </Container>
       </Section>
 
-      {/* Trust — testimonials without cards */}
-      <Section
-        space="base"
-        className="border-t border-line"
-        ariaLabelledby="confianza-title"
-      >
-        <Container>
-          <SectionHeading
-            id="confianza-title"
-            kicker={t(nosotros.trust.eyebrow, locale)}
-            measure="max-w-[24ch]"
-          >
-            {t(nosotros.trust.title, locale)}
-          </SectionHeading>
-
-          <ul className="mt-14 grid gap-x-14 gap-y-12 md:grid-cols-2">
-            {testimonials.map((tm, i) => (
-              <Reveal
-                as="li"
-                key={tm.author}
-                index={i}
-              >
-                <figure className="border-t border-line pt-6">
-                  <blockquote className="font-display text-display-s text-ink">
-                    {t(tm.quote, locale)}
-                  </blockquote>
-                  <figcaption className="mt-5 text-body-s">
-                    <span className="text-ink">{tm.author}</span>
-                    <span className="text-ink-3"> · {t(tm.role, locale)}</span>
-                  </figcaption>
-                </figure>
-              </Reveal>
-            ))}
-          </ul>
-
-          {/* The partner strip is omitted while there are no cleared logos (§32) */}
-          {partners.length > 0 && (
-            <div className="mt-16">
-              <SectionHeading
-                as="h3"
-                size="s"
-              >
-                {t(nosotros.trust.partnersTitle, locale)}
-              </SectionHeading>
-            </div>
-          )}
-        </Container>
-      </Section>
+      {/* La sección CONFIANZA se retiró el 2026-09-08. Los dos testimonios,
+          la franja de aliados y su copy (`nosotros.trust`) siguen en su sitio
+          —`getTestimonials`, `getPartners`, `content/company`— sin nadie que
+          los consuma: son contenido real, y los logos de aliados son además una
+          entrega pendiente con permiso ya concedido. Borrarlos sería tirar algo
+          que vuelve, no limpiar. Anotados como huérfanos en el registro. */}
     </>
   )
 }

@@ -2560,6 +2560,19 @@ Se apaga la nativa (`::-webkit-search-cancel-button`) y se conserva `type="searc
 
 Va en `globals.css` sin capa, como el resto de restablecimientos de este fichero. Comprobado: una sola aspa, y sigue limpiando el campo y devolviendo los resultados.
 
+### Fuera la sección CONFIANZA de `/nosotros`
+
+La página termina ahora en VISIÓN, que es donde termina la narrativa. El bloque de testimonios venía después del cierre y le añadía un final segundo.
+
+**Lo que NO se borró, y por qué.** `/nosotros` era el único consumidor de `getTestimonials`, `getPartners` y `nosotros.trust`, así que retirar la sección los deja sin nadie que los llame. Aun así se quedan donde están:
+
+- Los dos testimonios son **contenido real** con nombre y cargo, no material de relleno.
+- La franja de aliados es una **entrega pendiente con el permiso ya concedido** (punto 6 del retomada). Borrar su andamiaje sería borrar el sitio donde aterriza.
+
+Quedan anotados como huérfanos, que es como este proyecto ya trata los suyos (Bloque 58). El recuento de i18n no se mueve —siguen declarados en los tres idiomas— y del `page.tsx` sí desaparecen los dos `import` y las dos variables que se quedaron sin uso.
+
+Comprobado en 1440 y 390: sin restos de la sección en el texto renderizado, jerarquía intacta (1 `h1`, 4 `h2`, 4 `h3`) y el vídeo cerrando contra el pie sin hueco muerto.
+
 ### Evidencia
 
 Lint 0 · tipos 0 · build limpio · i18n **459/459** en los tres idiomas. `/nosotros` verificada en 390, 768, 1024, 1440 y 1920: sin desborde horizontal, sin texto recortado, sin viudas y **sin elementos invisibles** —lo que confirma que los `Reveal` siguen disparando—. Jerarquía comprobada: 1 `h1`, 5 `h2`, 4 `h3`. Vídeo de la EAN comprobado en los dos usos: con controles y sonido en la entrada, silenciado y en bucle en el beat 5.
