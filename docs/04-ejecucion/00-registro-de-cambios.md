@@ -2790,3 +2790,52 @@ Se vio comparando: los chunks de JS volvían `immutable` y las fuentes no. Un fi
 ### Evidencia
 
 5 páginas · 4G lento + CPU 4× · mediana de 5 pasadas descartando el arranque en frío · comparación A/B del póster con el velo real compuesto · tipos 0 · lint 0 · 58 tests · build limpio · sin regresión visual: 15 de 15 reveals visibles, los dos vídeos reproduciendo, cero imágenes rotas y cero desbordes en 390 y 1440.
+
+---
+
+## Bloque 66 · Auditoría de UX y funcionalidad previa al PR — 2026-09-08
+
+Recorrido completo como usuario: barra y pie, CTAs, enlaces internos y externos, navegación, scroll, buscador de red, fichas de estación, novedades, descarga de la app, selector de idioma, cookies, flotante, formulario, estados de interacción, historial del navegador, URLs directas, recargas y estados de error.
+
+**Encontrado un solo problema objetivo.** Casi todo lo demás que parecía un fallo era mi propio instrumental midiendo mal, y queda anotado abajo para que nadie repita el camino.
+
+### El buscador confiaba en dos parámetros de la URL y no en los otros dos
+
+`readCriteria` ya validaba `minPower` contra los escalones reales y `sort` contra una lista blanca. **`ciudad` y `conector` no.** Y esas dos claves son un contrato documentado: viajan en enlaces que la gente comparte y que los buscadores indexan.
+
+Consecuencia medida: `/es/red?ciudad=inventada` —una ciudad renombrada, un enlace guardado hace un año— devolvía **cero resultados Y ningún chip seleccionado**. Quien abría ese enlace veía una lista vacía, abría los filtros y no había nada marcado que explicara por qué. La salida existía («Quitar filtros»), pero el estado era inexplicable.
+
+Ahora un valor desconocido se ignora, que es lo que los chips sí pueden representar: «Todas». Es el mismo patrón que ya seguían sus dos hermanos en la misma función.
+
+**Un efecto que conviene conocer:** `?conector=CHAdeMO` pasa de estado vacío a mostrar todas las estaciones con los chips en «Todos». CHAdeMO es un conector real que esta red no tiene, así que no existe como chip y su estado es irrepresentable. Entre dos formas de tratar lo irrepresentable, se eligió la que ya usaban `minPower` y `sort`; y la lista muestra los conectores de cada estación, así que no se afirma nada falso. Si se prefiere lo contrario, es una línea.
+
+### Lo que se probó y funciona
+
+|                          |                                                                                                                                                                                                                       |
+| ------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Selector de idioma       | Conserva la ruta exacta en ficha de estación, entrada de novedades, ciudad y legal                                                                                                                                    |
+| Historial                | **Atrás restaura la posición de lectura** (249 → 249) y Adelante abre arriba                                                                                                                                          |
+| Scroll al navegar        | Desde y=6936 abre en y=0. Las anclas (`#descarga`, `#caso`) caen a 184px, libres de la cabecera                                                                                                                       |
+| Buscador                 | Búsqueda, chips con `aria-pressed`, cuatro grupos con `fieldset`/`legend`, URL compartible que **sobrevive al refresh con los controles reflejando el estado**                                                        |
+| Estado vacío             | «No hay estaciones con esos criterios · Prueba con menos filtros o mira otra ciudad… · Quitar filtros». Orienta y da salida                                                                                           |
+| Geolocalización denegada | «No pudimos acceder a tu ubicación. Puedes seguir buscando por nombre o ciudad.»                                                                                                                                      |
+| Cookies                  | **Cero scripts de Google antes del consentimiento.** Aceptar carga GTM y persiste; rechazar persiste y **nunca** carga nada, ni al navegar ni al recargar                                                             |
+| Flotante                 | Se cierra con el botón y con Escape, sigue cerrado al navegar, vuelve al recargar, y se calla en `/empresas` y legales. Oculto va con `inert`, `aria-hidden` y sin punteros                                           |
+| Formulario               | Errores por campo con foco al primero, y al enviar el `mailto:` a los tres destinatarios con el cuerpo redactado. El copy es honesto: **«Te abrimos el correo… solo tienes que enviarlo»**, no «recibimos tu mensaje» |
+| Enlaces externos         | Los ocho con `rel="noopener noreferrer"` y aviso de pestaña nueva en el nombre accesible                                                                                                                              |
+| Hover                    | Texto de `#e6e9ee` a verde de marca                                                                                                                                                                                   |
+| URLs directas            | Las 11 rutas, directas y tras recargar: `h1` presente y abren arriba                                                                                                                                                  |
+| 404                      | Titular propio, cabecera, pie y **dos salidas**: «Ir a la red» e «Ir al inicio»                                                                                                                                       |
+| CTAs                     | 35 en cinco páginas, **ninguno sin destino**                                                                                                                                                                          |
+
+### Cinco falsos positivos de mi instrumental, anotados para no repetirlos
+
+1. **«Atrás pierde la posición»** — mi `scrollIntoView` antes del clic movía la página; el navegador restauraba correctamente la posición que había _en el momento de navegar_.
+2. **«El flotante no se cierra»** — buscaba por altura, y la tarjeta no se desmonta: se anima a `opacity: 0` con `inert`. Medido por opacidad, cierra perfecto.
+3. **«El flotante aparece en `/empresas`»** — el mismo error.
+4. **«El banner de cookies no sale en la primera visita»** — abrí la segunda pestaña en el mismo contexto de navegador, que ya tenía el `localStorage` escrito. Con un contexto limpio sale.
+5. **«Hover no cambia el color»** — había elegido el CTA primario, cuyo hover no es de color sino de transformación.
+
+### Evidencia
+
+Recorrido en 1440 y 390 · contextos de navegador limpios para los flujos de consentimiento · clics de ratón reales sobre coordenadas, no `element.click()`, donde el scroll importaba · tipos 0 · lint 0 · 58 tests · build limpio.

@@ -138,14 +138,28 @@ const EMPTY: Criteria = {
  * already provided by the `/red/[city]` routes, which was the original SEO
  * reason.
  */
-function readCriteria(steps: number[]): Criteria {
+function readCriteria(steps: number[], citySlugs: string[], connectors: string[]): Criteria {
   const p = new URLSearchParams(window.location.search)
   const kw = Number(p.get(PARAM.power))
   const sort = p.get(PARAM.sort)
+  /**
+   * `city` and `connector` ARE VALIDATED TOO, like `minPower` and `sort`
+   * already were.
+   *
+   * They were the two that trusted the address bar, and these keys are a
+   * documented contract: they travel in links people share and search engines
+   * index. `?ciudad=` with a slug that no longer exists — a city renamed, a
+   * link saved a year ago — produced zero results AND no chip selected, so
+   * whoever opened it saw an empty list with nothing marked and no explanation.
+   * An unknown value is now simply ignored, which is what the chips can
+   * actually represent: "Todas".
+   */
+  const city = p.get(PARAM.city) ?? ''
+  const connector = p.get(PARAM.connector) ?? ''
   return {
     query: p.get(PARAM.q) ?? '',
-    city: p.get(PARAM.city) ?? '',
-    connector: p.get(PARAM.connector) ?? '',
+    city: citySlugs.includes(city) ? city : '',
+    connector: connectors.includes(connector) ? connector : '',
     minPower: steps.includes(kw) ? kw : 0,
     onlyLive: p.get(PARAM.live) === '1',
     /* `distance` is not restored from the URL: it requires location
@@ -227,8 +241,14 @@ export function StationFinder({ locale, stations, cities }: Props) {
      assignment, with no cascade. */
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    setCriteria(readCriteria(steps))
-  }, [steps])
+    setCriteria(
+      readCriteria(
+        steps,
+        cities.map((c) => c.slug),
+        connectors,
+      ),
+    )
+  }, [steps, cities, connectors])
 
   const results = useMemo(
     () =>
