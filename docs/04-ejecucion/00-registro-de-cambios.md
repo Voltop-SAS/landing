@@ -2546,6 +2546,12 @@ El marco es 3:2 y la maqueta lo recorta a 21/9 centrado. Comprobado sobre el rec
 
 Con esto **`/nosotros` deja de abrir con huecos**: era la última página que tenía. En todo el catálogo solo queda `chargingDetail`, que afecta a las fichas de estación.
 
+### El menú de móvil pesaba más que el logotipo
+
+Las cinco entradas iban en `display-m`: **24px a 390px de ancho**. El wordmark del propio Voltop mide 20. El menú competía con la marca que lo encabeza.
+
+Baja un escalón del sistema, a `display-s` → 20px. No es un valor suelto, es el peldaño siguiente de la escala, y la fila conserva **66px de alto**, muy por encima de los 44 que pide un objetivo táctil. Comprobado a 360, 390 y 430: sin scroll, con el CTA y el selector de idioma completos en pantalla. La navegación de escritorio no se toca — va en `body-s` y siempre fue otra cosa.
+
 ### Evidencia
 
 Lint 0 · tipos 0 · build limpio · i18n **459/459** en los tres idiomas. `/nosotros` verificada en 390, 768, 1024, 1440 y 1920: sin desborde horizontal, sin texto recortado, sin viudas y **sin elementos invisibles** —lo que confirma que los `Reveal` siguen disparando—. Jerarquía comprobada: 1 `h1`, 5 `h2`, 4 `h3`. Vídeo de la EAN comprobado en los dos usos: con controles y sonido en la entrada, silenciado y en bucle en el beat 5.
