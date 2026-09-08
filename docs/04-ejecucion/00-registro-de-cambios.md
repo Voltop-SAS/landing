@@ -2504,6 +2504,26 @@ Ahora la portada abre la entrada. Se resolvió en `PostLink` —que es donde viv
 
 Comprobado: clic real sobre el vídeo → `/es/novedades/apertura-wake-medellin`, con el vídeo de la entrada en `controls: true` y `muted: false`. Y **tres tab stops** en `main`, uno por entrada: ninguno de más.
 
+### Y al llegar, se reproduce
+
+Lo que parecía imposible: un navegador no deja arrancar un vídeo con sonido sin un gesto del usuario, y **esa activación no cruza una carga de página**. Llegar a un sitio y que suene algo, normalmente, no se puede.
+
+`next/link` es la excepción, y no por un truco: una navegación interna del App Router es una **transición de cliente**. El documento no se descarga nunca. El clic en la previsualización y el vídeo de la entrada viven en el mismo documento, así que la activación que concedió el clic sigue ahí cuando la entrada monta.
+
+La intención viaja en una **variable de módulo** (`play-intent.ts`), no en `sessionStorage`, y la razón es la vida útil: una variable de módulo sobrevive a la navegación de cliente y muere al recargar, que es exactamente cuando muere la activación. Guardada en `sessionStorage` la intención duraría más que el clic — cerrarías la pestaña, volverías, y un vídeo se pondría a hablarte solo.
+
+Va **por `src`, no por ruta**: la intención es de la pieza. Y se consume al leerla, así que dispara una vez y nunca dos.
+
+Tres cosas que había que evitar y se comprobaron una a una:
+
+- **El fondo del beat 5 es este mismo componente** y sirve el mismo fichero que la entrada de la EAN. Sin comprobar que la previsualización *sea* un enlace (`closest('a')`), hacer clic en ese fondo dejaba armada la entrada para cuando alguien llegara por otro camino.
+- **React monta cada efecto dos veces en desarrollo.** Sin recordar el consumo en un `ref`, el segundo pase encontraba el buzón vacío y la reproducción fallaba **solo en local**, que es el peor sitio donde puede fallar algo porque es donde se revisa.
+- **La espera al hueco libre del hilo** —los hasta 3 s que protegen el arranque de página— se salta cuando hay intención. Ahí el vídeo *es* lo que se ha venido a ver.
+
+Solo lo recoge la versión **con controles**, y eso no es casual: es la única que cumple WCAG 1.4.2, porque tener un mecanismo para parar el audio es la condición para que pueda sonar solo más de tres segundos.
+
+Comprobado con `--autoplay-policy=document-user-activation-required`, que es la política real: clic en la previsualización → **`pausado:false`, `muted:false`, `t:1.34`**; entrada en frío → pausada; llegando por el titular → pausada; clic en el fondo del beat 5 → no arma nada.
+
 ### Evidencia
 
 Lint 0 · tipos 0 · build limpio · i18n **459/459** en los tres idiomas. `/nosotros` verificada en 390, 768, 1024, 1440 y 1920: sin desborde horizontal, sin texto recortado, sin viudas y **sin elementos invisibles** —lo que confirma que los `Reveal` siguen disparando—. Jerarquía comprobada: 1 `h1`, 5 `h2`, 4 `h3`. Vídeo de la EAN comprobado en los dos usos: con controles y sonido en la entrada, silenciado y en bucle en el beat 5.

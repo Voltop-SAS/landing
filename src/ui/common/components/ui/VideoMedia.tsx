@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useReducedMotion } from 'motion/react'
 import { t, type Locale } from '~/core/common/domain/i18n/config'
 import type { MediaAsset } from '~/core/common/domain/entities/Media'
+import { requestPlayOnArrival, consumePlayOnArrival } from '@ui/common/lib/play-intent'
 
 /**
  * BACKGROUND VIDEO · respects the reduced-motion preference.
@@ -48,6 +49,7 @@ export function VideoMedia({
 }) {
   const reduce = useReducedMotion()
   const ref = useRef<HTMLVideoElement>(null)
+  const src = asset.src
 
   /**
    * ── EL VÍDEO NO EXISTE HASTA QUE TE ACERCAS ───────────────────────────────
@@ -89,7 +91,47 @@ export function VideoMedia({
    */
   const [enVista, setEnVista] = useState(false)
   const [pintado, setPintado] = useState(false)
-  const cerca = enVista && pintado
+
+  /**
+   * ── LLEGAR YA REPRODUCIENDO ───────────────────────────────────────────────
+   * Si alguien hizo clic en la previsualización silenciosa de esta misma pieza,
+   * llega aquí para verla. Empieza sola, con sonido. El porqué de que el
+   * navegador lo permita está en `play-intent`: la navegación es de cliente y
+   * el documento no se descarga, así que la activación del clic sigue viva.
+   *
+   * Solo la versión CON CONTROLES la recoge, y eso importa por dos razones: es
+   * la única que tiene sentido escuchar, y es la que cumple WCAG 1.4.2 —hay un
+   * mecanismo para pararla, que es la condición para que un audio pueda sonar
+   * solo más de tres segundos—.
+   *
+   * `prefers-reduced-motion` no frena esto: la preferencia protege de
+   * movimiento que empieza sin pedirlo, y aquí se pidió con un clic.
+   *
+   * Si no hay intención —se llegó por el titular, por un enlace de fuera o
+   * recargando— no pasa nada de esto y queda el póster con sus controles.
+   */
+  const [intencion, setIntencion] = useState(false)
+  /* La intención se consume UNA vez y se recuerda aquí. En desarrollo React
+     monta cada efecto dos veces, y sin este apunte el segundo pase encontraría
+     el buzón ya vacío y la reproducción solo fallaría en local — el peor sitio
+     donde puede fallar algo, porque es donde se revisa. */
+  const consumida = useRef(false)
+
+  useEffect(() => {
+    if (!controls || !src) return
+    if (!consumida.current) consumida.current = consumePlayOnArrival(src)
+    if (!consumida.current) return
+    /* Diferido un fotograma por lo mismo que en el observador de abajo: un
+       `setState` síncrono dentro de un efecto encadena renders. */
+    const id = requestAnimationFrame(() => setIntencion(true))
+    return () => cancelAnimationFrame(id)
+  }, [controls, src])
+
+  /* Quien acaba de hacer clic está esperando, así que la intención SALTA la
+     espera al hueco libre del hilo. Esa espera existe para que un vídeo no
+     compita con el arranque de la página; aquí el vídeo ES lo que se ha venido
+     a ver, y hacerle esperar hasta 3 s sería el fallo, no la protección. */
+  const cerca = (enVista && pintado) || intencion
 
   useEffect(() => {
     const arranca = () => {
@@ -143,6 +185,20 @@ export function VideoMedia({
     else void v.play().catch(() => {})
   }, [reduce, controls, cerca])
 
+  /* La reproducción al llegar. Va aparte de la de fondo porque son opuestas:
+     aquella es silenciosa y en bucle, esta suena y se puede parar.
+
+     El `catch` no es defensivo por si acaso: es la ruta normal cuando NO hay
+     activación —una recarga, un enlace desde fuera— y ahí lo correcto es que
+     no pase nada y se quede el póster. Un rechazo aquí no es un error. */
+  useEffect(() => {
+    const v = ref.current
+    if (!v || !intencion || !cerca) return
+    v.load()
+    v.muted = false
+    void v.play().catch(() => {})
+  }, [intencion, cerca])
+
   return (
     <video
       ref={ref}
@@ -158,6 +214,17 @@ export function VideoMedia({
       playsInline
       autoPlay={controls ? undefined : !reduce}
       aria-label={t(asset.alt, locale)}
+      /* Solo cuenta como intención si esta previsualización ES un enlace. Sin
+         la comprobación, hacer clic en el fondo del beat 5 de la Home —que es
+         este mismo fichero— dejaría armado el vídeo de la entrada de la EAN
+         para cuando alguien llegara allí por otro camino. */
+      onClick={
+        controls || !src
+          ? undefined
+          : (e) => {
+              if (e.currentTarget.closest('a')) requestPlayOnArrival(src)
+            }
+      }
     >
       {/* ORDER matters: the browser takes the FIRST source whose `media`
           matches, so the light variant goes first. With no `media` on the
