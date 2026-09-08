@@ -23,6 +23,7 @@ const station = (over: Partial<Station>): Station => ({
   points: 2,
   status: 'operativa',
   hours: { es: '' },
+  openingHours: null,
   pricing: null,
   services: [],
   media: { photos: [] },

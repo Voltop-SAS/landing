@@ -38,6 +38,17 @@ export type Station = {
   points: number
   status: StationStatus
   hours: Localized
+  /**
+   * The same opening hours, in the format schema.org understands
+   * (`Mo-Su 00:00-23:59`). `null` when they are not fixed.
+   *
+   * It is a SECOND field and not a derivation of `hours`, which is display
+   * text: matching a Spanish string to decide what to tell a search engine
+   * would break the day someone writes "24 horas" instead of "24/7". A station
+   * whose hours are not fixed says nothing rather than guessing — the same rule
+   * the rest of the dataset follows with its nulls.
+   */
+  openingHours: string | null
   /** Pricing. `null` while it is not commercially confirmed. */
   pricing: { perKwh: number; currency: string } | null
   services: Localized[]

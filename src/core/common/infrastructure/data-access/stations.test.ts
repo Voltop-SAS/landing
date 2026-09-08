@@ -29,6 +29,7 @@ function station(overrides: Partial<Station> & { slug: string }): Station {
     points: 2,
     status: 'operativa',
     hours: text,
+    openingHours: null,
     pricing: null,
     services: [],
     media: { photos: [] },

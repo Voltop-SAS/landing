@@ -40,6 +40,7 @@ export const stations: Station[] = [
     points: 18,
     status: 'operativa',
     hours: { es: 'Abierto 24/7', en: 'Open 24/7', pt: 'Aberto 24/7' },
+    openingHours: 'Mo-Su 00:00-23:59',
     /* Confirmed by Camilo on 2026-09-08. All three stations share the tariff;
        the field stays PER STATION on purpose, because the note beside it says it
        can vary, and the day one of them differs it changes here without touching
@@ -88,6 +89,7 @@ export const stations: Station[] = [
     points: 11,
     status: 'operativa',
     hours: { es: 'Abierto 24/7', en: 'Open 24/7', pt: 'Aberto 24/7' },
+    openingHours: 'Mo-Su 00:00-23:59',
     /* Confirmed by Camilo on 2026-09-08. All three stations share the tariff;
        the field stays PER STATION on purpose, because the note beside it says it
        can vary, and the day one of them differs it changes here without touching
@@ -148,6 +150,9 @@ export const stations: Station[] = [
     points: 6,
     status: 'operativa',
     hours: { es: 'Consultar en la app', en: 'Check in the app', pt: 'Consulte no aplicativo' },
+    /* Not fixed: the station publishes them in the app, so nothing is declared
+       here rather than inventing a schedule. */
+    openingHours: null,
     /* Confirmed by Camilo on 2026-09-08. All three stations share the tariff;
        the field stays PER STATION on purpose, because the note beside it says it
        can vary, and the day one of them differs it changes here without touching

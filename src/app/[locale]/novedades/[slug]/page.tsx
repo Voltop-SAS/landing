@@ -127,6 +127,29 @@ export default async function PostPage({ params }: Props) {
     image: shareImage(post, locale),
   }
 
+  /* The same `BreadcrumbList` the station pages already carry (§29). The
+     VISUAL breadcrumb was right below and the hierarchy was not stated for the
+     search engine, so the two deep route types were saying different things
+     about themselves. Same order as the markup so they cannot diverge. */
+  const breadcrumbJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: t(novedades.eyebrow, locale),
+        item: absoluteUrl(locale, routes.news),
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: t(post.title, locale),
+        item: absoluteUrl(locale, routes.post(post.slug)),
+      },
+    ],
+  }
+
   return (
     <TrackView
       event="novedad_vista"
@@ -137,130 +160,141 @@ export default async function PostPage({ params }: Props) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
 
-      <Section
-        space="none"
-        className="pb-8 pt-32 md:pt-40"
-      >
-        <Container width="narrow">
-          <nav
-            aria-label={t(a11y.breadcrumb, locale)}
-            className="font-mono text-mono text-ink-3"
-          >
-            <ol className="flex flex-wrap items-center gap-2">
-              <li>
-                <Link
-                  href={href(locale, routes.news)}
-                  className="inline-flex min-h-11 items-center transition-colors hover:text-ink"
-                >
-                  {t(novedades.eyebrow, locale)}
-                </Link>
-              </li>
-              <li aria-hidden="true">/</li>
-              {/* Plural: here the type names the CATEGORY, not this entry. See
-                  the `typesPlural` note in the copy. */}
-              <li className="text-ink-2">{t(novedades.typesPlural[post.type], locale)}</li>
-            </ol>
-          </nav>
-
-          <div className="mt-4 flex flex-wrap items-center gap-4">
-            <time
-              dateTime={post.date}
-              className="font-mono text-mono uppercase tracking-wider text-ink-2"
+      {/* `<article>`: this page is one self-contained piece — headline, date,
+          body and author — which is exactly what the element is for, and the
+          `NewsArticle` above says as much to a search engine while the markup
+          did not. It wraps both sections so the opening and the body are one
+          document and not two loose blocks. */}
+      <article>
+        <Section
+          space="none"
+          className="pb-8 pt-32 md:pt-40"
+        >
+          <Container width="narrow">
+            <nav
+              aria-label={t(a11y.breadcrumb, locale)}
+              className="font-mono text-mono text-ink-3"
             >
-              {formatDate(post.date, locale)}
-            </time>
+              <ol className="flex flex-wrap items-center gap-2">
+                <li>
+                  <Link
+                    href={href(locale, routes.news)}
+                    className="inline-flex min-h-11 items-center transition-colors hover:text-ink"
+                  >
+                    {t(novedades.eyebrow, locale)}
+                  </Link>
+                </li>
+                <li aria-hidden="true">/</li>
+                {/* Plural: here the type names the CATEGORY, not this entry. See
+                  the `typesPlural` note in the copy. */}
+                <li className="text-ink-2">{t(novedades.typesPlural[post.type], locale)}</li>
+              </ol>
+            </nav>
+
+            <div className="mt-4 flex flex-wrap items-center gap-4">
+              <time
+                dateTime={post.date}
+                className="font-mono text-mono uppercase tracking-wider text-ink-2"
+              >
+                {formatDate(post.date, locale)}
+              </time>
+              {post.dataStatus === 'placeholder' && (
+                <PendingTag>{t(novedades.provisionalTag, locale)}</PendingTag>
+              )}
+            </div>
+
+            <h1 className="mt-5 font-display text-display-xl font-semibold text-balance text-ink">
+              {t(post.title, locale)}
+            </h1>
+            <p className="mt-6 measure text-body-l text-ink-2">{t(post.summary, locale)}</p>
+
             {post.dataStatus === 'placeholder' && (
-              <PendingTag>{t(novedades.provisionalTag, locale)}</PendingTag>
+              <p className="mt-4 measure text-body-s text-ink-3">
+                {t(novedades.provisionalNote, locale)}
+              </p>
             )}
-          </div>
+          </Container>
+        </Section>
 
-          <h1 className="mt-5 font-display text-display-xl font-semibold text-balance text-ink">
-            {t(post.title, locale)}
-          </h1>
-          <p className="mt-6 measure text-body-l text-ink-2">{t(post.summary, locale)}</p>
-
-          {post.dataStatus === 'placeholder' && (
-            <p className="mt-4 measure text-body-s text-ink-3">
-              {t(novedades.provisionalNote, locale)}
-            </p>
-          )}
-        </Container>
-      </Section>
-
-      <Section
-        space="none"
-        className="pb-24 md:pb-32"
-      >
-        <Container width="narrow">
-          {post.cover && (
-            /* `controls` when the cover is a VIDEO. Without it, `VideoMedia`
+        <Section
+          space="none"
+          className="pb-24 md:pb-32"
+        >
+          <Container width="narrow">
+            {post.cover && (
+              /* `controls` when the cover is a VIDEO. Without it, `VideoMedia`
                treats it as background material: muted, looping and with no
                bar — so the Wake piece played with no audio and no way to turn
                it on. A video that is the subject of the entry is something you
                decide to watch, and for that you need to be able to play it,
                seek and hear it.
                Una fotografía de portada no cambia: la prop no le aplica. */
-            <Media
-              asset={post.cover}
+              <Media
+                asset={post.cover}
+                locale={locale}
+                aspect="16/9"
+                corner
+                controls={post.cover.kind === 'video'}
+                sizes="(min-width: 768px) 46rem, 100vw"
+                priority
+              />
+            )}
+
+            <PostBody
+              blocks={post.body}
               locale={locale}
-              aspect="16/9"
-              corner
-              controls={post.cover.kind === 'video'}
-              sizes="(min-width: 768px) 46rem, 100vw"
-              priority
             />
-          )}
 
-          <PostBody
-            blocks={post.body}
-            locale={locale}
-          />
-
-          {/* Back to the product: the entry ends in the network, not in a dead end. */}
-          {(station || city) && (
-            <>
-              <Rule className="mt-16" />
-              <div className="mt-8 flex flex-col gap-6">
-                {station && (
-                  <div>
-                    <p className="font-mono text-mono uppercase tracking-wider text-ink-3">
-                      {t(novedades.related.station, locale)}
-                    </p>
-                    <div className="mt-3">
-                      <Button
-                        variant="secondary"
-                        size="s"
-                        arrow
-                        href={href(locale, routes.station(station.slug))}
-                      >
-                        {t(novedades.related.stationCta, locale)}
-                      </Button>
+            {/* Back to the product: the entry ends in the network, not in a dead end. */}
+            {(station || city) && (
+              <>
+                <Rule className="mt-16" />
+                <div className="mt-8 flex flex-col gap-6">
+                  {station && (
+                    <div>
+                      <p className="font-mono text-mono uppercase tracking-wider text-ink-3">
+                        {t(novedades.related.station, locale)}
+                      </p>
+                      <div className="mt-3">
+                        <Button
+                          variant="secondary"
+                          size="s"
+                          arrow
+                          href={href(locale, routes.station(station.slug))}
+                        >
+                          {t(novedades.related.stationCta, locale)}
+                        </Button>
+                      </div>
                     </div>
-                  </div>
-                )}
-                {city && (
-                  <Link
-                    href={href(locale, routes.city(city.slug))}
-                    className="inline-flex min-h-11 items-center self-start text-body-s text-ink-2 transition-colors hover:text-ink"
-                  >
-                    {t(novedades.related.city, locale)} {city.name} →
-                  </Link>
-                )}
-              </div>
-            </>
-          )}
+                  )}
+                  {city && (
+                    <Link
+                      href={href(locale, routes.city(city.slug))}
+                      className="inline-flex min-h-11 items-center self-start text-body-s text-ink-2 transition-colors hover:text-ink"
+                    >
+                      {t(novedades.related.city, locale)} {city.name} →
+                    </Link>
+                  )}
+                </div>
+              </>
+            )}
 
-          <div className="mt-14">
-            <Link
-              href={href(locale, routes.news)}
-              className="inline-flex min-h-11 items-center font-mono text-mono uppercase tracking-wider text-ink-3 transition-colors hover:text-ink"
-            >
-              ← {t(novedades.backToIndex, locale)}
-            </Link>
-          </div>
-        </Container>
-      </Section>
+            <div className="mt-14">
+              <Link
+                href={href(locale, routes.news)}
+                className="inline-flex min-h-11 items-center font-mono text-mono uppercase tracking-wider text-ink-3 transition-colors hover:text-ink"
+              >
+                ← {t(novedades.backToIndex, locale)}
+              </Link>
+            </div>
+          </Container>
+        </Section>
+      </article>
     </TrackView>
   )
 }

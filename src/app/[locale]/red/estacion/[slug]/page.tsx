@@ -138,7 +138,11 @@ export default async function StationPage({ params }: Props) {
     ...(s.geo
       ? { geo: { '@type': 'GeoCoordinates', latitude: s.geo.lat, longitude: s.geo.lng } }
       : {}),
-    openingHours: t(s.hours, locale),
+    /* Only when there is a machine-readable value. It used to emit
+       `t(s.hours, locale)` — "Abierto 24/7", "Consultar en la app" — into a
+       property that expects `Mo-Su 00:00-23:59`, so a search engine read free
+       Spanish text where it looks for a schedule and discarded it. */
+    ...(s.openingHours ? { openingHours: s.openingHours } : {}),
     provider: { '@type': 'Organization', name: 'Voltop', url: SITE_URL },
     amenityFeature: s.services.map((sv) => ({
       '@type': 'LocationFeatureSpecification',

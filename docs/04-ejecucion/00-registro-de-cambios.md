@@ -2630,3 +2630,57 @@ Cero `console.log` de depuración —los dos que hay son la auditoría i18n del 
 ### Riesgo abierto antes del PR
 
 **66 MB de vídeo versionados en git.** El punto 9 del retomada decía que solo compensaba moverlos «cuando crezca el catálogo de vídeo». Ha crecido: de 28 MB a 66. Cada clon se los lleva y cada recodificación deja una copia entera en el historial para siempre. Es decisión de infraestructura, no de código, y conviene tomarla antes de que el historial se haga más caro de revertir.
+
+---
+
+## Bloque 63 · Auditoría SEO previa al PR — 2026-09-08
+
+Las 42 URLs del sitemap, medidas en el navegador sobre el build de producción. Tres arreglos objetivos, y cuatro decisiones que se dejan para validación porque tocan contenido aprobado.
+
+### Lo que estaba bien y no se toca
+
+Un solo `h1` por página y **cero saltos de nivel** en los encabezados de las 42 · canonical propio en las 42 · `hreflang` con las cuatro etiquetas, autorreferencia y `x-default` (el portugués se declara `pt-BR`, que es lo que dice la configuración) · `og:image`, `og:title` y `twitter:card` completos · cero títulos o descripciones duplicados dentro de un mismo idioma · cero imágenes sin `alt` —los cinco `alt=""` son decorativos y el logotipo va con `aria-hidden` dentro de un enlace con `aria-label`— · cero anclas vagas del tipo «ver más» · los seis enlaces externos con `rel="noopener noreferrer"` · **cero páginas huérfanas y cero enlaces fuera del sitemap** · anchor text que ya lleva nombre, ciudad, potencia y puntos, que es exactamente lo que busca alguien en búsqueda local.
+
+### `openingHours` le daba texto en español a un campo de máquina
+
+La ficha de estación emitía `openingHours: "Abierto 24/7"` —y «Consultar en la app»— en un campo de schema.org que espera `Mo-Su 00:00-23:59`. Un buscador leía prosa donde busca un horario y lo descartaba.
+
+Se añade `openingHours` a la entidad `Station` como **segundo campo**, no como derivación del que se muestra: adivinar el horario haciendo coincidir una cadena en español se rompería el día que alguien escriba «24 horas» en vez de «24/7». Las dos estaciones abiertas siempre lo declaran; **Wake lo deja en `null`** porque sus horarios no son fijos, y la propiedad simplemente no se emite. Es la misma regla de honestidad que sigue el resto del dataset con sus nulos.
+
+### Las entradas de novedades no eran un artículo
+
+Cero elementos `<article>` en todo el sitio. Una entrada de novedades es exactamente lo que ese elemento describe —titular, fecha, cuerpo y autor, autocontenidos— y el `NewsArticle` de los datos estructurados ya lo decía mientras el marcado no.
+
+Y les faltaba el `BreadcrumbList` que las fichas de estación sí llevaban: la miga de pan **visible** estaba ahí, pero la jerarquía no se le contaba al buscador. Los dos tipos de ruta profunda decían cosas distintas de sí mismos; ahora dicen la misma.
+
+### Requiere validación · contenido duplicado en las páginas legales
+
+`/en/legal/terminos` y `/pt/legal/terminos` sirven **el mismo texto español** que la versión `es` —medido: 5.572, 5.599 y 5.604 palabras, y la diferencia es solo el marco traducido—. Es una decisión deliberada y correcta de producto (§: traducir un instrumento jurídico lo convierte en otro instrumento), pero deja **tres URLs indexables con ~5.500 palabras idénticas**.
+
+Lo mismo con la política: 2.232 palabras por tres.
+
+Opciones, de menor a mayor intervención:
+
+1. **Dejarlo.** El daño real es presupuesto de rastreo y que Google elija por su cuenta cuál indexa. Nadie busca estas páginas.
+2. **`noindex, follow` en las versiones `en` y `pt`** hasta que existan traducciones reales. Saca el duplicado del índice, las páginas siguen accesibles y enlazadas, y se revierte en una línea. **Es lo que recomendaría.**
+3. Canonical cruzado `en`/`pt` → `es`. **NO lo recomiendo:** contradice el `hreflang`, y Google desaconseja explícitamente combinar las dos señales.
+
+Hay un efecto secundario que conviene ver: la descripción de `/en/legal/terminos` está en inglés y la página está en español. Quien la encuentre en un resultado verá una promesa en inglés y aterrizará en un texto en español.
+
+### Requiere validación · tres cosas de copy
+
+**1. El título de `/es/red` no dice dónde.** Es «Voltop · Red de carga» (21 caracteres) y es la página comercial B2C más importante del sitio. Su propia descripción sí lo dice —«estaciones de carga Voltop en Colombia»— y su `h1` es «Encuentra dónde cargar». Un título como **«Voltop · Estaciones de carga en Colombia»** (40) recogería la intención sin añadir una sola palabra que no esté ya en la página. Es copy aprobado: no se toca sin decirlo.
+
+**2. El título de la entrada de Wake dice «Voltop» dos veces** y mide 63 caracteres, así que Google lo corta: «Voltop · Nueva estación de carga rápida **Voltop** en Wake Medellín». La repetición viene de que el titular ya lleva la marca y la plantilla la antepone. Se arregla sin tocar copy visible —omitir el prefijo cuando el titular ya contiene la marca— pero cambia cómo se construyen TODOS los títulos, así que se propone en vez de aplicarse.
+
+**3. La descripción de esa misma entrada mide 221 caracteres** y se corta en ~160. Sale de `post.summary`, que además se lee en la página, así que acortarla cambia contenido visible.
+
+### Requiere validación · contenido corto en las páginas de ciudad
+
+`/es/red/medellin` tiene **69 palabras**; Bogotá, 89; las fichas de estación, entre 90 y 99. El proyecto define estas páginas como «el canal de adquisición B2C más barato» y son las que compiten por «cargador eléctrico Medellín». Con ese volumen es difícil que ganen a un directorio.
+
+No propongo rellenarlas con texto: sería justo la sobreoptimización que se pide evitar. Lo que sí tendría contenido REAL que añadir, sin inventar nada, es lo que el dataset ya sabe y hoy no se cuenta en esas páginas —conectores disponibles por ciudad, qué significa cada potencia en tiempo de carga, o las entradas de novedades asociadas a esa ciudad, que ya existen y ya están enlazadas desde otras vistas—. Es una decisión de producto y contenido, no técnica.
+
+### Evidencia
+
+Las 42 URLs en 200 · 1 `h1` cada una · **0 saltos de jerarquía** · 42/42 canonical propio · 42/42 `og:image` · 6/6 entradas con `<article>` · datos estructurados: 9 `EVChargingStation`+`BreadcrumbList`, 6 `NewsArticle`+`BreadcrumbList`, 6 `Organization`, 3 `FAQPage` · tipos 0 · lint 0 · 58 tests · build limpio · i18n 459/459.
