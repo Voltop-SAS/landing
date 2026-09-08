@@ -134,24 +134,25 @@ export function Media({
             sizes={sizes}
             priority={priority}
             /**
-             * `fetchPriority` EXPLÍCITO, y no sobra: `priority` NO lo emite.
+             * EXPLICIT `fetchPriority`, and it is not redundant: `priority` does
+             * NOT emit it.
              *
-             * Medido el 2026-09-08 sobre el build de producción, red 4G lenta,
-             * escritorio. La fotografía del Hero —que es el elemento LCP y ya
-             * llevaba `priority`— salía en el HTML SIN `fetchpriority`, así que
-             * el navegador la pedía con prioridad BAJA:
+             * Measured on 2026-09-08 against the production build, slow 4G,
+             * desktop. The hero photograph — the LCP element, and already
+             * carrying `priority` — came out in the HTML WITHOUT
+             * `fetchpriority`, so the browser requested it at LOW priority:
              *
-             *   181 → 3252 ms   168 KB   Low    ← la foto de portada
-             *   176 → 1113 ms    40 KB   High   ← una tipografía
-             *   179 →  826 ms    24 KB   High   ← otra tipografía
+             *   181 → 3252 ms   168 KB   Low    ← the cover photograph
+             *   176 → 1113 ms    40 KB   High   ← a typeface
+             *   179 →  826 ms    24 KB   High   ← another typeface
              *
-             * Transferir 168 KB por ese enlace son ~840 ms. Tardaba 3.071. La
-             * diferencia entera es cola: cuatro tipografías en alta y siete
-             * trozos de código por delante.
+             * Transferring 168 KB over that link is ~840 ms. It took 3,071. The
+             * whole difference is queue: four typefaces at high priority and
+             * seven chunks of code ahead of it.
              *
-             * `priority` sí genera el `<link rel="preload">`, pero un preload
-             * sin prioridad declarada no adelanta a nada. Esto no cambia ni un
-             * píxel de la imagen: cambia el turno en la cola.
+             * `priority` does generate the `<link rel="preload">`, but a preload
+             * with no declared priority overtakes nothing. This changes not one
+             * pixel of the image: it changes its turn in the queue.
              */
             fetchPriority={priority ? 'high' : undefined}
             quality={quality}

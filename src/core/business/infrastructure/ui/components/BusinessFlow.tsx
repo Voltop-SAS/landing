@@ -100,10 +100,10 @@ export function BusinessFlow({
               </div>
 
               <div className="border-l-0 border-t border-line pt-10 lg:border-l lg:border-t-0 lg:pl-16 lg:pt-0">
-                {/* El tercer rótulo. Ver la nota de `proof.testimonialLabel`:
-                    "El reto" y "La solución" se anuncian y la cita no, así que
-                    era el único bloque que llegaba sin nombre. Mismo `size="s"`
-                    que los otros dos para que los tres pesen igual. */}
+                {/* The third label. See the note on `proof.testimonialLabel`:
+                    "El reto" and "La solución" are announced and the quote was
+                    not, so it was the only block arriving unnamed. Same
+                    `size="s"` as the other two so all three weigh the same. */}
                 <SectionHeading
                   as="h3"
                   size="s"

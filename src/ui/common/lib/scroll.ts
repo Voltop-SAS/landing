@@ -40,22 +40,21 @@ export function unlockScroll() {
 }
 
 /**
- * Lleva el scroll arriba del todo, al instante y sin animación.
+ * Sends the scroll to the very top, instantly and with no animation.
  *
- * ── POR QUÉ HACE FALTA ────────────────────────────────────────────────────
- * El App Router de Next sube al principio en cada navegación de cliente, pero
- * Lenis se ha quedado con el control del scroll y conserva su posición interna,
- * así que la restaura sobre la página nueva. Medido el 2026-09-08 sobre el
- * build de producción: pulsando «Explora la red completa» desde 2.698px, la
- * página de Red abría en 2.700px de 3.700 — **al 73% de su altura**. Con
- * «Conoce esta estación», al 69%.
+ * ── WHY IT IS NEEDED ─────────────────────────────────────────────────────
+ * Next's App Router goes to the top on every client navigation, but Lenis has
+ * taken over the scroll and keeps its own internal position, so it restores it
+ * over the new page. Measured on 2026-09-08 against the production build:
+ * pressing "Explora la red completa" from 2,698px opened the network page at
+ * 2,700px out of 3,700 — **73% down**. With "Conoce esta estación", 69%.
  *
- * Es un fallo de TODA la navegación, no de esos dos botones.
+ * It is a fault of the WHOLE navigation, not of those two buttons.
  *
- * `immediate` y `force`: sin animación, porque no es un desplazamiento que el
- * usuario haya pedido —es el punto de partida de otra página— y animarlo se
- * vería como un salto; y `force` para que funcione aunque el motor esté parado
- * por un overlay abierto.
+ * `immediate` and `force`: no animation, because this is not a scroll the user
+ * asked for — it is the starting point of another page — and animating it would
+ * read as a jump; and `force` so it works even when the engine is stopped by an
+ * open overlay.
  */
 export function scrollToTop() {
   if (instance) instance.scrollTo(0, { immediate: true, force: true })

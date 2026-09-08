@@ -40,13 +40,13 @@ export const stations: Station[] = [
     points: 18,
     status: 'operativa',
     hours: { es: 'Abierto 24/7', en: 'Open 24/7', pt: 'Aberto 24/7' },
-    /* Confirmada por Camilo el 2026-09-08. Las tres estaciones comparten
-       tarifa; el campo sigue siendo POR ESTACIÓN a propósito, porque la nota
-       que la acompaña dice que puede variar y el día que una tenga otra, se
-       cambia aquí sin tocar el componente. */
+    /* Confirmed by Camilo on 2026-09-08. All three stations share the tariff;
+       the field stays PER STATION on purpose, because the note beside it says it
+       can vary, and the day one of them differs it changes here without touching
+       the component. */
     pricing: { perKwh: 1780, currency: 'COP' },
-    /* Los mismos dos en las tres estaciones desde el 2026-09-08, por decisión
-       de producto. Antes eran listas distintas por sitio —la EAN tenía techo y
+    /* The same two at all three stations since 2026-09-08, by product decision.
+       They used to be different lists per site — the EAN had a roof and
        cafetería, el Grand Hyatt valet y restaurante— y Wake no tenía ninguna,
        así que su ficha ni siquiera pintaba la sección. Ahora las tres dicen lo
        mismo y las tres la pintan.
@@ -88,12 +88,12 @@ export const stations: Station[] = [
     points: 11,
     status: 'operativa',
     hours: { es: 'Abierto 24/7', en: 'Open 24/7', pt: 'Aberto 24/7' },
-    /* Confirmada por Camilo el 2026-09-08. Las tres estaciones comparten
-       tarifa; el campo sigue siendo POR ESTACIÓN a propósito, porque la nota
-       que la acompaña dice que puede variar y el día que una tenga otra, se
-       cambia aquí sin tocar el componente. */
+    /* Confirmed by Camilo on 2026-09-08. All three stations share the tariff;
+       the field stays PER STATION on purpose, because the note beside it says it
+       can vary, and the day one of them differs it changes here without touching
+       the component. */
     pricing: { perKwh: 1780, currency: 'COP' },
-        services: [
+    services: [
       { es: 'WiFi', en: 'Wi-Fi', pt: 'Wi-Fi' },
       { es: 'Baños', en: 'Restrooms', pt: 'Banheiros' },
     ],
@@ -148,10 +148,10 @@ export const stations: Station[] = [
     points: 6,
     status: 'operativa',
     hours: { es: 'Consultar en la app', en: 'Check in the app', pt: 'Consulte no aplicativo' },
-    /* Confirmada por Camilo el 2026-09-08. Las tres estaciones comparten
-       tarifa; el campo sigue siendo POR ESTACIÓN a propósito, porque la nota
-       que la acompaña dice que puede variar y el día que una tenga otra, se
-       cambia aquí sin tocar el componente. */
+    /* Confirmed by Camilo on 2026-09-08. All three stations share the tariff;
+       the field stays PER STATION on purpose, because the note beside it says it
+       can vary, and the day one of them differs it changes here without touching
+       the component. */
     pricing: { perKwh: 1780, currency: 'COP' },
     services: [
       { es: 'WiFi', en: 'Wi-Fi', pt: 'Wi-Fi' },

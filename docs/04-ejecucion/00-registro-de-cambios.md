@@ -2582,3 +2582,51 @@ Consecuencia medida: por debajo de ~420px los dos enlaces legales **pasan de una
 ### Evidencia
 
 Lint 0 · tipos 0 · build limpio · i18n **459/459** en los tres idiomas. `/nosotros` verificada en 390, 768, 1024, 1440 y 1920: sin desborde horizontal, sin texto recortado, sin viudas y **sin elementos invisibles** —lo que confirma que los `Reveal` siguen disparando—. Jerarquía comprobada: 1 `h1`, 5 `h2`, 4 `h3`. Vídeo de la EAN comprobado en los dos usos: con controles y sonido en la entrada, silenciado y en bucle en el beat 5.
+
+---
+
+## Bloque 62 · Barrido técnico previo al PR a staging — 2026-09-08
+
+Revisión con criterio de producción, sin tocar el producto. Tres arreglos reales, una deuda propia saldada y cuatro cosas que se dejan intactas a propósito.
+
+### La deuda era mía: 226 comentarios en español
+
+`AGENTS.md` dice que identificadores y comentarios van en inglés, y que la regla se aplica «al código nuevo y a cualquier código que toques». Medido en todo `src/`: **234 líneas de comentario en español**, de las cuales **226 estaban en ficheros de este diff**. El resto del código ya estaba convertido — o sea, la deuda no era heredada, la había introducido yo.
+
+Traducidas las 234 y renombrados los identificadores: `enVista`→`inView`, `pintado`→`painted`, `cerca`→`near`, `intencion`→`intent`, `consumida`→`consumed`, `arranca`→`start`, `pendiente`→`pending`, `MOSTRAR_CIFRAS_PENDIENTES`→`SHOW_PENDING_FIGURES`, `leadDeCiudad`→`cityLead`.
+
+Quedan 17 coincidencias que NO son violaciones: comentarios en inglés que **citan** copy español entre comillas, y los títulos de los dos documentos legales.
+
+### Las entradas de novedades viajaban sin imagen
+
+Medido sobre las 42 páginas: 36 emiten `og:image` y las dos entradas de novedades **no**. Compartidas por WhatsApp o LinkedIn llegaban sin previsualización.
+
+La causa está en la documentación de Next: los objetos de metadatos de varios segmentos se combinan **superficialmente** y las claves duplicadas se **reemplazan**. Declarar un `openGraph` en la entrada reemplazaba el del padre entero, incluidas las `images` que inyecta `[locale]/opengraph-image.tsx`.
+
+Y al arreglarlo salió un segundo fallo en el mismo sitio: los datos estructurados ponían `NewsArticle.image = post.cover.src`, y las dos portadas son **vídeo**, así que le estaban dando un `.mp4` a un campo que pide una imagen. Ahora un único `shareImage()` sirve a los dos: el póster cuando la portada es vídeo, el fichero cuando es fotografía, y la imagen OG del idioma si no hay portada.
+
+### La imagen OG estaba fuera de paleta
+
+El fichero decía «generated from the brand tokens» y no era verdad: `ImageResponse` renderiza con Satori, que **no resuelve variables CSS**, así que los colores van escritos a mano — y cuando llegó la paleta oficial el 2026-09-02 este fichero se quedó atrás. Cuatro de sus cinco colores eran los provisionales: fondo `#0a0f1c`, gradiente `#45e0a8 → #28c6e6`, titular `#f2f5fa`, entradilla `#a9b3c4`.
+
+Corregidos contra los tokens reales, con el gradiente en la dirección oficial (cian → verde). Importa más de lo que parece: es la cara del sitio cuando alguien comparte un enlace, así que una deriva aquí se ve fuera antes que dentro.
+
+### Lo que se deja intacto, y por qué
+
+- **`Flow.tsx`, sin consumidores.** Es una de las cuatro primitivas del vocabulario de movimiento, su propio fichero explica por extenso por qué se conserva y `docs/MOTION.md` la documenta. Es una decisión aprobada sin material al que aplicarse hoy, no código muerto.
+- **`<html lang>` fijo en `es-CO` en los tres idiomas.** Es un compromiso ya documentado: emitir el documento desde `[locale]/layout.tsx` rompía la resolución de los límites `not-found` —cualquier 404 servía el documento de error interno de Next— y se compensa con un `<div lang>` que marca el idioma real de todo el contenido, que es el nodo que consultan los lectores de pantalla.
+- **`net::ERR_ABORTED` en los vídeos.** Medido con CDP: la petición abortada transfiere **0 KB** y la real exactamente el tamaño del fichero. Es la precarga especulativa de Chrome que `v.load()` sustituye antes de que llegue un solo byte. Ruido de consola sin coste.
+- **`getTestimonials`, `getPartners` y `nosotros.trust`, sin consumidores.** Ver el Bloque 61.
+- **`puppeteer-core`** aparece como dependencia sin usar porque los scripts de verificación están en `.gitignore`. Es el método de verificación del proyecto; se queda.
+
+### Lo que no se encontró
+
+Cero `console.log` de depuración —los dos que hay son la auditoría i18n del build y un `console.debug` tras `NODE_ENV === 'development'`—, cero `TODO`/`FIXME`, cero `@ts-ignore`, cero assets sin referencia en `public/`, cero ficheros residuales sin trackear, cero componentes duplicados, cero URLs o colores sueltos fuera de sus módulos de constantes, y los siete módulos de `src/core` con la misma estructura `domain`/`infrastructure`.
+
+### Evidencia
+
+`tsc --noEmit` 0 · `eslint src/` 0 · **58 tests en 7 ficheros, todos pasando** · build de producción limpio, sin avisos · i18n **459/459** en los tres idiomas · `npm audit` 0 vulnerabilidades · las **42 URLs del sitemap en 200**, todas con un solo `h1`, título, descripción, canonical, cuatro `hreflang`, `og:image` y cero imágenes sin `alt` · los 42 enlaces internos resuelven · las cinco rutas inválidas devuelven **404 con la página del proyecto** —cabecera, pie, `noindex` y sin `__next_error__`— y `/` redirige a `/es`.
+
+### Riesgo abierto antes del PR
+
+**66 MB de vídeo versionados en git.** El punto 9 del retomada decía que solo compensaba moverlos «cuando crezca el catálogo de vídeo». Ha crecido: de 28 MB a 66. Cada clon se los lleva y cada recodificación deja una copia entera en el historial para siempre. Es decisión de infraestructura, no de código, y conviene tomarla antes de que el historial se haga más caro de revertir.

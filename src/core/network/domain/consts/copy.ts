@@ -216,7 +216,11 @@ export const red = {
       },
       {
         step: '02',
-        title: { es: 'Inicia tu carga', en: 'Start charging', pt: 'Inicie sua carga' } satisfies Localized,
+        title: {
+          es: 'Inicia tu carga',
+          en: 'Start charging',
+          pt: 'Inicie sua carga',
+        } satisfies Localized,
         body: {
           /* Names the QR, which is the actual gesture at the station and the
              same one the Home describes. It dropped "No necesitas tarjeta ni
@@ -291,22 +295,22 @@ export const city = {
   eyebrow: { es: 'Cobertura', en: 'Coverage', pt: 'Cobertura' } satisfies Localized,
   titlePrefix: { es: 'Cargar en', en: 'Charging in', pt: 'Carregar em' } satisfies Localized,
   /**
-   * ── LA DESCRIPCIÓN DE CADA CIUDAD ES UNA PLANTILLA ───────────────────────
-   * Antes cada ciudad traía su propio texto escrito a mano en el dataset.
-   * Bogotá decía «Carga en el norte, el centro financiero y los corredores de
-   * salida de la ciudad, en espacios donde ya ibas a estar» — evocador y sin un
-   * solo dato— y Medellín «con 80 kW y seis puntos de carga», que son TRES
-   * cifras a mano en la prosa: exactamente lo que este archivo prohíbe y lo que
-   * ya dejó obsoleto un texto de esta misma página, cuando decía «de 60 a 150
-   * kW» y la red real iba de 22 a 80.
+   * ── EACH CITY'S DESCRIPTION IS A TEMPLATE ────────────────────────────────
+   * Every city used to carry its own hand-written text in the dataset. Bogotá
+   * said "Carga en el norte, el centro financiero y los corredores de salida de
+   * la ciudad, en espacios donde ya ibas a estar" — evocative and without a
+   * single figure — and Medellín "con 80 kW y seis puntos de carga", which is
+   * THREE figures typed into prose: exactly what this file forbids, and what
+   * already made another text on this same page obsolete when it said "de 60 a
+   * 150 kW" while the real network ran from 22 to 80.
    *
-   * Ahora las tres cifras salen de `getCitiesWithStations()`. Se ven idénticas
-   * hoy y el día que entre una estación se actualizan solas.
+   * The three figures now come from `getCitiesWithStations()`. They look
+   * identical today, and the day a station is added they update themselves.
    *
-   * Dos variantes por el mismo motivo que en el beat 3 de la Home: con una sola
-   * estación es «una potencia» y con varias «potencias». Un pluralizador
-   * genérico produciría «1 estaciones», que es la costura que delata a un sitio
-   * generado.
+   * Two variants for the same reason as the home page's beat 3: with a single
+   * station it is "una potencia" and with several "potencias". A generic
+   * pluraliser would produce "1 estaciones", which is the seam that gives a
+   * generated site away.
    */
   lead: {
     one: {
@@ -373,19 +377,19 @@ export const station = {
     pt: 'Coordenadas pendentes de confirmação: o link abre uma busca por endereço.',
   } satisfies Localized,
   /**
-   * ── DE «PENDIENTE» A «IVA INCLUIDO» (2026-09-08) ─────────────────────────
-   * Este hueco lo ocupaba un `PendingTag` naranja que decía «Pendiente», con
-   * una nota debajo explicando que la tarifa aún no se publicaba. Producto lo
-   * sustituye por una cualificación del precio.
+   * ── FROM "PENDIENTE" TO "IVA INCLUIDO" (2026-09-08) ──────────────────────
+   * This slot held an orange `PendingTag` reading "Pendiente", with a note
+   * below explaining that the tariff was not published yet. Product replaced it
+   * with a qualification of the price.
    *
-   * ⚠️ Y HAY QUE SABERLO: la tarifa SIGUE sin publicarse. Ninguna estación
-   * tiene `pricing` en el dataset, así que la ficha dice «Tarifa · IVA
-   * incluido» sin ninguna cifra al lado — un matiz sobre un precio que no está.
-   * Es lo pedido, no un descuido. El día que haya cifras, la rama de `pricing`
-   * del componente las pinta y este texto pasa a acompañarlas, que es donde
-   * cobra pleno sentido.
+   * All three stations now carry `pricing` in the dataset (1,780 COP/kWh), so
+   * the note sits beside a real figure, which is where it makes full sense.
    */
-  pricingTaxNote: { es: 'IVA incluido', en: 'VAT included', pt: 'IVA incluído' } satisfies Localized,
+  pricingTaxNote: {
+    es: 'IVA incluido',
+    en: 'VAT included',
+    pt: 'IVA incluído',
+  } satisfies Localized,
   pricingVaries: {
     es: 'La tarifa puede variar según la estación, el horario y el cargador.',
     en: 'The rate may vary by station, time of day and charger.',

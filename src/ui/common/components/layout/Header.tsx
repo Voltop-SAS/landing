@@ -256,11 +256,11 @@ export function Header({ locale }: { locale: Locale }) {
           ref={panelRef}
           className="fixed inset-x-0 bottom-0 top-16 z-(--z-overlay) flex flex-col overflow-y-auto border-t border-line bg-canvas nav:hidden"
         >
-          {/* `display-s`, no `display-m`. A 390px la diferencia es 20px contra
-              24px, y esos 4px eran los que hacían que cinco entradas de menú
-              pesaran más que el propio logotipo, que mide 20. Un escalón del
-              sistema, no un valor suelto: la fila sigue midiendo 65px, muy por
-              encima de los 44 que pide un objetivo táctil. */}
+          {/* `display-s`, not `display-m`. At 390px that is 20px against 24px,
+              and those 4px were what made five menu entries outweigh the
+              wordmark itself, which is 20. One step down the system scale, not a
+              loose value: the row still measures 66px, well above the 44 a touch
+              target asks for. */}
           <nav
             className="flex flex-col px-(--spacing-gutter) py-4"
             aria-label={t(a11y.mainNav, locale)}

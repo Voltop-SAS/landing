@@ -363,13 +363,13 @@ export const home = {
       en: 'Dismiss the download notice',
       pt: 'Fechar o aviso de download',
     },
-    /* Más corto desde el 2026-09-08. La barra de móvil tiene ~246px de ancho
-       para el texto a 390px y la frase anterior los llenaba justos; a 320px
-       caía a dos líneas y estiraba la barra a 145px, un 33% de la pantalla.
-       Con esta cabe en una sola línea desde 360px y la barra baja de altura.
+    /* Shorter since 2026-09-08. The mobile bar has ~246px of width for the text
+       at 390px and the previous sentence filled them exactly; at 320px it fell
+       to two lines and stretched the bar to 145px, 33% of the screen. With this
+       one it fits on a single line from 360px up and the bar loses height.
 
-       Sigue siendo una clave APARTE de `body`: escritorio y tablet conservan la
-       suya, que es la larga. */
+       It stays a SEPARATE key from `body`: desktop and tablet keep their own,
+       which is the long one. */
     bodyMobile: {
       es: 'Encuentra dónde cargar.',
       en: 'Find where to charge.',

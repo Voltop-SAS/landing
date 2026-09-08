@@ -19,26 +19,27 @@ import { cn } from '@ui/common/lib/cn'
  * looking good is not enough: it has to justify every second it occupies the
  * screen. The rules are constraints, not decoration:
  *
- * 1. ESTÁ VISIBLE SIEMPRE, hasta que se cierra a mano. Decisión de producto
- *    del 2026-09-08, y sustituye a DOS reglas anteriores del mismo día: la que
- *    lo escondía sobre la primera sección y la que lo retiraba al llegar a la
- *    sección de descarga.
+ * 1. IT IS ALWAYS VISIBLE, until it is closed by hand. Product decision from
+ *    2026-09-08, and it replaces TWO earlier rules from the same day: the one
+ *    that hid it over the first section and the one that withdrew it on
+ *    reaching the download section.
  *
- *    ── POR QUÉ SE FUERON ─────────────────────────────────────────────────
- *    Toda condición ligada al scroll produce transiciones, y las transiciones
- *    en una capa fija se perciben como parpadeo. Medido en un recorrido de la
- *    Home: con tres zonas mudas eran **5 cambios de estado** (`··███···██·····█`);
- *    reducidas a una, 2. Cero condiciones, cero cambios.
+ *    ── WHY THEY WENT ─────────────────────────────────────────────────────
+ *    Every scroll-bound condition produces transitions, and transitions on a
+ *    fixed layer read as flicker. Measured over one pass down the home page:
+ *    with three quiet zones it was **5 state changes** (`··███···██·····█`);
+ *    cut to one, 2. Zero conditions, zero changes.
  *
- *    Se intentó primero acotar dónde tapaba texto. No hay dónde: midiendo los
- *    glifos reales —no las cajas— la tarjeta se posa sobre texto en casi todas
- *    las secciones y en todos los anchos (a 1024px, 46.946 px² sobre la cita
- *    del fundador; 8.768 en empresas; 7.273 en novedades). Una capa fija sobre
- *    una página larga siempre cae encima de algo, y perseguirlo sección a
- *    sección exige esconderla casi siempre — que es el parpadeo otra vez.
+ *    Narrowing down where it covered text was tried first. There is no such
+ *    place: measuring the real glyphs — not the boxes — the card lands on text
+ *    in nearly every section and at every width (at 1024px, 46,946 px² over the
+ *    founder's quote; 8,768 on the business page; 7,273 on the newsroom). A
+ *    fixed layer over a long page always falls on something, and chasing it
+ *    section by section means hiding it almost always — which is the flicker
+ *    again.
  *
- *    La respuesta a que una capa tape contenido no es esconderla a ratos: es
- *    que se pueda cerrar. Ver la regla 3.
+ *    The answer to a layer covering content is not to hide it now and then: it
+ *    is to make it closable. See rule 3.
  *
  * 2. IT DOES NOT STEAL A PLAYER'S CONTROLS. The desktop card overlapped the
  *    playback bar of the beat 7 film, and a click on mute or fullscreen OPENED
@@ -149,15 +150,14 @@ import { cn } from '@ui/common/lib/cn'
 /** The same key `CookieConsent` uses. See rule 5. */
 const COOKIES_KEY = 'voltop:cookies'
 
-
 export function AppFloating({ locale }: { locale: Locale }) {
   const c = home.appFloating
-  /* Ya no hay estado ligado al scroll: ver la regla 1. Lo único que decide la
-     visibilidad son tres cosas, y ninguna depende de dónde estés en la página:
-     la ruta, la decisión de cookies y si se cerró a mano. */
+  /* There is no scroll-bound state any more: see rule 1. Visibility is decided
+     by three things, none of which depends on where you are in the page: the
+     route, the cookie decision, and whether it was closed by hand. */
   const [cookiesDecided, setCookiesDecided] = useState(false)
-  /* Regla 3 — en memoria y SOLO en memoria. Lee esa regla antes de añadir aquí
-     cualquier tipo de almacenamiento. */
+  /* Rule 3 — in memory and ONLY in memory. Read that rule before adding any
+     kind of storage here. */
   const [dismissed, setDismissed] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
 

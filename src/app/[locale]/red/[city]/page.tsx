@@ -28,11 +28,11 @@ import { formatPowerKw } from '~/core/network/domain/entities/Station'
 type Props = { params: Promise<{ locale: string; city: string }> }
 
 /**
- * /RED/[CIUDAD] · cobertura local.
+ * /RED/[CIUDAD] · local coverage.
  *
- * Cada ciudad es una landing de búsqueda local ("cargador eléctrico Medellín"):
- * el canal de adquisición B2C más barato del proyecto (§29).
- * Añadir una ciudad al dataset genera esta ruta automáticamente.
+ * Every city is a local-search landing page ("cargador eléctrico Medellín"):
+ * the cheapest B2C acquisition channel in the project (§29).
+ * Adding a city to the dataset generates this route automatically.
  */
 /**
  * CLOSED PARAMS. A `notFound()` thrown from a page resolves no boundary at all
@@ -64,16 +64,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const path = routes.city(city.slug)
   return {
     title: `${t(cityCopy.metaTitlePattern, locale)} ${city.name}`,
-    description: leadDeCiudad(city.slug, city.name, locale),
+    description: cityLead(city.slug, city.name, locale),
     alternates: alternatesFor(locale, path),
   }
 }
 
 /**
- * Compone la descripción de la ciudad con las cifras del dataset. Ver la nota
- * de `cityCopy.lead`: antes cada ciudad traía el texto escrito a mano.
+ * Composes the city description from the dataset's figures. See the note on
+ * `cityCopy.lead`: each city used to carry the text hand-written.
  */
-function leadDeCiudad(citySlug: string, cityName: string, locale: Locale) {
+function cityLead(citySlug: string, cityName: string, locale: Locale) {
   const datos = getCitiesWithStations().find((c) => c.city.slug === citySlug)
   if (!datos) return ''
   const plantilla = datos.count === 1 ? cityCopy.lead.one : cityCopy.lead.many
@@ -125,8 +125,9 @@ export default async function CityPage({ params }: Props) {
             </ol>
           </nav>
 
-          {/* `ciudad_vista` estaba en el plan de medición sin emitirse (§31).
-              Umbral 0 porque el evento es "vio la página", no "leyó el bloque". */}
+          {/* `ciudad_vista` was in the measurement plan without being emitted
+              (§31). Threshold 0 because the event is "saw the page", not "read
+              the block". */}
           <TrackView
             event="ciudad_vista"
             props={{ citySlug: city.slug }}
@@ -137,7 +138,7 @@ export default async function CityPage({ params }: Props) {
             {t(cityCopy.titlePrefix, locale)} {city.name}
           </h1>
           <p className="mt-6 measure text-body-l text-ink-2">
-            {leadDeCiudad(city.slug, city.name, locale)}
+            {cityLead(city.slug, city.name, locale)}
           </p>
         </Container>
       </Section>

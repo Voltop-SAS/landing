@@ -13,12 +13,12 @@ export function SmoothScroll() {
   const pathname = usePathname()
 
   /**
-   * Cada página nueva empieza arriba. La razón entera está en `scrollToTop`.
+   * Every new page starts at the top. The full reason lives in `scrollToTop`.
    *
-   * Depende de `pathname` y no de la URL completa a propósito: un enlace a
-   * `#ciudades` cambia el hash pero no la ruta, así que este efecto no se
-   * dispara y el salto al ancla sigue funcionando. Y la primera carga ya está
-   * arriba, de modo que llamarlo entonces no hace nada visible.
+   * It depends on `pathname` and not on the full URL on purpose: a link to
+   * `#ciudades` changes the hash but not the route, so this effect does not
+   * fire and the jump to the anchor keeps working. And the first load is
+   * already at the top, so calling it then does nothing visible.
    */
   useEffect(() => {
     if (window.location.hash) return

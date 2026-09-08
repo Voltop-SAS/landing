@@ -148,7 +148,7 @@ export const nosotros = {
       pt: 'Nossa rede já está em operação em Bogotá e Medellín, e seguimos trabalhando para levar o carregamento elétrico a mais lugares da Colômbia.',
     } satisfies Localized,
     /* Honest state while the figures are not validated (§33). NOT rendered
-       right now — see MOSTRAR_CIFRAS_PENDIENTES in the page. Kept because the
+       right now — see SHOW_PENDING_FIGURES in the page. Kept because the
        block comes back the day the figures are verified. */
     pendingTitle: {
       es: 'Cifras en validación',

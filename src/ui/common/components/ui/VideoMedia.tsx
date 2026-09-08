@@ -52,117 +52,119 @@ export function VideoMedia({
   const src = asset.src
 
   /**
-   * ── EL VÍDEO NO EXISTE HASTA QUE TE ACERCAS ───────────────────────────────
-   * Optimización del 2026-09-08. `preload="none"` estaba puesto y NO bastaba:
-   * el navegador se lo salta cuando hay `autoPlay` y el elemento entra en
-   * pantalla. Medido en móvil a 4G: **677 KB de vídeo descargándose sin mover
-   * el scroll**, compitiendo con la foto de portada, que es lo que decide la
-   * sensación de rapidez. En escritorio son 3 MB, el 76% del peso de la página.
+   * ── THE VIDEO DOES NOT EXIST UNTIL YOU GET CLOSE ─────────────────────────
+   * Optimisation from 2026-09-08. `preload="none"` was already there and was
+   * NOT enough: the browser skips it when there is `autoPlay` and the element
+   * comes on screen. Measured on mobile over 4G: **677 KB of video downloading
+   * without scrolling**, competing with the cover photograph, which is what
+   * decides the sense of speed. On desktop it is 3 MB, 76% of the page weight.
    *
-   * La causa es que el beat 2 queda justo al borde del viewport nada más
-   * abrir: el hero mide 800px y una pantalla de móvil 844.
+   * The cause is that beat 2 sits right at the edge of the viewport as soon as
+   * the page opens: the hero is 800px and a phone screen is 844.
    *
-   * Lo que se hace: los `<source>` no se renderizan hasta que el vídeo se
-   * acerca. Sin fuentes no hay nada que descargar, ni siquiera con `autoPlay`.
+   * What is done: the `<source>` elements are not rendered until the video gets
+   * close. With no sources there is nothing to download, not even with
+   * `autoPlay`.
    *
-   * QUÉ NO CAMBIA, que es el punto: el `poster` se pinta desde el primer
-   * momento —es el fotograma 0 del propio bucle—, así que visualmente la
-   * sección es idéntica desde que carga. Cuando llegas, el vídeo ya está
-   * cargado y arranca. Ni el momento signature ni su animación se tocan.
+   * WHAT DOES NOT CHANGE, which is the point: the `poster` is painted from the
+   * first moment — it is frame 0 of the loop itself — so visually the section
+   * is identical from load. By the time you arrive the video is loaded and
+   * starts. Neither the signature moment nor its animation is touched.
    *
-   * ── LA CONDICIÓN NO ES «¿ESTÁ CERCA?», ES «¿YA PINTÓ LO IMPORTANTE?» ─────
-   * Primer intento: solo un `IntersectionObserver` con 400px de margen. No
-   * sirvió de nada, y la razón está en la composición de la página: **el beat 2
-   * empieza a 880px y una pantalla de escritorio mide 900**, así que el vídeo
-   * cae dentro de la primera pantalla desde que cargas y cualquier margen se
-   * dispara al instante. Medido: 1.555 KB descargándose sin mover el scroll.
+   * ── THE CONDITION IS NOT "IS IT CLOSE?", IT IS "HAS THE IMPORTANT PART
+   *    PAINTED?" ──────────────────────────────────────────────────────────
+   * First attempt: an `IntersectionObserver` alone with a 400px margin. It did
+   * nothing, and the reason is the page composition: **beat 2 starts at 880px
+   * and a desktop screen is 900**, so the video falls inside the first screen
+   * from load and any margin fires instantly. Measured: 1,555 KB downloading
+   * without scrolling.
    *
-   * Así que hacen falta DOS condiciones, y las dos:
+   * So TWO conditions are needed, and both of them:
    *
-   * 1. Que la página haya terminado de cargar y el hilo esté libre. Esto es lo
-   *    que de verdad protege el arranque: el vídeo deja de competir con la
-   *    fotografía de portada, que es el elemento que marca la sensación de
-   *    rapidez.
-   * 2. Que el vídeo esté a la vista o cerca. Quien nunca baja no gasta esos
-   *    datos.
+   * 1. That the page has finished loading and the thread is free. This is what
+   *    really protects the start: the video stops competing with the cover
+   *    photograph, which is the element that sets the sense of speed.
+   * 2. That the video is in view or near it. Someone who never scrolls does not
+   *    spend that data.
    *
-   * El `timeout` de 3s del idle es el seguro: en un navegador ocupado el hueco
-   * libre puede no llegar nunca, y el vídeo tiene que acabar cargando.
+   * The idle `timeout` of 3s is the safety net: on a busy browser the free slot
+   * may never come, and the video has to load eventually.
    */
-  const [enVista, setEnVista] = useState(false)
-  const [pintado, setPintado] = useState(false)
+  const [inView, setInView] = useState(false)
+  const [painted, setPainted] = useState(false)
 
   /**
-   * ── LLEGAR YA REPRODUCIENDO ───────────────────────────────────────────────
-   * Si alguien hizo clic en la previsualización silenciosa de esta misma pieza,
-   * llega aquí para verla. Empieza sola, con sonido. El porqué de que el
-   * navegador lo permita está en `play-intent`: la navegación es de cliente y
-   * el documento no se descarga, así que la activación del clic sigue viva.
+   * ── ARRIVING ALREADY PLAYING ─────────────────────────────────────────────
+   * If someone clicked the silent preview of this very piece, they came here to
+   * watch it. It starts on its own, with sound. Why the browser allows that is
+   * explained in `play-intent`: the navigation is client-side and the document
+   * never unloads, so the activation the click granted is still alive.
    *
-   * Solo la versión CON CONTROLES la recoge, y eso importa por dos razones: es
-   * la única que tiene sentido escuchar, y es la que cumple WCAG 1.4.2 —hay un
-   * mecanismo para pararla, que es la condición para que un audio pueda sonar
-   * solo más de tres segundos—.
+   * Only the version WITH CONTROLS picks it up, and that matters for two
+   * reasons: it is the only one worth listening to, and it is the one that
+   * satisfies WCAG 1.4.2 — there is a mechanism to stop it, which is the
+   * condition for audio to be allowed to play on its own for more than three
+   * seconds.
    *
-   * `prefers-reduced-motion` no frena esto: la preferencia protege de
-   * movimiento que empieza sin pedirlo, y aquí se pidió con un clic.
+   * `prefers-reduced-motion` does not hold this back: the preference protects
+   * against motion that starts unasked, and here it was asked for with a click.
    *
-   * Si no hay intención —se llegó por el titular, por un enlace de fuera o
-   * recargando— no pasa nada de esto y queda el póster con sus controles.
+   * With no intent — arriving via the headline, an external link or a reload —
+   * none of this happens and the poster stays, with its controls.
    */
-  const [intencion, setIntencion] = useState(false)
-  /* La intención se consume UNA vez y se recuerda aquí. En desarrollo React
-     monta cada efecto dos veces, y sin este apunte el segundo pase encontraría
-     el buzón ya vacío y la reproducción solo fallaría en local — el peor sitio
-     donde puede fallar algo, porque es donde se revisa. */
-  const consumida = useRef(false)
+  const [intent, setIntent] = useState(false)
+  /* The intent is consumed ONCE and remembered here. In development React
+     mounts every effect twice, and without this note the second pass would find
+     the mailbox already empty and playback would fail ONLY in local — the worst
+     place for something to fail, because it is where the work gets reviewed. */
+  const consumed = useRef(false)
 
   useEffect(() => {
     if (!controls || !src) return
-    if (!consumida.current) consumida.current = consumePlayOnArrival(src)
-    if (!consumida.current) return
-    /* Diferido un fotograma por lo mismo que en el observador de abajo: un
-       `setState` síncrono dentro de un efecto encadena renders. */
-    const id = requestAnimationFrame(() => setIntencion(true))
+    if (!consumed.current) consumed.current = consumePlayOnArrival(src)
+    if (!consumed.current) return
+    /* Deferred a frame for the same reason as the observer below: a synchronous
+       `setState` inside an effect chains renders. */
+    const id = requestAnimationFrame(() => setIntent(true))
     return () => cancelAnimationFrame(id)
   }, [controls, src])
 
-  /* Quien acaba de hacer clic está esperando, así que la intención SALTA la
-     espera al hueco libre del hilo. Esa espera existe para que un vídeo no
-     compita con el arranque de la página; aquí el vídeo ES lo que se ha venido
-     a ver, y hacerle esperar hasta 3 s sería el fallo, no la protección. */
-  const cerca = (enVista && pintado) || intencion
+  /* Someone who just clicked is waiting, so the intent SKIPS the wait for the
+     thread's free slot. That wait exists so a video does not compete with the
+     page start; here the video IS what they came to see, and making them wait
+     up to 3 s would be the failure, not the protection. */
+  const near = (inView && painted) || intent
 
   useEffect(() => {
-    const arranca = () => {
+    const start = () => {
       const ric = (window as unknown as { requestIdleCallback?: typeof requestIdleCallback })
         .requestIdleCallback
-      if (ric) ric(() => setPintado(true), { timeout: 3000 })
-      else setTimeout(() => setPintado(true), 400)
+      if (ric) ric(() => setPainted(true), { timeout: 3000 })
+      else setTimeout(() => setPainted(true), 400)
     }
     if (document.readyState === 'complete') {
-      const id = setTimeout(arranca, 0)
+      const id = setTimeout(start, 0)
       return () => clearTimeout(id)
     }
-    window.addEventListener('load', arranca, { once: true })
-    return () => window.removeEventListener('load', arranca)
+    window.addEventListener('load', start, { once: true })
+    return () => window.removeEventListener('load', start)
   }, [])
 
   useEffect(() => {
     const v = ref.current
     if (!v) return
-    /* Sin IntersectionObserver —navegador antiguo— se da por visto: es mejor
-       gastar datos que dejar un hueco donde debería haber vídeo. Diferido un
-       fotograma porque un `setState` síncrono dentro de un efecto encadena
-       renders y React lo señala; mismo recurso que usa `AppFloating`. */
+    /* With no IntersectionObserver — an old browser — it counts as seen: better
+       to spend data than to leave a hole where a video should be. Deferred a
+       frame because a synchronous `setState` inside an effect chains renders and
+       React flags it; the same device `AppFloating` uses. */
     if (typeof IntersectionObserver === 'undefined') {
-      const id = requestAnimationFrame(() => setEnVista(true))
+      const id = requestAnimationFrame(() => setInView(true))
       return () => cancelAnimationFrame(id)
     }
     const io = new IntersectionObserver(
       ([entry]) => {
         if (!entry.isIntersecting) return
-        setEnVista(true)
+        setInView(true)
         io.disconnect()
       },
       { rootMargin: '200px' },
@@ -174,30 +176,32 @@ export function VideoMedia({
   /* `autoPlay` is not enough: if the preference changes on the fly, or if the
      browser started playback before hydration, it has to be stopped.
 
-     Depende también de `cerca`: los `<source>` acaban de aparecer y un
-     `<video>` no mira a sus hijos nuevos por su cuenta — hace falta `load()`
-     antes de poder reproducir. */
+     It also depends on `near`: the `<source>` elements have just appeared and a
+     `<video>` does not look at its new children on its own — `load()` is needed
+     before it can play. */
   useEffect(() => {
     const v = ref.current
-    if (!v || controls || !cerca) return
+    if (!v || controls || !near) return
     v.load()
     if (reduce) v.pause()
     else void v.play().catch(() => {})
-  }, [reduce, controls, cerca])
+  }, [reduce, controls, near])
 
-  /* La reproducción al llegar. Va aparte de la de fondo porque son opuestas:
-     aquella es silenciosa y en bucle, esta suena y se puede parar.
+  /* Playback on arrival. It lives apart from the background one because they
+     are opposites: that one is silent and looped, this one has sound and can be
+     stopped.
 
-     El `catch` no es defensivo por si acaso: es la ruta normal cuando NO hay
-     activación —una recarga, un enlace desde fuera— y ahí lo correcto es que
-     no pase nada y se quede el póster. Un rechazo aquí no es un error. */
+     The `catch` is not defensive just in case: it is the normal path when there
+     is NO activation — a reload, a link from outside — and there the right
+     outcome is that nothing happens and the poster stays. A rejection here is
+     not an error. */
   useEffect(() => {
     const v = ref.current
-    if (!v || !intencion || !cerca) return
+    if (!v || !intent || !near) return
     v.load()
     v.muted = false
     void v.play().catch(() => {})
-  }, [intencion, cerca])
+  }, [intent, near])
 
   return (
     <video
@@ -214,10 +218,10 @@ export function VideoMedia({
       playsInline
       autoPlay={controls ? undefined : !reduce}
       aria-label={t(asset.alt, locale)}
-      /* Solo cuenta como intención si esta previsualización ES un enlace. Sin
-         la comprobación, hacer clic en el fondo del beat 5 de la Home —que es
-         este mismo fichero— dejaría armado el vídeo de la entrada de la EAN
-         para cuando alguien llegara allí por otro camino. */
+      /* It only counts as intent if this preview IS a link. Without the check,
+         clicking the background of the home page's beat 5 — which is this very
+         file — would leave the EAN entry's video armed for whoever arrived
+         there by another route. */
       onClick={
         controls || !src
           ? undefined
@@ -233,14 +237,14 @@ export function VideoMedia({
           `<source media>` is evaluated once on load, not on resize: that is
           correct here — nobody switches from phone to monitor mid-page — and
           it avoids reloading the video on every resize. */}
-      {cerca && asset.srcMobile ? (
+      {near && asset.srcMobile ? (
         <source
           src={asset.srcMobile}
           media="(max-width: 767px)"
           type="video/mp4"
         />
       ) : null}
-      {cerca ? (
+      {near ? (
         <source
           src={asset.src ?? undefined}
           type="video/mp4"

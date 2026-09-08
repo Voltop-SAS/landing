@@ -79,10 +79,10 @@ export default async function RedPage({ params }: Props) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
-      {/* Apertura FUNCIONAL: en una superficie de producto el marco editorial
-          paga alquiler. `pt-24` en móvil deja 32px de aire bajo el header de
-          64px en lugar de 64px, y el lead se alinea a la baseline del titular
-          en desktop en vez de flotar a la derecha creando un hueco en L. */}
+      {/* A FUNCTIONAL opening: on a product surface the editorial frame pays
+          rent. `pt-24` on mobile leaves 32px of air under the 64px header
+          instead of 64px, and the lead aligns to the headline's baseline on
+          desktop instead of floating right and creating an L-shaped hole. */}
       <Section
         space="none"
         className="pb-5 pt-24 md:pb-6 md:pt-32"
@@ -145,20 +145,20 @@ export default async function RedPage({ params }: Props) {
                     </h3>
                     <span className="font-mono text-mono text-ink-3">{city.region}</span>
                   </div>
-                  {/* La frase se compone con las cifras del dataset. Ver el
-                      comentario de `red.cities.blurb`: antes era `city.intro`,
-                      escrita a mano por ciudad, y una de las dos ya llevaba
-                      tres números metidos en la prosa. */}
+                  {/* The sentence is composed from the dataset's figures. See
+                      the note on `red.cities.blurb`: it used to be `city.intro`,
+                      hand-written per city, and one of the two already had three
+                      numbers buried in the prose. */}
                   <p className="mt-3 measure text-body-s text-ink-2">
                     {t(count === 1 ? red.cities.blurb.one : red.cities.blurb.many, locale)
                       .replace('{stations}', String(count))
                       .replace('{points}', String(points))
                       .replace('{kw}', String(maxKw))}
                   </p>
-                  {/* `2/2 estaciones` sobraba: la fracción solo informa cuando
-                      los dos números difieren. Se conserva para ese caso —una
-                      estación anunciada y todavía no operativa es justo lo que
-                      no se puede esconder— y se calla cuando todas operan. */}
+                  {/* `2/2 estaciones` was noise: the fraction only informs when
+                      the two numbers differ. It is kept for that case — a station
+                      announced and not yet operating is exactly what must not be
+                      hidden — and stays quiet when all of them run. */}
                   <p className="mt-6 font-mono text-mono text-ink-3">
                     {operational === count ? count : `${operational}/${count}`}{' '}
                     {t(count === 1 ? units.station : units.stations, locale)}
@@ -185,7 +185,8 @@ export default async function RedPage({ params }: Props) {
             {t(red.howToCharge.title, locale)}
           </SectionHeading>
 
-          {/* SÍ es una secuencia: el número informa y es el ancla visual. */}
+          {/* This one IS a sequence: the number informs and is the visual
+              anchor. */}
           <ProcessList
             className="mt-12 md:grid-cols-3"
             items={red.howToCharge.steps.map((s) => ({

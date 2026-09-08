@@ -26,19 +26,19 @@ import { media } from '~/core/common/infrastructure/content/media'
  * into a page of their own, indexable and shareable. The page is generated if
  * there is material, not because the log entry exists.
  *
- * ── LAS TRES FECHAS ESTÁN CONFIRMADAS (2026-09-08) ───────────────────────
- * Hasta esa fecha, dos de las tres entradas llevaban `dataStatus:
- * "placeholder"` porque su fecha era una estimación, y la interfaz mostraba el
- * aviso «Fechas provisionales». Camilo confirmó las dos que faltaban, así que
- * las tres son ahora `verified` y **ese aviso desaparece solo** — no hay que
- * retirarlo a mano: la interfaz lo pinta a partir del `dataStatus`.
+ * ── ALL THREE DATES ARE CONFIRMED (2026-09-08) ───────────────────────────
+ * Until then, two of the three entries carried `dataStatus: "placeholder"`
+ * because their date was an estimate, and the interface showed the "provisional
+ * dates" notice. Camilo confirmed the two that were missing, so all three are
+ * now `verified` and **that notice disappears on its own** — it does not have
+ * to be removed by hand: the interface paints it from `dataStatus`.
  *
- * ⚠️ Y OJO CON LA CADENCIA, que es lo que este registro mide. Las fechas
- * confirmadas son de FEBRERO y OCTUBRE de 2025, más una de abril de 2026: la
- * entrada más reciente tiene ya meses. La nota de arriba lo dice con todas las
- * letras — «tres artículos con fecha vieja dicen que la empresa se ha
- * parado»—. Los hechos son ciertos y publicarlos es correcto; lo que hace
- * falta es la SIGUIENTE entrada, no cambiar estas.
+ * ⚠️ AND MIND THE CADENCE, which is what this log measures. The confirmed dates
+ * are FEBRUARY and OCTOBER 2025, plus one from April 2026: the most recent
+ * entry is already months old. The note above says it outright — "three
+ * articles with old dates say the company has stopped". The facts are true and
+ * publishing them is right; what is needed is the NEXT entry, not a change to
+ * these.
  */
 
 import type { Post } from '~/core/news/domain/entities/Post'
@@ -47,8 +47,8 @@ export const posts: Post[] = [
   {
     slug: 'apertura-universidad-ean',
     type: 'apertura',
-    /* Confirmada por Camilo el 2026-09-08. Deja de ser provisional: ver
-       `dataStatus` abajo. */
+    /* Confirmed by Camilo on 2026-09-08. No longer provisional: see
+       `dataStatus` below. */
     date: '2025-02-01',
     title: {
       es: 'Nueva estación en la Universidad EAN',
@@ -89,16 +89,16 @@ export const posts: Post[] = [
           pt: 'Um campus concentra permanência: quem chega fica por várias horas. É onde carregar deixa de ser uma parada e passa a acontecer enquanto você faz outra coisa — o critério que a Voltop usa para decidir onde construir.',
         },
       },
-      /* AQUÍ IBA `eanOpening` OTRA VEZ, y era el mismo material que la portada:
-         la entrada lo mostraba dos veces seguidas. Se quitó el 2026-09-08, el
-         mismo arreglo que ya llevaba la entrada de Wake y por la misma razón —
-         se retira el bloque del cuerpo, NO la portada, porque la portada es
-         además la imagen de metadatos que viaja al compartir el enlace.
+      /* `eanOpening` WENT HERE A SECOND TIME, and it was the same material as
+         the cover: the entry showed it twice in a row. Removed on 2026-09-08,
+         the same fix the Wake entry already carried and for the same reason —
+         the body block goes, NOT the cover, because the cover is also the
+         metadata image that travels when the link is shared.
 
-         Costó verlo porque `eanOpening` todavía no se ha entregado: sin
-         material no se pintaban dos vídeos sino dos HUECOS declarados, y una
-         búsqueda de `<video>` no encontraba nada. Cuando llegue la fotografía
-         se habría visto duplicada. */
+         It was hard to spot because at the time `eanOpening` had not been
+         delivered: with no material there were not two videos but two declared
+         HOLES, and a search for `<video>` found nothing. The asset arrived later
+         that same day, so without this fix it would now be visibly duplicated. */
     ],
     status: 'publicado',
     dataStatus: 'verified',
@@ -196,7 +196,7 @@ export const posts: Post[] = [
   {
     slug: 'grand-hyatt-bogota',
     type: 'alianza',
-    /* Confirmada por Camilo el 2026-09-08. Deja de ser provisional. */
+    /* Confirmed by Camilo on 2026-09-08. No longer provisional. */
     date: '2025-10-01',
     title: {
       es: 'Voltop llega al Grand Hyatt Bogotá',

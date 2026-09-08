@@ -18,14 +18,14 @@ import { Reveal } from '@ui/common/components/ui/Reveal'
 import { TrackView } from '@ui/common/components/analytics/TrackView'
 
 /**
- * El bloque "Cifras en validación" no se publica por ahora (petición de Camilo,
- * 2026-09-08): mostrar indicadores sin valores restaba más de lo que sumaba.
+ * The "Cifras en validación" block is not published for now (Camilo's request,
+ * 2026-09-08): showing indicators with no values took away more than it added.
  *
- * La estructura NO se borra —la sección vuelve entera el día que haya datos
- * verificados—, solo deja de renderizarse. Con `hasValidated` en true el bloque
- * ni siquiera entra en juego: se pintan las métricas reales, que es el destino.
+ * The structure is NOT deleted — the section comes back whole the day there is
+ * verified data — it simply stops rendering. With `hasValidated` true the block
+ * never comes into play: the real metrics get painted, which is the goal.
  */
-const MOSTRAR_CIFRAS_PENDIENTES = false
+const SHOW_PENDING_FIGURES = false
 
 type Props = { params: Promise<{ locale: string }> }
 
@@ -86,10 +86,10 @@ export default async function NosotrosPage({ params }: Props) {
           <h1 className="mt-5 font-display text-display-xl font-semibold text-balance text-ink">
             {t(nosotros.hero.title, locale)}
           </h1>
-          {/* Tres bloques, no uno: el copy entregado marca "Ahí entra Voltop."
-              como destacado. Se distingue subiendo de `text-ink-2` a `text-ink`
-              dentro del mismo tamaño y la misma pila — es énfasis del texto, no
-              un elemento nuevo. */}
+          {/* Three blocks, not one: the delivered copy marks "Ahí entra Voltop."
+              as a highlight. It stands apart by moving from `text-ink-2` to
+              `text-ink` within the same size and the same stack — it is the
+              text's own emphasis, not a new element. */}
           <div className="mt-7 space-y-5 text-body-l">
             <p className="text-ink-2">{t(nosotros.hero.lead, locale)}</p>
             <p className="text-ink">{t(nosotros.hero.highlight, locale)}</p>
@@ -198,7 +198,7 @@ export default async function NosotrosPage({ params }: Props) {
               className="mt-14"
             />
           ) : (
-            MOSTRAR_CIFRAS_PENDIENTES && (
+            SHOW_PENDING_FIGURES && (
               <div className="mt-10 max-w-2xl border-l-2 border-warn/50 pl-6">
                 <PendingTag>{t(nosotros.impact.pendingTitle, locale)}</PendingTag>
                 <p className="mt-4 text-body-l text-ink-2">
@@ -255,11 +255,11 @@ export default async function NosotrosPage({ params }: Props) {
           width="wide"
           className="mt-14"
         >
-          {/* `controls` porque esto es una PIEZA QUE SE VE, no un fondo: es el
-              fundador hablando a cámara. Sin controles iría en silencio y en
-              bucle infinito —le verías hablar sin oír una palabra— y además no
-              habría forma de pararlo. Misma regla que ya aplica la entrada de
-              novedades. */}
+          {/* `controls` because this is a PIECE THAT IS WATCHED, not a
+              background: it is the founder talking to camera. Without controls
+              it would run silent on an endless loop — you would watch him speak
+              and never hear a word — and there would be no way to stop it. The
+              same rule the news entry already applies. */}
           <Media
             asset={media.ceoVision}
             locale={locale}
@@ -270,12 +270,13 @@ export default async function NosotrosPage({ params }: Props) {
         </Container>
       </Section>
 
-      {/* La sección CONFIANZA se retiró el 2026-09-08. Los dos testimonios,
-          la franja de aliados y su copy (`nosotros.trust`) siguen en su sitio
-          —`getTestimonials`, `getPartners`, `content/company`— sin nadie que
-          los consuma: son contenido real, y los logos de aliados son además una
-          entrega pendiente con permiso ya concedido. Borrarlos sería tirar algo
-          que vuelve, no limpiar. Anotados como huérfanos en el registro. */}
+      {/* The CONFIANZA section was removed on 2026-09-08. The two testimonials,
+          the partner strip and their copy (`nosotros.trust`) all stay where they
+          are — `getTestimonials`, `getPartners`, `content/company` — with nobody
+          consuming them: they are real content, and the partner logos are also a
+          pending delivery whose permission is already granted. Deleting them
+          would be throwing away something that comes back, not cleaning up.
+          Recorded as orphans in the changelog. */}
     </>
   )
 }

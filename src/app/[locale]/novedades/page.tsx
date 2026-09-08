@@ -152,16 +152,16 @@ export default async function NovedadesPage({ params }: Props) {
               <Container>
                 {featured.cover && (
                   <figure>
-                    {/* La portada ABRE la entrada. Es lo que espera cualquiera
-                        que vea una pieza de este tamaño, y en el caso del vídeo
-                        es además la única forma de llegar a la reproducción con
-                        sonido: aquí suena en silencio a propósito —el navegador
-                        bloquea el autoplay con audio y sin controles
-                        incumpliría WCAG 1.4.2— y en la entrada tiene controles.
+                    {/* The cover OPENS the entry. It is what anyone seeing a
+                        piece this size expects, and in the video's case it is
+                        also the only way to reach playback with sound: here it
+                        runs silent on purpose — the browser blocks autoplay with
+                        audio, and without controls it would break WCAG 1.4.2 —
+                        while inside the entry it has controls.
 
-                        `decorative` porque el titular de abajo ya enlaza al
-                        mismo sitio: el ratón gana el destino grande, el teclado
-                        y el lector de pantalla no ganan un duplicado. */}
+                        `decorative` because the headline below already links to
+                        the same place: the mouse gains the large target, the
+                        keyboard and the screen reader do not gain a duplicate. */}
                     <PostLink
                       post={featured}
                       locale={locale}

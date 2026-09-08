@@ -215,9 +215,9 @@ export const empresas = {
      * integration, promising a response time is the same offence as the
      * success state that was corrected in Block 7.
      */
-    /* Con signos de interrogación: es la pregunta que se hace quien está a
-       punto de dejar sus datos, y formulada como pregunta se reconoce antes que
-       como enunciado. */
+    /* With question marks: it is the question someone about to hand over their
+       details is asking themselves, and phrased as a question it is recognised
+       faster than as a statement. */
     nextTitle: {
       es: '¿Qué pasa después?',
       en: 'What happens next?',
@@ -232,9 +232,10 @@ export const empresas = {
           pt: 'Analisamos sua solicitação',
         } satisfies Localized,
         body: {
-          /* Ya no dice "mira si tu sitio encaja con lo que sabemos operar
-             bien": eso introducía un filtro —puede que no encajes— en el paso
-             que existe para reducir la fricción de dejar los datos. */
+          /* It no longer says "mira si tu sitio encaja con lo que sabemos
+             operar bien": that introduced a filter — you might not fit — into
+             the very step that exists to reduce the friction of leaving your
+             details. */
           es: 'Nuestro equipo revisa la información y se pone en contacto contigo.',
           en: 'Our team reviews the information and gets in touch with you.',
           pt: 'Nossa equipe analisa as informações e entra em contato com você.',
@@ -261,10 +262,10 @@ export const empresas = {
           pt: 'Preparamos uma proposta',
         } satisfies Localized,
         body: {
-          /* Sale "modelo comercial" y sale "Sin compromiso": el primero
-             prometía una cifra comercial en un paso que solo describe el
-             proceso, y el segundo es una condición que esta página no publica.
-             Queda lo que sí se define: infraestructura y modelo de operación. */
+          /* Out go "modelo comercial" and "Sin compromiso": the first promised
+             a commercial figure in a step that only describes the process, and
+             the second is a condition this page does not publish. What stays is
+             what actually gets defined: infrastructure and operating model. */
           es: 'Definimos la infraestructura y el modelo de operación que mejor se ajustan a tu proyecto.',
           en: 'We define the infrastructure and the operating model that best fit your project.',
           pt: 'Definimos a infraestrutura e o modelo de operação que melhor se ajustam ao seu projeto.',

@@ -301,9 +301,9 @@ export const leadForm = {
         pt: 'O que você precisa?',
       } satisfies Localized,
       placeholder: {
-        /* Ya no inventa una cifra. El anterior decía "tenemos 40 colaboradores":
-           un ejemplo con un número concreto se lee como un caso típico, y ese
-           dato no sale de ningún sitio. */
+        /* It no longer invents a figure. The previous one said "tenemos 40
+           colaboradores": an example with a concrete number reads as a typical
+           case, and that number comes from nowhere. */
         es: 'Ej.: queremos instalar puntos de carga para los vehículos eléctricos de nuestra empresa.',
         en: 'E.g.: we want to install charge points for our company vehicles.',
         pt: 'Ex.: queremos instalar pontos de carga para os veículos elétricos da nossa empresa.',
@@ -311,12 +311,12 @@ export const leadForm = {
     },
     consent: {
       /** Legal requirement: Ley 1581 de 2012 (habeas data, Colombia). §38. */
-      /* `{policy}` es el enlace, dentro de la frase, igual que en el aviso de
-         cookies. Antes la autorización terminaba en "conforme a su política de
-         tratamiento de datos" y el enlace iba DESPUÉS, con su propio rótulo
-         ("Ver política…"): la casilla decía una cosa y al lado había otro
-         control repitiéndola. Ahora la frase que se autoriza contiene el
-         documento que se está aceptando, con su nombre completo. */
+      /* `{policy}` is the link, inside the sentence, just as in the cookie
+         notice. The authorisation used to end in "conforme a su política de
+         tratamiento de datos" with the link AFTER it, carrying its own label
+         ("Ver política…"): the checkbox said one thing and next to it another
+         control repeated it. Now the sentence being authorised contains the
+         document being accepted, under its full name. */
       label: {
         es: 'Autorizo a Voltop a tratar mis datos personales para responder a esta solicitud, de acuerdo con su {policy}.',
         en: 'I authorize Voltop to process my personal data in order to respond to this request, in accordance with its {policy}.',
@@ -327,8 +327,8 @@ export const leadForm = {
         en: 'We need your authorization in order to contact you.',
         pt: 'Precisamos da sua autorização para entrar em contato.',
       } satisfies Localized,
-      /* El nombre completo del documento, palabra por palabra igual que el
-         `h1` de `/legal/privacidad` y que el enlace del aviso de cookies. */
+      /* The document's full name, word for word the same as the `h1` of
+         `/legal/privacidad` and as the cookie notice's link. */
       policyLink: {
         es: 'Política de Tratamiento de Datos Personales',
         en: 'Personal Data Processing Policy',
@@ -337,11 +337,11 @@ export const leadForm = {
     },
   },
 
-  /* Vuelve a "solicitud". El comentario anterior lo cambió a "mi caso" para
-     rimar con "Tu caso" y "Cuéntanos tu caso", y esos dos rótulos ya no
-     existen: el formulario se titula "Empecemos por aquí" y el aviso de errores
-     y el estado de éxito hablan de una SOLICITUD. El botón vuelve a decir lo
-     mismo que el resto del flujo. */
+  /* Back to "solicitud". An earlier change made it "mi caso" to rhyme with
+     "Tu caso" and "Cuéntanos tu caso", and neither of those labels exists any
+     more: the form is titled "Empecemos por aquí", and the error notice and the
+     success state both talk about a SOLICITUD. The button says the same thing as
+     the rest of the flow again. */
   submit: {
     es: 'Enviar solicitud',
     en: 'Send request',
@@ -674,10 +674,10 @@ export const footer = {
           href: `${routes.about}#impacto`,
         },
         {
-          /* La sección dejó de llamarse LIDERAZGO y ahora es VISIÓN (copy del
-             2026-09-08). El ancla `#liderazgo` NO cambia: es la dirección que
-             ya puede estar enlazada desde fuera, y renombrarla rompe enlaces
-             sin arreglar nada que se vea. */
+          /* The section stopped being called LIDERAZGO and is now VISIÓN (copy
+             from 2026-09-08). The `#liderazgo` anchor does NOT change: it is an
+             address that may already be linked from outside, and renaming it
+             breaks links without fixing anything visible. */
           label: { es: 'Visión', en: 'Vision', pt: 'Visão' } satisfies Localized,
           href: `${routes.about}#liderazgo`,
         },

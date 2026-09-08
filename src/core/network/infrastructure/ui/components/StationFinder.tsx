@@ -385,25 +385,25 @@ export function StationFinder({ locale, stations, cities }: Props) {
             >
               {t(red.sort.label, locale)}
             </label>
-            {/* ── EL CHEVRON ES NUESTRO, NO EL DEL NAVEGADOR ─────────────────
-                Antes se veía el que pinta el sistema, y su distancia al borde
-                la fija el navegador: no la mueve ningún `padding`. Medido a
-                1440px, el texto arrancaba a 16px del borde izquierdo y la
-                flecha quedaba a ~12px del derecho — desequilibrio visible en un
-                control de 238px.
+            {/* ── THE CHEVRON IS OURS, NOT THE BROWSER'S ─────────────────────
+                What used to show was the one the system paints, and its distance
+                from the edge is fixed by the browser: no `padding` moves it.
+                Measured at 1440px, the text started 16px from the left edge and
+                the arrow sat ~12px from the right — a visible imbalance on a
+                238px control.
 
-                `appearance-none` apaga SOLO el dibujo de la flecha. El
-                `<select>` sigue siendo nativo: teclado, lector de pantalla y la
-                rueda de iOS/Android intactos, que es justo por lo que se eligió
-                un select y no un menú a medida.
+                `appearance-none` switches off ONLY the arrow's drawing. The
+                `<select>` stays native: keyboard, screen reader and the
+                iOS/Android wheel intact, which is exactly why a select was
+                chosen over a custom menu.
 
-                El glifo es el MISMO que usa el selector de idioma —`viewBox
-                0 0 10 6`, trazo 1.5, extremos redondeados— para que el sitio
-                tenga un solo chevron y no dos parecidos.
+                The glyph is the SAME one the language switch uses — `viewBox
+                0 0 10 6`, stroke 1.5, round caps — so the site has one chevron
+                and not two similar ones.
 
-                `right-4` = 16px, exactamente el `px-4` del lado izquierdo: el
-                aire es ahora el mismo a los dos lados. Y `pr-10` reserva sitio
-                para que el texto largo nunca pase por debajo. */}
+                `right-4` = 16px, exactly the `px-4` of the left side: the air is
+                now the same on both. And `pr-10` reserves room so long text
+                never runs underneath. */}
             <div className="relative">
               <select
                 id={sortId}
@@ -422,9 +422,10 @@ export function StationFinder({ locale, stations, cities }: Props) {
                   <option value="distance">{t(red.sort.distance, locale)}</option>
                 )}
               </select>
-              {/* `pointer-events-none`: el clic tiene que llegar al select, que
-                  es quien abre la lista. `lg:top-[calc(50%+0.375rem)]` compensa
-                  el `lg:mt-3` del select, porque el contenedor no lo lleva. */}
+              {/* `pointer-events-none`: the click has to reach the select, which
+                  is what opens the list. `lg:top-[calc(50%+0.375rem)]` offsets
+                  the select's `lg:mt-3`, because the container does not carry
+                  it. */}
               <svg
                 aria-hidden="true"
                 viewBox="0 0 10 6"

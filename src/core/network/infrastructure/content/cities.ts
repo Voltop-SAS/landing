@@ -12,13 +12,13 @@
 import type { City } from '~/core/network/domain/entities/City'
 
 /**
- * ── AQUÍ YA NO HAY DESCRIPCIÓN POR CIUDAD (2026-09-08) ────────────────────
- * Cada ciudad traía un campo `intro` escrito a mano. Se retiró entero, no solo
- * su contenido: mientras el campo existiera, cualquiera podía volver a llenarlo
- * y el texto reaparecería sin que nadie lo pidiera.
+ * ── THERE IS NO PER-CITY DESCRIPTION HERE ANY MORE (2026-09-08) ───────────
+ * Every city carried a hand-written `intro` field. It was removed whole, not
+ * just its content: as long as the field existed, anyone could fill it again
+ * and the text would come back with nobody asking for it.
  *
- * La descripción se compone ahora en `cityCopy.lead` con las cifras que
- * devuelve `getCitiesWithStations()`. Lee esa nota antes de traerlo de vuelta.
+ * The description is now composed in `cityCopy.lead` from the figures
+ * `getCitiesWithStations()` returns. Read that note before bringing it back.
  */
 export const cities: City[] = [
   {

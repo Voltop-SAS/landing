@@ -23,16 +23,16 @@
  * consumed on read, so it fires once and never twice.
  */
 
-let pendiente: string | null = null
+let pending: string | null = null
 
 /** Called by the preview when someone clicks it. */
 export function requestPlayOnArrival(src: string) {
-  pendiente = src
+  pending = src
 }
 
 /** Called by the destination. Returns true ONCE, and only for the same piece. */
 export function consumePlayOnArrival(src: string) {
-  if (pendiente !== src) return false
-  pendiente = null
+  if (pending !== src) return false
+  pending = null
   return true
 }

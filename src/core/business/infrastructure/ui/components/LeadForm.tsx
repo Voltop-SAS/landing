@@ -96,13 +96,7 @@ async function submitLead(payload: LeadPayload): Promise<void> {
     `?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
 }
 
-export function LeadForm({
-  locale,
-  segmentKey,
-}: {
-  locale: Locale
-  segmentKey: string
-}) {
+export function LeadForm({ locale, segmentKey }: { locale: Locale; segmentKey: string }) {
   const [status, setStatus] = useState<Status>('idle')
   const [started, setStarted] = useState(false)
   const confirmationRef = useRef<HTMLDivElement>(null)
@@ -211,10 +205,10 @@ export function LeadForm({
       noValidate
       className="border border-line bg-surface-1 p-6 md:p-10"
     >
-      {/* El rótulo "Tu caso: <segmento>" se retiró el 2026-09-08. Repetía en
-          12px mono la pestaña que el usuario acaba de pulsar y que sigue
-          marcada arriba, y el `segmentKey` viaja igual en el envío: la
-          información no se pierde, solo deja de decirse dos veces. */}
+      {/* The "Tu caso: <segment>" label was removed on 2026-09-08. It repeated,
+          in 12px mono, the tab the user had just pressed and which is still
+          marked above, and `segmentKey` travels in the submission either way:
+          no information is lost, it just stops being said twice. */}
       <h3 className="font-display text-display-m font-semibold text-ink">
         {t(leadForm.title, locale)}
       </h3>
@@ -315,12 +309,12 @@ export function LeadForm({
               htmlFor={fieldId('consent')}
               className="py-3 text-body-s text-ink-2"
             >
-              {/* El enlace va DENTRO de la autorización. Ver la nota de
-                  `consent.label`: se parte por `{policy}` y en su hueco entra
-                  el nombre completo del documento. Si un idioma perdiera el
-                  token, la frase se renderiza entera sin enlace en lugar de
-                  romperse — una autorización ilegible es lo único que aquí no
-                  puede pasar. */}
+              {/* The link goes INSIDE the authorisation. See the note on
+                  `consent.label`: the text splits on `{policy}` and the
+                  document's full name takes its place. If a locale ever lost the
+                  token, the sentence renders whole without a link rather than
+                  breaking — an unreadable authorisation is the one thing that
+                  cannot happen here. */}
               {(() => {
                 const [before, after] = t(leadForm.fields.consent.label, locale).split('{policy}')
                 return (

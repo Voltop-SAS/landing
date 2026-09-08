@@ -105,22 +105,22 @@ export function CookieConsent({ locale }: { locale: Locale }) {
   const visible = read && decision === null
 
   /**
-   * EL FOCO ENTRA EN LA REGIÓN, NO EN UN BOTÓN.
+   * FOCUS LANDS ON THE REGION, NOT ON A BUTTON.
    *
-   * "Aceptar" tenía `autoFocus`, y en una carga limpia —sin que nadie toque el
-   * teclado— Chrome le daba `:focus-visible`: medido, anillo de 2px de marca en
-   * "Aceptar" y nada en "Rechazar".
+   * "Aceptar" had `autoFocus`, and on a clean load — with nobody touching the
+   * keyboard — Chrome gave it `:focus-visible`: measured, a 2px brand ring on
+   * "Aceptar" and nothing on "Rechazar".
    *
-   * Dos cosas se rompían con eso. La cabecera de este fichero exige que las dos
-   * salidas pesen lo mismo, y un anillo en una de ellas es una diferencia
-   * visual que ninguna de las otras igualdades compensa. Y peor: se lee como
-   * PRESELECCIONADA — pulsar Enter aceptaba— lo cual es un empujón hacia el sí
-   * en el único sitio del sitio donde la decisión tiene que ser libre.
+   * Two things broke with that. This file's header requires both exits to carry
+   * the same weight, and a ring on one of them is a visual difference none of
+   * the other equalities makes up for. And worse: it reads as PRESELECTED —
+   * pressing Enter accepted — which is a nudge towards yes in the one place on
+   * the site where the decision has to be free.
    *
-   * Enfocar el contenedor conserva lo que `autoFocus` resolvía: quien navega
-   * con teclado aterriza dentro del aviso y su siguiente Tab es "Aceptar", sin
-   * tener que buscarlo. `tabIndex={-1}` lo hace enfocable por código sin
-   * añadirlo al orden de tabulación.
+   * Focusing the container keeps what `autoFocus` solved: a keyboard user lands
+   * inside the notice and their next Tab is "Aceptar", without having to hunt
+   * for it. `tabIndex={-1}` makes it focusable from code without adding it to
+   * the tab order.
    */
   const region = useRef<HTMLDivElement>(null)
   useEffect(() => {
@@ -150,9 +150,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           aria-label={t(copy.title, locale)}
           /* `z-(--z-overlay)`: above the app floater, which also lives at the
              bottom. The decision comes first. */
-          /* Silencia el anillo de foco de ESTE contenedor. La razón entera
-             está en `globals.css`, junto a la regla: aquí no vale una utilidad
-             de Tailwind porque la regla global vive fuera de `@layer`. */
+          /* Silences the focus ring of THIS container. The full reason lives in
+             `globals.css`, next to the rule: a Tailwind utility does not work
+             here because the global rule lives outside `@layer`. */
           data-focus-silent=""
           className="fixed inset-x-0 bottom-0 z-(--z-overlay) border-t border-line bg-canvas/85 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl"
         >
@@ -185,12 +185,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                         <>
                           <Link
                             href={href(locale, routes.privacy)}
-                            /* Subrayado SIEMPRE visible, no solo en hover: dentro de un
-                              párrafo el color no basta para señalar un enlace
-                              —quien no distingue el verde no lo encuentra— y
-                              este es el enlace que hace que el consentimiento
-                              sea informado. El foco lo pone la regla global de
-                              `globals.css`, no hace falta repetirlo aquí. */
+                            /* Underline ALWAYS visible, not only on hover: inside a
+                              paragraph, colour alone does not mark a link
+                              — someone who cannot tell the green apart will not
+                              find it — and this is the link that makes the
+                              consent informed. The focus ring comes from the
+                              global rule in `globals.css`; no need to repeat it
+                              here. */
                             className="text-ink underline decoration-line-strong decoration-1 underline-offset-4 transition-colors hover:text-brand hover:decoration-brand"
                           >
                             {t(copy.policy, locale)}
