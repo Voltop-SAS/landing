@@ -2684,3 +2684,61 @@ No propongo rellenarlas con texto: sería justo la sobreoptimización que se pid
 ### Evidencia
 
 Las 42 URLs en 200 · 1 `h1` cada una · **0 saltos de jerarquía** · 42/42 canonical propio · 42/42 `og:image` · 6/6 entradas con `<article>` · datos estructurados: 9 `EVChargingStation`+`BreadcrumbList`, 6 `NewsArticle`+`BreadcrumbList`, 6 `Organization`, 3 `FAQPage` · tipos 0 · lint 0 · 58 tests · build limpio · i18n 459/459.
+
+---
+
+## Bloque 64 · Auditoría de accesibilidad WCAG 2.2 AA — 2026-09-08
+
+Nueve páginas recorridas con teclado real y medidas en 320, 390, 512, 640, 768 y 1440. Dos arreglos, y una no conformidad que no se puede cerrar desde el código.
+
+### 2.4.11 Foco no oculto · el fallo AA que había
+
+Dos capas fijas enmarcan la página —la cabecera arriba, la barra de la app abajo— y el navegador, al tabular, desplaza el elemento enfocado lo justo para meterlo en pantalla: justo debajo de una de las dos.
+
+Medido tabulando la Home entera a 390px y muestreando **nueve puntos por elemento**, no su centro:
+
+- Hacia delante: «Visión» y el logotipo del pie quedaban **totalmente tapados** por la barra.
+- Hacia atrás con Mayús+Tab: «Soluciones por caso» y el logotipo quedaban **totalmente tapados** bajo la cabecera.
+
+Tapado del todo incumple AA. Tapado a medias no: eso es el 2.4.12, que es AAA. En escritorio lo peor era 6 de 9 puntos, así que ahí ya se cumplía.
+
+Se arregla con **`scroll-padding`** en `html`: le dice al navegador cuánto sitio reservar al desplazar algo a la vista. No cambia la maqueta, ni el diseño, ni dónde está nada — solo dónde se detiene el scroll. Los valores salen de medir las capas: 88px arriba (cabecera de 65–81px) y 152px abajo (barra de 126px + 12 de separación a 390px). Por encima de `lg` la barra se vuelve tarjeta de esquina de 280px, deja de cruzar el ancho y no puede tapar nada del todo, así que ahí no se reserva nada.
+
+Tras el arreglo: **cero elementos totalmente tapados** en los dos sentidos y en los dos anchos.
+
+### 4.1.2 · el selector de casos controlaba paneles inexistentes
+
+Las cuatro pestañas de `/empresas` declaraban `aria-controls="panel-…"` pero **solo el panel activo está en el DOM**, así que tres de los cuatro apuntaban a un identificador que no resuelve a nada. El patrón APG permite no renderizar los paneles inactivos; lo que no permite es afirmar que controlas algo que no existe. Ahora `aria-controls` va solo en la pestaña seleccionada. El `tabindex` móvil y las flechas ya estaban bien: comprobado, ArrowRight, Home y End mueven y seleccionan.
+
+### Falsos positivos que conviene dejar anotados
+
+- **Ocho textos «sin contraste»** eran fondos con gradiente y texto con `background-clip`, que un cálculo por `backgroundColor` no ve. Medidos sobre el píxel compuesto: los botones dan **10,06 a 10,86:1**.
+- **El «01» de las listas de proceso** salía a 2,86:1 por p99, pero es un numeral de trazo de 1px muy antialiasado. Calculado exacto sobre el color compuesto de `--color-line-control` sobre `canvas` da **3,56:1**, por encima del 3:1 de texto grande. Además lleva `aria-hidden`: el orden lo da el `<ol>`.
+- **La casilla de consentimiento mide 20×20**, por debajo de los 24 del 2.5.8. **Se acoge a la excepción de espaciado**: el objetivo más cercano está a **183px**, así que los círculos de 24px no se tocan. Cumple.
+- **El enlace de salto** parecía 100% tapado por la cabecera. Era solapamiento geométrico, no de pintado: comprobado con `elementFromPoint`, se pinta encima.
+- **Recortes a 320px**: dos son cabeceras `sr-only`, que son cajas de 1px por diseño. El tercero es «Espacios comerciales», 4px más ancho que su columna con `overflow: visible` — no se recorta, no colisiona y la página no desplaza en horizontal. Cosmético en el ancho mínimo absoluto.
+
+### Lo que ya cumplía
+
+Cero elementos focusables sin nombre accesible en las nueve páginas · anillo de foco visible en todas las paradas · **`prefers-reduced-motion`: 0 de 15 reveals invisibles y los vídeos en pausa** · menú móvil con `aria-expanded` correcto, **foco atrapado** y Escape que cierra y devuelve el foco al botón · **3.2.6 Ayuda consistente**: el enlace de ayuda en la posición 6 en las cinco páginas · sin desbordes de página a 320, 512 ni 640 · **1.4.12 espaciado de texto** sin desbordes · formulario con `label` en los seis campos, **`autocomplete` en los cuatro que lo admiten (1.3.5)**, `role="alert"` de resumen, `aria-invalid` y `aria-describedby` con mensajes accionables por campo, y el foco al primer campo inválido · árbol de accesibilidad bien formado, con «Se abre en una pestaña nueva» anunciado · estados de estación en texto, no solo color.
+
+Queda anotado sin cambiar: `aria-controls` en el menú móvil y el selector de idioma apunta a paneles que no existen mientras están cerrados. Es el patrón habitual de un _disclosure_, `aria-expanded` lleva la semántica real, y tocar código de overlay que funciona por un aviso de validador no compensa.
+
+### NO CONFORMIDAD AA VIVA · subtítulos
+
+**1.2.2 Subtítulos (pregrabados)** sigue incumplido, y ahora se puede decir con precisión de qué piezas se trata. Comprobadas las pistas de audio una a una:
+
+| Pieza                               | Audio  | Estado                                                                                                   |
+| ----------------------------------- | ------ | -------------------------------------------------------------------------------------------------------- |
+| `apertura-ean.mp4` · 70 s           | **sí** | **Incumple.** Se reproduce con controles en la entrada de novedades y no tiene subtítulos de ningún tipo |
+| `vision-ceo.mp4` · 28 s             | **sí** | **Incumple en `es` y `pt`.** Lleva subtítulos quemados en INGLÉS, que además no se pueden quitar         |
+| `voltop-film.mp4` · 65 s            | no     | 1.2.2 no aplica. Es vídeo sin sonido; su `alt` descriptivo hace de alternativa                           |
+| `estacion-medellin-loop.mp4` · 11 s | no     | Fondo decorativo con nombre accesible                                                                    |
+
+**Cero elementos `<track>` en todo el sitio.** Se cierra entregando los `.vtt` en los tres idiomas —y, para `ceoVision`, un máster sin los subtítulos quemados—. Es una entrega de contenido, no una tarea de código: el día que lleguen, se declaran en el catálogo de media.
+
+**Esto es lo que impide afirmar que el sitio cumple WCAG 2.2 AA por completo.** Todo lo demás que se ha medido, cumple.
+
+### Evidencia
+
+9 páginas · 6 anchos · tabulación real en los dos sentidos con muestreo de nueve puntos por elemento · contraste sobre el píxel compuesto · tipos 0 · lint 0 · 58 tests · build limpio · i18n 459/459.

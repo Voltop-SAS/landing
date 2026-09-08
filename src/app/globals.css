@@ -280,6 +280,37 @@ html {
      prefiere menos movimiento). Dos motores de scroll compiten entre sí. */
 }
 
+/* WCAG 2.2 · 2.4.11 FOCO NO OCULTO.
+   Dos capas fijas enmarcan la página —la cabecera arriba y la barra de la app
+   abajo— y el navegador, al tabular, desplaza el elemento enfocado lo justo
+   para meterlo en el viewport: justo debajo de una de las dos.
+
+   Medido el 2026-09-08 a 390px, tabulando la Home entera y muestreando nueve
+   puntos por elemento: hacia delante, «Visión» y el logotipo del pie quedaban
+   TOTALMENTE tapados por la barra; hacia atrás con Mayús+Tab, «Soluciones por
+   caso» y el logotipo quedaban bajo la cabecera. Tapado del todo es un
+   incumplimiento AA; tapado a medias, no —eso es el 2.4.12, que es AAA—.
+
+   `scroll-padding` es la respuesta exacta: le dice al navegador cuánto sitio
+   reservar al desplazar algo a la vista. NO cambia la maqueta, ni el diseño, ni
+   dónde está nada: solo dónde se detiene el scroll.
+
+   Los valores salen de medir las capas, con aire por encima: cabecera 65px en
+   móvil y 81px de `md` en adelante; barra 126px + 12px de separación a 390px.
+   Por encima de `lg` la barra se convierte en tarjeta de esquina de 280px, deja
+   de cruzar el ancho y ya no puede tapar nada del todo, así que ahí no se
+   reserva nada. */
+html {
+  scroll-padding-top: 5.5rem;
+  scroll-padding-bottom: 9.5rem;
+}
+
+@media (min-width: 64rem) {
+  html {
+    scroll-padding-bottom: 0;
+  }
+}
+
 body {
   background: var(--color-canvas);
   color: var(--color-ink);
