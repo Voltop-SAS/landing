@@ -2890,3 +2890,64 @@ Medidos los 42 rótulos en mayúsculas del sitio. Hay **dos roles distintos**, y
 ### Evidencia
 
 9 páginas · censo de estilos computados, no de clases · 42 rótulos en mayúsculas clasificados por rol · 23 usos de `<Button>` cruzados por etiqueta y variante · tipos 0 · lint 0 · 58 tests · build limpio.
+
+---
+
+## Bloque 68 · Validación responsive y cross-browser — 2026-09-08
+
+**36 anchos × 9 páginas = 324 combinaciones**, con los bordes de cada breakpoint a ±1px (479/480/481, 639/640/641, 767/768/769, 831/832/833, 1023/1024/1025), nueve altos de viewport, las cinco orientaciones horizontales y los dos iPad.
+
+### Un arreglo real · la barra tapaba el CTA principal en pantallas cortas
+
+Medido sobre dispositivos reales, no sobre anchos redondos:
+
+| Dispositivo              | Antes                             | Después            |
+| ------------------------ | --------------------------------- | ------------------ |
+| iPhone SE 2/3 · 375×667  | **−3px**, el CTA rozando la barra | **+45px**          |
+| Android básico · 360×640 | **−28px, CTA TAPADO**             | **+20px**          |
+| Pixel · 412×732          | +83px                             | +83px (sin tocar)  |
+| iPhone 14 · 390×844      | +171px                            | +171px (sin tocar) |
+
+El Hero ya tenía anotado que **reservar sitio abajo no sirve** —su contenido fluye desde arriba, así que un `padding-bottom` alarga la sección sin mover nada—. Lo que sí sirve es **levantar el bloque**: por debajo de 700px de alto, los 128px de padding superior son sencillamente demasiados; bajo una cabecera de 65px empujan el eyebrow a 193px antes de la primera palabra.
+
+`[@media(max-height:700px)]:pt-20`, en el componente y acotado por alto. **Ningún teléfono normal se toca:** 412×732 y 390×844 quedan fuera de la consulta y miden exactamente lo mismo que antes.
+
+**320×568 (el primer iPhone SE) NO se arregla, y no puede:** cabecera 65 + barra 126 dejan 377px, y el Hero no cabe ahí con ningún padding. La respuesta en ese caso es la que la barra ya tiene: se cierra.
+
+### Falso positivo que conviene anotar
+
+El barrido marcaba **tres elementos «fuera del viewport» en `/es` a los 36 anchos**. Son la primitiva de movimiento FRAME —escalada a 1.06 a propósito, para que haya material que revelar— y su contenedor, **recortados por un ancestro con `overflow: hidden`**. `scrollWidth` es igual a `innerWidth` en los 36 anchos: no hay desborde. Descontando el recorte por ancestro, el barrido final da **0 problemas en 189 combinaciones**.
+
+Lo mismo con «las capas fijas ocupan el 62% a 1024×768»: mi fórmula asumía barra a ancho completo, y a ese ancho ya es tarjeta de esquina — 280×369, el **13% del área**, sin chocar con nada.
+
+### SAFE AREAS · pendiente de decisión, no tocado
+
+El código tiene **tres usos de `env(safe-area-inset-bottom)`** —aviso de cookies, pie y barra de la app— y **el `<meta viewport>` no declara `viewport-fit=cover`**. Sin eso, `env()` vale siempre 0: esos tres paddings **no hacen nada**.
+
+No es peligroso hoy: sin `viewport-fit=cover`, iOS mete la página entera dentro del área segura, así que nada queda bajo el indicador de inicio. Pero el código está escrito para lo contrario, y hay que resolverlo en una de las dos direcciones:
+
+1. **Añadir `viewport-fit=cover`** — la página llega a los bordes, que es lo que pide un diseño oscuro a sangre, y los tres `env()` empiezan a funcionar. **Es para lo que se escribió el código.**
+2. **Quitar los tres `env()`** — dejan de prometer algo que no hacen.
+
+**No lo cambio porque no puedo verificarlo:** Chrome sin dispositivo no emula los insets de iOS, y activar el borde a borde a ciegas movería la barra, el aviso y el pie en todos los iPhone con notch. Necesita un iPhone real delante.
+
+### Cross-browser · lo que pude y lo que no
+
+**Chrome: recorrido completo.** **Safari: no automatizable aquí** — `safaridriver --enable` pide contraseña de administrador. **Firefox: no está instalado.**
+
+En su lugar, análisis estático de los rasgos con diferencias conocidas, sobre el CSS servido:
+
+| Rasgo                                                         | Usos    | Estado                                                                               |
+| ------------------------------------------------------------- | ------- | ------------------------------------------------------------------------------------ |
+| `backdrop-filter`                                             | 14      | **Protegido**: 7 `-webkit-` y 25 bloques `@supports` con respaldo sólido             |
+| `requestIdleCallback`                                         | 3       | **Protegido**: Safari solo lo trae desde 17.4 y `VideoMedia` cae a `setTimeout(400)` |
+| `IntersectionObserver`                                        | 8       | **Protegido**: hay rama para navegador sin soporte                                   |
+| `color-mix` / `oklab`                                         | 40 / 17 | Safari 16.2+ y Firefox 113+                                                          |
+| `dvh`, `inert`, `aspect-ratio`, `clip-path`, `scroll-padding` | 26      | Soportados en las tres                                                               |
+| `text-wrap: balance`                                          | 1       | Safari 17.5+; los anteriores lo ignoran sin romper nada                              |
+
+Los dos rasgos que históricamente rompen en Safari ya venían con su respaldo escrito. **Aun así, esto es análisis estático: no sustituye a abrir el sitio en un Safari y un Firefox reales, y eso queda pendiente.**
+
+### Evidencia
+
+324 combinaciones en el barrido inicial y 189 en el de verificación · bordes de breakpoint a ±1px · nueve altos · cinco orientaciones horizontales · tipos 0 · lint 0 · 58 tests · build limpio.
