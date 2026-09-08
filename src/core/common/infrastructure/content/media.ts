@@ -102,11 +102,34 @@ export const media = {
   },
 
   /** Proof of purpose and leadership. */
+  /**
+   * DELIVERED 2026-09-08 as `Video_Nosotros.mov`, HEVC 1920×1080 with audio,
+   * 28 s and 39 MB. Served as H.264 CRF 26 (7.0 MB) plus a 960-wide variant at
+   * CRF 29 (1.7 MB). The master lives in `~/Voltop-masters-originales/`.
+   *
+   * ── IT IS WATCHED, SO IT GOT CONTROLS ────────────────────────────────────
+   * The slot rendered it as a BACKGROUND: muted, looping, no controls. That was
+   * fine while it was a hole and wrong the moment the material arrived — this
+   * is the founder talking to camera. Muted and on an endless loop you would
+   * watch him speak and never hear a word.
+   *
+   * So `/nosotros` now passes `controls`, which is the same rule the news entry
+   * already applies and the one written on the prop itself: a background is
+   * looked at without meaning to, a narrated piece is watched by choice.
+   *
+   * ── THE SUBTITLES ARE BURNED IN, AND IN ENGLISH ──────────────────────────
+   * Checked frame by frame: there is text on screen in practically every
+   * second, so there is no clean frame for the poster either. On `/es` and
+   * `/pt` the subtitle is in the wrong language, and nobody can turn it off.
+   * It is the same debt already open for the film — the master without burned
+   * subtitles plus three `.vtt` — and it now affects a second piece.
+   */
   ceoVision: {
     id: 'vision-ceo',
     kind: 'video',
-    src: null,
-    poster: null,
+    src: '/vision-ceo.mp4',
+    srcMobile: '/vision-ceo-movil.mp4',
+    poster: '/vision-ceo-poster.jpg',
     alt: {
       es: 'Bruno Ocampo, fundador y CEO de Voltop, hablando desde una estación de carga',
       en: 'Bruno Ocampo, founder and CEO of Voltop, speaking from a charging station',
@@ -117,9 +140,9 @@ export const media = {
       en: 'Purpose and leadership. Intimate and brief, not corporate.',
       pt: 'Propósito e liderança. Íntimo e breve, não corporativo.',
     },
-    duration: '0:45',
+    duration: '0:28',
     aspect: '16/9',
-    availability: 'confirmado-no-entregado',
+    availability: 'entregado',
   },
 
   /**

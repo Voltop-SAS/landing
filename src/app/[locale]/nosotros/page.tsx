@@ -262,10 +262,16 @@ export default async function NosotrosPage({ params }: Props) {
           width="wide"
           className="mt-14"
         >
+          {/* `controls` porque esto es una PIEZA QUE SE VE, no un fondo: es el
+              fundador hablando a cámara. Sin controles iría en silencio y en
+              bucle infinito —le verías hablar sin oír una palabra— y además no
+              habría forma de pararlo. Misma regla que ya aplica la entrada de
+              novedades. */}
           <Media
             asset={media.ceoVision}
             locale={locale}
             corner
+            controls
             sizes="(min-width: 1600px) 1600px, 100vw"
           />
         </Container>

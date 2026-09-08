@@ -2516,9 +2516,9 @@ Va **por `src`, no por ruta**: la intención es de la pieza. Y se consume al lee
 
 Tres cosas que había que evitar y se comprobaron una a una:
 
-- **El fondo del beat 5 es este mismo componente** y sirve el mismo fichero que la entrada de la EAN. Sin comprobar que la previsualización *sea* un enlace (`closest('a')`), hacer clic en ese fondo dejaba armada la entrada para cuando alguien llegara por otro camino.
+- **El fondo del beat 5 es este mismo componente** y sirve el mismo fichero que la entrada de la EAN. Sin comprobar que la previsualización _sea_ un enlace (`closest('a')`), hacer clic en ese fondo dejaba armada la entrada para cuando alguien llegara por otro camino.
 - **React monta cada efecto dos veces en desarrollo.** Sin recordar el consumo en un `ref`, el segundo pase encontraba el buzón vacío y la reproducción fallaba **solo en local**, que es el peor sitio donde puede fallar algo porque es donde se revisa.
-- **La espera al hueco libre del hilo** —los hasta 3 s que protegen el arranque de página— se salta cuando hay intención. Ahí el vídeo *es* lo que se ha venido a ver.
+- **La espera al hueco libre del hilo** —los hasta 3 s que protegen el arranque de página— se salta cuando hay intención. Ahí el vídeo _es_ lo que se ha venido a ver.
 
 Solo lo recoge la versión **con controles**, y eso no es casual: es la única que cumple WCAG 1.4.2, porque tener un mecanismo para parar el audio es la condición para que pueda sonar solo más de tres segundos.
 
@@ -2535,6 +2535,16 @@ El marco es 3:2 y la maqueta lo recorta a 21/9 centrado. Comprobado sobre el rec
 **Una medición que me salió mal y conviene anotar.** Leyendo `naturalWidth` desde la página, la imagen parecía servirse a 0,45× de lo necesario. Es falso: cargando esa misma URL del optimizador directamente devuelve **3200×2133** y el navegador solo pide el candidato correcto (`w=3840`, AVIF de 268 KB). `naturalWidth` leído sobre un `<img>` con `srcset` y `decoding="async"` no es de fiar; el optimizador sí.
 
 **Pendiente de saber:** no sé quiénes son las dos personas. El `alt` las describe sin nombrarlas, que es lo correcto mientras no se confirme; si una es Bruno Ocampo, el `alt` debería decirlo.
+
+### El vídeo del fundador, y el fondo que no podía seguir siendo fondo
+
+`Video_Nosotros.mov`: HEVC 1920×1080 con audio, 28 s y 39 MB. Servido a H.264 CRF 26 (7,0 MB) más una variante de 960 a CRF 29 (1,7 MB). Máster fuera del repositorio.
+
+**El hueco lo pintaba como FONDO** —silenciado, en bucle y sin controles— y eso estaba bien mientras fuera un hueco. En cuanto llegó el material dejó de estarlo: es el fundador hablando a cámara. Silenciado y en bucle infinito le verías hablar y no oirías una palabra. `/nosotros` pasa a `controls`, que es la regla que ya aplica la entrada de novedades y la que está escrita en la propia prop: un fondo se mira sin querer, una pieza narrada se ve queriendo.
+
+**Los subtítulos van quemados y en inglés.** Comprobado fotograma a fotograma —muestreo cada segundo de los 28— : hay texto en pantalla en prácticamente todos, así que tampoco existe un fotograma limpio para el póster. En `/es` y `/pt` el subtítulo está en el idioma equivocado y nadie puede quitarlo. Es la misma deuda ya abierta para la película —máster sin subtítulos quemados más tres `.vtt`— y ahora afecta a una segunda pieza.
+
+Con esto **`/nosotros` deja de abrir con huecos**: era la última página que tenía. En todo el catálogo solo queda `chargingDetail`, que afecta a las fichas de estación.
 
 ### Evidencia
 
