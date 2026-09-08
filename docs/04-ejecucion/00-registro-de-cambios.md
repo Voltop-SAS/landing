@@ -2496,6 +2496,14 @@ Tracking por tamaño de lectura, creciente conforme baja el cuerpo: `body-l` +0.
 - **El CSS sin capa gana a las utilidades de Tailwind**, que sí están en capa, sin importar la especificidad. Vale para todo lo que se escriba suelto en `globals.css`.
 - **`autoPlay` anula `preload="none"`.** Si se quiere de verdad no descargar, hay que no emitir los `<source>`.
 
+### La portada de novedades no abría nada
+
+La previsualización de Wake en `/es/novedades` **no era clicable**: el único enlace a la entrada era el titular de al lado. Con el vídeo ahí en silencio, eso dejaba el audio detrás de un clic que nadie iba a acertar.
+
+Ahora la portada abre la entrada. Se resolvió en `PostLink` —que es donde vive la regla §15 de no enlazar sin destino— con un `decorative` nuevo: el enlace existe de verdad, con su `href` (clic central, abrir en pestaña nueva y el rastreador siguen funcionando), pero sale del recorrido de teclado y del lector de pantalla con `tabIndex={-1}` y `aria-hidden`. El ratón gana el destino grande; el teclado no gana un duplicado del titular que ya está justo debajo.
+
+Comprobado: clic real sobre el vídeo → `/es/novedades/apertura-wake-medellin`, con el vídeo de la entrada en `controls: true` y `muted: false`. Y **tres tab stops** en `main`, uno por entrada: ninguno de más.
+
 ### Evidencia
 
 Lint 0 · tipos 0 · build limpio · i18n **459/459** en los tres idiomas. `/nosotros` verificada en 390, 768, 1024, 1440 y 1920: sin desborde horizontal, sin texto recortado, sin viudas y **sin elementos invisibles** —lo que confirma que los `Reveal` siguen disparando—. Jerarquía comprobada: 1 `h1`, 5 `h2`, 4 `h3`. Vídeo de la EAN comprobado en los dos usos: con controles y sonido en la entrada, silenciado y en bucle en el beat 5.
