@@ -2552,6 +2552,14 @@ Las cinco entradas iban en `display-m`: **24px a 390px de ancho**. El wordmark d
 
 Baja un escalón del sistema, a `display-s` → 20px. No es un valor suelto, es el peldaño siguiente de la escala, y la fila conserva **66px de alto**, muy por encima de los 44 que pide un objetivo táctil. Comprobado a 360, 390 y 430: sin scroll, con el CTA y el selector de idioma completos en pantalla. La navegación de escritorio no se toca — va en `body-s` y siempre fue otra cosa.
 
+### Dos aspas en el buscador de `/red`
+
+Al escribir aparecían dos "X" seguidas. Una era nuestra —con su `aria-label` y su objetivo táctil de 44px— y la otra la que WebKit dibuja **por su cuenta** en cualquier `input[type="search"]`, en Chrome y en Safari.
+
+Se apaga la nativa (`::-webkit-search-cancel-button`) y se conserva `type="search"`, que no es decorativo: es lo que hace que el teclado de iOS muestre la tecla "Buscar" y lo que le dice a un lector de pantalla qué clase de campo es.
+
+Va en `globals.css` sin capa, como el resto de restablecimientos de este fichero. Comprobado: una sola aspa, y sigue limpiando el campo y devolviendo los resultados.
+
 ### Evidencia
 
 Lint 0 · tipos 0 · build limpio · i18n **459/459** en los tres idiomas. `/nosotros` verificada en 390, 768, 1024, 1440 y 1920: sin desborde horizontal, sin texto recortado, sin viudas y **sin elementos invisibles** —lo que confirma que los `Reveal` siguen disparando—. Jerarquía comprobada: 1 `h1`, 5 `h2`, 4 `h3`. Vídeo de la EAN comprobado en los dos usos: con controles y sonido en la entrada, silenciado y en bucle en el beat 5.

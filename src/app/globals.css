@@ -350,6 +350,20 @@ body {
   outline: none;
 }
 
+/* LA "X" NATIVA DEL CAMPO DE BÚSQUEDA.
+   `input[type="search"]` dibuja su propia aspa en WebKit —Chrome y Safari—, y
+   el buscador de /red ya tiene la suya, con su `aria-label` y su objetivo
+   táctil de 44px. Al escribir aparecían LAS DOS, una al lado de la otra.
+
+   Se apaga la nativa y se conserva `type="search"`, que no es decorativo: es
+   lo que hace que el teclado de iOS muestre la tecla "Buscar" y lo que le dice
+   a un lector de pantalla qué clase de campo es. */
+input[type='search']::-webkit-search-cancel-button,
+input[type='search']::-webkit-search-decoration {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
 /* Enlace de salto al contenido (WCAG 2.4.1) */
 .skip-link {
   position: fixed;
