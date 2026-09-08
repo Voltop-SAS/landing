@@ -2,7 +2,7 @@ import { t, defaultLocale, type Locale } from '~/core/common/domain/i18n/config'
 import { legalDoc } from '~/core/legal/domain/consts/copy'
 import type { LegalDoc } from '~/core/legal/domain/entities/LegalDoc'
 import { formatDate } from '@ui/common/lib/dates'
-import { Section, Container } from '@ui/common/components/ui/LayoutPrimitives'
+import { Section, Container, Eyebrow } from '@ui/common/components/ui/LayoutPrimitives'
 
 /**
  * LEGAL DOCUMENT
@@ -73,9 +73,11 @@ export function LegalDocument({
           third of a screen of emptiness to the right of the contents. */}
       <Container>
         <header className="border-b border-line pb-10">
-          <p className="font-mono text-mono uppercase tracking-[0.14em] text-ink-3">
-            {t(legalDoc.eyebrow, locale)}
-          </p>
+          {/* The `Eyebrow` component, not a hand-rolled one. It carried
+              `tracking-[0.14em]`, which is neither of the system's two values:
+              not the token's 0.18em for an eyebrow, and not the 0.05em of a
+              field label. A third tracking for a role that already had one. */}
+          <Eyebrow>{t(legalDoc.eyebrow, locale)}</Eyebrow>
           <h1 className="mt-5 max-w-[18ch] font-display text-display-xl font-semibold text-balance text-ink">
             {title}
           </h1>
@@ -127,9 +129,7 @@ export function LegalDocument({
             aria-label={t(legalDoc.tocTitle, locale)}
             className="hidden lg:sticky lg:top-28 lg:block lg:max-h-[calc(100dvh-9rem)] lg:w-72 lg:shrink-0 lg:overflow-y-auto lg:pt-12"
           >
-            <p className="font-mono text-mono uppercase tracking-[0.14em] text-ink-3">
-              {t(legalDoc.tocTitle, locale)}
-            </p>
+            <Eyebrow>{t(legalDoc.tocTitle, locale)}</Eyebrow>
             <div className="mt-4">{indice}</div>
           </nav>
 

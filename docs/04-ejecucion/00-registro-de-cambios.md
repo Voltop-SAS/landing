@@ -2839,3 +2839,54 @@ Ahora un valor desconocido se ignora, que es lo que los chips sí pueden represe
 ### Evidencia
 
 Recorrido en 1440 y 390 · contextos de navegador limpios para los flujos de consentimiento · clics de ratón reales sobre coordenadas, no `element.click()`, donde el scroll importaba · tipos 0 · lint 0 · 58 tests · build limpio.
+
+---
+
+## Bloque 67 · Barrido visual del sistema — 2026-09-08
+
+Censo de estilos computados sobre nueve páginas: tipografías, tamaños, pesos, interlineados, trackings, colores, jerarquías, botones, radios, bordes, contenedores, espaciados y tratamiento de media. **Dos desviaciones reales.** Todo lo demás resultó ser variación intencional, y queda dicho cuál es cuál.
+
+### Los eyebrows: cuáles son intencionales y cuáles no
+
+Medidos los 42 rótulos en mayúsculas del sitio. Hay **dos roles distintos**, y confundirlos es lo que producía la sensación de desorden:
+
+| Rol                     | Valor                           | Uso                                                       |
+| ----------------------- | ------------------------------- | --------------------------------------------------------- |
+| **Eyebrow**             | 12px · **0.18em** · `ink-3`     | 19× — heroes de páginas interiores y aperturas de sección |
+| **Eyebrow de marca**    | 12px · **0.18em** · `brand`     | 9× — **solo** los beats narrativos de la Home             |
+| **Rótulo de campo**     | 12px · **0.05em** · `ink-3`     | 64× — metadatos y etiquetas de dato                       |
+| Valor junto a su rótulo | 12px · 0.05em · `ink-2` / `ink` | 7× — el dato brilla, la etiqueta no                       |
+| Rótulo elevado          | 12px · 0.05em · `brand`         | 1× — la columna B2C del cierre                            |
+| Insignias de tienda     | 9px · 0.12em                    | 2× — proporción prescrita por App Store y Google Play     |
+
+**El verde es intencional y tiene una regla clara:** aparece en los nueve eyebrows de la Home y en ningún otro sitio. La Home es la narrativa de marca; las páginas interiores son superficies de producto y abren en apagado. **No hay ningún eyebrow blanco.** El único rótulo verde fuera de la Home no existe: el que hay está _en_ la Home, en el cierre, y es intencional — la columna B2C se eleva en tres ejes a la vez (color del rótulo, tamaño del cuerpo y variante del botón) frente a la B2B.
+
+### Desviación 1 · el mismo rótulo con dos trackings
+
+**«Puntos de carga» se renderizaba a 0.05em en la Home y a 0.02em en la ficha de estación.** El `<dt>` de `SpecList` era **el único rótulo de campo del sitio sin `tracking-wider`**: los otros 64 lo llevan. Corregido.
+
+### Desviación 2 · un tercer tracking que no era de nadie
+
+`LegalDocument` montaba su eyebrow a mano con `tracking-[0.14em]` —ni el 0.18em del token ni el 0.05em de los rótulos— en dos sitios: la apertura del documento y el título del índice. Pasan a usar el componente `Eyebrow`. Con esto el sitio queda con **exactamente dos valores de tracking** para mayúsculas, y el color llevando la jerarquía dentro de cada uno.
+
+### Verificado coherente, sin tocar
+
+|              |                                                                                                                                     |
+| ------------ | ----------------------------------------------------------------------------------------------------------------------------------- |
+| Tipografías  | Poppins en display, Manrope en cuerpo, JetBrains Mono en rótulos. Ni una familia fuera de sitio                                     |
+| Escala       | Cada tamaño con su interlineado y su tracking, todos desde tokens: `display-2xl` a 96px/1.02/−0.03em hasta `caption` a 13px/+0.02em |
+| Botones      | 4 variantes × 3 tamaños en 23 usos. **Cada acción usa siempre la misma variante**, salvo un caso (abajo)                            |
+| Radios       | Tres valores: 999px en píldoras (33×), 10px estructural (14×) y la esquina de firma de 62px (5×)                                    |
+| Bordes       | Todos de 1px, con tres colores de token por función: `line` 0.09 (67×), `line-control` 0.36 (29×), `line-strong` 0.18 (13×)         |
+| Contenedores | Tres anchos, todos token: 1240 contenido (41×), 780 estrecho (8×), 1600 amplio (3×)                                                 |
+| Media        | Ninguna imagen deformada. Los `object-fit: fill` son el valor por defecto de CSS sobre cajas que ya respetan la proporción nativa   |
+
+### Tres cosas que reporto sin cambiar
+
+1. **«Conoce esta estación» tiene dos pesos en la misma página.** En el beat 3 va como `ghost` —con borde— y en el beat 5 como `link`. Es defendible: el beat 5 es vídeo a sangre bajo un velo y un botón con borde competiría con la composición. Pero es la misma acción con dos tratamientos en una sola pantalla de recorrido. **Decisión de composición, no de sistema.**
+2. **El `<h4>` de `BusinessFlow` monta a mano lo que `SectionHeading` produciría**, porque el componente solo acepta `h2` y `h3`. Las clases coinciden exactamente, así que no hay diferencia visual — es una limitación del componente, no un descuido.
+3. **Las preguntas de la FAQ son `h3` a tamaño de cuerpo** (16px Manrope) en vez de display. Es el patrón de acordeón: la pregunta es un control de una lista densa, no un titular. Intencional, pero conviene saberlo porque es el único `h3` del sitio que no es Poppins.
+
+### Evidencia
+
+9 páginas · censo de estilos computados, no de clases · 42 rótulos en mayúsculas clasificados por rol · 23 usos de `<Button>` cruzados por etiqueta y variante · tipos 0 · lint 0 · 58 tests · build limpio.
