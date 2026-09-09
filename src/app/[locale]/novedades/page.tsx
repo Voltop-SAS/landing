@@ -108,9 +108,11 @@ export default async function NovedadesPage({ params }: Props) {
               </div>
             </dl>
 
-            {/* Declared BEFORE reading, not in a footnote: the project's
-                precedent is `demoNotice`, which warns before asking for the
-                data and not in small print after the button. */}
+            {/* Declared BEFORE reading, not in a footnote. The precedent used
+                to be the lead form's `demoNotice`, which warned before asking
+                for the data rather than in small print under the button; that
+                notice went away with the form's demo state, but the rule it
+                established is the one applied here. */}
             {hasProvisional && (
               <div className="mt-5 flex flex-wrap items-center gap-3">
                 <PendingTag>{t(novedades.provisionalTagAll, locale)}</PendingTag>
