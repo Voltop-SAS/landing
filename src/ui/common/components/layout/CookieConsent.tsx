@@ -6,6 +6,7 @@ import Script from 'next/script'
 import { t, type Locale } from '~/core/common/domain/i18n/config'
 import { cookies as copy } from '~/core/common/domain/consts/copy'
 import { href, routes } from '~/core/common/domain/i18n/routes'
+import { TextSlot } from '@ui/common/components/ui/TextSlot'
 
 /**
  * COOKIE NOTICE
@@ -168,40 +169,25 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 {t(copy.title, locale)}
               </p>
               {/* The policy link lives INSIDE the sentence. See the note on
-                  `cookies.body`: the text is split on `{policy}` and the link
-                  takes its place, carrying the document's full name.
-
-                  If a locale ever lost the token, `split` returns one part and
-                  the sentence renders whole without a link rather than
-                  breaking. The notice staying readable is the one thing that
-                  cannot fail here. */}
+                  `cookies.body` for why, and `TextSlot` for how — including
+                  what happens if a locale ever loses the placeholder. */}
               <p className="measure mt-1 text-body-s text-ink-2">
-                {(() => {
-                  const [before, after] = t(copy.body, locale).split('{policy}')
-                  return (
-                    <>
-                      {before}
-                      {after !== undefined && (
-                        <>
-                          <Link
-                            href={href(locale, routes.privacy)}
-                            /* Underline ALWAYS visible, not only on hover: inside a
-                              paragraph, colour alone does not mark a link
-                              — someone who cannot tell the green apart will not
-                              find it — and this is the link that makes the
-                              consent informed. The focus ring comes from the
-                              global rule in `globals.css`; no need to repeat it
-                              here. */
-                            className="text-ink underline decoration-line-strong decoration-1 underline-offset-4 transition-colors hover:text-brand hover:decoration-brand"
-                          >
-                            {t(copy.policy, locale)}
-                          </Link>
-                          {after}
-                        </>
-                      )}
-                    </>
-                  )
-                })()}
+                <TextSlot
+                  text={t(copy.body, locale)}
+                  name="policy"
+                >
+                  <Link
+                    href={href(locale, routes.privacy)}
+                    /* Underline ALWAYS visible, not only on hover: inside a
+                       paragraph, colour alone does not mark a link — someone who
+                       cannot tell the green apart will not find it — and this is
+                       the link that makes the consent informed. The focus ring
+                       comes from the global rule in `globals.css`. */
+                    className="text-ink underline decoration-line-strong decoration-1 underline-offset-4 transition-colors hover:text-brand hover:decoration-brand"
+                  >
+                    {t(copy.policy, locale)}
+                  </Link>
+                </TextSlot>
               </p>
             </div>
 

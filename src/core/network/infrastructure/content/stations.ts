@@ -47,14 +47,14 @@ export const stations: Station[] = [
        the component. */
     pricing: { perKwh: 1780, currency: 'COP' },
     /* The same two at all three stations since 2026-09-08, by product decision.
-       They used to be different lists per site — the EAN had a roof and
-       cafetería, el Grand Hyatt valet y restaurante— y Wake no tenía ninguna,
-       así que su ficha ni siquiera pintaba la sección. Ahora las tres dicen lo
-       mismo y las tres la pintan.
+       They used to be different lists per site — the EAN had a roof and a
+       cafeteria, the Grand Hyatt valet and a restaurant, and Wake had none at
+       all, so its page did not even render the section. Now all three say the
+       same thing and all three render it.
 
-       Lo que se pierde: los servicios propios de cada lugar dejan de contarse.
-       Si algún día se quieren recuperar, cada estación vuelve a tener su lista
-       y el componente ya los pinta sin tocar nada. */
+       What is lost: each place's own amenities stop being told. If they are
+       ever wanted back, each station gets its list again and the component
+       already renders them without touching anything. */
     services: [
       { es: 'WiFi', en: 'Wi-Fi', pt: 'Wi-Fi' },
       { es: 'Baños', en: 'Restrooms', pt: 'Banheiros' },

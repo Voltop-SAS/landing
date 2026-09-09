@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useReducedMotion } from 'motion/react'
 import { t, type Locale } from '~/core/common/domain/i18n/config'
 import type { MediaAsset } from '~/core/common/domain/entities/Media'
-import { requestPlayOnArrival, consumePlayOnArrival } from '@ui/common/lib/play-intent'
+import { requestPlayOnArrival, consumePlayOnArrival } from '@ui/common/lib/playIntent'
 
 /**
  * BACKGROUND VIDEO · respects the reduced-motion preference.
@@ -97,7 +97,7 @@ export function VideoMedia({
    * ── ARRIVING ALREADY PLAYING ─────────────────────────────────────────────
    * If someone clicked the silent preview of this very piece, they came here to
    * watch it. It starts on its own, with sound. Why the browser allows that is
-   * explained in `play-intent`: the navigation is client-side and the document
+   * explained in `playIntent`: the navigation is client-side and the document
    * never unloads, so the activation the click granted is still alive.
    *
    * Only the version WITH CONTROLS picks it up, and that matters for two

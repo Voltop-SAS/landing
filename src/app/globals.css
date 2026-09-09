@@ -129,20 +129,20 @@
        16px body       +0.010em
        15px body-s     +0.015em
        13px caption    +0.020em
-       12px mono       +0.020em   ← ya existía
+       12px mono       +0.020em   ← already there
 
-     ── POR QUÉ EN `em` Y NO EN PÍXELES ───────────────────────────────────
-     Tres de los cuatro son `clamp()`: escalan con el viewport. En `em` el
-     tracking escala con ellos y la proporción se mantiene de 360 a 1440px; en
-     píxeles, un valor cómodo a 1440 abre demasiado el texto a 360, que es
-     justo donde el tamaño ya es el mínimo.
+     ── WHY IN `em` AND NOT IN PIXELS ─────────────────────────────────────
+     Three of the four are `clamp()`: they scale with the viewport. In `em` the
+     tracking scales with them and the proportion holds from 360 to 1440px; in
+     pixels, a value that is comfortable at 1440 opens the text too far at 360,
+     which is exactly where the size is already at its minimum.
 
-     ── Y POR QUÉ AQUÍ IMPORTA MÁS QUE EN FONDO CLARO ─────────────────────
-     El sitio es dark-first. El texto claro sobre fondo oscuro se percibe
-     ópticamente más grueso y más junto que el mismo texto en negativo, así que
-     el mismo cuerpo pide algo más de aire. La magnitud es deliberadamente
-     pequeña: +0.015em a 15px son 0,22px por carácter — unos 13px repartidos en
-     una línea de 60 caracteres. Se nota como respiración, no como espaciado. */
+     ── AND WHY IT MATTERS MORE HERE THAN ON A LIGHT BACKGROUND ───────────
+     The site is dark-first. Light text on a dark background is perceived as
+     optically heavier and tighter than the same text in negative, so the same
+     body size asks for a little more air. The magnitude is deliberately small:
+     +0.015em at 15px is 0.22px per character — some 13px spread across a
+     60-character line. It reads as breathing, not as letter-spacing. */
   --text-body-l: clamp(1.0625rem, 1rem + 0.278vw, 1.25rem);
   --text-body-l--line-height: 1.6;
   --text-body-l--letter-spacing: 0.005em;
@@ -280,26 +280,26 @@ html {
      prefiere menos movimiento). Dos motores de scroll compiten entre sí. */
 }
 
-/* WCAG 2.2 · 2.4.11 FOCO NO OCULTO.
-   Dos capas fijas enmarcan la página —la cabecera arriba y la barra de la app
-   abajo— y el navegador, al tabular, desplaza el elemento enfocado lo justo
-   para meterlo en el viewport: justo debajo de una de las dos.
+/* WCAG 2.2 · 2.4.11 FOCUS NOT OBSCURED.
+   Two fixed layers frame the page — the header at the top and the app bar at
+   the bottom — and when tabbing, the browser scrolls the focused element just
+   enough to bring it into the viewport: which is to say, right underneath one
+   of the two.
 
-   Medido el 2026-09-08 a 390px, tabulando la Home entera y muestreando nueve
-   puntos por elemento: hacia delante, «Visión» y el logotipo del pie quedaban
-   TOTALMENTE tapados por la barra; hacia atrás con Mayús+Tab, «Soluciones por
-   caso» y el logotipo quedaban bajo la cabecera. Tapado del todo es un
-   incumplimiento AA; tapado a medias, no —eso es el 2.4.12, que es AAA—.
+   Measured on 2026-09-08 at 390px, tabbing through the whole home page and
+   sampling nine points per element: going forward, "Visión" and the footer
+   wordmark were ENTIRELY covered by the bar; going back with Shift+Tab,
+   "Soluciones por caso" and the wordmark sat under the header. Entirely hidden
+   is an AA failure; partly hidden is not — that is 2.4.12, which is AAA.
 
-   `scroll-padding` es la respuesta exacta: le dice al navegador cuánto sitio
-   reservar al desplazar algo a la vista. NO cambia la maqueta, ni el diseño, ni
-   dónde está nada: solo dónde se detiene el scroll.
+   `scroll-padding` is the exact answer: it tells the browser how much room to
+   reserve when it scrolls something into view. It changes NOTHING about the
+   layout, the design or where anything sits: only where the scroll stops.
 
-   Los valores salen de medir las capas, con aire por encima: cabecera 65px en
-   móvil y 81px de `md` en adelante; barra 126px + 12px de separación a 390px.
-   Por encima de `lg` la barra se convierte en tarjeta de esquina de 280px, deja
-   de cruzar el ancho y ya no puede tapar nada del todo, así que ahí no se
-   reserva nada. */
+   The values come from measuring the layers, with air on top: header 65px on
+   mobile and 81px from `md` up; bar 126px plus 12px of separation at 390px.
+   Above `lg` the bar becomes a 280px corner card, stops crossing the width and
+   can no longer cover anything entirely, so nothing is reserved there. */
 html {
   scroll-padding-top: 5.5rem;
   scroll-padding-bottom: 9.5rem;
@@ -569,19 +569,19 @@ input[type='search']::-webkit-search-decoration {
    vocabulary: they share neither timing nor intent with the reveals.
 
    ── WHY IT WAS NEEDED ────────────────────────────────────────────────────
-   El sitio tenía hover en 19 componentes y respuesta al clic en 2. En un
-   ratón la diferencia se nota poco; en una pantalla táctil NO HAY HOVER, así
-   que hasta ahora tocar una tarjeta de ciudad no producía ninguna señal entre
-   el toque y la carga de la página siguiente. El movimiento aquí no es
-   expresivo: es acuse de recibo.
+   The site had hover on 19 components and a click response on 2. With a mouse
+   the difference barely registers; on a touch screen THERE IS NO HOVER, so
+   until now tapping a city card produced no signal at all between the tap and
+   the next page loading. The movement here is not expressive: it is an
+   acknowledgement of receipt.
 
-   Existía además un token `--color-brand-press` declarado y sin usar de una
-   primera intención que nunca aterrizó. Se retiró en la limpieza; esta es la
-   forma que sí aterriza, y es geométrica en vez de cromática, para que sirva
-   igual a una tarjeta de vidrio, a una insignia y a una fila del registro.
+   There was also a `--color-brand-press` token, declared and unused, left over
+   from a first intention that never landed. It was dropped in the cleanup;
+   this is the form that does land, and it is geometric rather than chromatic
+   so that it serves a glass card, a badge and a log row equally well.
 
-   Un solo valor para todo el sitio: 0.98. Dos escalas de presión distintas no
-   son dos decisiones, son la falta de una.
+   One single value for the whole site: 0.98. Two different press scales are
+   not two decisions, they are the absence of one.
    ========================================================================= */
 .press {
   transition: transform var(--duration-fast) var(--ease-standard);
@@ -640,14 +640,14 @@ input[type='search']::-webkit-search-decoration {
 }
 
 /* -------------------------------------------------------------------------
-   RED DE SEGURIDAD DE LOS REVEALS
+   SAFETY NET FOR THE REVEALS
 
-   Motion serializa su estado inicial como estilo EN LÍNEA, así que el HTML
-   servido llevaba `opacity: 0` en todos los bloques con `Reveal`. Si el JS no
-   llega —o si el usuario pide menos movimiento, porque `useReducedMotion()`
-   devuelve `null` en el servidor— ese contenido quedaba invisible.
+   Motion serialises its initial state as an INLINE style, so the served HTML
+   carried `opacity: 0` on every block with a `Reveal`. If the JS never arrives
+   — or if the user asks for less movement, because `useReducedMotion()`
+   returns `null` on the server — that content was invisible.
 
-   Estas dos reglas lo garantizan sin depender de JavaScript:
+   These two rules guarantee it without depending on JavaScript:
    - `scripting: none`: the content shows even with no JS.
    - `prefers-reduced-motion`: the content shows FROM THE SERVED HTML, without
      the flicker that waiting for hydration caused.

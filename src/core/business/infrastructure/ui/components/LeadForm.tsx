@@ -7,6 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { t, type Locale } from '~/core/common/domain/i18n/config'
 import { href, routes } from '~/core/common/domain/i18n/routes'
+import { TextSlot } from '@ui/common/components/ui/TextSlot'
 import { leadForm } from '~/core/common/domain/consts/copy'
 import { leadRecipients } from '~/core/common/domain/consts/links'
 import { Button } from '@ui/common/components/ui/Button'
@@ -310,30 +311,21 @@ export function LeadForm({ locale, segmentKey }: { locale: Locale; segmentKey: s
               className="py-3 text-body-s text-ink-2"
             >
               {/* The link goes INSIDE the authorisation. See the note on
-                  `consent.label`: the text splits on `{policy}` and the
-                  document's full name takes its place. If a locale ever lost the
-                  token, the sentence renders whole without a link rather than
-                  breaking — an unreadable authorisation is the one thing that
-                  cannot happen here. */}
-              {(() => {
-                const [before, after] = t(leadForm.fields.consent.label, locale).split('{policy}')
-                return (
-                  <>
-                    {before}
-                    {after !== undefined && (
-                      <>
-                        <Link
-                          href={href(locale, routes.privacy)}
-                          className="text-ink underline decoration-line-strong decoration-1 underline-offset-4 transition-colors hover:text-brand hover:decoration-brand"
-                        >
-                          {t(leadForm.fields.consent.policyLink, locale)}
-                        </Link>
-                        {after}
-                      </>
-                    )}
-                  </>
-                )
-              })()}
+                  `consent.label` for why, and `TextSlot` for how — including
+                  what happens if a locale ever loses the placeholder. An
+                  unreadable authorisation is the one thing that cannot happen
+                  here. */}
+              <TextSlot
+                text={t(leadForm.fields.consent.label, locale)}
+                name="policy"
+              >
+                <Link
+                  href={href(locale, routes.privacy)}
+                  className="text-ink underline decoration-line-strong decoration-1 underline-offset-4 transition-colors hover:text-brand hover:decoration-brand"
+                >
+                  {t(leadForm.fields.consent.policyLink, locale)}
+                </Link>
+              </TextSlot>
             </label>
           </div>
           {errors.consent && (

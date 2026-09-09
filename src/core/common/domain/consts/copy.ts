@@ -163,7 +163,7 @@ export const actions = {
   } satisfies Localized,
   /* No longer "Soluciones para empresas": that text became beat 4's EYEBROW,
      and a button that repeats the label of its own
-     sección no dice a dónde lleva. */
+     section does not say where it leads. */
   businessSolutions: {
     es: 'Ver soluciones',
     en: 'See solutions',

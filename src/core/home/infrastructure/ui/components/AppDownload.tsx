@@ -196,12 +196,13 @@ export function AppDownload({ locale }: { locale: Locale }) {
                    capped at `max-w-sm` (384px). Declared slightly over so the
                    QR survives the AVIF re-encode. */
                 sizes="(min-width: 1024px) 560px, 384px"
-                /* 75 y no 92: `next.config.ts` solo declara `qualities: [70,
-                   75]` y cualquier otra da error —lo avisó la consola—. La
-                   preocupación era el QR dentro del raster, y no aplica: ocupa
-                   ~38% del ancho, así que a 540px de caja y DPR 2 llegan unos
-                   410px de código para ~33 módulos, 12px por módulo. AVIF a 75
-                   no deshace un módulo de 12px. */
+                /* 75 and not 92: `next.config.ts` only declares
+                   `qualities: [70, 75]` and any other value errors — the
+                   console said so. The worry was the QR inside the raster, and
+                   it does not apply: it takes up ~38% of the width, so at a
+                   540px box and DPR 2 some 410px of code arrive for ~33
+                   modules, 12px per module. AVIF at 75 does not undo a 12px
+                   module. */
                 quality={75}
                 className="h-auto w-full max-w-sm lg:max-w-none"
               />

@@ -16,6 +16,12 @@ import {
   distanceKm,
   type StationSort,
 } from '~/core/common/infrastructure/data-access'
+import {
+  readCriteria,
+  criteriaToQuery,
+  EMPTY_CRITERIA,
+  type Criteria,
+} from '~/core/network/infrastructure/helpers/criteria'
 import { StatusBadge } from '@ui/common/components/ui/DataPrimitives'
 import { Button } from '@ui/common/components/ui/Button'
 import { track } from '~/core/common/infrastructure/analytics'
@@ -83,109 +89,8 @@ function computeSteps(stations: Station[]): number[] {
 type Coords = { lat: number; lng: number }
 type GeoState = 'idle' | 'locating' | 'granted' | 'denied'
 
-/**
- * Short, stable URL keys: they are part of the link people share. The Spanish
- * values are a contract, not a leftover — they appear in indexable URLs (see
- * AGENTS.md).
- */
-const PARAM = {
-  q: 'q',
-  city: 'ciudad',
-  connector: 'conector',
-  power: 'kw',
-  live: 'live',
-  sort: 'orden',
-}
-
-/**
- * The entire search criteria in ONE object.
- *
- * These used to be six separate `useState` calls, which forced six `setState`
- * calls to hydrate from the URL and six dependencies listed in every
- * `useMemo`. With a single object, reading the URL is one assignment and the
- * synchronising effect has a single dependency.
- */
-type Criteria = {
-  query: string
-  city: string
-  connector: string
-  minPower: number
-  onlyLive: boolean
-  sort: StationSort
-}
-
-const EMPTY: Criteria = {
-  query: '',
-  city: '',
-  connector: '',
-  minPower: 0,
-  onlyLive: false,
-  sort: 'relevance',
-}
-
-/**
- * URL → criteria.
- *
- * This is applied AFTER mounting, not in the `useState` initialiser. This
- * route is static: the HTML is generated at build time with no query string,
- * so reading the URL on the first render would produce criteria different from
- * the server's and React would report a hydration mismatch. The price is one
- * frame showing the full list before the shared link is applied; the benefit
- * is not turning the route dynamic and not polluting the console.
- *
- * ACCEPTED LIMITATION: a filtered link is SHAREABLE but not indexable — the
- * served HTML always carries the full list. Indexable coverage by city is
- * already provided by the `/red/[city]` routes, which was the original SEO
- * reason.
- */
-function readCriteria(steps: number[], citySlugs: string[], connectors: string[]): Criteria {
-  const p = new URLSearchParams(window.location.search)
-  const kw = Number(p.get(PARAM.power))
-  const sort = p.get(PARAM.sort)
-  /**
-   * `city` and `connector` ARE VALIDATED TOO, like `minPower` and `sort`
-   * already were.
-   *
-   * They were the two that trusted the address bar, and these keys are a
-   * documented contract: they travel in links people share and search engines
-   * index. `?ciudad=` with a slug that no longer exists — a city renamed, a
-   * link saved a year ago — produced zero results AND no chip selected, so
-   * whoever opened it saw an empty list with nothing marked and no explanation.
-   * An unknown value is now simply ignored, which is what the chips can
-   * actually represent: "Todas".
-   */
-  const city = p.get(PARAM.city) ?? ''
-  const connector = p.get(PARAM.connector) ?? ''
-  return {
-    query: p.get(PARAM.q) ?? '',
-    city: citySlugs.includes(city) ? city : '',
-    connector: connectors.includes(connector) ? connector : '',
-    minPower: steps.includes(kw) ? kw : 0,
-    onlyLive: p.get(PARAM.live) === '1',
-    /* `distance` is not restored from the URL: it requires location
-       permission, and a link cannot grant that. */
-    sort: (['power', 'status', 'city'] as const).includes(sort as never)
-      ? (sort as StationSort)
-      : 'relevance',
-  }
-}
-
-/** Criteria → URL. Short, stable keys: they are the link people share. */
-function writeCriteria(c: Criteria) {
-  const p = new URLSearchParams()
-  if (c.query) p.set(PARAM.q, c.query)
-  if (c.city) p.set(PARAM.city, c.city)
-  if (c.connector) p.set(PARAM.connector, c.connector)
-  if (c.minPower) p.set(PARAM.power, String(c.minPower))
-  if (c.onlyLive) p.set(PARAM.live, '1')
-  /* `distance` is not written: it depends on a permission a link cannot grant. */
-  if (c.sort !== 'relevance' && c.sort !== 'distance') p.set(PARAM.sort, c.sort)
-  const qs = p.toString()
-  window.history.replaceState(null, '', qs ? `?${qs}` : window.location.pathname)
-}
-
 export function StationFinder({ locale, stations, cities }: Props) {
-  const [criteria, setCriteria] = useState<Criteria>(EMPTY)
+  const [criteria, setCriteria] = useState<Criteria>(EMPTY_CRITERIA)
   const { query, city, connector, minPower, onlyLive, sort } = criteria
 
   /**
@@ -196,7 +101,10 @@ export function StationFinder({ locale, stations, cities }: Props) {
    */
   const apply = (next: Criteria) => {
     setCriteria(next)
-    writeCriteria(next)
+    /* The address bar is written here and nowhere else: `criteriaToQuery` is
+       pure so the contract can be tested without a browser. */
+    const qs = criteriaToQuery(next)
+    window.history.replaceState(null, '', qs || window.location.pathname)
   }
   const set = <K extends keyof Criteria>(key: K, value: Criteria[K]) =>
     apply({ ...criteria, [key]: value })
@@ -242,11 +150,11 @@ export function StationFinder({ locale, stations, cities }: Props) {
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setCriteria(
-      readCriteria(
+      readCriteria(window.location.search, {
         steps,
-        cities.map((c) => c.slug),
+        citySlugs: cities.map((c) => c.slug),
         connectors,
-      ),
+      }),
     )
   }, [steps, cities, connectors])
 
@@ -261,7 +169,7 @@ export function StationFinder({ locale, stations, cities }: Props) {
 
   const clearAll = () => {
     /* Keep the sort order: clearing filters is not re-sorting. */
-    apply({ ...EMPTY, sort: criteria.sort })
+    apply({ ...EMPTY_CRITERIA, sort: criteria.sort })
     track('red_filtros_limpiados')
   }
 

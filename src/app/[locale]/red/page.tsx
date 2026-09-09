@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { isLocale, t, type Locale } from '~/core/common/domain/i18n/config'
+import { isLocale, t, fill, type Locale } from '~/core/common/domain/i18n/config'
 import { href, routes, alternatesFor } from '~/core/common/domain/i18n/routes'
 import { red } from '~/core/network/domain/consts/copy'
 import { actions, states, units, a11y } from '~/core/common/domain/consts/copy'
@@ -150,10 +150,11 @@ export default async function RedPage({ params }: Props) {
                       hand-written per city, and one of the two already had three
                       numbers buried in the prose. */}
                   <p className="mt-3 measure text-body-s text-ink-2">
-                    {t(count === 1 ? red.cities.blurb.one : red.cities.blurb.many, locale)
-                      .replace('{stations}', String(count))
-                      .replace('{points}', String(points))
-                      .replace('{kw}', String(maxKw))}
+                    {fill(t(count === 1 ? red.cities.blurb.one : red.cities.blurb.many, locale), {
+                      stations: count,
+                      points,
+                      kw: maxKw,
+                    })}
                   </p>
                   {/* `2/2 estaciones` was noise: the fraction only informs when
                       the two numbers differ. It is kept for that case — a station
