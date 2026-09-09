@@ -251,14 +251,25 @@ export function StationFinder({ locale, stations, cities }: Props) {
               type="search"
               value={query}
               onChange={(e) => set('query', e.target.value)}
-              /* This used to fire on EVERY blur that had a value: focusing
-                 and blurring three times counted as three searches. It now
-                 only fires if the term changed since the last one recorded. */
+              /* ── THE TERM IS NOT SENT. ONLY THAT SOMEBODY SEARCHED ─────────
+                 It used to travel as `termino: "hyatt"`. A search box is free
+                 text: people type place names, plate numbers, their own
+                 address. None of that belongs in an analytics dashboard, and
+                 once sent it cannot be taken back.
+
+                 What survives is what a decision can be made from: that a
+                 search happened and whether it found anything. `resultados: 0`
+                 is the useful signal — it says the network is missing
+                 something — without carrying what was typed.
+
+                 The term is still used to DEDUPLICATE locally: it never leaves
+                 this component. Focusing and blurring three times over the same
+                 text still counts as one search. */
               onBlur={(e) => {
                 const term = e.target.value.trim()
                 if (term && term !== lastTracked.current) {
                   lastTracked.current = term
-                  track('red_buscar', { termino: term })
+                  track('red_buscar', { resultados: results.length })
                 }
               }}
               placeholder={t(red.search.placeholder, locale)}

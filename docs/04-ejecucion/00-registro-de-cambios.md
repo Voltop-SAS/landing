@@ -3186,3 +3186,49 @@ Las tres páginas: título y descripción propios · `og:` completo con `og:loca
 ### Después del despliegue
 
 **La caché de WhatsApp no se limpia sola al desplegar.** El enlace ya compartido seguirá mostrando la tarjeta vieja unos días. Se fuerza desde el depurador de Meta (`developers.facebook.com/tools/debug`) con _Scrape Again_, y se comprueba al instante compartiendo `voltop.co/es`, que es otra clave de caché.
+
+---
+
+## Bloque 73 · Tagging Plan v1.1, primer bloque: consentimiento y PII — 2026-09-09
+
+De los ocho pasos del plan, estos dos son los únicos que **no dependen de las dos decisiones abiertas** (ver abajo) y los dos cierran fugas reales. Se hacen primero por eso.
+
+### La medición ya no recoge nada sin consentimiento
+
+`dispatch` empujaba a `window.dataLayer` sin preguntar. Ninguna petición salía del navegador —GTM no carga hasta que se acepta— pero **los eventos se apilaban en el array, y GTM lo lee DESDE EL PRINCIPIO al cargar**.
+
+Medido el 2026-09-08: quien recorría cuatro páginas sin decidir y luego aceptaba enviaba tres eventos que describían lo que hizo **antes** de decir que sí.
+
+Ahora `track()` pregunta antes de cada emisión. **Sin búfer, a propósito**: un evento sin consentimiento se descarta, no se guarda — conservarlo para enviarlo después es la misma recogida con retraso. La decisión se lee en cada llamada y no se cachea, porque alguien puede aceptar a mitad de sesión y desde ese momento sí cuenta.
+
+**Consecuencia asumida:** las secciones que alguien ya pasó antes de aceptar no se contabilizan. Es inherente a no tener búfer, no un fallo.
+
+### La clave del consentimiento deja de estar en dos sitios
+
+`'voltop:cookies'` vivía dentro de `CookieConsent`. Con `analytics.ts` teniendo que leer la misma decisión, la alternativa era repetir la cadena en un segundo fichero: dos sitios que cambiar y uno de ellos mal la primera vez que alguien toque el otro.
+
+Nuevo `consent.ts` junto a `analytics.ts`, con la clave y el lector. Los valores `aceptado`/`rechazado` **se quedan en español**: son datos ya escritos en el navegador de todo el que ha visitado el sitio, así que renombrarlos es una migración.
+
+### El buscador deja de enviar lo que la gente escribe
+
+`red_buscar` viajaba con `termino: "hyatt"`. Una caja de búsqueda es texto libre: la gente teclea nombres de sitios, placas, su propia dirección. Nada de eso pinta en un panel de analítica, y una vez enviado no se puede retirar.
+
+Ahora envía `resultados`, que es de donde se puede tomar una decisión: **`resultados: 0` dice que a la red le falta algo**, sin llevarse lo que se tecleó. El término se sigue usando para deduplicar **dentro del componente** — enfocar y desenfocar tres veces sobre el mismo texto sigue contando como una búsqueda.
+
+⚠️ **Medido en producción, con el cuerpo de los POST leído:** hoy GA4 **no** está capturando el término por su cuenta —la búsqueda en sitio parece apagada en la propiedad—. El riesgo estructural sigue ahí porque el parámetro se llama `q`, que está en la lista por defecto de GA4. Por eso se cierra en el código y no solo en la configuración: una casilla se puede volver a encender sin saber lo que arrastra.
+
+### Verificado
+
+|                                          |                                                        |
+| ---------------------------------------- | ------------------------------------------------------ |
+| Sin consentimiento, navegando y buscando | `dataLayer` **null** — no se recoge nada               |
+| Tras aceptar                             | los eventos fluyen; `red_buscar` lleva `resultados: 1` |
+| ¿Aparece el término en algún evento?     | **no**                                                 |
+| Aceptando a mitad de sesión              | **no arrastra** lo anterior                            |
+
+Tipos 0 · lint 0 · 92 tests · build limpio · i18n 459/459.
+
+### Sigue bloqueado, a la espera de decisión
+
+1. **`generate_lead`** no es implementable: el formulario abre un `mailto:` y **no existe ninguna Server Action en el proyecto**. Un `mailto:` no puede saber si el mensaje se envió.
+2. **El renombrado de los 14 eventos al inglés** choca con la regla de `AGENTS.md` que los declara contrato en español. Es aprobable, pero exige actualizar esa regla en el mismo commit.
