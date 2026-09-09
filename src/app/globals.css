@@ -1,98 +1,671 @@
 @import 'tailwindcss';
 
-:root {
-  --background: #020b2d;
-  --foreground: #e5eaf3;
+/* =========================================================================
+   VOLTOP · DESIGN TOKENS
+   Fuente única de verdad. Ningún valor visual debe escribirse suelto.
+   Ver docs/MASTER-PROJECT-DEFINITION.md §24.
 
-  --muted: #111118;
-  --muted-foreground: #9195a0;
+   Registros visuales: "Silencio" (estructural, plano) ↔ "Impacto" (energía).
+   Dark-first. Sin modo claro.
+   ========================================================================= */
+@theme {
+  /* ---------------------------------------------------------------
+     COLOR · Canvas and surfaces (Silence register)
+     --------------------------------------------------------------- */
+  /* VOLTOP'S OFFICIAL PALETTE, delivered 2026-09-02. It replaces the
+     provisional one. `canvas` and `surface-2` are the two backgrounds the brand
+     defines; `surface-1` and `surface-3` are interpolated between and above
+     them, because the system needs four levels of depth and the brand defines
+     two. If they are ever set officially, they get replaced here. */
+  --color-canvas: #0a0f1a; /* brand · BG primary */
+  --color-surface-1: #0d1420;
+  --color-surface-2: #111827; /* brand · BG secondary */
+  --color-surface-3: #1a2334;
 
-  --accent: #1d2431;
-  --accent-foreground: #f8faff;
+  /* ---------------------------------------------------------------
+     COLOR · Ink
+     Every text tone meets WCAG AA (>=4.5:1) over canvas, surface-1, surface-2
+     and surface-3. Verified, not assumed.
+     --------------------------------------------------------------- */
+  --color-ink: #e6e9ee; /* brand · Text primary   — 15.74:1 over canvas */
+  --color-ink-2: #a3b2c3; /* brand · Text secondary —  8.86:1 over canvas */
+  /* Third level: the brand defines TWO text tones and the system uses three
+     (mono labels, captions, metadata). The one that already passed is kept
+     — 6.35:1 over canvas and 5.88:1 over surface-2 — rather than inventing a
+     new one. */
+  --color-ink-3: #8b95a8;
 
-  --popover: #03030a;
-  --popover-foreground: #a2a9b8;
+  /* ---------------------------------------------------------------
+     COLOR · Brand (Impact register: the green->cyan "current")
+     The gradient is SIGNAL, not texture: max. 1 primary action per view.
+     --------------------------------------------------------------- */
+  /* The official gradient runs from `brand-2` (cyan) to `brand` (green). The
+     variable order is kept so components do not have to change: `brand` is the
+     accent colour and `brand-2` the gradient's second stop. */
+  --color-brand: #51d9b2; /* brand · Brand secondary — 10.87:1 over canvas */
+  --color-brand-2: #0fc7e1; /* brand · Brand primary   —  9.38:1 over canvas */
+  /* On both brand colours the text has to be DARK: white gives 2.04:1 and the
+     dark ink over brand gives 9.38:1. Measured, not assumed. */
+  --color-on-brand: #0a0f1a;
 
-  --border: #1d2431;
-  --input: #1d2431;
+  /* ---------------------------------------------------------------
+     COLOR · Semántico (estados). Sustituye literales sueltos.
+     --------------------------------------------------------------- */
+  --color-live: #38d398; /* marca · Success — 9.98:1 sobre canvas */
+  --color-error: #e2555a; /* marca · Error   — 5.18:1 sobre canvas */
+  --color-warn: #f6b756; /* marca · Warning — 10.79:1 sobre canvas */
+  --color-idle: #8b95a8;
 
-  --card: #03030a;
-  --card-foreground: #e5eaf3;
+  /* ---------------------------------------------------------------
+     COLOR · Líneas y foco
 
-  --primary: #00e5c9;
-  --primary-foreground: #020202;
+     Tres niveles con USOS DISTINTOS, no tres intensidades decorativas:
 
-  --secondary: #020b2d;
-  --secondary-foreground: #f8faff;
+     - `line` y `line-strong` son hairlines ESTRUCTURALES (reglas de tabla,
+       divisorias, bordes de cuadrícula). No identifican un control, así que
+       WCAG 1.4.11 no les aplica y pueden ser sutiles.
+     - `line-control` es el borde de un CONTROL: input, textarea, chip, tab,
+       botón con borde. Ahí el borde ES lo que hace reconocible el control,
+       y 1.4.11 exige ≥3:1. Verificado: 3.32:1 sobre canvas y surface-1,
+       3.31:1 sobre surface-2, 3.20:1 sobre surface-3.
 
-  --destructive: #802020;
-  --destructive-foreground: #f8faff;
+     Subir `line` a 3:1 habría cambiado la textura de todo el sitio para
+     cumplir un umbral que no le corresponde. El token separado corrige el
+     incumplimiento sin tocar el registro visual.
+     --------------------------------------------------------------- */
+  --color-line: rgba(255, 255, 255, 0.09);
+  --color-line-strong: rgba(255, 255, 255, 0.18);
+  --color-line-control: rgba(255, 255, 255, 0.36);
+  /* The focus ring uses the brand accent: it is the colour the site says
+     "here" with. */
+  --color-focus: #51d9b2;
 
-  --ring: #1d2431;
+  /* ---------------------------------------------------------------
+     TIPOGRAFÍA · Familias
+     Las variables *-raw las inyecta next/font en <html>.
+     No auto-referenciar: rompe el valor computado.
+     PLACEHOLDER hasta recibir las tipografías de marca.
+     --------------------------------------------------------------- */
+  --font-display: var(--font-display-raw), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-sans-raw), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-mono-raw), ui-monospace, monospace;
+
+  /* ---------------------------------------------------------------
+     TIPOGRAFÍA · Escala fluida (360px → 1440px)
+     Prohibidos los saltos duros de escala entre breakpoints.
+     --------------------------------------------------------------- */
+  --text-display-2xl: clamp(2.75rem, 1.667rem + 4.815vw, 6rem);
+  --text-display-2xl--line-height: 1.02;
+  --text-display-2xl--letter-spacing: -0.03em;
+
+  --text-display-xl: clamp(2.25rem, 1.5rem + 3.333vw, 4.5rem);
+  --text-display-xl--line-height: 1.02;
+  --text-display-xl--letter-spacing: -0.025em;
+
+  --text-display-l: clamp(1.875rem, 1.417rem + 2.037vw, 3.25rem);
+  --text-display-l--line-height: 1.06;
+  --text-display-l--letter-spacing: -0.02em;
+
+  --text-display-m: clamp(1.5rem, 1.25rem + 1.111vw, 2.25rem);
+  --text-display-m--line-height: 1.15;
+  --text-display-m--letter-spacing: -0.015em;
+
+  --text-display-s: clamp(1.25rem, 1.167rem + 0.37vw, 1.5rem);
+  --text-display-s--line-height: 1.25;
+  --text-display-s--letter-spacing: -0.01em;
+
+  /* ── THE FOUR READING SIZES · TRACKING · 2026-09-08 ───────────────────
+     All four sat at 0, and that is where the curve broke. The display scale
+     runs from -0.03em at 96px to -0.01em at 24px: the smaller it gets, the less
+     tight. Past display the progression stopped dead, and a reading size does
+     not want the same tracking as a small headline — it wants MORE.
+
+     The curve now continues and closes on a value the system already had:
+     `mono` at 12px has carried +0.02em since day one, so the progression lands
+     where it was already set instead of inventing an endpoint.
+
+       24px display-s  −0.010em
+       20px body-l     +0.005em
+       16px body       +0.010em
+       15px body-s     +0.015em
+       13px caption    +0.020em
+       12px mono       +0.020em   ← already there
+
+     ── WHY IN `em` AND NOT IN PIXELS ─────────────────────────────────────
+     Three of the four are `clamp()`: they scale with the viewport. In `em` the
+     tracking scales with them and the proportion holds from 360 to 1440px; in
+     pixels, a value that is comfortable at 1440 opens the text too far at 360,
+     which is exactly where the size is already at its minimum.
+
+     ── AND WHY IT MATTERS MORE HERE THAN ON A LIGHT BACKGROUND ───────────
+     The site is dark-first. Light text on a dark background is perceived as
+     optically heavier and tighter than the same text in negative, so the same
+     body size asks for a little more air. The magnitude is deliberately small:
+     +0.015em at 15px is 0.22px per character — some 13px spread across a
+     60-character line. It reads as breathing, not as letter-spacing. */
+  --text-body-l: clamp(1.0625rem, 1rem + 0.278vw, 1.25rem);
+  --text-body-l--line-height: 1.6;
+  --text-body-l--letter-spacing: 0.005em;
+
+  --text-body: 1rem;
+  --text-body--line-height: 1.65;
+  --text-body--letter-spacing: 0.01em;
+
+  --text-body-s: clamp(0.875rem, 0.854rem + 0.093vw, 0.9375rem);
+  --text-body-s--line-height: 1.55;
+  --text-body-s--letter-spacing: 0.015em;
+
+  --text-caption: 0.8125rem;
+  --text-caption--line-height: 1.5;
+  --text-caption--letter-spacing: 0.02em;
+
+  --text-mono: 0.75rem;
+  --text-mono--line-height: 1.4;
+  --text-mono--letter-spacing: 0.02em;
+
+  --text-eyebrow: 0.75rem;
+  --text-eyebrow--line-height: 1.2;
+  --text-eyebrow--letter-spacing: 0.18em;
+
+  /* ---------------------------------------------------------------
+     ESPACIADO · Ritmo vertical de sección
+     Tres intensidades: el ritmo de página se construye alternándolas.
+
+     ESTOS VALORES SON LA DISTANCIA ENTRE SECCIONES, no el padding de cada
+     una. La distinción no es semántica: antes cada sección aplicaba el valor
+     completo arriba Y abajo, así que dos secciones consecutivas SUMABAN. Medido
+     a 1440px, `base` seguido de `base` dejaba 288px de negro vacío, y ocurría
+     en cada par de secciones de cada página interna — mientras el comentario de
+     aquí abajo prohibía justamente eso.
+
+     Cada sección aporta la MITAD (ver `--spacing-block-*`), así que el hueco
+     entre dos secciones es el valor del token y la alternancia vuelve a
+     significar algo: `tight` tras `loose` da contraste real en lugar de sumar
+     dos veces lo mismo.
+     --------------------------------------------------------------- */
+  --spacing-section-tight: clamp(3rem, 2.167rem + 3.704vw, 5.5rem);
+  --spacing-section: clamp(4.5rem, 3rem + 6.667vw, 9rem);
+  --spacing-section-loose: clamp(6rem, 3.833rem + 9.63vw, 12.5rem);
+  --spacing-gutter: clamp(1.5rem, 1rem + 2.222vw, 3.5rem);
+
+  /* What each section contributes. Consumed only by `Section` (ui/layout.tsx). */
+  --spacing-block-tight: calc(var(--spacing-section-tight) / 2);
+  --spacing-block: calc(var(--spacing-section) / 2);
+  --spacing-block-loose: calc(var(--spacing-section-loose) / 2);
+
+  /* ---------------------------------------------------------------
+     ESTRUCTURA
+     --------------------------------------------------------------- */
+  --container-content: 1240px; /* contenedor estándar */
+  --container-narrow: 780px; /* lectura / editorial */
+  --container-wide: 1600px; /* composiciones amplias */
+
+  --radius-structural: 10px; /* datos, estructura */
+  --radius-pill: 999px; /* acciones, energía */
+
+  /**
+   * SIGNATURE RADIUS · a single corner, oversized.
+   *
+   * It is the device that turns a block of photography into a composed piece.
+   * It is ALWAYS applied to the same corner — top right — and never to all
+   * four: four large corners is a generic card; one is a decision.
+   *
+   * Fluid, like the typography (§22): 64px on a 1440-wide block is 4.4% of its
+   * width, but on a 360 one it would be 18% and would eat the image. `clamp`
+   * keeps the proportion instead of the value.
+   */
+  --radius-signature: clamp(1.75rem, 1rem + 3.2vw, 4rem);
+
+  --breakpoint-xs: 480px;
+  /**
+   * The width at which the full header fits without cramping.
+   *
+   * At `md` (768px) it does not fit: wordmark, four nav entries, language
+   * switch and CTA add up to more than the row, and the distribution left the
+   * wordmark touching the menu — 0px apart. Reducing the gap between entries
+   * does not fix it: even at 16px the separation never becomes acceptable, and
+   * the entries end up cramped against each other.
+   *
+   * 832px is the measured width at which the distribution breathes. Between 768
+   * and 832 the drop-down menu is used, which is the right pattern for a tablet
+   * in portrait and which is already built and accessible.
+   */
+  --breakpoint-nav: 52rem;
+
+  /* ---------------------------------------------------------------
+     MOTION
+     Solo se animan transform y opacity.
+
+     ESPEJO DE lib/motion.ts. Estos tokens los consume el CSS (transiciones de
+     hover, foco, header); Motion consume los mismos valores desde TypeScript,
+     porque Tailwind lee CSS y Motion necesita números de JS. Antes los
+     componentes escribían `[0.22, 1, 0.36, 1]` y `0.6/0.7/0.32` a mano en tres
+     archivos y tres de estos tokens no se usaban en ningún sitio: eran dos
+     sistemas de movimiento en paralelo. Si cambias un valor aquí, cámbialo
+     también en lib/motion.ts.
+     --------------------------------------------------------------- */
+  --ease-standard: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-current: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-exit: cubic-bezier(0.4, 0, 1, 1);
+  /**
+   * OVERSHOOT · the system's only easing with overshoot.
+   *
+   * Reserved for control microinteractions — an arrow moving forward, a state
+   * confirming — never for section entrances or anything filling half a screen.
+   * In small doses it gives character; repeated, it makes you queasy.
+   * Budget: if it appears more than five times in one view, it is too much.
+   */
+  --ease-overshoot: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  --duration-fast: 200ms;
+  --duration-base: 320ms;
+  --duration-reveal: 700ms;
 }
 
-@theme {
-  /* Shadcn UI */
-  --radius: 0.5rem;
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+/* z-index — escala explícita para evitar números mágicos */
+:root {
+  --z-base: 0;
+  --z-raised: 10;
+  --z-sticky: 30;
+  --z-header: 50;
+  --z-overlay: 60;
+}
 
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
+/* =========================================================================
+   BASE
+   ========================================================================= */
+html {
+  color-scheme: dark;
+  /* Sin scroll-behavior: smooth — lo gestiona Lenis (o nada, si el usuario
+     prefiere menos movimiento). Dos motores de scroll compiten entre sí. */
+}
 
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
+/* WCAG 2.2 · 2.4.11 FOCUS NOT OBSCURED.
+   Two fixed layers frame the page — the header at the top and the app bar at
+   the bottom — and when tabbing, the browser scrolls the focused element just
+   enough to bring it into the viewport: which is to say, right underneath one
+   of the two.
 
-  --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
+   Measured on 2026-09-08 at 390px, tabbing through the whole home page and
+   sampling nine points per element: going forward, "Visión" and the footer
+   wordmark were ENTIRELY covered by the bar; going back with Shift+Tab,
+   "Soluciones por caso" and the wordmark sat under the header. Entirely hidden
+   is an AA failure; partly hidden is not — that is 2.4.12, which is AAA.
 
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
+   `scroll-padding` is the exact answer: it tells the browser how much room to
+   reserve when it scrolls something into view. It changes NOTHING about the
+   layout, the design or where anything sits: only where the scroll stops.
 
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
+   The values come from measuring the layers, with air on top: header 65px on
+   mobile and 81px from `md` up; bar 126px plus 12px of separation at 390px.
+   Above `lg` the bar becomes a 280px corner card, stops crossing the width and
+   can no longer cover anything entirely, so nothing is reserved there. */
+html {
+  scroll-padding-top: 5.5rem;
+  scroll-padding-bottom: 9.5rem;
+}
 
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-
-  --font-family-poppins: var(--font-poppins);
-  --font-family-inter: var(--font-inter);
-
-  --animate-accordion-down: accordion-down 0.2s ease-out;
-  --animate-accordion-up: accordion-up 0.2s ease-out;
-
-  @keyframes accordion-down {
-    from {
-      height: 0;
-    }
-
-    to {
-      height: var(--radix-accordion-content-height);
-    }
-  }
-
-  @keyframes accordion-up {
-    from {
-      height: var(--radix-accordion-content-height);
-    }
-
-    to {
-      height: '0';
-    }
+@media (min-width: 64rem) {
+  html {
+    scroll-padding-bottom: 0;
   }
 }
 
 body {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
-    Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  background: var(--color-canvas);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-size: var(--text-body);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  /* `clip` instead of `hidden`: it contains the overflow without creating a
+     scroll container, so position:sticky keeps working. */
+  overflow-x: clip;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--color-brand) 30%, transparent);
+  color: var(--color-ink);
+}
+
+/* Foco visible accesible — nunca se elimina el outline.
+
+   `video`, `audio`, `iframe` y `details` están en la lista porque también son
+   focalizables y quedaban fuera: el reproductor de la película recibía el
+   anillo POR DEFECTO de Chrome —un hilo azul de 1px— en vez del del sistema,
+   y era prácticamente invisible sobre el vídeo.
+
+   `transition-property: none` no es un capricho: `outline-color` entra en la
+   lista de `transition-colors` de Tailwind v4, así que el anillo aparecía con
+   un fundido de 450ms partiendo del color del texto. Un indicador de foco que
+   tarda en llegar no cumple su función, que es decirte DÓNDE ESTÁS ahora. */
+:where(
+  a,
+  button,
+  input,
+  textarea,
+  select,
+  summary,
+  video,
+  audio,
+  iframe,
+  details,
+  [tabindex]
+):focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+  border-radius: 4px;
+  transition-property: none;
+}
+
+/* CONTAINERS THAT RECEIVE FOCUS FROM CODE, NOT FROM TABBING.
+   The cookie notice moves focus to its own region when it appears, so a
+   keyboard user lands inside without having to hunt for it. That region has
+   `tabIndex={-1}`: it is outside the tab order and does nothing.
+
+   The rule above matches `[tabindex]`, so it drew a 2px brand ring around the
+   whole notice on every first visit — it read as an error state, not as "you
+   are here".
+
+   It does not break WCAG 2.4.7: the norm asks for a visible indicator on
+   components OPERABLE by keyboard, and this one is not. The three that are —
+   the link and the two buttons — keep theirs.
+
+   ── WHY HERE AND NOT WITH A UTILITY ───────────────────────────────────────
+   `focus-visible:outline-none` in the markup was tried first and did NOT work,
+   even though its specificity is higher: the rule above lives OUTSIDE `@layer`
+   and Tailwind's utilities live inside it, and unlayered CSS beats layered CSS
+   whatever happens with specificity. That is why the exception has to be here,
+   in the same unlayered context. */
+[data-focus-silent]:focus-visible {
+  outline: none;
+}
+
+/* THE SEARCH FIELD'S NATIVE "X".
+   `input[type="search"]` draws its own cross in WebKit — Chrome and Safari —
+   and the /red finder already has one, with its `aria-label` and its 44px touch
+   target. Typing made BOTH appear, side by side.
+
+   The native one is switched off and `type="search"` is kept, which is not
+   decorative: it is what makes the iOS keyboard show the "Search" key and what
+   tells a screen reader what kind of field this is. */
+input[type='search']::-webkit-search-cancel-button,
+input[type='search']::-webkit-search-decoration {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* Enlace de salto al contenido (WCAG 2.4.1) */
+.skip-link {
+  position: fixed;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: var(--z-overlay);
+  transform: translateY(-160%);
+  transition: transform var(--duration-fast) var(--ease-standard);
+}
+.skip-link:focus-visible {
+  transform: translateY(0);
+}
+
+/* =========================================================================
+   UTILIDADES DE MARCA
+   ========================================================================= */
+/* Dirección OFICIAL del gradiente: cian → verde (#0FC7E1 → #51D9B2). Iba al
+   revés; la marca lo define en ese orden y el orden se nota en cada botón. */
+.brand-gradient {
+  background-image: linear-gradient(100deg, var(--color-brand-2), var(--color-brand));
+}
+
+.brand-text {
+  background-image: linear-gradient(100deg, var(--color-brand-2), var(--color-brand));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Grano fino — evita el aspecto plano/"generado". Requiere position:relative. */
+.grain::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.04;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Resplandor de energía — reservado al registro Impacto */
+.energy-glow {
+  box-shadow: 0 0 60px -12px color-mix(in srgb, var(--color-brand-2) 55%, transparent);
+}
+
+/* =========================================================================
+   SUPERFICIE DE VIDRIO
+   Ver docs/MASTER-PROJECT-DEFINITION.md §12–13.
+
+   Una superficie que deja pasar el fondo y se comporta como un material, no
+   como una caja con opacidad. Tres capas, y cada una hace un trabajo distinto:
+
+   1. EL MEDIO — `backdrop-filter` con desenfoque Y saturación. La saturación
+      es lo que separa esto de "un div translúcido": el vidrio real concentra
+      el color de lo que hay detrás en lugar de lavarlo. Sin ella, sobre un
+      lienzo casi negro el panel se ve gris sucio.
+
+   2. EL CANTO ESPECULAR — un borde de 1px con GRADIENTE, no un color plano.
+      La luz entra por arriba a la izquierda y se apaga hacia abajo, que es lo
+      que da la lectura de "pieza con volumen". Se dibuja con dos máscaras
+      compuestas en XOR porque CSS no admite `border-image` con radios.
+
+   3. LA PROFUNDIDAD — dos sombras: una amplia y difusa que despega la pieza
+      del fondo, y un realce interior arriba que simula el grosor del canto.
+
+   ── LEGIBILITY OVER EFFECT ────────────────────────────────────────────
+   The background stays at 62% and no lower. Below that the text starts to
+   compete with whatever scrolls behind it, and §23 requires 4.5:1 against the
+   COMPOSITED background, not against the theoretical token.
+
+   ── WITHOUT `backdrop-filter` THERE IS NO GLASS, THERE IS OPACITY ─────
+   Where the browser does not support it the panel falls back to a solid
+   background. It is the only honest way out: a translucent background with no
+   blur leaves the text over whatever is behind and becomes unreadable.
+   ========================================================================= */
+/* CAREFUL: `position` is NOT declared here.
+   `.glass` and Tailwind's `.fixed` have the same specificity — one class — so
+   whichever appears later in the sheet wins. With `position: relative` inside
+   `.glass`, an element with `glass fixed` stopped being fixed and was placed in
+   the flow: the floating card appeared 3013px down the page instead of anchored
+   bottom right.
+   The `::before` needs a positioned ancestor, so anyone using `.glass` without
+   `fixed`/`absolute` must add `relative` in the markup. */
+.glass {
+  background: color-mix(in srgb, var(--color-surface-2) 68%, transparent);
+  /* `brightness` is what makes the glass legible, and it is the part almost
+     always forgotten. Without dimming the background, a light headline passing
+     behind reads THROUGH the panel and competes with the text on top; with it,
+     what is behind is still hinted at — which is the point — but no longer
+     disputes the reading. `saturate` stops that dimming from leaving a dirty
+     grey: real glass concentrates the colour of what is behind it.
+
+     The values come from a MEASURED sweep over the worst case — the mobile bar,
+     which crosses display-sized headlines across the screen — at 18 scroll
+     positions. At rest nothing reads through even at 52%; it is left at 68% as
+     margin against a compositing artefact: during animated scroll the browser
+     can paint the `backdrop-filter` a frame behind, and with more opacity that
+     flicker goes unnoticed. */
+  backdrop-filter: blur(32px) saturate(190%) brightness(0.32);
+  -webkit-backdrop-filter: blur(32px) saturate(190%) brightness(0.32);
+  box-shadow:
+    0 24px 60px -20px rgb(0 0 0 / 0.65),
+    0 2px 10px -4px rgb(0 0 0 / 0.4),
+    inset 0 1px 0 0 rgb(255 255 255 / 0.08);
+}
+
+.glass::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    150deg,
+    rgb(255 255 255 / 0.34) 0%,
+    rgb(255 255 255 / 0.1) 28%,
+    rgb(255 255 255 / 0.03) 52%,
+    color-mix(in srgb, var(--color-brand) 16%, transparent) 100%
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glass {
+    background: var(--color-surface-2);
+  }
+}
+
+/* -------------------------------------------------------------------------
+   `.glass-strong` — the same glass, for panels that FLOAT OVER TEXT
+   -------------------------------------------------------------------------
+   The 68% of `.glass` is calibrated for panels that live inside a composition:
+   behind them there is photography or a surface, not paragraphs.
+
+   The app floater is another case. It crosses the whole page and passes over
+   display-sized headlines and dense lists. And here contrast is NOT the metric
+   that fails: measured on the composited pixel at the 99th percentile, the
+   panel's secondary text gave 7.79:1 on desktop and 8.45:1 on mobile, well
+   above AA's 4.5:1. The problem is a different one and it has to be named
+   properly: **the text behind is still legible through the glass**, and two
+   legible texts in the same place compete even when both have contrast.
+
+   What gets corrected, then, is not the luminance but the STRUCTURE left of the
+   background. Raising it to 92% erases that without turning the panel into an
+   opaque rectangle: the blur and the hint of the colour behind are still there,
+   which is what keeps it inside the system.
+   ------------------------------------------------------------------------- */
+.glass-strong {
+  background: color-mix(in srgb, var(--color-surface-2) 92%, transparent);
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glass-strong {
+    background: var(--color-surface-2);
+  }
+}
+
+/* =========================================================================
+   PRESSED · the answer to a click
+   See docs/MASTER-PROJECT-DEFINITION.md §21 and `lib/motion.ts`.
+
+   Microinteractions are ANOTHER FAMILY, not a small version of DEPTH: they are
+   expressed in colour, opacity and two or three pixels, never on the narrative
+   system's scale. That is why they live here, in CSS, and not in the Motion
+   vocabulary: they share neither timing nor intent with the reveals.
+
+   ── WHY IT WAS NEEDED ────────────────────────────────────────────────────
+   The site had hover on 19 components and a click response on 2. With a mouse
+   the difference barely registers; on a touch screen THERE IS NO HOVER, so
+   until now tapping a city card produced no signal at all between the tap and
+   the next page loading. The movement here is not expressive: it is an
+   acknowledgement of receipt.
+
+   There was also a `--color-brand-press` token, declared and unused, left over
+   from a first intention that never landed. It was dropped in the cleanup;
+   this is the form that does land, and it is geometric rather than chromatic
+   so that it serves a glass card, a badge and a log row equally well.
+
+   One single value for the whole site: 0.98. Two different press scales are
+   not two decisions, they are the absence of one.
+   ========================================================================= */
+.press {
+  transition: transform var(--duration-fast) var(--ease-standard);
+}
+
+.press:active {
+  transform: scale(0.98);
+}
+
+/* The acknowledgement survives without motion: someone who asks for less
+   animation still needs to know their tap landed. The signal moves to colour. */
+@media (prefers-reduced-motion: reduce) {
+  .press {
+    transition: none;
+  }
+
+  .press:active {
+    transform: none;
+    opacity: 0.75;
+  }
+}
+
+/* MEDIDA DE LÍNEA · 45–75 caracteres (§22)
+
+   Los valores NO son el número de caracteres. La unidad `ch` es el ancho del
+   glifo "0", y en esta tipografía el carácter medio de un texto con espacios
+   mide ~1.31 veces menos. Por eso `62ch` rendía ~83 caracteres reales: la
+   regla estaba escrita bien y el valor la incumplía.
+   
+   Calibrado sobre el render, no sobre la teoría:
+     .measure         48ch → ~63 caracteres
+     .measure-narrow  36ch → ~47 caracteres
+   
+   Si se cambia la tipografía hay que volver a medir: la proporción es una
+   propiedad de la fuente, no una constante. */
+.measure {
+  max-width: 48ch;
+}
+.measure-narrow {
+  max-width: 36ch;
+}
+
+/* =========================================================================
+   MOTION · prefers-reduced-motion
+   El contenido nunca queda invisible ni inaccesible.
+   ========================================================================= */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* -------------------------------------------------------------------------
+   SAFETY NET FOR THE REVEALS
+
+   Motion serialises its initial state as an INLINE style, so the served HTML
+   carried `opacity: 0` on every block with a `Reveal`. If the JS never arrives
+   — or if the user asks for less movement, because `useReducedMotion()`
+   returns `null` on the server — that content was invisible.
+
+   These two rules guarantee it without depending on JavaScript:
+   - `scripting: none`: the content shows even with no JS.
+   - `prefers-reduced-motion`: the content shows FROM THE SERVED HTML, without
+     the flicker that waiting for hydration caused.
+   ------------------------------------------------------------------------- */
+@media (scripting: none) {
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+    /* FRAME also writes `clip-path`. Without cancelling it here, the film
+       would stay cropped at the sides in a browser with no JavaScript. */
+    clip-path: none !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+    clip-path: none !important;
+  }
 }

@@ -1,0 +1,169 @@
+# Punto de retomada
+
+> Actualizado: 2026-09-08 · Rama `ajustes/post-handoff`
+> Estado: **build, lint y tipos limpios · 42 páginas indexables · ES 459 · EN 459 · PT 459 · 0 vulnerabilidades**
+
+Este documento existe para poder cerrar la sesión y volver sin releer nada. El
+_porqué_ de cada decisión está en `00-registro-de-cambios.md`, bloques 1 a 59.
+La norma sigue siendo `MASTER-PROJECT-DEFINITION.md`, ahora en **v1.2**.
+
+**Si vienes de fuera del proyecto, no empieces por aquí:** empieza por
+`README.md` para levantarlo y por `docs/HANDOFF.md`, que trae la lista de
+decisiones que parecen fallos y no lo son. Este documento asume contexto.
+
+> **AVISO — 2026-09-07.** El proyecto se integró en `Voltop-SAS/landing` y el
+> desarrollador lo reestructuró a `src/` con arquitectura por dominios.
+> **Los documentos que describen el presente ya citan las rutas nuevas** —48
+> referencias actualizadas y verificadas una a una contra el árbol—. La tabla de
+> equivalencias está en `docs/FLUJO-DE-TRABAJO.md`.
+>
+> `00-registro-de-cambios.md` y los documentos de fase (`00-discovery`, `01-ia`,
+> `02-art-direction`, `03-design-system`) **conservan las rutas viejas a
+> propósito**: son un registro de lo que pasó, y reescribirlos diría que el
+> proyecto estuvo en `src/` cuando no lo estaba.
+
+---
+
+## Cómo levantar el proyecto
+
+```bash
+cd <ruta-del-proyecto>
+npm run dev                       # → http://localhost:3000 · para TRABAJAR
+npm run build && npm start        # → http://localhost:3000 · para VERIFICAR
+```
+
+`dev` refleja cada guardado al instante; `start` sirve el último build, así que
+un cambio no aparece hasta rehacerlo. Revisa en `dev` y verifica en `start`: el
+build es el único que enseña lo que se publica.
+
+**Los dos no se turnan sin limpiar.** Comparten `.next`, y correr `build` con un
+servidor `dev` de por medio deja ese directorio en un estado que `dev` no
+digiere: **404 en `/es`, `/en` y `/pt`** —todas las rutas de idioma a la vez,
+que es la pista de que no es un fallo del código—. Se arregla con `rm -rf .next`
+y a levantar de nuevo.
+
+Al entrar sale el **aviso de cookies**, una franja abajo: es correcto, la
+analítica no carga hasta que se responde.
+
+El **flotante de la app** está visible desde el principio y **no se esconde
+solo**: se queda hasta que lo cierres, y vuelve en cada recarga (Bloque 61 — las
+zonas mudas por sección se retiraron, hacían parpadear el componente). Si no
+aparece: o el aviso de cookies sigue sin responder —el flotante espera a que se
+decida—, o estás en `/empresas` o un legal, donde se calla a propósito.
+
+Recargar con **Cmd+Shift+R** (el caché del navegador engaña más que el build).
+
+---
+
+## En qué estado está
+
+**El sitio está construido.** No queda arquitectura pendiente, ni decisión
+técnica abierta, ni deuda sin documentar. Lo que falta son **entregas
+externas**, listadas abajo.
+
+Cerrado en esta sesión, de un vistazo:
+
+|                 |                                                                                                                         |
+| --------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| Marca           | Paleta oficial completa · Poppins (titulares) + Manrope (interfaz). **Cero marcadores de posición**                     |
+| Datos de la red | 3 estaciones reales · 35 puntos · 22–80 kW · coordenadas y direcciones                                                  |
+| App             | Insignias a su tienda · QR verificado · flotante en escritorio y móvil                                                  |
+| Legal           | Términos y política publicados e indexables · aviso de cookies que **bloquea** la analítica hasta el consentimiento     |
+| Medición        | Google Tag Manager `GTM-WJ5S2LBF` (configurable, ver `.env.example`) · los 17 eventos del plan con emisor               |
+| Formulario B2B  | Conectado por correo a los tres destinatarios                                                                           |
+| Novedades       | 3 entradas · la de Wake con vídeo, cuerpo y CTA                                                                         |
+| Accesibilidad   | 110 combinaciones sin desbordes · contraste peor 7.52:1 sobre píxel compuesto · reduced-motion sin elementos invisibles |
+
+---
+
+## Lo que falta, por tipo
+
+### Bloquea la publicación
+
+| #     | Qué                                                                  | Nota                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| ----- | -------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| ~~1~~ | ~~`app.voltop.co` devuelve 503~~ **RESUELTO 2026-09-03**             | Comprobado: responde 307 → `/download` y sirve una página real de descarga. El CTA del header siempre apuntó bien; ya no hay nada que decidir                                                                                                                                                                                                                                                                        |
+| 2     | **Un asset** (`chargingDetail`) — el resto **ENTREGADOS 2026-09-08** | Ninguna página abre ya con un hueco declarado. `chargingDetail` solo afecta a las fichas de estación. `wideInfrastructure` pasó a llamarse `allianceWake`: lo que llegó no era una estación sino un apretón de manos, y el nombre describía una foto que no existe                                                                                                                                                   |
+| 3     | **`.vtt` en tres idiomas para DOS piezas con audio**                 | Única no conformidad WCAG 2.2 AA viva, acotada el 2026-09-08 midiendo las pistas una a una: `apertura-ean.mp4` (70 s, CON audio, sin subtítulos de ningún tipo) y `ceoVision` (28 s, con subtítulos QUEMADOS y en inglés, que en `/es` y `/pt` están en el idioma equivocado y no se pueden quitar). `voltop-film.mp4` **no tiene pista de audio**, así que 1.2.2 no le aplica. Cero elementos `<track>` en el sitio |
+| 4     | **Consulta legal sobre el aviso de cookies**                         | El aviso está montado y funciona. Falta que un abogado confirme que la redacción y el mecanismo bastan                                                                                                                                                                                                                                                                                                               |
+
+### Falta información
+
+| #     | Qué                                                                                 | Desbloquea                                                                                |
+| ----- | ----------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| ~~5~~ | ~~Fechas reales de las entradas **EAN** y **Grand Hyatt**~~ **RESUELTO 2026-09-08** | EAN 01/02/2025, Grand Hyatt 01/10/2025. Las dos entradas pasan a `dataStatus: 'verified'` |
+| 6     | Archivos y nombres de los **logos de aliados** (el permiso ya existe)               | `partners: []` está vacío y la franja se omite sola                                       |
+| 7     | ¿La **tarifa** se publica algún día?                                                | Hoy el copy describe el mecanismo, no la cifra. Correcto y publicable                     |
+
+### Requiere decisión
+
+| #      | Qué                                                                                | Contexto                                                                                                                                                                                                                                                                                                                                                      |
+| ------ | ---------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 8      | **El vídeo de Wake es el mismo archivo que la película de la Home**                | Se ve en dos sitios: bajo "Visión" con la cita de Bruno, y en la noticia. ¿Se acepta la repetición o se separan las piezas? **La previsualización de la lista se queda muda a propósito** (2026-09-08): el autoplay con sonido lo bloquea el navegador y sin controles incumpliría WCAG 1.4.2; el audio está a un clic, en la entrada                         |
+| 9      | **`voltop-film.mp4` (28 MB) versionado en git**                                    | Funciona. Solo compensa moverlo cuando crezca el catálogo de vídeo                                                                                                                                                                                                                                                                                            |
+| ~~10~~ | ~~Poppins Black (900) cargada y sin usar~~ **CERRADO 2026-09-03**                  | Se retiró en la limpieza: se cargaba sin que ningún componente la usara. Si algún día se quieren titulares más rotundos, se vuelve a añadir en `src/app/layout.tsx`                                                                                                                                                                                           |
+| 11     | **Formulario por `mailto:`**                                                       | Funciona sin servidor, pero pierde a quien no tenga cliente de correo y expone las tres direcciones. Un servicio de formularios lo resuelve y solo cambia una función                                                                                                                                                                                         |
+| ~~12~~ | ~~**La 404 sale en el idioma por defecto**~~ **DECIDIDO 2026-09-08: se queda así** | Camilo eligió dejarlo. El arreglo se implementó y se midió (Bloque 71): leer la ruta en `not-found` saca del prerenderizado a las 42 páginas, porque ese límite está en el árbol de render de todas. Un visitante inglés recibe la 404 en español **con navegación completa y dos salidas**, y la página es `noindex`. **No reabrir sin releer el Bloque 71** |
+
+### Descartado conscientemente
+
+- **View Transitions / React experimental** — verificado: el flag se acepta pero dispara **0 transiciones**; el componente no existe en React estable. No se cambia el canal por una animación.
+- **Filtro de novedades** — con 3 entradas filtraría a una. Umbral: ~15.
+- **Wordmark gigante en el footer** — decoración sin función.
+- **Carga en horario valle** — producto confirmó que no existen tarifas por franja. Se sustituyó por _reserva_, que sí existe.
+- **"Sin sorpresas de disponibilidad"** — está sujeta a ocupación; no se puede garantizar.
+
+---
+
+## Cosas que conviene saber antes de tocar nada
+
+**Las cifras no se escriben a mano.** Puntos de carga, potencias, ciudades y
+conectores se calculan desde el dataset en `getNetworkSummary()`. Añadir una
+estación actualiza la Home sola. Lo mismo los escalones del filtro de potencia.
+
+**El texto legal no es `Localized`.** Es español plano a propósito: traducir un
+instrumento jurídico lo convierte en otro instrumento. Inglés y portugués
+muestran el original con aviso.
+
+**`.glass` no declara `position`.** Tiene la misma especificidad que `.fixed`
+de Tailwind, y declararla rompía el anclaje de los elementos fijos. Quien la
+use sin `fixed`/`absolute` añade `relative` en el marcado.
+
+**`.measure` vale 48ch, no 62.** La unidad `ch` mide el glifo "0", más ancho
+que el carácter medio. Si se cambia la tipografía, **hay que volver a medir**:
+la proporción es propiedad de la fuente.
+
+**Los másteres viven fuera del repositorio**, en `~/Voltop-masters-originales/` (fuera del repositorio, ver el handoff)
+con su propio LEEME. Están en `.gitignore`. Siguen pendientes de subir a un
+almacenamiento compartido: hoy están en una sola máquina.
+
+**Para medir cualquier cosa en el navegador:** hay trampas documentadas en el
+registro —el `clip` de las capturas usa coordenadas de página, Lenis intercepta
+el scroll programático, y el contraste hay que medirlo sobre el píxel
+compuesto a percentil 99, no sobre el token—. Están en los bloques 12, 17 y 34.
+
+---
+
+## Después de la limpieza del 2026-09-03
+
+El código quedó auditado entero (ver Bloque 46 del registro). Lo que conviene
+saber al volver:
+
+- **El pie ya no dice "Prototipo · contenido provisional".** Se retiró: era
+  falso y salía en todas las páginas.
+- **Quedan 17 skills, no 47.** Las genéricas de diseño se retiraron porque
+  competían con las siete `voltop-*`, que son el criterio de este proyecto.
+- **`PostLink` es nuevo** y centraliza la regla §15 —enlazar solo si hay
+  destino— que estaba copiada en las tres listas de novedades. Las listas
+  siguen siendo visualmente distintas a propósito.
+- **`Media` y `VideoMedia` no se funden nunca**: uno es servidor, el otro
+  cliente porque lee `prefers-reduced-motion`.
+
+## Lo siguiente, si hubiera que elegir
+
+1. **Conseguir los cuatro assets que quedan.** Es lo único que deja una página abriendo
+   con un hueco gris, y es la primera pantalla que ve quien entra.
+2. **Arreglar `app.voltop.co`** o aceptar que el CTA del header apunte a la
+   sección de descarga de la Home, donde las insignias sí funcionan.
+3. **La consulta legal del aviso de cookies**, que es lo único con riesgo
+   jurídico real.

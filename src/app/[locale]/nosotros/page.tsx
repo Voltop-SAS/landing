@@ -1,0 +1,282 @@
+import type { Metadata } from 'next'
+import { notFound } from 'next/navigation'
+import { isLocale, t, type Locale } from '~/core/common/domain/i18n/config'
+import { routes, alternatesFor, SITE_URL } from '~/core/common/domain/i18n/routes'
+import { nosotros } from '~/core/about/domain/consts/copy'
+import { brand } from '~/core/common/domain/consts/copy'
+import { media } from '~/core/common/infrastructure/content/media'
+import { getMetrics, getFounder } from '~/core/common/infrastructure/data-access'
+import {
+  Section,
+  Container,
+  Eyebrow,
+  SectionHeading,
+} from '@ui/common/components/ui/LayoutPrimitives'
+import { MetricRow, PendingTag } from '@ui/common/components/ui/DataPrimitives'
+import { Media } from '@ui/common/components/ui/Media'
+import { Reveal } from '@ui/common/components/ui/Reveal'
+import { TrackView } from '@ui/common/components/analytics/TrackView'
+
+/**
+ * The "Cifras en validación" block is not published for now (Camilo's request,
+ * 2026-09-08): showing indicators with no values took away more than it added.
+ *
+ * The structure is NOT deleted — the section comes back whole the day there is
+ * verified data — it simply stops rendering. With `hasValidated` true the block
+ * never comes into play: the real metrics get painted, which is the goal.
+ */
+const SHOW_PENDING_FIGURES = false
+
+type Props = { params: Promise<{ locale: string }> }
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale } = await params
+  if (!isLocale(locale)) return {}
+  return {
+    title: t(nosotros.meta.title, locale),
+    description: t(nosotros.meta.description, locale),
+    alternates: alternatesFor(locale, routes.about),
+  }
+}
+
+/**
+ * /NOSOTROS · credibility.
+ *
+ * It used to be three blocks (metrics + logos + two testimonials) with no
+ * story, no stated criteria for how we build and no leadership. It now has the
+ * depth the architecture demands of it: story → how we build → impact →
+ * leadership → trust.
+ *
+ * The impact block does NOT invent figures: while there is no validated data it
+ * honestly declares that validation is pending (§33).
+ */
+export default async function NosotrosPage({ params }: Props) {
+  const { locale: raw } = await params
+  if (!isLocale(raw)) notFound()
+  const locale = raw as Locale
+
+  const metrics = getMetrics()
+  const hasValidated = metrics.some((m) => m.validated && m.value)
+  const founder = getFounder()
+
+  const orgJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: brand.name,
+    url: SITE_URL,
+    description: t(brand.tagline, locale),
+    areaServed: { '@type': 'Country', name: 'Colombia' },
+    founder: { '@type': 'Person', name: founder.name },
+  }
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }}
+      />
+
+      {/* Narrative opening — a different register from /red and /empresas */}
+      <Section
+        space="none"
+        className="pt-32 md:pt-40"
+      >
+        <Container width="narrow">
+          <Eyebrow>{t(nosotros.hero.eyebrow, locale)}</Eyebrow>
+          <h1 className="mt-5 font-display text-display-xl font-semibold text-balance text-ink">
+            {t(nosotros.hero.title, locale)}
+          </h1>
+          {/* Three blocks, not one: the delivered copy marks "Ahí entra Voltop."
+              as a highlight. It stands apart by moving from `text-ink-2` to
+              `text-ink` within the same size and the same stack — it is the
+              text's own emphasis, not a new element. */}
+          <div className="mt-7 space-y-5 text-body-l">
+            <p className="text-ink-2">{t(nosotros.hero.lead, locale)}</p>
+            <p className="text-ink">{t(nosotros.hero.highlight, locale)}</p>
+            <p className="text-ink-2">{t(nosotros.hero.leadEnd, locale)}</p>
+          </div>
+        </Container>
+      </Section>
+
+      {/* Story — narrow column, editorial */}
+      <Section
+        space="base"
+        ariaLabelledby="historia-title"
+      >
+        <Container width="narrow">
+          <SectionHeading
+            id="historia-title"
+            kicker={t(nosotros.story.eyebrow, locale)}
+          >
+            {t(nosotros.story.title, locale)}
+          </SectionHeading>
+          <div className="mt-8 space-y-6">
+            {nosotros.story.body.map((p, i) => (
+              <p
+                key={i}
+                className="text-body-l text-ink-2"
+              >
+                {t(p, locale)}
+              </p>
+            ))}
+          </div>
+        </Container>
+      </Section>
+
+      {/* Real material, full bleed — a breath between blocks of text */}
+      <Container width="wide">
+        <Media
+          asset={media.allianceWake}
+          locale={locale}
+          corner
+          sizes="(min-width: 1600px) 1600px, 100vw"
+          aspect="21/9"
+        />
+      </Container>
+
+      {/* How we build — structural grid */}
+      <Section
+        space="base"
+        ariaLabelledby="criterios-title"
+      >
+        <Container>
+          <SectionHeading
+            id="criterios-title"
+            kicker={t(nosotros.infrastructure.eyebrow, locale)}
+          >
+            {t(nosotros.infrastructure.title, locale)}
+          </SectionHeading>
+
+          {/* NO numbering: four criteria we do not negotiate are not a
+              secuencia, y numerarlos sugería un orden que no existe. El ancla
+              es el título, no la cifra. */}
+          <ul className="mt-12 grid gap-x-14 gap-y-12 md:grid-cols-2">
+            {nosotros.infrastructure.pillars.map((p, i) => (
+              <Reveal
+                as="li"
+                key={i}
+                index={i}
+              >
+                <div className="border-t border-line-strong pt-6">
+                  <h3 className="font-display text-display-m font-semibold text-balance text-ink">
+                    {t(p.title, locale)}
+                  </h3>
+                  <p className="mt-3 measure text-body-s text-ink-2">{t(p.body, locale)}</p>
+                </div>
+              </Reveal>
+            ))}
+          </ul>
+        </Container>
+      </Section>
+
+      {/* Impact — honest while there are no validated figures */}
+      <Section
+        id="impacto"
+        space="base"
+        className="border-t border-line"
+        ariaLabelledby="impacto-title"
+      >
+        <Container>
+          <TrackView
+            event="impacto_visto"
+            props={{ validadas: hasValidated }}
+          >
+            <SectionHeading
+              id="impacto-title"
+              kicker={t(nosotros.impact.eyebrow, locale)}
+            >
+              {t(nosotros.impact.title, locale)}
+            </SectionHeading>
+          </TrackView>
+
+          <p className="mt-5 measure text-body-l text-ink-2">{t(nosotros.impact.lead, locale)}</p>
+
+          {hasValidated ? (
+            <MetricRow
+              metrics={metrics}
+              locale={locale}
+              className="mt-14"
+            />
+          ) : (
+            SHOW_PENDING_FIGURES && (
+              <div className="mt-10 max-w-2xl border-l-2 border-warn/50 pl-6">
+                <PendingTag>{t(nosotros.impact.pendingTitle, locale)}</PendingTag>
+                <p className="mt-4 text-body-l text-ink-2">
+                  {t(nosotros.impact.pendingBody, locale)}
+                </p>
+                <ul className="mt-8 grid gap-x-10 gap-y-3 font-mono text-mono text-ink-3 sm:grid-cols-2">
+                  {metrics.map((m) => (
+                    <li
+                      key={m.key}
+                      className="border-t border-line pt-3"
+                    >
+                      {t(m.label, locale)}
+                      {m.unit ? ` · ${m.unit}` : ''}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )
+          )}
+        </Container>
+      </Section>
+
+      {/* Leadership — the founder's voice, with his material */}
+      <Section
+        id="liderazgo"
+        space="base"
+        ariaLabelledby="liderazgo-title"
+      >
+        <Container>
+          <SectionHeading
+            id="liderazgo-title"
+            kicker={t(nosotros.leadership.eyebrow, locale)}
+          >
+            {t(nosotros.leadership.title, locale)}
+          </SectionHeading>
+        </Container>
+
+        <Container
+          width="narrow"
+          className="mt-14"
+        >
+          {founder.quote && (
+            <blockquote className="font-display text-display-m font-medium text-balance text-ink">
+              {t(founder.quote, locale)}
+            </blockquote>
+          )}
+          <p className="mt-6 border-t border-line pt-6 text-body-s">
+            <span className="text-ink">{founder.name}</span>
+            <span className="text-ink-3"> · {t(founder.role, locale)}</span>
+          </p>
+        </Container>
+
+        <Container
+          width="wide"
+          className="mt-14"
+        >
+          {/* `controls` because this is a PIECE THAT IS WATCHED, not a
+              background: it is the founder talking to camera. Without controls
+              it would run silent on an endless loop — you would watch him speak
+              and never hear a word — and there would be no way to stop it. The
+              same rule the news entry already applies. */}
+          <Media
+            asset={media.ceoVision}
+            locale={locale}
+            corner
+            controls
+            sizes="(min-width: 1600px) 1600px, 100vw"
+          />
+        </Container>
+      </Section>
+
+      {/* The CONFIANZA section was removed on 2026-09-08. The two testimonials,
+          the partner strip and their copy (`nosotros.trust`) all stay where they
+          are — `getTestimonials`, `getPartners`, `content/company` — with nobody
+          consuming them: they are real content, and the partner logos are also a
+          pending delivery whose permission is already granted. Deleting them
+          would be throwing away something that comes back, not cleaning up.
+          Recorded as orphans in the changelog. */}
+    </>
+  )
+}
