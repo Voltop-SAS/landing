@@ -26,16 +26,32 @@ import { cn } from '@ui/common/lib/cn'
  * `group` is added only on the linked branch: the children's `group-hover`
  * should not respond when there is nothing to open. The same goes for `press`:
  * a row that leads nowhere should not acknowledge the tap.
+ *
+ * ── `decorative` ─────────────────────────────────────────────────────────
+ * For a SECOND link to the same entry sitting next to the real one — the cover
+ * of the lead entry, whose headline already links to the same place.
+ *
+ * The mouse expects a large piece of media to be clickable, so it is. But for a
+ * keyboard and for a screen reader it would be a duplicate: the same
+ * destination announced twice, and one extra tab stop with no name of its own.
+ * `decorative` removes it from both — `tabIndex={-1}` and `aria-hidden` — and
+ * leaves the headline as the one accessible link.
+ *
+ * It does NOT stop being a link: it is still an `<a>` with a real `href`, so
+ * middle click, "open in a new tab" and the crawler keep working.
  */
 export function PostLink({
   post,
   locale,
   className,
+  decorative,
   children,
 }: {
   post: Post
   locale: Locale
   className?: string
+  /** A duplicate of a link that already exists next to it. See above. */
+  decorative?: boolean
   children: React.ReactNode
 }) {
   if (!hasPage(post)) return <div className={className}>{children}</div>
@@ -44,6 +60,7 @@ export function PostLink({
     <Link
       href={href(locale, routes.post(post.slug))}
       className={cn('group press', className)}
+      {...(decorative ? { tabIndex: -1, 'aria-hidden': true } : {})}
     >
       {children}
     </Link>

@@ -7,6 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { t, type Locale } from '~/core/common/domain/i18n/config'
 import { href, routes } from '~/core/common/domain/i18n/routes'
+import { TextSlot } from '@ui/common/components/ui/TextSlot'
 import { leadForm } from '~/core/common/domain/consts/copy'
 import { leadRecipients } from '~/core/common/domain/consts/links'
 import { Button } from '@ui/common/components/ui/Button'
@@ -96,15 +97,7 @@ async function submitLead(payload: LeadPayload): Promise<void> {
     `?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
 }
 
-export function LeadForm({
-  locale,
-  segmentKey,
-  segmentLabel,
-}: {
-  locale: Locale
-  segmentKey: string
-  segmentLabel: string
-}) {
+export function LeadForm({ locale, segmentKey }: { locale: Locale; segmentKey: string }) {
   const [status, setStatus] = useState<Status>('idle')
   const [started, setStarted] = useState(false)
   const confirmationRef = useRef<HTMLDivElement>(null)
@@ -213,14 +206,13 @@ export function LeadForm({
       noValidate
       className="border border-line bg-surface-1 p-6 md:p-10"
     >
-      <div className="flex flex-wrap items-baseline justify-between gap-3">
-        <h3 className="font-display text-display-m font-semibold text-ink">
-          {t(leadForm.title, locale)}
-        </h3>
-        <p className="font-mono text-mono text-ink-3">
-          {t(leadForm.caseLabel, locale)}: <span className="text-ink-2">{segmentLabel}</span>
-        </p>
-      </div>
+      {/* The "Tu caso: <segment>" label was removed on 2026-09-08. It repeated,
+          in 12px mono, the tab the user had just pressed and which is still
+          marked above, and `segmentKey` travels in the submission either way:
+          no information is lost, it just stops being said twice. */}
+      <h3 className="font-display text-display-m font-semibold text-ink">
+        {t(leadForm.title, locale)}
+      </h3>
       <p className="mt-3 measure text-body-s text-ink-2">{t(leadForm.intro, locale)}</p>
 
       {/* Demo notice BEFORE asking for the data. It used to sit in 12px mono
@@ -318,13 +310,22 @@ export function LeadForm({
               htmlFor={fieldId('consent')}
               className="py-3 text-body-s text-ink-2"
             >
-              {t(leadForm.fields.consent.label, locale)}{' '}
-              <Link
-                href={href(locale, routes.privacy)}
-                className="text-ink underline underline-offset-4 transition-colors hover:text-brand"
+              {/* The link goes INSIDE the authorisation. See the note on
+                  `consent.label` for why, and `TextSlot` for how — including
+                  what happens if a locale ever loses the placeholder. An
+                  unreadable authorisation is the one thing that cannot happen
+                  here. */}
+              <TextSlot
+                text={t(leadForm.fields.consent.label, locale)}
+                name="policy"
               >
-                {t(leadForm.fields.consent.policyLink, locale)}
-              </Link>
+                <Link
+                  href={href(locale, routes.privacy)}
+                  className="text-ink underline decoration-line-strong decoration-1 underline-offset-4 transition-colors hover:text-brand hover:decoration-brand"
+                >
+                  {t(leadForm.fields.consent.policyLink, locale)}
+                </Link>
+              </TextSlot>
             </label>
           </div>
           {errors.consent && (

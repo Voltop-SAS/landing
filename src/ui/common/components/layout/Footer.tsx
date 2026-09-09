@@ -49,7 +49,7 @@ export function Footer({ locale }: { locale: Locale }) {
             >
               <Logo />
             </Link>
-            <p className="mt-4 max-w-xs text-body-s text-ink-3">{t(brand.tagline, locale)}</p>
+            <p className="mt-4 max-w-xs text-body-s text-ink-3">{t(brand.footerBlurb, locale)}</p>
             {/* The support email, visible and as text. It is declared in the
                 Data Processing Policy as VOLTOP S.A.S.'s contact detail, so it
                 is the official channel and deserves to be where people look

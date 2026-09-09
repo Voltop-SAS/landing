@@ -6,8 +6,8 @@ import { href, routes, alternatesFor } from '~/core/common/domain/i18n/routes'
 import { red, city as cityCopy } from '~/core/network/domain/consts/copy'
 import { units, a11y } from '~/core/common/domain/consts/copy'
 import {
-  getCities,
-  getCity,
+  getCityCoverage,
+  getCitiesWithStations,
   getStationsByCity,
   getPostsForCity,
 } from '~/core/common/infrastructure/data-access'
@@ -23,15 +23,16 @@ import { StatusBadge } from '@ui/common/components/ui/DataPrimitives'
 import { Reveal } from '@ui/common/components/ui/Reveal'
 import { TrackView } from '@ui/common/components/analytics/TrackView'
 import { formatPowerKw } from '~/core/network/domain/entities/Station'
+import { cityLead } from '~/core/network/infrastructure/helpers/cityLead'
 
 type Props = { params: Promise<{ locale: string; city: string }> }
 
 /**
- * /RED/[CIUDAD] · cobertura local.
+ * /RED/[CIUDAD] · local coverage.
  *
- * Cada ciudad es una landing de búsqueda local ("cargador eléctrico Medellín"):
- * el canal de adquisición B2C más barato del proyecto (§29).
- * Añadir una ciudad al dataset genera esta ruta automáticamente.
+ * Every city is a local-search landing page ("cargador eléctrico Medellín"):
+ * the cheapest B2C acquisition channel in the project (§29).
+ * Adding a city to the dataset generates this route automatically.
  */
 /**
  * CLOSED PARAMS. A `notFound()` thrown from a page resolves no boundary at all
@@ -51,19 +52,23 @@ type Props = { params: Promise<{ locale: string; city: string }> }
 export const dynamicParams = false
 
 export function generateStaticParams() {
-  return locales.flatMap((locale) => getCities().map((c) => ({ locale, city: c.slug })))
+  /* Only cities WITH stations. A city with none has nothing to land on, and
+     the page's own text is composed from those figures. See `getCityCoverage`. */
+  return locales.flatMap((locale) =>
+    getCitiesWithStations().map(({ city }) => ({ locale, city: city.slug })),
+  )
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, city: citySlug } = await params
   if (!isLocale(locale)) return {}
-  const city = getCity(citySlug)
-  if (!city) return {}
+  const coverage = getCityCoverage(citySlug)
+  if (!coverage) return {}
 
-  const path = routes.city(city.slug)
+  const path = routes.city(coverage.city.slug)
   return {
-    title: `${t(cityCopy.metaTitlePattern, locale)} ${city.name}`,
-    description: t(city.intro, locale),
+    title: `${t(cityCopy.metaTitlePattern, locale)} ${coverage.city.name}`,
+    description: cityLead(coverage, locale),
     alternates: alternatesFor(locale, path),
   }
 }
@@ -73,11 +78,16 @@ export default async function CityPage({ params }: Props) {
   if (!isLocale(raw)) notFound()
   const locale = raw as Locale
 
-  const city = getCity(citySlug)
-  if (!city) notFound()
+  const coverage = getCityCoverage(citySlug)
+  if (!coverage) notFound()
+  const city = coverage.city
 
   const stations = getStationsByCity(city.slug)
-  const others = getCities().filter((c) => c.slug !== city.slug)
+  /* Only cities that have a page: the route is generated from
+     `getCitiesWithStations`, so linking to any other one would be a 404. */
+  const others = getCitiesWithStations()
+    .map((c) => c.city)
+    .filter((c) => c.slug !== city.slug)
   const news = await getPostsForCity(city.slug)
 
   return (
@@ -110,8 +120,9 @@ export default async function CityPage({ params }: Props) {
             </ol>
           </nav>
 
-          {/* `ciudad_vista` estaba en el plan de medición sin emitirse (§31).
-              Umbral 0 porque el evento es "vio la página", no "leyó el bloque". */}
+          {/* `ciudad_vista` was in the measurement plan without being emitted
+              (§31). Threshold 0 because the event is "saw the page", not "read
+              the block". */}
           <TrackView
             event="ciudad_vista"
             props={{ citySlug: city.slug }}
@@ -121,7 +132,7 @@ export default async function CityPage({ params }: Props) {
           <h1 className="mt-4 font-display text-display-xl font-semibold text-ink">
             {t(cityCopy.titlePrefix, locale)} {city.name}
           </h1>
-          <p className="mt-6 measure text-body-l text-ink-2">{t(city.intro, locale)}</p>
+          <p className="mt-6 measure text-body-l text-ink-2">{cityLead(coverage, locale)}</p>
         </Container>
       </Section>
 

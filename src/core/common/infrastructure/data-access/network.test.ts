@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { getNetworkSummary } from './network'
+import { getCitiesWithStations, getCityCoverage, getNetworkSummary } from './network'
 import type { Station } from '~/core/network/domain/entities/Station'
 
 /**
@@ -23,6 +23,7 @@ const station = (over: Partial<Station>): Station => ({
   points: 2,
   status: 'operativa',
   hours: { es: '' },
+  openingHours: null,
   pricing: null,
   services: [],
   media: { photos: [] },
@@ -99,5 +100,88 @@ describe('getNetworkSummary', () => {
       station({ slug: 'b', points: 3 }),
     ])
     expect(summary.points).toBe(3)
+  })
+})
+
+/**
+ * These figures are the ones the city cards and the city pages put into a
+ * sentence. Since the copy stopped being written by hand, a wrong number here
+ * becomes a wrong number in a meta description — which is the version a search
+ * engine keeps.
+ */
+const CITIES = [
+  { slug: 'bogota', name: 'Bogotá', region: 'Cundinamarca' },
+  { slug: 'medellin', name: 'Medellín', region: 'Antioquia' },
+  { slug: 'cali', name: 'Cali', region: 'Valle del Cauca' },
+]
+
+describe('getCitiesWithStations', () => {
+  it('adds up the points of every station in the city', () => {
+    const [bogota] = getCitiesWithStations(CITIES, [
+      station({ slug: 'a', citySlug: 'bogota', points: 18 }),
+      station({ slug: 'b', citySlug: 'bogota', points: 11 }),
+    ])
+    expect(bogota.count).toBe(2)
+    expect(bogota.points).toBe(29)
+  })
+
+  /**
+   * `maxKw` is the maximum of the maximums: what the fastest point in that
+   * city delivers, which is what "hasta N kW" promises. An average or a
+   * minimum here would understate the network; a sum would invent a station.
+   */
+  it('reports the fastest point in the city, not a total or an average', () => {
+    const [bogota] = getCitiesWithStations(CITIES, [
+      station({ slug: 'a', citySlug: 'bogota', powerKw: { min: 22, max: 22 } }),
+      station({ slug: 'b', citySlug: 'bogota', powerKw: { min: 50, max: 80 } }),
+    ])
+    expect(bogota.maxKw).toBe(80)
+  })
+
+  /**
+   * A city with no stations is left out entirely, and the whole `/red/[city]`
+   * route hangs off that: it is generated from this list, so a city with
+   * nothing to show gets no page rather than an empty one.
+   */
+  it('leaves out a city that has no stations', () => {
+    const result = getCitiesWithStations(CITIES, [station({ citySlug: 'bogota' })])
+    expect(result.map((c) => c.city.slug)).toEqual(['bogota'])
+  })
+
+  /**
+   * `count` is every station and `operational` only the ones running. The card
+   * shows the fraction precisely when they differ — a station announced and
+   * not yet operating is what must not be hidden.
+   */
+  it('counts announced stations in the total but not as operational', () => {
+    const [bogota] = getCitiesWithStations(CITIES, [
+      station({ slug: 'a', citySlug: 'bogota', status: 'operativa' }),
+      station({ slug: 'b', citySlug: 'bogota', status: 'proxima' }),
+    ])
+    expect(bogota.count).toBe(2)
+    expect(bogota.operational).toBe(1)
+  })
+})
+
+describe('getCityCoverage', () => {
+  it('finds the city by slug', () => {
+    const coverage = getCityCoverage('medellin', CITIES, [
+      station({ citySlug: 'medellin', points: 6 }),
+    ])
+    expect(coverage?.city.name).toBe('Medellín')
+    expect(coverage?.points).toBe(6)
+  })
+
+  /**
+   * `undefined` is what turns into a 404, and that is deliberate: the page's
+   * lead and its meta description are composed from these figures, so a city
+   * with none would publish an empty description rather than a page.
+   */
+  it('reports nothing for a city with no stations', () => {
+    expect(getCityCoverage('cali', CITIES, [station({ citySlug: 'bogota' })])).toBeUndefined()
+  })
+
+  it('reports nothing for a slug that is not a city', () => {
+    expect(getCityCoverage('atlantis', CITIES, [station({ citySlug: 'bogota' })])).toBeUndefined()
   })
 })

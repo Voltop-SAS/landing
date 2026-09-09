@@ -207,7 +207,7 @@ se ve un salto al empezar.
 | Entregable | Detalle |
 |---|---|
 | **CRM objetivo** (O3) | El formulario está listo y **no envía**. Un único punto a cambiar: `submitLead` en `LeadForm.tsx`, más poner `CRM_ENABLED = true`. El copy de éxito real ya está escrito y traducido. Campos estables: `name, email, company, phone, message, segment, consent` |
-| **Plataforma de analytics** (O4) | Los eventos se emiten a `window.dataLayer`. Un único punto a cambiar: `dispatch` en `lib/analytics/index.ts` |
+| **Plataforma de analytics** (O4) | Los eventos se emiten a `window.dataLayer`. Un único punto a cambiar: `dispatch` en `src/core/common/infrastructure/analytics/index.ts` |
 | **Enlaces de App Store y Google Play** (O8) | `app_store_click` está declarado y no se puede emitir porque no hay enlaces. No hay ningún botón de app publicado — no se publica un enlace sin destino |
 | **Texto legal de la política de datos** (§38) | La página existe con la estructura y el índice de contenidos, marcada `noindex` mientras no haya texto. Lo emite el área legal conforme a la Ley 1581 de 2012. El consentimiento del formulario enlaza ahí, así que **bloquea la publicación del formulario** |
 | Proveedor de mapa (O7) | Diferido. Aunque llegue, sin coordenadas no hay nada que pintar |
@@ -219,7 +219,7 @@ se ve un salto al empezar.
 | Item | Detalle |
 |---|---|
 | `public/*.svg` | `file.svg`, `globe.svg`, `next.svg`, `vercel.svg`, `window.svg` — sobras del scaffold de Next, sin una sola referencia en el código |
-| `app/favicon.ico` | Es el favicon por defecto de Next, 25,9 KB |
+| `src/app/favicon.ico` | Es el favicon por defecto de Next, 25,9 KB |
 | Tamaño de los huecos | Ningún hueco pendiente debería ser el elemento más grande de su página. El de 21/9 de la ficha de estación mide 575 px de alto y domina por encima de los datos reales |
 | `robots.txt` | Dice `Allow: /` y el sitemap apunta a `voltop.co` mientras el pie dice "Prototipo · contenido provisional". **Si esto se despliega, Google indexa placeholders** |
 | Redirección de raíz | `permanent: false` a propósito mientras no se publica. Pasar a `true` al lanzar |

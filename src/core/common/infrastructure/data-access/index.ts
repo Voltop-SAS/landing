@@ -37,7 +37,12 @@ export {
   type StationSort,
 } from './stations'
 export { getCities, getCity } from './cities'
-export { getNetworkSummary, getCitiesWithStations } from './network'
+export {
+  getNetworkSummary,
+  getCitiesWithStations,
+  getCityCoverage,
+  type CityCoverage,
+} from './network'
 export {
   getMetrics,
   getBusinessSegments,

@@ -5,12 +5,7 @@ import { routes, alternatesFor, SITE_URL } from '~/core/common/domain/i18n/route
 import { nosotros } from '~/core/about/domain/consts/copy'
 import { brand } from '~/core/common/domain/consts/copy'
 import { media } from '~/core/common/infrastructure/content/media'
-import {
-  getMetrics,
-  getFounder,
-  getTestimonials,
-  getPartners,
-} from '~/core/common/infrastructure/data-access'
+import { getMetrics, getFounder } from '~/core/common/infrastructure/data-access'
 import {
   Section,
   Container,
@@ -21,6 +16,16 @@ import { MetricRow, PendingTag } from '@ui/common/components/ui/DataPrimitives'
 import { Media } from '@ui/common/components/ui/Media'
 import { Reveal } from '@ui/common/components/ui/Reveal'
 import { TrackView } from '@ui/common/components/analytics/TrackView'
+
+/**
+ * The "Cifras en validación" block is not published for now (Camilo's request,
+ * 2026-09-08): showing indicators with no values took away more than it added.
+ *
+ * The structure is NOT deleted — the section comes back whole the day there is
+ * verified data — it simply stops rendering. With `hasValidated` true the block
+ * never comes into play: the real metrics get painted, which is the goal.
+ */
+const SHOW_PENDING_FIGURES = false
 
 type Props = { params: Promise<{ locale: string }> }
 
@@ -53,8 +58,6 @@ export default async function NosotrosPage({ params }: Props) {
   const metrics = getMetrics()
   const hasValidated = metrics.some((m) => m.validated && m.value)
   const founder = getFounder()
-  const testimonials = getTestimonials()
-  const partners = getPartners()
 
   const orgJsonLd = {
     '@context': 'https://schema.org',
@@ -83,7 +86,15 @@ export default async function NosotrosPage({ params }: Props) {
           <h1 className="mt-5 font-display text-display-xl font-semibold text-balance text-ink">
             {t(nosotros.hero.title, locale)}
           </h1>
-          <p className="mt-7 text-body-l text-ink-2">{t(nosotros.hero.lead, locale)}</p>
+          {/* Three blocks, not one: the delivered copy marks "Ahí entra Voltop."
+              as a highlight. It stands apart by moving from `text-ink-2` to
+              `text-ink` within the same size and the same stack — it is the
+              text's own emphasis, not a new element. */}
+          <div className="mt-7 space-y-5 text-body-l">
+            <p className="text-ink-2">{t(nosotros.hero.lead, locale)}</p>
+            <p className="text-ink">{t(nosotros.hero.highlight, locale)}</p>
+            <p className="text-ink-2">{t(nosotros.hero.leadEnd, locale)}</p>
+          </div>
         </Container>
       </Section>
 
@@ -115,7 +126,7 @@ export default async function NosotrosPage({ params }: Props) {
       {/* Real material, full bleed — a breath between blocks of text */}
       <Container width="wide">
         <Media
-          asset={media.wideInfrastructure}
+          asset={media.allianceWake}
           locale={locale}
           corner
           sizes="(min-width: 1600px) 1600px, 100vw"
@@ -178,35 +189,34 @@ export default async function NosotrosPage({ params }: Props) {
             </SectionHeading>
           </TrackView>
 
+          <p className="mt-5 measure text-body-l text-ink-2">{t(nosotros.impact.lead, locale)}</p>
+
           {hasValidated ? (
-            <>
-              <p className="mt-5 measure text-body-l text-ink-2">
-                {t(nosotros.impact.lead, locale)}
-              </p>
-              <MetricRow
-                metrics={metrics}
-                locale={locale}
-                className="mt-14"
-              />
-            </>
+            <MetricRow
+              metrics={metrics}
+              locale={locale}
+              className="mt-14"
+            />
           ) : (
-            <div className="mt-10 max-w-2xl border-l-2 border-warn/50 pl-6">
-              <PendingTag>{t(nosotros.impact.pendingTitle, locale)}</PendingTag>
-              <p className="mt-4 text-body-l text-ink-2">
-                {t(nosotros.impact.pendingBody, locale)}
-              </p>
-              <ul className="mt-8 grid gap-x-10 gap-y-3 font-mono text-mono text-ink-3 sm:grid-cols-2">
-                {metrics.map((m) => (
-                  <li
-                    key={m.key}
-                    className="border-t border-line pt-3"
-                  >
-                    {t(m.label, locale)}
-                    {m.unit ? ` · ${m.unit}` : ''}
-                  </li>
-                ))}
-              </ul>
-            </div>
+            SHOW_PENDING_FIGURES && (
+              <div className="mt-10 max-w-2xl border-l-2 border-warn/50 pl-6">
+                <PendingTag>{t(nosotros.impact.pendingTitle, locale)}</PendingTag>
+                <p className="mt-4 text-body-l text-ink-2">
+                  {t(nosotros.impact.pendingBody, locale)}
+                </p>
+                <ul className="mt-8 grid gap-x-10 gap-y-3 font-mono text-mono text-ink-3 sm:grid-cols-2">
+                  {metrics.map((m) => (
+                    <li
+                      key={m.key}
+                      className="border-t border-line pt-3"
+                    >
+                      {t(m.label, locale)}
+                      {m.unit ? ` · ${m.unit}` : ''}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )
           )}
         </Container>
       </Section>
@@ -245,63 +255,28 @@ export default async function NosotrosPage({ params }: Props) {
           width="wide"
           className="mt-14"
         >
+          {/* `controls` because this is a PIECE THAT IS WATCHED, not a
+              background: it is the founder talking to camera. Without controls
+              it would run silent on an endless loop — you would watch him speak
+              and never hear a word — and there would be no way to stop it. The
+              same rule the news entry already applies. */}
           <Media
             asset={media.ceoVision}
             locale={locale}
             corner
+            controls
             sizes="(min-width: 1600px) 1600px, 100vw"
           />
         </Container>
       </Section>
 
-      {/* Trust — testimonials without cards */}
-      <Section
-        space="base"
-        className="border-t border-line"
-        ariaLabelledby="confianza-title"
-      >
-        <Container>
-          <SectionHeading
-            id="confianza-title"
-            kicker={t(nosotros.trust.eyebrow, locale)}
-            measure="max-w-[24ch]"
-          >
-            {t(nosotros.trust.title, locale)}
-          </SectionHeading>
-
-          <ul className="mt-14 grid gap-x-14 gap-y-12 md:grid-cols-2">
-            {testimonials.map((tm, i) => (
-              <Reveal
-                as="li"
-                key={tm.author}
-                index={i}
-              >
-                <figure className="border-t border-line pt-6">
-                  <blockquote className="font-display text-display-s text-ink">
-                    {t(tm.quote, locale)}
-                  </blockquote>
-                  <figcaption className="mt-5 text-body-s">
-                    <span className="text-ink">{tm.author}</span>
-                    <span className="text-ink-3"> · {t(tm.role, locale)}</span>
-                  </figcaption>
-                </figure>
-              </Reveal>
-            ))}
-          </ul>
-
-          {/* The partner strip is omitted while there are no cleared logos (§32) */}
-          {partners.length > 0 && (
-            <div className="mt-16">
-              <SectionHeading
-                as="h3"
-                size="s"
-              >
-                {t(nosotros.trust.partnersTitle, locale)}
-              </SectionHeading>
-            </div>
-          )}
-        </Container>
-      </Section>
+      {/* The CONFIANZA section was removed on 2026-09-08. The two testimonials,
+          the partner strip and their copy (`nosotros.trust`) all stay where they
+          are — `getTestimonials`, `getPartners`, `content/company` — with nobody
+          consuming them: they are real content, and the partner logos are also a
+          pending delivery whose permission is already granted. Deleting them
+          would be throwing away something that comes back, not cleaning up.
+          Recorded as orphans in the changelog. */}
     </>
   )
 }

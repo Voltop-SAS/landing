@@ -93,7 +93,13 @@ export function SegmentSelector({
               role="tab"
               type="button"
               aria-selected={isActive}
-              aria-controls={`panel-${s.key}`}
+              /* `aria-controls` ONLY on the selected tab. Only its panel is in
+                 the DOM — the other three do not exist — so pointing at them
+                 named ids that resolve to nothing, which a validator reports and
+                 some screen readers follow into emptiness. The APG allows a
+                 pattern where inactive panels are not rendered; what it does not
+                 allow is claiming to control something that is not there. */
+              aria-controls={isActive ? `panel-${s.key}` : undefined}
               tabIndex={i === focusIndex ? 0 : -1}
               onClick={() => select(i)}
               className={cn(

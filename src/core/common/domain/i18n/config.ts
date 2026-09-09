@@ -140,3 +140,38 @@ export const localeMeta: Record<
      in Brazilian Portuguese describes it poorly. */
   pt: { label: 'PT', name: 'Português', htmlLang: 'pt-BR', hreflang: 'pt-BR' },
 }
+
+/* ---------------------------------------------------------------- */
+/* Placeholders inside product copy                                  */
+/* ---------------------------------------------------------------- */
+
+/**
+ * Fills the `{name}` placeholders a piece of copy carries.
+ *
+ * ── WHY COPY CARRIES PLACEHOLDERS AT ALL ──────────────────────────────────
+ * Because §33 forbids writing a figure by hand, and a sentence that names one
+ * is a figure written by hand. The city cards used to read "con 80 kW y seis
+ * puntos de carga" per city, typed into prose: true the day it was written and
+ * silently wrong the day a station came in. A template with `{points}` and
+ * `{kw}` cannot go stale, because the numbers arrive from the dataset every
+ * time it renders.
+ *
+ * ── WHY IT IS ONE FUNCTION AND NOT A `.replace()` AT EACH CALL SITE ───────
+ * There were four of those, in two pages and two components, each repeating
+ * both the brace syntax and the fallback behaviour. A placeholder convention
+ * that lives in four places is a convention nobody can change.
+ *
+ * A name that is not in `values` is LEFT AS IT IS rather than blanked: copy
+ * and code get edited by different people on different days, and a visible
+ * `{kw}` is a bug someone reports, while an empty gap is one nobody sees.
+ *
+ * For a placeholder that has to become a LINK rather than text — the policy
+ * inside a consent sentence — see `TextSlot` in the UI layer. It splits on the
+ * same syntax.
+ */
+export function fill(text: string, values: Record<string, string | number>): string {
+  return Object.entries(values).reduce(
+    (out, [name, value]) => out.replaceAll(`{${name}}`, String(value)),
+    text,
+  )
+}

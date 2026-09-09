@@ -16,6 +16,12 @@ import {
   distanceKm,
   type StationSort,
 } from '~/core/common/infrastructure/data-access'
+import {
+  readCriteria,
+  criteriaToQuery,
+  EMPTY_CRITERIA,
+  type Criteria,
+} from '~/core/network/infrastructure/helpers/criteria'
 import { StatusBadge } from '@ui/common/components/ui/DataPrimitives'
 import { Button } from '@ui/common/components/ui/Button'
 import { track } from '~/core/common/infrastructure/analytics'
@@ -83,95 +89,8 @@ function computeSteps(stations: Station[]): number[] {
 type Coords = { lat: number; lng: number }
 type GeoState = 'idle' | 'locating' | 'granted' | 'denied'
 
-/**
- * Short, stable URL keys: they are part of the link people share. The Spanish
- * values are a contract, not a leftover — they appear in indexable URLs (see
- * AGENTS.md).
- */
-const PARAM = {
-  q: 'q',
-  city: 'ciudad',
-  connector: 'conector',
-  power: 'kw',
-  live: 'live',
-  sort: 'orden',
-}
-
-/**
- * The entire search criteria in ONE object.
- *
- * These used to be six separate `useState` calls, which forced six `setState`
- * calls to hydrate from the URL and six dependencies listed in every
- * `useMemo`. With a single object, reading the URL is one assignment and the
- * synchronising effect has a single dependency.
- */
-type Criteria = {
-  query: string
-  city: string
-  connector: string
-  minPower: number
-  onlyLive: boolean
-  sort: StationSort
-}
-
-const EMPTY: Criteria = {
-  query: '',
-  city: '',
-  connector: '',
-  minPower: 0,
-  onlyLive: false,
-  sort: 'relevance',
-}
-
-/**
- * URL → criteria.
- *
- * This is applied AFTER mounting, not in the `useState` initialiser. This
- * route is static: the HTML is generated at build time with no query string,
- * so reading the URL on the first render would produce criteria different from
- * the server's and React would report a hydration mismatch. The price is one
- * frame showing the full list before the shared link is applied; the benefit
- * is not turning the route dynamic and not polluting the console.
- *
- * ACCEPTED LIMITATION: a filtered link is SHAREABLE but not indexable — the
- * served HTML always carries the full list. Indexable coverage by city is
- * already provided by the `/red/[city]` routes, which was the original SEO
- * reason.
- */
-function readCriteria(steps: number[]): Criteria {
-  const p = new URLSearchParams(window.location.search)
-  const kw = Number(p.get(PARAM.power))
-  const sort = p.get(PARAM.sort)
-  return {
-    query: p.get(PARAM.q) ?? '',
-    city: p.get(PARAM.city) ?? '',
-    connector: p.get(PARAM.connector) ?? '',
-    minPower: steps.includes(kw) ? kw : 0,
-    onlyLive: p.get(PARAM.live) === '1',
-    /* `distance` is not restored from the URL: it requires location
-       permission, and a link cannot grant that. */
-    sort: (['power', 'status', 'city'] as const).includes(sort as never)
-      ? (sort as StationSort)
-      : 'relevance',
-  }
-}
-
-/** Criteria → URL. Short, stable keys: they are the link people share. */
-function writeCriteria(c: Criteria) {
-  const p = new URLSearchParams()
-  if (c.query) p.set(PARAM.q, c.query)
-  if (c.city) p.set(PARAM.city, c.city)
-  if (c.connector) p.set(PARAM.connector, c.connector)
-  if (c.minPower) p.set(PARAM.power, String(c.minPower))
-  if (c.onlyLive) p.set(PARAM.live, '1')
-  /* `distance` is not written: it depends on a permission a link cannot grant. */
-  if (c.sort !== 'relevance' && c.sort !== 'distance') p.set(PARAM.sort, c.sort)
-  const qs = p.toString()
-  window.history.replaceState(null, '', qs ? `?${qs}` : window.location.pathname)
-}
-
 export function StationFinder({ locale, stations, cities }: Props) {
-  const [criteria, setCriteria] = useState<Criteria>(EMPTY)
+  const [criteria, setCriteria] = useState<Criteria>(EMPTY_CRITERIA)
   const { query, city, connector, minPower, onlyLive, sort } = criteria
 
   /**
@@ -182,7 +101,10 @@ export function StationFinder({ locale, stations, cities }: Props) {
    */
   const apply = (next: Criteria) => {
     setCriteria(next)
-    writeCriteria(next)
+    /* The address bar is written here and nowhere else: `criteriaToQuery` is
+       pure so the contract can be tested without a browser. */
+    const qs = criteriaToQuery(next)
+    window.history.replaceState(null, '', qs || window.location.pathname)
   }
   const set = <K extends keyof Criteria>(key: K, value: Criteria[K]) =>
     apply({ ...criteria, [key]: value })
@@ -227,8 +149,14 @@ export function StationFinder({ locale, stations, cities }: Props) {
      assignment, with no cascade. */
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    setCriteria(readCriteria(steps))
-  }, [steps])
+    setCriteria(
+      readCriteria(window.location.search, {
+        steps,
+        citySlugs: cities.map((c) => c.slug),
+        connectors,
+      }),
+    )
+  }, [steps, cities, connectors])
 
   const results = useMemo(
     () =>
@@ -241,7 +169,7 @@ export function StationFinder({ locale, stations, cities }: Props) {
 
   const clearAll = () => {
     /* Keep the sort order: clearing filters is not re-sorting. */
-    apply({ ...EMPTY, sort: criteria.sort })
+    apply({ ...EMPTY_CRITERIA, sort: criteria.sort })
     track('red_filtros_limpiados')
   }
 
@@ -385,23 +313,61 @@ export function StationFinder({ locale, stations, cities }: Props) {
             >
               {t(red.sort.label, locale)}
             </label>
-            <select
-              id={sortId}
-              value={sort}
-              onChange={(e) => {
-                set('sort', e.target.value as StationSort)
-                onFilter('orden', e.target.value)
-              }}
-              className="min-h-11 w-full rounded-(--radius-pill) border border-line-control bg-canvas px-4 pr-9 text-body-s text-ink outline-none transition-colors focus:border-brand lg:mt-3 lg:min-h-12 lg:rounded-(--radius-structural) lg:px-4 lg:pr-10 lg:text-body"
-            >
-              <option value="relevance">{t(red.sort.relevance, locale)}</option>
-              <option value="power">{t(red.sort.power, locale)}</option>
-              <option value="status">{t(red.sort.status, locale)}</option>
-              <option value="city">{t(red.sort.city, locale)}</option>
-              {geoAvailable && origin && (
-                <option value="distance">{t(red.sort.distance, locale)}</option>
-              )}
-            </select>
+            {/* ── THE CHEVRON IS OURS, NOT THE BROWSER'S ─────────────────────
+                What used to show was the one the system paints, and its distance
+                from the edge is fixed by the browser: no `padding` moves it.
+                Measured at 1440px, the text started 16px from the left edge and
+                the arrow sat ~12px from the right — a visible imbalance on a
+                238px control.
+
+                `appearance-none` switches off ONLY the arrow's drawing. The
+                `<select>` stays native: keyboard, screen reader and the
+                iOS/Android wheel intact, which is exactly why a select was
+                chosen over a custom menu.
+
+                The glyph is the SAME one the language switch uses — `viewBox
+                0 0 10 6`, stroke 1.5, round caps — so the site has one chevron
+                and not two similar ones.
+
+                `right-4` = 16px, exactly the `px-4` of the left side: the air is
+                now the same on both. And `pr-10` reserves room so long text
+                never runs underneath. */}
+            <div className="relative">
+              <select
+                id={sortId}
+                value={sort}
+                onChange={(e) => {
+                  set('sort', e.target.value as StationSort)
+                  onFilter('orden', e.target.value)
+                }}
+                className="min-h-11 w-full appearance-none rounded-(--radius-pill) border border-line-control bg-canvas px-4 pr-[3.75rem] text-body-s text-ink outline-none transition-colors focus:border-brand lg:mt-3 lg:min-h-12 lg:rounded-(--radius-structural) lg:px-4 lg:pr-[3.75rem] lg:text-body"
+              >
+                <option value="relevance">{t(red.sort.relevance, locale)}</option>
+                <option value="power">{t(red.sort.power, locale)}</option>
+                <option value="status">{t(red.sort.status, locale)}</option>
+                <option value="city">{t(red.sort.city, locale)}</option>
+                {geoAvailable && origin && (
+                  <option value="distance">{t(red.sort.distance, locale)}</option>
+                )}
+              </select>
+              {/* `pointer-events-none`: the click has to reach the select, which
+                  is what opens the list. `lg:top-[calc(50%+0.375rem)]` offsets
+                  the select's `lg:mt-3`, because the container does not carry
+                  it. */}
+              <svg
+                aria-hidden="true"
+                viewBox="0 0 10 6"
+                className="pointer-events-none absolute right-4 top-1/2 h-1.5 w-2.5 -translate-y-1/2 text-ink-3 lg:top-[calc(50%+0.375rem)]"
+              >
+                <path
+                  d="M1 1l4 4 4-4"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                />
+              </svg>
+            </div>
           </div>
         </div>
       </div>

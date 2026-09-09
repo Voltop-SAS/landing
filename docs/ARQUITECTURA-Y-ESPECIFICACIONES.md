@@ -8,7 +8,7 @@ ES, no lo que podría ser. Las reglas normativas numeradas (§) viven en
 
 ## 1 · Rutas
 
-50 páginas estáticas, tres idiomas. Todo cuelga de `app/[lang]/`.
+50 páginas estáticas, tres idiomas. Todo cuelga de `src/app/[locale]/`.
 
 | Ruta | Genera | Notas |
 |---|---|---|
@@ -28,7 +28,7 @@ ES, no lo que podría ser. Las reglas normativas numeradas (§) viven en
 `permanent: true` en `next.config.ts`.
 
 Añadir una estación o una ciudad **no requiere tocar código**: se añade el
-registro en `content/data/` y la ruta, el sitemap y los agregados de la Home se
+registro en `src/core/<dominio>/infrastructure/content/` y la ruta, el sitemap y los agregados de la Home se
 generan solos.
 
 ## 2 · Los 9 beats de la Home
@@ -56,7 +56,7 @@ plana, ese es el motivo y está en el registro de cambios (bloque 58).
 
 ## 3 · Sistema visual
 
-Dark-first, sin modo claro. **77 tokens** en `app/globals.css` bajo `@theme`.
+Dark-first, sin modo claro. **77 tokens** en `src/app/globals.css` bajo `@theme`.
 
 ### Color
 
@@ -181,7 +181,7 @@ Anchos barridos: 320, 360, 390, 414, 430, 480, 540, 600, 640, 700, 768, 820,
 
 ## 5 · Media
 
-Todo asset se registra en **`content/data/media.ts`** con su función narrativa,
+Todo asset se registra en **`src/core/common/infrastructure/content/media.ts`** con su función narrativa,
 nunca como ruta suelta en un componente. Un hueco declara qué falta y para qué,
 de modo que la composición se puede evaluar sin el material.
 
@@ -229,7 +229,7 @@ Objetivo **WCAG 2.1 AA**. Lo implementado:
 
 ## 7 · SEO
 
-- `title` y `description` por página e idioma, desde `content/copy`.
+- `title` y `description` por página e idioma, desde `src/core/<dominio>/domain/consts/copy.ts`.
 - **`canonical` + `hreflang`** vía `alternatesFor()`. Solo se anuncian **idiomas
   publicados**: un `hreflang` es una invitación a indexar, y anunciar un idioma
   en borrador lo mete en resultados mientras está a medias. Incluye `x-default`.
@@ -247,12 +247,12 @@ Objetivo **WCAG 2.1 AA**. Lo implementado:
 ## 8 · Internacionalización
 
 - **Tres idiomas:** `es` (principal), `en`, `pt`. El idioma vive en la URL.
-- Todo el texto es `Localized = { es, en, pt }` en `content/copy/*`. **Se escribe
+- Todo el texto es `Localized = { es, en, pt }` en `src/core/<dominio>/domain/consts/copy.ts`. **Se escribe
   primero en español**; lo que no se traduce (nombres propios, unidades) se
   modela como string plano.
-- **`lib/i18n/audit.ts` recorre todo el contenido en cada build** y falla si un
+- **`src/core/common/infrastructure/i18n/audit.ts` recorre todo el contenido en cada build** y falla si un
   idioma publicado tiene huecos. No es un test opcional: se ejecuta desde
-  `app/sitemap.ts`, así que **no se puede compilar con traducciones incompletas**.
+  `src/app/sitemap.ts`, así que **no se puede compilar con traducciones incompletas**.
 - **El texto legal NO es `Localized`**: es español plano a propósito. Traducir un
   instrumento jurídico lo convierte en otro instrumento. Inglés y portugués
   muestran el original con un aviso.

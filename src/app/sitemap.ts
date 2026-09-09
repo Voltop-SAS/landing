@@ -5,7 +5,7 @@ import { legalDocs } from '~/core/legal/infrastructure/content/legalDocs'
 import { assertPublishedLocalesComplete } from '~/core/common/infrastructure/i18n/audit'
 import {
   getStations,
-  getCities,
+  getCitiesWithStations,
   getPostsWithPage,
   getLatestPostDate,
 } from '~/core/common/infrastructure/data-access'
@@ -72,7 +72,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: new Date(legalDocs.privacy.updatedISO),
       changeFrequency: 'yearly',
     },
-    ...getCities().map((c) => ({
+    /* Only cities WITH stations: those are the ones `/red/[city]` generates,
+       so any other one would advertise a 404 to a crawler. */
+    ...getCitiesWithStations().map(({ city: c }) => ({
       path: routes.city(c.slug),
       priority: 0.8,
       lastModified: build,

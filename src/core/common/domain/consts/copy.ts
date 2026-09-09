@@ -51,6 +51,21 @@ export const brand = {
     en: 'Charging network for electric cars in Colombia. Find it, use it and pay for it from the app.',
     pt: 'Rede de carregamento para carros elétricos na Colômbia. Você encontra, usa e paga pelo aplicativo.',
   } satisfies Localized,
+
+  /* The line under the logo in the footer. It is NOT `tagline`, and the split
+     is the whole point: `tagline` feeds the `<title>`, the meta descriptions of
+     the Home and /nosotros, and the subtitle of the Open Graph image. A title
+     is cut at around 60 characters in a results page, so the sentence that
+     lives there has to stay short.
+
+     This one is 123 characters and names the app —"la app Voltop"—, which reads
+     right at the foot of a page and repeats itself inside a title that already
+     opens with "Voltop —". Same message, two lengths, two jobs. */
+  footerBlurb: {
+    es: 'Red de carga para carros eléctricos en Colombia. Encuentra estaciones, inicia tu carga y gestiona todo desde la app Voltop.',
+    en: 'Charging network for electric cars in Colombia. Find stations, start your charge and manage everything from the Voltop app.',
+    pt: 'Rede de carregamento para carros elétricos na Colômbia. Encontre estações, inicie sua carga e gerencie tudo pelo aplicativo Voltop.',
+  } satisfies Localized,
 }
 
 /**
@@ -148,11 +163,11 @@ export const actions = {
   } satisfies Localized,
   /* No longer "Soluciones para empresas": that text became beat 4's EYEBROW,
      and a button that repeats the label of its own
-     sección no dice a dónde lleva. */
+     section does not say where it leads. */
   businessSolutions: {
-    es: 'Conoce nuestras soluciones',
-    en: 'See our solutions',
-    pt: 'Conheça nossas soluções',
+    es: 'Ver soluciones',
+    en: 'See solutions',
+    pt: 'Ver soluções',
   } satisfies Localized,
   talkToTeam: {
     es: 'Habla con nuestro equipo',
@@ -180,10 +195,19 @@ export const actions = {
     en: 'Back to the network',
     pt: 'Voltar para a rede',
   } satisfies Localized,
+  /* The /red banner CTA only. It was "Lleva Voltop a tu espacio" — the same
+     label as an /empresas#casos link further down this file. They no longer
+     match, and that is fine because they lead to different places: this one to
+     /empresas, that one to a section inside it. §15 asks one action to carry
+     one label, not that two different destinations share one.
+
+     "Quiero ser parte" speaks in the first person, like the two labels in the
+     Home's closing beat ("Conduzco un carro eléctrico" / "Represento una
+     empresa"): the reader recognises themselves instead of being instructed. */
   hostStation: {
-    es: 'Lleva Voltop a tu espacio',
-    en: 'Bring Voltop to your space',
-    pt: 'Leve a Voltop para o seu espaço',
+    es: 'Quiero ser parte',
+    en: 'I want to join',
+    pt: 'Quero fazer parte',
   } satisfies Localized,
 }
 
@@ -210,16 +234,15 @@ export const units = {
 
 export const leadForm = {
   title: {
-    es: 'Cuéntanos qué necesitas',
-    en: 'Tell us what you need',
-    pt: 'Conte o que você precisa',
+    es: 'Empecemos por aquí',
+    en: "Let's start here",
+    pt: 'Vamos começar por aqui',
   } satisfies Localized,
   intro: {
-    es: 'Alguien del equipo lee tu caso y te responde con una propuesta concreta.',
-    en: 'Someone on the team reads your case and replies with a concrete proposal.',
-    pt: 'Alguém do time lê o seu caso e responde com uma proposta concreta.',
+    es: 'Déjanos tus datos y algunos detalles para entender lo que necesitas.',
+    en: 'Leave us your details and a few specifics so we can understand what you need.',
+    pt: 'Deixe seus dados e alguns detalhes para entendermos o que você precisa.',
   } satisfies Localized,
-  caseLabel: { es: 'Tu caso', en: 'Your case', pt: 'Seu caso' } satisfies Localized,
 
   fields: {
     name: {
@@ -239,9 +262,13 @@ export const leadForm = {
          (`LeadForm` only checks the shape of the address), and it did so to
          exactly the profile most likely to write from Gmail: the owner of a car
          park or of a small fleet. */
-      label: { es: 'Correo', en: 'Email', pt: 'E-mail' } satisfies Localized,
+      label: {
+        es: 'Correo electrónico',
+        en: 'Email address',
+        pt: 'E-mail',
+      } satisfies Localized,
       hint: {
-        es: 'Te respondemos a este correo.',
+        es: 'Aquí recibirás nuestra respuesta.',
         en: "We'll reply to this address.",
         pt: 'Respondemos para este e-mail.',
       } satisfies Localized,
@@ -274,34 +301,52 @@ export const leadForm = {
         pt: 'O que você precisa?',
       } satisfies Localized,
       placeholder: {
-        es: 'Ej.: tenemos 40 colaboradores con vehículo eléctrico y una sede en Bogotá.',
-        en: 'E.g.: we have 40 employees with EVs and one office in Bogotá.',
-        pt: 'Ex.: temos 40 colaboradores com veículo elétrico e uma sede em Bogotá.',
+        /* It no longer invents a figure. The previous one said "tenemos 40
+           colaboradores": an example with a concrete number reads as a typical
+           case, and that number comes from nowhere. */
+        es: 'Ej.: queremos instalar puntos de carga para los vehículos eléctricos de nuestra empresa.',
+        en: 'E.g.: we want to install charge points for our company vehicles.',
+        pt: 'Ex.: queremos instalar pontos de carga para os veículos elétricos da nossa empresa.',
       } satisfies Localized,
     },
     consent: {
       /** Legal requirement: Ley 1581 de 2012 (habeas data, Colombia). §38. */
+      /* `{policy}` is the link, inside the sentence, just as in the cookie
+         notice. The authorisation used to end in "conforme a su política de
+         tratamiento de datos" with the link AFTER it, carrying its own label
+         ("Ver política…"): the checkbox said one thing and next to it another
+         control repeated it. Now the sentence being authorised contains the
+         document being accepted, under its full name. */
       label: {
-        es: 'Autorizo a Voltop a tratar mis datos personales para responder a esta solicitud, conforme a su política de tratamiento de datos.',
-        en: 'I authorize Voltop to process my personal data in order to respond to this request, in accordance with its data processing policy.',
-        pt: 'Autorizo a Voltop a tratar meus dados pessoais para responder a esta solicitação, conforme sua política de tratamento de dados.',
+        es: 'Autorizo a Voltop a tratar mis datos personales para responder a esta solicitud, de acuerdo con su {policy}.',
+        en: 'I authorize Voltop to process my personal data in order to respond to this request, in accordance with its {policy}.',
+        pt: 'Autorizo a Voltop a tratar meus dados pessoais para responder a esta solicitação, de acordo com sua {policy}.',
       } satisfies Localized,
       error: {
         es: 'Necesitamos tu autorización para poder contactarte.',
         en: 'We need your authorization in order to contact you.',
         pt: 'Precisamos da sua autorização para entrar em contato.',
       } satisfies Localized,
+      /* The document's full name, word for word the same as the `h1` of
+         `/legal/privacidad` and as the cookie notice's link. */
       policyLink: {
-        es: 'Ver política de tratamiento de datos',
-        en: 'View data processing policy',
-        pt: 'Ver política de tratamento de dados',
+        es: 'Política de Tratamiento de Datos Personales',
+        en: 'Personal Data Processing Policy',
+        pt: 'Política de Tratamento de Dados Pessoais',
       } satisfies Localized,
     },
   },
 
-  /* The rest of the page already says "Tu caso" and "Cuéntanos tu caso"; the
-     button said "solicitud", which is service-counter vocabulary. */
-  submit: { es: 'Enviar mi caso', en: 'Send my case', pt: 'Enviar meu caso' } satisfies Localized,
+  /* Back to "solicitud". An earlier change made it "mi caso" to rhyme with
+     "Tu caso" and "Cuéntanos tu caso", and neither of those labels exists any
+     more: the form is titled "Empecemos por aquí", and the error notice and the
+     success state both talk about a SOLICITUD. The button says the same thing as
+     the rest of the flow again. */
+  submit: {
+    es: 'Enviar solicitud',
+    en: 'Send request',
+    pt: 'Enviar solicitação',
+  } satisfies Localized,
   submitting: { es: 'Enviando…', en: 'Sending…', pt: 'Enviando…' } satisfies Localized,
 
   /** The asterisk alone communicates nothing: it needs a legend (WCAG 3.3.2). */
@@ -433,14 +478,28 @@ export const states = {
     } satisfies Localized,
     home: { es: 'Ir al inicio', en: 'Go to homepage', pt: 'Ir para o início' } satisfies Localized,
   },
-  pendingRealtime: {
-    /* It used to say "la integración de datos de operación", which is our
-       backlog's vocabulary put in front of someone who just wants to charge.
-       And it closed the door instead of opening the next one: the app DOES show
-       availability, and the Terms say so. */
-    es: 'Aquí todavía no mostramos el estado en vivo de cada punto. En la app sí puedes ver la disponibilidad antes de salir.',
-    en: "We don't show live status for each point here yet. In the app you can check availability before you leave.",
-    pt: 'Aqui ainda não mostramos o status ao vivo de cada ponto. No app você já consulta a disponibilidade antes de sair.',
+  /* Was `pendingRealtime`, and the name was the point: it warned that live
+     status was NOT integrated. Renamed because there is nothing pending.
+
+     ── WHY THE WORDS "TIEMPO REAL" ARE ALLOWED HERE ──────────────────────
+     §19 forbids promising a capability the product does not have, and names
+     this exact case: if there is no availability integration, no text says "in
+     real time". The Terms back consulting availability —the User may "Consultar
+     la ubicación y disponibilidad de las Estaciones de Carga"— but they never
+     say *real time*, and article 156 warns the opposite: that the Platform can
+     be affected by connectivity and maintenance.
+
+     CAMILO CONFIRMED IT ON 2026-09-08: the app does show the live status of
+     each point. Written down because the claim is not verifiable from the code
+     or from the legal text, and the next reader is going to doubt it — the
+     previous copy existed precisely to avoid saying this.
+
+     **If live status ever stops being live, this string is the first that has
+     to change**, and with it FAQ answers 1 and 2, which make the same promise. */
+  realtimeInApp: {
+    es: 'Consulta la disponibilidad de las estaciones en tiempo real desde la app Voltop antes de salir.',
+    en: 'Check station availability in real time from the Voltop app before you leave.',
+    pt: 'Consulte a disponibilidade das estações em tempo real no aplicativo Voltop antes de sair.',
   } satisfies Localized,
 }
 
@@ -615,7 +674,11 @@ export const footer = {
           href: `${routes.about}#impacto`,
         },
         {
-          label: { es: 'Liderazgo', en: 'Leadership', pt: 'Liderança' } satisfies Localized,
+          /* The section stopped being called LIDERAZGO and is now VISIÓN (copy
+             from 2026-09-08). The `#liderazgo` anchor does NOT change: it is an
+             address that may already be linked from outside, and renaming it
+             breaks links without fixing anything visible. */
+          label: { es: 'Visión', en: 'Vision', pt: 'Visão' } satisfies Localized,
           href: `${routes.about}#liderazgo`,
         },
       ],
@@ -659,9 +722,9 @@ export const footer = {
     pt: 'Termos e condições',
   } satisfies Localized,
   privacy: {
-    es: 'Tratamiento de datos',
-    en: 'Data processing',
-    pt: 'Tratamento de dados',
+    es: 'Tratamiento de datos personales',
+    en: 'Personal data processing',
+    pt: 'Tratamento de dados pessoais',
   } satisfies Localized,
   rights: {
     es: 'Todos los derechos reservados.',
@@ -697,20 +760,35 @@ export const storeBadges = {
  */
 export const cookies = {
   title: {
-    es: 'Cookies de analítica',
-    en: 'Analytics cookies',
-    pt: 'Cookies de análise',
+    es: 'Usamos cookies para mejorar tu experiencia',
+    en: 'We use cookies to improve your experience',
+    pt: 'Usamos cookies para melhorar sua experiência',
   } satisfies Localized,
+  /**
+   * `{policy}` IS THE LINK, and it lives inside the sentence.
+   *
+   * It used to be a separate "Leer la política" sitting next to the two
+   * buttons — a third control in a row where the only two that matter are
+   * Accept and Reject. §15 does not allow a link competing with the action of
+   * its own view, and a legal reference is not an action: it is part of what
+   * you are being told before you decide.
+   *
+   * The component splits on the token and renders a `<Link>` in its place. The
+   * label is the FULL name of the document —"Política de Tratamiento de Datos
+   * Personales"— and not "la política": Ley 1581 asks for informed
+   * authorisation, and a link that does not name what it opens informs of
+   * nothing. It matches the `h1` of `/legal/privacidad` word for word.
+   */
   body: {
-    es: 'Nos ayudan a entender qué partes del sitio se usan y cuáles no. No las activamos hasta que nos digas.',
-    en: "They help us understand which parts of the site get used and which don't. We won't turn them on until you say so.",
-    pt: 'Elas nos ajudam a entender quais partes do site são usadas e quais não. Só ativamos quando você permitir.',
+    es: 'Utilizamos cookies de analítica para entender cómo se usa nuestro sitio y seguir mejorándolo. Tú decides si quieres aceptarlas. Conoce más en nuestra {policy}.',
+    en: 'We use analytics cookies to understand how our site is used and to keep improving it. You decide whether to accept them. Learn more in our {policy}.',
+    pt: 'Utilizamos cookies de análise para entender como nosso site é usado e continuar melhorando. Você decide se quer aceitá-los. Saiba mais na nossa {policy}.',
   } satisfies Localized,
   accept: { es: 'Aceptar', en: 'Accept', pt: 'Aceitar' } satisfies Localized,
   reject: { es: 'Rechazar', en: 'Reject', pt: 'Recusar' } satisfies Localized,
   policy: {
-    es: 'Leer la política',
-    en: 'Read the policy',
-    pt: 'Ler a política',
+    es: 'Política de Tratamiento de Datos Personales',
+    en: 'Personal Data Processing Policy',
+    pt: 'Política de Tratamento de Dados Pessoais',
   } satisfies Localized,
 }

@@ -3,12 +3,14 @@ import type { Localized } from '~/core/common/domain/i18n/config'
 /**
  * COPY · About
  *
- * Goal: credibility. History, scale, infrastructure, leadership, impact. It is
- * the page where the detail the home page only hints at lives (§14).
+ * Goal: credibility. The page is one continuous narrative, in this order:
+ * why Voltop exists → what we learned → how we build → what we're achieving →
+ * where we're going. Copy delivered by Camilo on 2026-09-08; the Spanish is
+ * verbatim, English and Portuguese are translations of it.
  *
- * Content note: the history milestones describe the nature of the journey
- * without invented dates or figures. They get completed when the business
- * delivers the data (open decision O6).
+ * The narrative order is why `leadership` now reads VISIÓN and closes looking
+ * forward instead of introducing a person: the founder's quote is the ending of
+ * the story, not a bio.
  */
 
 export const nosotros = {
@@ -24,37 +26,48 @@ export const nosotros = {
   hero: {
     eyebrow: { es: 'Nosotros', en: 'About us', pt: 'Sobre nós' } satisfies Localized,
     title: {
-      es: 'Un país no se electrifica sin dónde cargar.',
-      en: 'No country goes electric without somewhere to charge.',
-      pt: 'Nenhum país se eletrifica sem onde carregar.',
+      es: 'La movilidad eléctrica necesita una red que crezca con ella.',
+      en: 'Electric mobility needs a network that grows with it.',
+      pt: 'A mobilidade elétrica precisa de uma rede que cresça com ela.',
     } satisfies Localized,
     lead: {
-      /* The idea from the old lead moved up into the headline, which is where
-         things get remembered. That frees the lead to introduce the technology
-         layer on the page where credibility is built. */
-      es: 'Voltop construye y opera esa parte: una red de carga rápida en las ciudades del país, con la tecnología que la hace simple de usar.',
-      en: "Voltop builds and runs that part: a fast-charging network across the country's cities, with the technology that makes it simple to use.",
-      pt: 'A Voltop constrói e opera essa parte: uma rede de carregamento rápido nas cidades do país, com a tecnologia que a torna simples de usar.',
+      es: 'Colombia avanza hacia una nueva forma de moverse. Para que ese cambio sea posible, necesitamos infraestructura de carga confiable, fácil de usar y cada vez más presente.',
+      en: 'Colombia is moving toward a new way of getting around. For that shift to be possible, we need charging infrastructure that is reliable, easy to use and increasingly present.',
+      pt: 'A Colômbia avança rumo a uma nova forma de se locomover. Para que essa mudança seja possível, precisamos de infraestrutura de carregamento confiável, fácil de usar e cada vez mais presente.',
+    } satisfies Localized,
+    /* The delivered copy marks this line as a highlight, so it is its own
+       string: it renders in `text-ink` while the two paragraphs around it stay
+       in `text-ink-2`. Same component, same tokens — the emphasis is the copy's,
+       not a new design. */
+    highlight: {
+      es: 'Ahí entra Voltop.',
+      en: "That's where Voltop comes in.",
+      pt: 'É aí que entra a Voltop.',
+    } satisfies Localized,
+    leadEnd: {
+      es: 'Construimos y operamos la red que acompaña ese cambio.',
+      en: 'We build and operate the network that supports that shift.',
+      pt: 'Construímos e operamos a rede que acompanha essa mudança.',
     } satisfies Localized,
   },
 
   story: {
     eyebrow: { es: 'Historia', en: 'Story', pt: 'História' } satisfies Localized,
     title: {
-      es: 'Empezamos por lo difícil',
-      en: 'We started with the hard part',
-      pt: 'Começamos pela parte difícil',
+      es: 'Empezamos por hacer que funcione.',
+      en: 'We started by making it work.',
+      pt: 'Começamos por fazer que funcione.',
     } satisfies Localized,
     body: [
       {
-        es: 'Instalar un cargador es sencillo. Sostener una red que funcione todos los días —con potencia real, disponible, mantenida y en sitios donde la gente ya se detiene— es otra cosa.',
-        en: 'Installing a charger is simple. Sustaining a network that works every day — with real power, available, maintained, and in places where people already stop — is another matter.',
-        pt: 'Instalar um carregador é simples. Sustentar uma rede que funciona todos os dias — com potência real, disponível, mantida e em lugares onde as pessoas já param — é outra história.',
+        es: 'Entendimos que instalar cargadores era solo una parte del reto. Lo importante era construir una red que las personas pudieran encontrar, usar y en la que pudieran confiar todos los días.',
+        en: 'We learned that installing chargers was only part of the challenge. What mattered was building a network people could find, use and rely on every day.',
+        pt: 'Entendemos que instalar carregadores era apenas parte do desafio. O importante era construir uma rede que as pessoas pudessem encontrar, usar e na qual pudessem confiar todos os dias.',
       },
       {
-        es: 'Voltop se construyó alrededor de esa diferencia: operar, no solo instalar. Por eso cada estación es un compromiso de largo plazo con el lugar que la aloja y con quien la usa.',
-        en: "Voltop was built around that difference: to operate, not just install. That's why every station is a long-term commitment to the place that hosts it and to the people who use it.",
-        pt: 'A Voltop foi construída em torno dessa diferença: operar, não apenas instalar. Por isso cada estação é um compromisso de longo prazo com o lugar que a recebe e com as pessoas que a usam.',
+        es: 'Por eso Voltop nació para hacer algo más que instalar infraestructura: operarla, mantenerla y hacerla crecer.',
+        en: 'That is why Voltop was born to do more than install infrastructure: to operate it, maintain it and make it grow.',
+        pt: 'Por isso a Voltop nasceu para fazer algo mais do que instalar infraestrutura: operá-la, mantê-la e fazê-la crescer.',
       },
     ] satisfies Localized[],
   },
@@ -66,57 +79,57 @@ export const nosotros = {
       pt: 'Como construímos',
     } satisfies Localized,
     title: {
-      es: 'Criterios que no negociamos',
-      en: "Criteria we don't negotiate",
-      pt: 'Critérios que não negociamos',
+      es: 'Una red pensada para funcionar.',
+      en: 'A network designed to work.',
+      pt: 'Uma rede pensada para funcionar.',
     } satisfies Localized,
     pillars: [
       {
         title: {
-          es: 'El lugar antes que el equipo',
-          en: 'The place before the hardware',
-          pt: 'O lugar antes do equipamento',
+          es: 'El lugar importa',
+          en: 'The place matters',
+          pt: 'O lugar importa',
         } satisfies Localized,
         body: {
-          es: 'Elegimos ubicaciones donde detenerse ya tiene sentido. Un cargador en un sitio equivocado no se usa, por bueno que sea.',
-          en: 'We choose locations where stopping already makes sense. A charger in the wrong place goes unused, however good it is.',
-          pt: 'Escolhemos locais onde parar já faz sentido. Um carregador no lugar errado fica sem uso, por melhor que seja.',
+          es: 'Elegimos ubicaciones donde la carga se integra naturalmente al tiempo y al recorrido de las personas.',
+          en: "We choose locations where charging fits naturally into people's time and route.",
+          pt: 'Escolhemos locais onde o carregamento se integra naturalmente ao tempo e ao trajeto das pessoas.',
         } satisfies Localized,
       },
       {
         title: {
-          es: 'Potencia que corresponde al uso',
-          en: 'Power matched to usage',
-          pt: 'Potência dimensionada para o uso',
+          es: 'La potencia tiene un propósito',
+          en: 'Power has a purpose',
+          pt: 'A potência tem um propósito',
         } satisfies Localized,
         body: {
-          es: 'La velocidad se dimensiona según cuánto tiempo va a estar allí el vehículo, no según lo que suene mejor en una ficha.',
-          en: 'Speed is sized around how long the vehicle will actually be there, not around what sounds best on a spec sheet.',
-          pt: 'A velocidade é dimensionada pelo tempo que o veículo realmente vai ficar ali, não pelo que soa melhor em uma ficha técnica.',
+          es: 'Dimensionamos cada estación según el uso esperado, el tiempo de permanencia y las necesidades de cada ubicación.',
+          en: 'We size each station around expected usage, dwell time and the needs of each location.',
+          pt: 'Dimensionamos cada estação conforme o uso esperado, o tempo de permanência e as necessidades de cada local.',
         } satisfies Localized,
       },
       {
         title: {
-          es: 'Operación propia',
-          en: 'In-house operation',
-          pt: 'Operação própria',
+          es: 'Operamos lo que construimos',
+          en: 'We operate what we build',
+          pt: 'Operamos o que construímos',
         } satisfies Localized,
         body: {
-          es: 'Monitoreamos, mantenemos y respondemos nosotros. La disponibilidad es la promesa central del negocio.',
-          en: 'We monitor, maintain and respond ourselves. Availability is the core promise of the business.',
-          pt: 'Monitoramos, mantemos e respondemos nós mesmos. A disponibilidade é a promessa central do negócio.',
+          es: 'Monitoreamos, mantenemos y atendemos nuestra infraestructura para mantenerla disponible.',
+          en: 'We monitor, maintain and service our infrastructure to keep it available.',
+          pt: 'Monitoramos, mantemos e atendemos nossa infraestrutura para mantê-la disponível.',
         } satisfies Localized,
       },
       {
         title: {
-          es: 'Diseñada para crecer',
-          en: 'Built to grow',
-          pt: 'Feita para crescer',
+          es: 'Pensamos en lo que sigue',
+          en: 'We plan for what comes next',
+          pt: 'Pensamos no que vem a seguir',
         } satisfies Localized,
         body: {
-          es: 'Cada sitio se proyecta con capacidad para ampliarse cuando la demanda lo pida, sin rehacer la instalación.',
-          en: 'Every site is planned with room to expand when demand calls for it, without redoing the installation.',
-          pt: 'Cada local é planejado com espaço para expandir quando a demanda pedir, sem refazer a instalação.',
+          es: 'Diseñamos cada ubicación con capacidad de crecer a medida que aumenta la demanda.',
+          en: 'We design every location with the capacity to grow as demand increases.',
+          pt: 'Projetamos cada local com capacidade de crescer à medida que a demanda aumenta.',
         } satisfies Localized,
       },
     ],
@@ -125,19 +138,18 @@ export const nosotros = {
   impact: {
     eyebrow: { es: 'Impacto', en: 'Impact', pt: 'Impacto' } satisfies Localized,
     title: {
-      es: 'Una red que crece con el país',
-      en: 'A network growing with the country',
-      pt: 'Uma rede que cresce junto com o país',
+      es: 'Una red que crece con el país.',
+      en: 'A network growing with the country.',
+      pt: 'Uma rede que cresce junto com o país.',
     } satisfies Localized,
     lead: {
-      /* This used to announce figures, and right below it came "Cifras en
-         validación: preferimos no publicar una imprecisa". The page
-         contradicted itself on screen; now the restraint IS the message. */
-      es: 'Medimos el avance de la red con datos de operación, no con estimaciones.',
-      en: "We measure the network's progress with operational data, not estimates.",
-      pt: 'Medimos o avanço da rede com dados de operação, não com estimativas.',
+      es: 'Nuestra red ya está en operación en Bogotá y Medellín, y seguimos trabajando para llevar la carga eléctrica a más lugares de Colombia.',
+      en: 'Our network is already operating in Bogotá and Medellín, and we keep working to bring electric charging to more places across Colombia.',
+      pt: 'Nossa rede já está em operação em Bogotá e Medellín, e seguimos trabalhando para levar o carregamento elétrico a mais lugares da Colômbia.',
     } satisfies Localized,
-    /** Honest state while the figures are not validated (§33). */
+    /* Honest state while the figures are not validated (§33). NOT rendered
+       right now — see SHOW_PENDING_FIGURES in the page. Kept because the
+       block comes back the day the figures are verified. */
     pendingTitle: {
       es: 'Cifras en validación',
       en: 'Figures under validation',
@@ -151,11 +163,11 @@ export const nosotros = {
   },
 
   leadership: {
-    eyebrow: { es: 'Liderazgo', en: 'Leadership', pt: 'Liderança' } satisfies Localized,
+    eyebrow: { es: 'Visión', en: 'Vision', pt: 'Visão' } satisfies Localized,
     title: {
-      es: 'Quién está detrás',
-      en: "Who's behind it",
-      pt: 'Quem está por trás',
+      es: 'Estamos construyendo para lo que viene.',
+      en: "We're building for what's coming.",
+      pt: 'Estamos construindo para o que vem.',
     } satisfies Localized,
   },
 

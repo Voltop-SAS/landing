@@ -133,6 +133,28 @@ export function Media({
             fill
             sizes={sizes}
             priority={priority}
+            /**
+             * EXPLICIT `fetchPriority`, and it is not redundant: `priority` does
+             * NOT emit it.
+             *
+             * Measured on 2026-09-08 against the production build, slow 4G,
+             * desktop. The hero photograph — the LCP element, and already
+             * carrying `priority` — came out in the HTML WITHOUT
+             * `fetchpriority`, so the browser requested it at LOW priority:
+             *
+             *   181 → 3252 ms   168 KB   Low    ← the cover photograph
+             *   176 → 1113 ms    40 KB   High   ← a typeface
+             *   179 →  826 ms    24 KB   High   ← another typeface
+             *
+             * Transferring 168 KB over that link is ~840 ms. It took 3,071. The
+             * whole difference is queue: four typefaces at high priority and
+             * seven chunks of code ahead of it.
+             *
+             * `priority` does generate the `<link rel="preload">`, but a preload
+             * with no declared priority overtakes nothing. This changes not one
+             * pixel of the image: it changes its turn in the queue.
+             */
+            fetchPriority={priority ? 'high' : undefined}
             quality={quality}
             className={cn(fit === 'contain' ? 'object-contain' : 'object-cover', position)}
           />

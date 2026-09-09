@@ -31,17 +31,23 @@ export const red = {
       pt: 'Encontre onde carregar',
     } satisfies Localized,
     lead: {
-      /* It used to describe the interface the user is already looking at. It
-         now keeps the usage hint and adds a concrete fact: precision is what
-         sounds like a technical company. The figures are the same ones
-         `getNetworkSummary` computes; if they diverge, the dataset wins. */
-      /* No hand-written figures. The power range changes with every station
-         that comes in, and this text already went stale once: it said "from
-         60 to 150 kW" when the real network goes from 22 to 80. The exact
-         figures live on each station's page, generated from the dataset. */
-      es: 'Filtra por ciudad, conector y potencia. Cada ficha indica cuántos puntos tiene y a qué potencia cargan.',
-      en: 'Filter by city, connector and power. Each station shows how many points it has and at what power they charge.',
-      pt: 'Filtre por cidade, conector e potência. Cada ficha indica quantos pontos tem e em que potência carregam.',
+      /* Still NO hand-written figures: the power range changes with every
+         station that comes in, and this text already went stale once — it said
+         "from 60 to 150 kW" when the real network goes from 22 to 80.
+
+         ⚠️ BUT THE CITIES ARE NOW HAND-WRITTEN. "Bogotá y Medellín" is the same
+         class of risk as those figures: the day a third city opens, this
+         sentence says the network has two and nobody gets an error. The city
+         list DOES exist computed, in `getNetworkSummary()`, and the Home reads
+         it from there.
+
+         It stays literal by an editorial decision of 2026-09-08: naming the two
+         cities is what tells a visitor whether the network reaches them, and a
+         generated list reads like a system message. **Whoever opens the third
+         city has to come back to this string.** */
+      es: 'Explora las estaciones de carga Voltop en Bogotá y Medellín. Filtra por ciudad, tipo de conector y potencia para encontrar la opción que necesitas.',
+      en: 'Explore Voltop charging stations in Bogotá and Medellín. Filter by city, connector type and power to find the option you need.',
+      pt: 'Explore as estações de carregamento Voltop em Bogotá e Medellín. Filtre por cidade, tipo de conector e potência para encontrar a opção que precisa.',
     } satisfies Localized,
   },
 
@@ -149,55 +155,97 @@ export const red = {
       pt: 'Cobertura por cidade',
     } satisfies Localized,
     lead: {
-      es: 'La red crece por corredores y ciudades. Explora dónde estamos hoy.',
-      en: 'The network grows by corridors and cities. Explore where we are today.',
-      pt: 'A rede cresce por corredores e cidades. Veja onde estamos hoje.',
+      /* ⚠️ The cities are hand-written here, same as in `hero.lead`. The day a
+         third one opens, this sentence says there are two and nothing breaks.
+         `getCitiesWithStations()` returns the real list; the editorial decision
+         of 2026-09-08 is to name them because that is what tells a visitor
+         whether the network reaches them. Whoever opens the third city comes
+         back to BOTH strings. */
+      es: 'Nuestra red de carga está presente en Bogotá y Medellín. Conoce las estaciones disponibles en cada ciudad.',
+      en: 'Our charging network covers Bogotá and Medellín. See the stations available in each city.',
+      pt: 'Nossa rede de carregamento está em Bogotá e Medellín. Conheça as estações disponíveis em cada cidade.',
     } satisfies Localized,
+
+    /* THE BLURB ON EACH CARD IS A TEMPLATE, NOT A SENTENCE.
+       It used to be `city.intro`, written by hand per city, and Medellín's read
+       "con 80 kW y seis puntos de carga" — three figures typed into prose. The
+       moment a station comes in, the card lies and nobody gets an error. Now the
+       three numbers come from `getCitiesWithStations()`.
+
+       Two variants because Spanish and Portuguese change more than the noun: with
+       one station it is "una potencia", with several "potencias". Rebuilding that
+       with a generic pluraliser would produce "1 estaciones de carga", which is
+       exactly the kind of seam that makes a site read as generated. */
+    blurb: {
+      one: {
+        es: '{stations} estación de carga con {points} puntos y una potencia de hasta {kw} kW.',
+        en: '{stations} charging station with {points} points and power of up to {kw} kW.',
+        pt: '{stations} estação de carregamento com {points} pontos e uma potência de até {kw} kW.',
+      } satisfies Localized,
+      many: {
+        es: '{stations} estaciones de carga con {points} puntos y potencias de hasta {kw} kW.',
+        en: '{stations} charging stations with {points} points and power of up to {kw} kW.',
+        pt: '{stations} estações de carregamento com {points} pontos e potências de até {kw} kW.',
+      } satisfies Localized,
+    },
   },
 
   howToCharge: {
     eyebrow: { es: 'Cómo cargar', en: 'How to charge', pt: 'Como carregar' } satisfies Localized,
-    /* The Portuguese promised something different ("and you're already
-       charging") from the Spanish and the English ("and you get on with your
-       day"). The promise is now the same in all three. */
+    /* The headline used to count the steps —"Tres pasos y sigues tu día"— which
+       is what the numbered list next to it already says. It now names the three
+       verbs, so the title and the list stop repeating each other.
+
+       The three languages once promised different things here (the Portuguese
+       said "and you're already charging"); they say the same now, and that has
+       to hold on every edit. */
     title: {
-      es: 'Tres pasos y sigues tu día',
-      en: "Three steps and you're on your way",
-      pt: 'Três passos e você segue o seu dia',
+      es: 'Encuentra, carga y sigue tu camino',
+      en: 'Find, charge and get on your way',
+      pt: 'Encontre, carregue e siga seu caminho',
     } satisfies Localized,
     steps: [
       {
         step: '01',
-        title: { es: 'Encuentra', en: 'Find', pt: 'Buscar' } satisfies Localized,
+        title: { es: 'Encuentra', en: 'Find', pt: 'Encontre' } satisfies Localized,
         body: {
-          es: 'Ubica una estación con el conector y la potencia que necesita tu vehículo.',
-          en: 'Locate a station with the connector and power your vehicle needs.',
-          pt: 'Localize uma estação com o conector e a potência que o seu veículo precisa.',
+          es: 'Explora la red y elige dónde cargar según la ubicación, el conector y la potencia que necesitas.',
+          en: 'Explore the network and choose where to charge by location, connector and the power you need.',
+          pt: 'Explore a rede e escolha onde carregar pela localização, pelo conector e pela potência que você precisa.',
         } satisfies Localized,
       },
       {
         step: '02',
-        title: { es: 'Conecta', en: 'Connect', pt: 'Conectar' } satisfies Localized,
+        title: {
+          es: 'Inicia tu carga',
+          en: 'Start charging',
+          pt: 'Inicie sua carga',
+        } satisfies Localized,
         body: {
-          es: 'Enchufa e inicia la carga desde la app. No necesitas tarjeta ni membresía.',
-          en: 'Plug in and start charging from the app. No card or membership needed.',
-          pt: 'Conecte e comece a carregar pelo aplicativo. Sem cartão nem assinatura.',
+          /* Names the QR, which is the actual gesture at the station and the
+             same one the Home describes. It dropped "No necesitas tarjeta ni
+             membresía": that was a commercial claim inside an instruction, and
+             an instruction that also sells stops being followable. */
+          es: 'Al llegar, conecta tu carro y escanea el código QR desde la app Voltop.',
+          en: 'When you arrive, plug in your car and scan the QR code from the Voltop app.',
+          pt: 'Ao chegar, conecte seu carro e escaneie o código QR pelo aplicativo Voltop.',
         } satisfies Localized,
       },
       {
         step: '03',
-        /* "Sigue" on its own is ambiguous in Spanish (follow what?), and the
-           three languages were saying different things. The body copy already
-           says exactly this. */
+        /* "Sigue tu carga", not "Sigue tu día": on its own "Sigue" is ambiguous
+           in Spanish —follow what?— and the object is the charge, which is what
+           the body then explains. The three languages said different things
+           here once; they no longer do. */
         title: {
-          es: 'Sigue tu día',
-          en: 'Get on with your day',
-          pt: 'Siga o seu dia',
+          es: 'Sigue tu carga',
+          en: 'Track your charge',
+          pt: 'Acompanhe sua carga',
         } satisfies Localized,
         body: {
-          es: 'Consulta el progreso desde el teléfono mientras haces lo que ibas a hacer.',
-          en: 'Track progress from your phone while you get on with your day.',
-          pt: 'Acompanhe o progresso pelo celular enquanto segue com o seu dia.',
+          es: 'Consulta el progreso desde tu celular y continúa cuando estés listo.',
+          en: 'Check the progress from your phone and get going when you are ready.',
+          pt: 'Acompanhe o progresso pelo celular e siga quando estiver pronto.',
         } satisfies Localized,
       },
     ],
@@ -209,27 +257,36 @@ export const red = {
       en: 'FAQ',
       pt: 'Perguntas frequentes',
     } satisfies Localized,
-    /* The headline follows the content: the last question is about help
-       DURING a charge, so "before you charge" left out part of what sits
-       below it. The wording covers the whole arc and borrows the cadence of
-       answer 5 itself. */
+    /* It read "Antes, durante y después de cargar", which described the ARC of
+       the five questions. It now says what the block is for. The previous
+       wording borrowed the cadence of answer 5 —"antes, durante o después de
+       una carga"— and that answer no longer says it, so the echo was gone. */
     title: {
-      es: 'Antes, durante y después de cargar',
-      en: 'Before, during and after a charge',
-      pt: 'Antes, durante e depois de carregar',
+      es: 'Todo lo que necesitas saber para cargar',
+      en: 'Everything you need to know about charging',
+      pt: 'Tudo o que você precisa saber para carregar',
     } satisfies Localized,
   },
 
   hostHandoff: {
+    /* It used to ASK —"¿Tienes un espacio con parqueadero?"— which qualifies
+       the reader before offering anything. It now states what that space can
+       become, which is the same handoff without the checkpoint. */
     title: {
-      es: '¿Tienes un espacio con parqueadero?',
-      en: 'Do you have a space with parking?',
-      pt: 'Você tem um espaço com estacionamento?',
+      es: 'Tu espacio puede ser parte de la red Voltop',
+      en: 'Your space can be part of the Voltop network',
+      pt: 'Seu espaço pode fazer parte da rede Voltop',
     } satisfies Localized,
     body: {
-      es: 'Hoteles, centros comerciales, campus y edificios corporativos: instalamos y operamos la carga sin inversión inicial de tu parte.',
-      en: 'Hotels, malls, campuses and corporate buildings: we install and operate the charging with no upfront investment on your side.',
-      pt: 'Hotéis, shoppings, campi e prédios corporativos: instalamos e operamos o carregamento sem investimento inicial da sua parte.',
+      /* It DROPPED "sin inversión inicial de tu parte". That was a commercial
+         condition stated on a page that does not negotiate, and §19 does not
+         allow a headline promising terms the product has not confirmed. What
+         replaces it —"nosotros nos encargamos de hacerlo posible"— says who
+         carries the work without naming who pays for it, which is what
+         /empresas is for. */
+      es: 'Hoteles, centros comerciales, universidades y edificios corporativos pueden convertirse en nuevos puntos de carga y ofrecer más valor a quienes los visitan. Nosotros nos encargamos de hacerlo posible.',
+      en: 'Hotels, malls, universities and corporate buildings can become new charge points and offer more value to the people who visit them. We take care of making it happen.',
+      pt: 'Hotéis, shoppings, universidades e prédios corporativos podem se tornar novos pontos de carga e oferecer mais valor a quem os visita. Nós cuidamos de tornar isso possível.',
     } satisfies Localized,
   },
 }
@@ -237,6 +294,36 @@ export const red = {
 export const city = {
   eyebrow: { es: 'Cobertura', en: 'Coverage', pt: 'Cobertura' } satisfies Localized,
   titlePrefix: { es: 'Cargar en', en: 'Charging in', pt: 'Carregar em' } satisfies Localized,
+  /**
+   * ── EACH CITY'S DESCRIPTION IS A TEMPLATE ────────────────────────────────
+   * Every city used to carry its own hand-written text in the dataset. Bogotá
+   * said "Carga en el norte, el centro financiero y los corredores de salida de
+   * la ciudad, en espacios donde ya ibas a estar" — evocative and without a
+   * single figure — and Medellín "con 80 kW y seis puntos de carga", which is
+   * THREE figures typed into prose: exactly what this file forbids, and what
+   * already made another text on this same page obsolete when it said "de 60 a
+   * 150 kW" while the real network ran from 22 to 80.
+   *
+   * The three figures now come from `getCitiesWithStations()`. They look
+   * identical today, and the day a station is added they update themselves.
+   *
+   * Two variants for the same reason as the home page's beat 3: with a single
+   * station it is "una potencia" and with several "potencias". A generic
+   * pluraliser would produce "1 estaciones", which is the seam that gives a
+   * generated site away.
+   */
+  lead: {
+    one: {
+      es: 'Encuentra estaciones de carga Voltop en {city}, con {points} puntos de carga y una potencia de hasta {kw} kW.',
+      en: 'Find Voltop charging stations in {city}, with {points} charge points and power of up to {kw} kW.',
+      pt: 'Encontre estações de carregamento Voltop em {city}, com {points} pontos de carga e uma potência de até {kw} kW.',
+    } satisfies Localized,
+    many: {
+      es: 'Encuentra estaciones de carga Voltop en {city}, con {points} puntos de carga y potencias de hasta {kw} kW.',
+      en: 'Find Voltop charging stations in {city}, with {points} charge points and power of up to {kw} kW.',
+      pt: 'Encontre estações de carregamento Voltop em {city}, com {points} pontos de carga e potências de até {kw} kW.',
+    } satisfies Localized,
+  },
   metaTitlePattern: {
     es: 'Estaciones de carga en',
     en: 'Charging stations in',
@@ -290,19 +377,23 @@ export const station = {
     pt: 'Coordenadas pendentes de confirmação: o link abre uma busca por endereço.',
   } satisfies Localized,
   /**
-   * SHORT label. This entire string used to live inside a `PendingTag`: a
-   * sentence with a full stop, uppercased and in mono, inside an 11px box. A
-   * tag carries a label; the sentence goes below it as a note.
+   * ── FROM "PENDIENTE" TO "IVA INCLUIDO" (2026-09-08) ──────────────────────
+   * This slot held an orange `PendingTag` reading "Pendiente", with a note
+   * below explaining that the tariff was not published yet. Product replaced it
+   * with a qualification of the price.
+   *
+   * All three stations now carry `pricing` in the dataset (1,780 COP/kWh), so
+   * the note sits beside a real figure, which is where it makes full sense.
    */
-  pendingPricingTag: { es: 'Pendiente', en: 'Pending', pt: 'Pendente' } satisfies Localized,
-  pendingPricing: {
-    /* "Commercial confirmation" is our backlog's vocabulary put in front of
-       someone who just wants to know what it costs. The "Pendiente" label
-       stays; the text now gives the next step, the same way FAQ answer 3
-       does. */
-    es: 'Todavía no publicamos la tarifa de esta estación. La ves en la app antes de iniciar la carga.',
-    en: "We haven't published this station's rate yet. You'll see it in the app before you start charging.",
-    pt: 'Ainda não publicamos a tarifa desta estação. Você a vê no app antes de iniciar o carregamento.',
+  pricingTaxNote: {
+    es: 'IVA incluido',
+    en: 'VAT included',
+    pt: 'IVA incluído',
+  } satisfies Localized,
+  pricingVaries: {
+    es: 'La tarifa puede variar según la estación, el horario y el cargador.',
+    en: 'The rate may vary by station, time of day and charger.',
+    pt: 'A tarifa pode variar conforme a estação, o horário e o carregador.',
   } satisfies Localized,
 }
 

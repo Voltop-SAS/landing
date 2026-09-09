@@ -10,7 +10,7 @@ import { Button } from '@ui/common/components/ui/Button'
 import { Reveal } from '@ui/common/components/ui/Reveal'
 
 /**
- * BEAT 6 · VISION — Intensity: Medium-high · Register: Silence · Space: loose
+ * BEAT 7 · VISION — Intensity: Medium-high · Register: Silence · Space: loose
  * STRUCTURE: two columns —the founder's portrait and his words—. It inverts
  * beat 5's relationship: there the text goes OVER the material and the photo
  * credits it; here the person and the text sit at the same level.
@@ -87,6 +87,24 @@ export function VisionQuote({ locale }: { locale: Locale }) {
 
           <Reveal>
             <Eyebrow tone="brand">{t(home.vision.eyebrow, locale)}</Eyebrow>
+
+            {/* ── A HEADING FOR THE DOCUMENT OUTLINE ─────────────────────────
+              This was the ONLY section of the Home with no `h1`/`h2`: the
+              accessible name came from the `<blockquote>` via
+              `aria-labelledby`, which is valid and gives the section a name —
+              but someone navigating BY HEADINGS skipped the beat entirely and
+              never learned a Visión section existed.
+
+              `sr-only` and not visible, because the beat's visible entry point
+              is the eyebrow plus the portrait, and adding a headline on screen
+              would change a composition that is resolved. Same device
+              `StationFinder` already uses for the results list.
+
+              It names the person, not the concept: "Visión" alone tells a
+              screen-reader user nothing about what is inside. */}
+            <h2 className="sr-only">
+              {t(home.vision.eyebrow, locale)} · {founder.name}
+            </h2>
 
             {/* Name and role BEFORE the quote. With the portrait alongside,
               who is speaking is already said visually; putting it in text here

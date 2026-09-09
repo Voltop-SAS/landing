@@ -256,6 +256,11 @@ export function Header({ locale }: { locale: Locale }) {
           ref={panelRef}
           className="fixed inset-x-0 bottom-0 top-16 z-(--z-overlay) flex flex-col overflow-y-auto border-t border-line bg-canvas nav:hidden"
         >
+          {/* `display-s`, not `display-m`. At 390px that is 20px against 24px,
+              and those 4px were what made five menu entries outweigh the
+              wordmark itself, which is 20. One step down the system scale, not a
+              loose value: the row still measures 66px, well above the 44 a touch
+              target asks for. */}
           <nav
             className="flex flex-col px-(--spacing-gutter) py-4"
             aria-label={t(a11y.mainNav, locale)}
@@ -265,7 +270,7 @@ export function Header({ locale }: { locale: Locale }) {
                 key={item.href}
                 href={href(locale, item.href)}
                 aria-current={isActive(item.href) ? 'page' : undefined}
-                className="border-b border-line py-5 font-display text-display-m text-ink"
+                className="border-b border-line py-5 font-display text-display-s text-ink"
               >
                 {t(item.label, locale)}
               </Link>
@@ -275,7 +280,7 @@ export function Header({ locale }: { locale: Locale }) {
                 than not having it at all. */}
             <Link
               href={href(locale, helpLink.href)}
-              className="border-b border-line py-5 font-display text-display-m text-ink-2"
+              className="border-b border-line py-5 font-display text-display-s text-ink-2"
             >
               {t(helpLink.label, locale)}
             </Link>

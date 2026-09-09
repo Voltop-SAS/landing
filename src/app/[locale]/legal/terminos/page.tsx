@@ -19,10 +19,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 /**
- * Términos y condiciones — texto íntegro emitido por el área legal (§38).
+ * Terms and conditions — the full text issued by the legal team (§38).
  *
- * Ya no lleva `noindex`: el motivo de la marca era no tener texto definitivo,
- * y ahora lo hay.
+ * It no longer carries `noindex`: the reason for that flag was not having a
+ * final text, and now there is one.
  */
 export default async function TermsPage({ params }: Props) {
   const { locale: raw } = await params

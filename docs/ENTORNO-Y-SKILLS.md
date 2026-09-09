@@ -103,10 +103,10 @@ sistema; lo que importa es la lista de comprobaciones de arriba, no el script.
 
 | Dependencia | Estado | Qué hay que hacer |
 |---|---|---|
-| **`app.voltop.co`** | Funcionando (307 → `/download`) | Es el destino del CTA principal del header. Si cambia el dominio, se edita `content/data/links.ts` |
-| **Tiendas de apps** | App Store `id6759729784` · Google Play `co.voltop.charging` | Enlaces en `content/data/links.ts` |
-| **Google Tag Manager** | Contenedor `GTM-WJ5S2LBF` | No es un secreto. Configurable con `NEXT_PUBLIC_GTM_ID`. **La plataforma de destino de los eventos sigue sin definir**: `lib/analytics` solo hace `dispatch` a `dataLayer` |
-| **Formulario B2B** | `mailto:` a tres direcciones de `@voltop.co` | En `content/data/links.ts`. Funciona sin servidor pero pierde a quien no tenga cliente de correo y expone las direcciones. Un servicio de formularios lo resuelve cambiando una función |
+| **`app.voltop.co`** | Funcionando (307 → `/download`) | Es el destino del CTA principal del header. Si cambia el dominio, se edita `src/core/common/domain/consts/links.ts` |
+| **Tiendas de apps** | App Store `id6759729784` · Google Play `co.voltop.charging` | Enlaces en `src/core/common/domain/consts/links.ts` |
+| **Google Tag Manager** | Contenedor `GTM-WJ5S2LBF` | No es un secreto. Configurable con `NEXT_PUBLIC_GTM_ID`. **La plataforma de destino de los eventos sigue sin definir**: `src/core/common/infrastructure/analytics` solo hace `dispatch` a `dataLayer` |
+| **Formulario B2B** | `mailto:` a tres direcciones de `@voltop.co` | En `src/core/common/domain/consts/links.ts`. Funciona sin servidor pero pierde a quien no tenga cliente de correo y expone las direcciones. Un servicio de formularios lo resuelve cambiando una función |
 | **Másteres de media** | `~/Voltop-masters-originales/` en la máquina de origen, ~609 MB | **NO están en el repositorio.** Pendiente subirlos a un almacenamiento compartido: hoy existen en una sola máquina |
 | **Consulta legal del aviso de cookies** | Pendiente | El mecanismo funciona y bloquea la analítica hasta el consentimiento. Falta que un abogado confirme redacción y suficiencia |
 

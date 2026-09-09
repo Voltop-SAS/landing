@@ -90,7 +90,11 @@ export function SpecList({
           key={item.label}
           className="bg-canvas p-5"
         >
-          <dt className="font-mono text-mono uppercase text-ink-3">{item.label}</dt>
+          {/* `tracking-wider`, like EVERY other field label on the site. This
+              was the only one without it, and it showed: "Puntos de carga"
+              renders at 0.05em on the home page and came out at 0.02em here —
+              the same label at two trackings depending on the page. */}
+          <dt className="font-mono text-mono uppercase tracking-wider text-ink-3">{item.label}</dt>
           <dd className={cn('mt-2', specTone[item.tone ?? 'number'])}>{item.value}</dd>
           {item.note && <p className="mt-1 text-caption text-ink-3">{item.note}</p>}
         </div>

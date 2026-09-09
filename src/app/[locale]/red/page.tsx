@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { isLocale, t, type Locale } from '~/core/common/domain/i18n/config'
+import { isLocale, t, fill, type Locale } from '~/core/common/domain/i18n/config'
 import { href, routes, alternatesFor } from '~/core/common/domain/i18n/routes'
 import { red } from '~/core/network/domain/consts/copy'
 import { actions, states, units, a11y } from '~/core/common/domain/consts/copy'
@@ -79,10 +79,10 @@ export default async function RedPage({ params }: Props) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
-      {/* Apertura FUNCIONAL: en una superficie de producto el marco editorial
-          paga alquiler. `pt-24` en móvil deja 32px de aire bajo el header de
-          64px en lugar de 64px, y el lead se alinea a la baseline del titular
-          en desktop en vez de flotar a la derecha creando un hueco en L. */}
+      {/* A FUNCTIONAL opening: on a product surface the editorial frame pays
+          rent. `pt-24` on mobile leaves 32px of air under the 64px header
+          instead of 64px, and the lead aligns to the headline's baseline on
+          desktop instead of floating right and creating an L-shaped hole. */}
       <Section
         space="none"
         className="pb-5 pt-24 md:pb-6 md:pt-32"
@@ -110,7 +110,7 @@ export default async function RedPage({ params }: Props) {
             stations={stations}
             cities={cities}
           />
-          <p className="mt-6 font-mono text-mono text-ink-3">{t(states.pendingRealtime, locale)}</p>
+          <p className="mt-6 font-mono text-mono text-ink-3">{t(states.realtimeInApp, locale)}</p>
         </Container>
       </Section>
 
@@ -128,7 +128,7 @@ export default async function RedPage({ params }: Props) {
           </div>
 
           <ul className="mt-10 grid gap-px border border-line bg-line sm:grid-cols-2">
-            {coverage.map(({ city, count, operational }, i) => (
+            {coverage.map(({ city, count, operational, points, maxKw }, i) => (
               <Reveal
                 as="li"
                 key={city.slug}
@@ -145,9 +145,24 @@ export default async function RedPage({ params }: Props) {
                     </h3>
                     <span className="font-mono text-mono text-ink-3">{city.region}</span>
                   </div>
-                  <p className="mt-3 measure text-body-s text-ink-2">{t(city.intro, locale)}</p>
+                  {/* The sentence is composed from the dataset's figures. See
+                      the note on `red.cities.blurb`: it used to be `city.intro`,
+                      hand-written per city, and one of the two already had three
+                      numbers buried in the prose. */}
+                  <p className="mt-3 measure text-body-s text-ink-2">
+                    {fill(t(count === 1 ? red.cities.blurb.one : red.cities.blurb.many, locale), {
+                      stations: count,
+                      points,
+                      kw: maxKw,
+                    })}
+                  </p>
+                  {/* `2/2 estaciones` was noise: the fraction only informs when
+                      the two numbers differ. It is kept for that case — a station
+                      announced and not yet operating is exactly what must not be
+                      hidden — and stays quiet when all of them run. */}
                   <p className="mt-6 font-mono text-mono text-ink-3">
-                    {operational}/{count} {t(units.stations, locale)}
+                    {operational === count ? count : `${operational}/${count}`}{' '}
+                    {t(count === 1 ? units.station : units.stations, locale)}
                   </p>
                 </Link>
               </Reveal>
@@ -171,7 +186,8 @@ export default async function RedPage({ params }: Props) {
             {t(red.howToCharge.title, locale)}
           </SectionHeading>
 
-          {/* SÍ es una secuencia: el número informa y es el ancla visual. */}
+          {/* This one IS a sequence: the number informs and is the visual
+              anchor. */}
           <ProcessList
             className="mt-12 md:grid-cols-3"
             items={red.howToCharge.steps.map((s) => ({

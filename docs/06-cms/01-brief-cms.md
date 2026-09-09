@@ -18,7 +18,7 @@ Para estaciones —que cambian pocas veces al año— la fricción se aguanta. P
 
 `DECISION` **El registro es el piloto.** Se conecta UNA colección al CMS y el resto sigue como datos locales. Bajo riesgo, reversible, y produce la evaluación real de coste, fidelidad y autonomía que §2 pedía — con datos en vez de estimaciones. Si funciona, migra el resto. Si no, se descarta habiendo perdido una colección, no el proyecto.
 
-`FACT` **El gate de §2 ya se cumplió.** La decisión de producción esperaba "hasta que el copy esté fuera del código", y todo el copy vive en `content/copy/*` desde el bloque 7.
+`FACT` **El gate de §2 ya se cumplió.** La decisión de producción esperaba "hasta que el copy esté fuera del código", y todo el copy vive en `src/core/<dominio>/domain/consts/copy.ts` desde el bloque 7.
 
 ---
 
@@ -26,9 +26,9 @@ Para estaciones —que cambian pocas veces al año— la fricción se aguanta. P
 
 | Pieza | Estado |
 |---|---|
-| `lib/data/posts-source.ts` → `fetchPosts()` | **Único punto que cambia.** Hoy devuelve el array local; mañana hace la llamada al CMS |
-| Accesores del registro en `lib/data/index.ts` | Ya son `async`. Orden, filtro de publicados, referencias y "qué entradas tienen página" **no dependen del origen** |
-| Presentación | **No cambia nada.** Ningún componente importa `content/data/*` |
+| `src/core/common/infrastructure/data-access/postsSource.ts` → `fetchPosts()` | **Único punto que cambia.** Hoy devuelve el array local; mañana hace la llamada al CMS |
+| Accesores del registro en `src/core/common/infrastructure/data-access/index.ts` | Ya son `async`. Orden, filtro de publicados, referencias y "qué entradas tienen página" **no dependen del origen** |
+| Presentación | **No cambia nada.** Ningún componente importa `src/core/<dominio>/infrastructure/content/*` |
 
 Conectar el CMS = sustituir el cuerpo de **una función**. Esa es toda la superficie de integración.
 
@@ -117,9 +117,9 @@ Cualquier CMS con texto enriquecido por bloques sirve: **Portable Text** de Sani
 ## 7 · Qué pasa el día que se conecte
 
 1. Crear la colección `post` en el CMS con el modelo de §3.
-2. Cargar las entradas de arranque (hoy en `content/data/posts.ts`) y **confirmar sus fechas reales**, que siguen marcadas como provisionales.
-3. Sustituir el cuerpo de `fetchPosts()` en `lib/data/posts-source.ts`.
+2. Cargar las entradas de arranque (hoy en `src/core/news/infrastructure/content/posts.ts`) y **confirmar sus fechas reales**, que siguen marcadas como provisionales.
+3. Sustituir el cuerpo de `fetchPosts()` en `src/core/common/infrastructure/data-access/postsSource.ts`.
 4. Conectar el webhook de publicación al despliegue.
-5. Borrar `content/data/posts.ts` y quitarlo de `SOURCES` en `lib/i18n/audit.ts`.
+5. Borrar `src/core/news/infrastructure/content/posts.ts` y quitarlo de `SOURCES` en `src/core/common/infrastructure/i18n/audit.ts`.
 
 El paso 5 importa: la auditoría de idiomas dejará de cubrir el registro cuando el contenido viva fuera del repositorio. **Esa cobertura hay que reponerla en el CMS** — como campo obligatorio, como aviso al editor o como comprobación en el webhook. Si no, vuelve el fallo que la auditoría existe para impedir: contenido publicado a medias en un idioma, en silencio.

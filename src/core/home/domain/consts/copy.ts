@@ -108,7 +108,7 @@ export const home = {
          hold up, and §19 does not allow headlines the product cannot meet.
          What is true and does differentiate is WHERE the stations are. */
       es: 'Ubicamos nuestras estaciones de carga en universidades, hoteles y centros comerciales para que puedas cargar tu vehículo eléctrico mientras continúas con tu día.',
-      en: 'We put our charging stations in universities, hotels and shopping centres so you can charge your electric vehicle while you get on with your day.',
+      en: 'We put our charging stations in universities, hotels and shopping centers so you can charge your electric vehicle while you get on with your day.',
       pt: 'Instalamos nossas estações de carregamento em universidades, hotéis e shoppings para que você possa carregar seu veículo elétrico enquanto segue com o seu dia.',
     } satisfies Localized,
     /** The video arrives under the `stationMedellin` key of the media registry. */
@@ -325,10 +325,14 @@ export const home = {
       en: 'Scan to download',
       pt: 'Escaneie para baixar',
     } satisfies Localized,
+    /* The alt describes the WHOLE image, not just the code: since 2026-09-08
+       the asset is a phone held in a hand running a charging session, with the
+       QR beside it. An alt that only named the QR would hide from a screen
+       reader the one thing the image shows about the product. */
     qrAlt: {
-      es: 'Código QR que abre la descarga de la app de Voltop',
-      en: 'QR code that opens the Voltop app download',
-      pt: 'Código QR que abre o download do aplicativo da Voltop',
+      es: 'Un teléfono en la mano con la app de Voltop mostrando una carga en curso al 70%, junto al código QR que abre la descarga',
+      en: 'A phone held in a hand with the Voltop app showing a charge in progress at 70%, next to the QR code that opens the download',
+      pt: 'Um telefone na mão com o aplicativo da Voltop mostrando uma carga em andamento a 70%, ao lado do código QR que abre o download',
     } satisfies Localized,
   },
 
@@ -350,10 +354,26 @@ export const home = {
        logo says it. It is the same reason the header lockup does not repeat
        the brand name. */
     titleMobile: { es: 'Descarga la app', en: 'Get the app', pt: 'Baixe o app' },
+    /* The dismiss control came back on 2026-09-08. The label says what
+       disappears, not just "cerrar": on a page with a cookie banner and a
+       header, a bare "Cerrar" does not say which of the three things it
+       closes. */
+    close: {
+      es: 'Cerrar el aviso de descarga',
+      en: 'Dismiss the download notice',
+      pt: 'Fechar o aviso de download',
+    },
+    /* Shorter since 2026-09-08. The mobile bar has ~246px of width for the text
+       at 390px and the previous sentence filled them exactly; at 320px it fell
+       to two lines and stretched the bar to 145px, 33% of the screen. With this
+       one it fits on a single line from 360px up and the bar loses height.
+
+       It stays a SEPARATE key from `body`: desktop and tablet keep their own,
+       which is the long one. */
     bodyMobile: {
-      es: 'Encuentra estaciones e inicia tu carga',
-      en: 'Find stations and start charging',
-      pt: 'Encontre estações e inicie seu carregamento',
+      es: 'Encuentra dónde cargar.',
+      en: 'Find where to charge.',
+      pt: 'Encontre onde carregar.',
     },
     open: { es: 'Abrir', en: 'Open', pt: 'Abrir' },
   },

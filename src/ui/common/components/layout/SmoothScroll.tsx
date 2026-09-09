@@ -1,14 +1,30 @@
 'use client'
 
 import { useEffect } from 'react'
+import { usePathname } from 'next/navigation'
 import Lenis from 'lenis'
-import { registerScrollEngine } from '@ui/common/lib/scroll'
+import { registerScrollEngine, scrollToTop } from '@ui/common/lib/scroll'
 
 /**
  * Smoothed scrolling. Fully disabled under `prefers-reduced-motion`, and it
  * does not compete with `scroll-behavior: smooth` (removed from the base CSS).
  */
 export function SmoothScroll() {
+  const pathname = usePathname()
+
+  /**
+   * Every new page starts at the top. The full reason lives in `scrollToTop`.
+   *
+   * It depends on `pathname` and not on the full URL on purpose: a link to
+   * `#ciudades` changes the hash but not the route, so this effect does not
+   * fire and the jump to the anchor keeps working. And the first load is
+   * already at the top, so calling it then does nothing visible.
+   */
+  useEffect(() => {
+    if (window.location.hash) return
+    scrollToTop()
+  }, [pathname])
+
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
 

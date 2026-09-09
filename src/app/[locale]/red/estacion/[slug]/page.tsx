@@ -27,7 +27,7 @@ import {
   Eyebrow,
   SectionHeading,
 } from '@ui/common/components/ui/LayoutPrimitives'
-import { StatusBadge, SpecList, PendingTag } from '@ui/common/components/ui/DataPrimitives'
+import { StatusBadge, SpecList } from '@ui/common/components/ui/DataPrimitives'
 import { Media } from '@ui/common/components/ui/Media'
 import { Button } from '@ui/common/components/ui/Button'
 import { DirectionsButton } from '~/core/network/infrastructure/ui/components/DirectionsButton'
@@ -37,10 +37,10 @@ import { formatPowerKw } from '~/core/network/domain/entities/Station'
 type Props = { params: Promise<{ locale: string; slug: string }> }
 
 /**
- * /RED/ESTACION/[SLUG] · ficha de estación.
+ * /RED/ESTACION/[SLUG] · station page.
  *
- * Generada íntegramente desde datos: añadir una estación al dataset crea la
- * página, su metadata y sus datos estructurados. Cero trabajo manual (§30).
+ * Generated entirely from data: adding a station to the dataset creates the
+ * page, its metadata and its structured data. Zero manual work (§30).
  */
 /**
  * CLOSED PARAMS. A `notFound()` thrown from a page resolves no boundary at all
@@ -77,8 +77,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       stationMeta.description,
       locale,
     )({
-      /* Sin ciudad resuelta se omite el topónimo en lugar de imprimir
-         "undefined" en la descripción que ve el buscador. */
+      /* With no resolved city the place name is omitted rather than printing
+         "undefined" in the description a search engine reads. */
       city: city?.name ?? 'Colombia',
       powerKw: formatPowerKw(s.powerKw),
       points: s.points,
@@ -123,7 +123,7 @@ export default async function StationPage({ params }: Props) {
     { label: t(stationCopy.specs.hours, locale), value: t(s.hours, locale), tone: 'text' as const },
   ]
 
-  /* Datos estructurados: cada estación es un activo de búsqueda local (§29). */
+  /* Structured data: every station is a local-search asset (§29). */
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'EVChargingStation',
@@ -138,7 +138,11 @@ export default async function StationPage({ params }: Props) {
     ...(s.geo
       ? { geo: { '@type': 'GeoCoordinates', latitude: s.geo.lat, longitude: s.geo.lng } }
       : {}),
-    openingHours: t(s.hours, locale),
+    /* Only when there is a machine-readable value. It used to emit
+       `t(s.hours, locale)` — "Abierto 24/7", "Consultar en la app" — into a
+       property that expects `Mo-Su 00:00-23:59`, so a search engine read free
+       Spanish text where it looks for a schedule and discarded it. */
+    ...(s.openingHours ? { openingHours: s.openingHours } : {}),
     provider: { '@type': 'Organization', name: 'Voltop', url: SITE_URL },
     amenityFeature: s.services.map((sv) => ({
       '@type': 'LocationFeatureSpecification',
@@ -260,9 +264,9 @@ export default async function StationPage({ params }: Props) {
         </Container>
       </Section>
 
-      {/* Media propia de la estación. El dataset aún no trae archivos (§32).
-          Va en `content`, no en `wide`: sobresalía 100px a la izquierda del
-          titular. El sangrado se reserva a media que lo justifique. */}
+      {/* The station's own media. The dataset does not carry files yet (§32).
+          It goes in `content`, not `wide`: it stuck out 100px to the left of the
+          headline. Full bleed is reserved for media that earns it. */}
       <Section
         space="none"
         className="pb-(--spacing-section-tight)"
@@ -309,9 +313,9 @@ export default async function StationPage({ params }: Props) {
           <div className="grid gap-14 lg:grid-cols-[1.7fr_1fr]">
             <div>
               <SectionHeading size="m">{t(stationCopy.specs.title, locale)}</SectionHeading>
-              {/* 2×2, no 4×1. Cuatro columnas dentro de la columna de contenido
-                  dejaban 128px útiles por celda: el horario envolvía en tres
-                  líneas a CUALQUIER ancho, incluido 1440. */}
+              {/* 2x2, not 4x1. Four columns inside the content column left 128
+                  usable pixels per cell: the opening hours wrapped onto three
+                  lines at EVERY width, 1440 included. */}
               <SpecList
                 items={specs}
                 className="mt-6"
@@ -322,19 +326,32 @@ export default async function StationPage({ params }: Props) {
                   <p className="font-mono text-mono uppercase tracking-wider text-ink-3">
                     {t(stationCopy.specs.pricing, locale)}
                   </p>
-                  {s.pricing ? (
-                    <p className="font-display text-display-s text-ink">
-                      {s.pricing.perKwh} {s.pricing.currency}/kWh
-                    </p>
-                  ) : (
-                    <PendingTag>{t(stationCopy.pendingPricingTag, locale)}</PendingTag>
-                  )}
-                </div>
-                {!s.pricing && (
-                  <p className="mt-2 text-caption text-ink-3">
-                    {t(stationCopy.pendingPricing, locale)}
+                  {/* The figure and, beside it, the qualification. "IVA incluido"
+                      does not stand alone: it qualifies a price, so it lives
+                      right next to it and at a lighter weight — the number is
+                      the fact, the tax is the small print.
+
+                      The thousands separator is the dot, which is Colombia's:
+                      `1.780`, not `1,780`. It is formatted with `es-CO` rather
+                      than typed by hand so it does not depend on where the site
+                      is built. */}
+                  <p className="font-display text-display-s text-ink">
+                    {s.pricing ? (
+                      <>
+                        ${new Intl.NumberFormat('es-CO').format(s.pricing.perKwh)}{' '}
+                        {s.pricing.currency}/kWh{' '}
+                        <span className="text-body-s text-ink-3">
+                          {t(stationCopy.pricingTaxNote, locale)}
+                        </span>
+                      </>
+                    ) : (
+                      t(stationCopy.pricingTaxNote, locale)
+                    )}
                   </p>
-                )}
+                </div>
+                <p className="mt-2 text-caption text-ink-3">
+                  {t(stationCopy.pricingVaries, locale)}
+                </p>
               </div>
 
               {s.services.length > 0 && (
@@ -358,9 +375,9 @@ export default async function StationPage({ params }: Props) {
               <SectionHeading size="s">{t(stationCopy.location, locale)}</SectionHeading>
               <p className="mt-5 text-body-s text-ink-2">{t(s.address, locale)}</p>
               <div className="mt-6 flex flex-col gap-3">
-                {/* `lang` no es decorativo: habilita el aviso de "se abre en
-                    una pestaña nueva". Y `estacion_como_llegar` es la conversión
-                    final del journey B2C y no se estaba midiendo (§31). */}
+                {/* `lang` is not decorative: it enables the "opens in a new tab"
+                    notice. And `estacion_como_llegar` is the final conversion of
+                    the B2C journey and was not being measured (§31). */}
                 <DirectionsButton
                   locale={locale}
                   href={directions}

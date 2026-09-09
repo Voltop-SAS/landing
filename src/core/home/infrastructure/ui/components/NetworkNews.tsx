@@ -9,6 +9,7 @@ import { Button } from '@ui/common/components/ui/Button'
 import { Reveal } from '@ui/common/components/ui/Reveal'
 
 /**
+ * BEAT 6 · NEWS — Intensity: Low · Register: Index
  * BEAT · LATEST FROM THE NETWORK
  *
  * ── WHY IT EXISTS ON THE HOME PAGE ────────────────────────────────────────

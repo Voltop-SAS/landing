@@ -66,7 +66,7 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>
 }): Promise<Metadata> {
   const { locale } = await params
-  /* Un idioma inexistente no describe ningún contenido y no debe indexarse. */
+  /* A non-existent locale describes no content and must not be indexed. */
   if (!isLocale(locale)) return { robots: { index: false, follow: true } }
 
   return {

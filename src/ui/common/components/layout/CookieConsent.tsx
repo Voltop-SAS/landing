@@ -1,11 +1,12 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import Script from 'next/script'
 import { t, type Locale } from '~/core/common/domain/i18n/config'
 import { cookies as copy } from '~/core/common/domain/consts/copy'
 import { href, routes } from '~/core/common/domain/i18n/routes'
+import { TextSlot } from '@ui/common/components/ui/TextSlot'
 
 /**
  * COOKIE NOTICE
@@ -104,6 +105,29 @@ export function CookieConsent({ locale }: { locale: Locale }) {
 
   const visible = read && decision === null
 
+  /**
+   * FOCUS LANDS ON THE REGION, NOT ON A BUTTON.
+   *
+   * "Aceptar" had `autoFocus`, and on a clean load — with nobody touching the
+   * keyboard — Chrome gave it `:focus-visible`: measured, a 2px brand ring on
+   * "Aceptar" and nothing on "Rechazar".
+   *
+   * Two things broke with that. This file's header requires both exits to carry
+   * the same weight, and a ring on one of them is a visual difference none of
+   * the other equalities makes up for. And worse: it reads as PRESELECTED —
+   * pressing Enter accepted — which is a nudge towards yes in the one place on
+   * the site where the decision has to be free.
+   *
+   * Focusing the container keeps what `autoFocus` solved: a keyboard user lands
+   * inside the notice and their next Tab is "Aceptar", without having to hunt
+   * for it. `tabIndex={-1}` makes it focusable from code without adding it to
+   * the tab order.
+   */
+  const region = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    if (visible) region.current?.focus()
+  }, [visible])
+
   return (
     <>
       {decision === 'aceptado' && (
@@ -121,10 +145,16 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
       {visible && (
         <div
+          ref={region}
+          tabIndex={-1}
           role="region"
           aria-label={t(copy.title, locale)}
           /* `z-(--z-overlay)`: above the app floater, which also lives at the
              bottom. The decision comes first. */
+          /* Silences the focus ring of THIS container. The full reason lives in
+             `globals.css`, next to the rule: a Tailwind utility does not work
+             here because the global rule lives outside `@layer`. */
+          data-focus-silent=""
           className="fixed inset-x-0 bottom-0 z-(--z-overlay) border-t border-line bg-canvas/85 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl"
         >
           {/* Same rail as the Header: `content` container and the system
@@ -138,7 +168,27 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               <p className="font-display text-body font-semibold text-ink">
                 {t(copy.title, locale)}
               </p>
-              <p className="measure mt-1 text-body-s text-ink-2">{t(copy.body, locale)}</p>
+              {/* The policy link lives INSIDE the sentence. See the note on
+                  `cookies.body` for why, and `TextSlot` for how — including
+                  what happens if a locale ever loses the placeholder. */}
+              <p className="measure mt-1 text-body-s text-ink-2">
+                <TextSlot
+                  text={t(copy.body, locale)}
+                  name="policy"
+                >
+                  <Link
+                    href={href(locale, routes.privacy)}
+                    /* Underline ALWAYS visible, not only on hover: inside a
+                       paragraph, colour alone does not mark a link — someone who
+                       cannot tell the green apart will not find it — and this is
+                       the link that makes the consent informed. The focus ring
+                       comes from the global rule in `globals.css`. */
+                    className="text-ink underline decoration-line-strong decoration-1 underline-offset-4 transition-colors hover:text-brand hover:decoration-brand"
+                  >
+                    {t(copy.policy, locale)}
+                  </Link>
+                </TextSlot>
+              </p>
             </div>
 
             <div className="flex flex-col gap-3 md:shrink-0 md:flex-row md:items-center md:gap-4">
@@ -154,25 +204,18 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 <button
                   type="button"
                   onClick={() => decide('aceptado')}
-                  autoFocus
-                  className="brand-gradient inline-flex h-11 items-center justify-center rounded-(--radius-pill) px-5 text-body-s font-semibold text-on-brand transition-[filter] duration-(--duration-fast) hover:brightness-105"
+                  className="brand-gradient press inline-flex h-11 items-center justify-center rounded-(--radius-pill) px-5 text-body-s font-semibold text-on-brand transition-[filter] duration-(--duration-fast) hover:brightness-105"
                 >
                   {t(copy.accept, locale)}
                 </button>
                 <button
                   type="button"
                   onClick={() => decide('rechazado')}
-                  className="inline-flex h-11 flex-1 items-center justify-center rounded-(--radius-pill) border border-line-control px-5 text-body-s font-semibold text-ink transition-colors duration-(--duration-fast) hover:border-line-strong hover:bg-surface-2"
+                  className="press inline-flex h-11 flex-1 items-center justify-center rounded-(--radius-pill) border border-line-control px-5 text-body-s font-semibold text-ink transition-colors duration-(--duration-fast) hover:border-line-strong hover:bg-surface-2"
                 >
                   {t(copy.reject, locale)}
                 </button>
               </div>
-              <Link
-                href={href(locale, routes.privacy)}
-                className="inline-flex min-h-11 items-center font-mono text-mono text-ink-3 transition-colors hover:text-brand"
-              >
-                {t(copy.policy, locale)}
-              </Link>
             </div>
           </div>
         </div>

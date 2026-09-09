@@ -40,12 +40,24 @@ export const stations: Station[] = [
     points: 18,
     status: 'operativa',
     hours: { es: 'Abierto 24/7', en: 'Open 24/7', pt: 'Aberto 24/7' },
-    pricing: null,
+    openingHours: 'Mo-Su 00:00-23:59',
+    /* Confirmed by Camilo on 2026-09-08. All three stations share the tariff;
+       the field stays PER STATION on purpose, because the note beside it says it
+       can vary, and the day one of them differs it changes here without touching
+       the component. */
+    pricing: { perKwh: 1780, currency: 'COP' },
+    /* The same two at all three stations since 2026-09-08, by product decision.
+       They used to be different lists per site — the EAN had a roof and a
+       cafeteria, the Grand Hyatt valet and a restaurant, and Wake had none at
+       all, so its page did not even render the section. Now all three say the
+       same thing and all three render it.
+
+       What is lost: each place's own amenities stop being told. If they are
+       ever wanted back, each station gets its list again and the component
+       already renders them without touching anything. */
     services: [
-      { es: 'Techo', en: 'Covered', pt: 'Coberto' },
-      { es: 'Cafetería', en: 'Café', pt: 'Café' },
+      { es: 'WiFi', en: 'Wi-Fi', pt: 'Wi-Fi' },
       { es: 'Baños', en: 'Restrooms', pt: 'Banheiros' },
-      { es: 'Wifi', en: 'Wi-Fi', pt: 'Wi-Fi' },
     ],
     media: {
       photos: [
@@ -77,13 +89,49 @@ export const stations: Station[] = [
     points: 11,
     status: 'operativa',
     hours: { es: 'Abierto 24/7', en: 'Open 24/7', pt: 'Aberto 24/7' },
-    pricing: null,
+    openingHours: 'Mo-Su 00:00-23:59',
+    /* Confirmed by Camilo on 2026-09-08. All three stations share the tariff;
+       the field stays PER STATION on purpose, because the note beside it says it
+       can vary, and the day one of them differs it changes here without touching
+       the component. */
+    pricing: { perKwh: 1780, currency: 'COP' },
     services: [
-      { es: 'Valet', en: 'Valet', pt: 'Manobrista' },
-      { es: 'Restaurante', en: 'Restaurant', pt: 'Restaurante' },
-      { es: 'Parqueadero cubierto', en: 'Covered parking', pt: 'Estacionamento coberto' },
+      { es: 'WiFi', en: 'Wi-Fi', pt: 'Wi-Fi' },
+      { es: 'Baños', en: 'Restrooms', pt: 'Banheiros' },
     ],
-    media: { photos: [] },
+    media: {
+      /**
+       * DELIVERED 2026-09-08. Grand Hyatt was the last station showing its
+       * declared hole; the page needed no changes, it already read
+       * `media.photos[0]` and fell back to the hole when the array was empty.
+       * Populating the dataset was enough — which is exactly what that branch
+       * was written for.
+       *
+       * The master arrived at 6038×4025 and 21.7 MB and lives in
+       * `~/Voltop-masters-originales/`, outside the repository. Converted with
+       * `sharp` to 2560px and JPEG q82: 530 KB.
+       *
+       * 2560 and not the 2400 of Wake and the EAN: this band declares
+       * `sizes="(min-width: 1280px) 1240px, 100vw"`, so at DPR 2 the declared
+       * box asks for 2480px and 2400 would leave it at 0.97× — serving less
+       * image than the box and stretching it.
+       *
+       * ⚠️ A PERSON APPEARS IN THE FRAME, in profile, starting the charge. §
+       * media asks for the permissions of people who appear in the material.
+       * The photograph came from Voltop, of its own installation, so the
+       * permission is presumed — but it is NOT verified here.
+       */
+      photos: [
+        {
+          src: '/estacion-grand-hyatt.jpg',
+          alt: {
+            es: 'Tres cargadores Voltop en el parqueadero cubierto del Grand Hyatt, con un vehículo eléctrico conectado y una persona iniciando la carga',
+            en: 'Three Voltop chargers in the Grand Hyatt covered parking area, with an electric vehicle plugged in and a person starting the charge',
+            pt: 'Três carregadores Voltop no estacionamento coberto do Grand Hyatt, com um veículo elétrico conectado e uma pessoa iniciando a carga',
+          },
+        },
+      ],
+    },
     featured: true,
     dataStatus: 'verified',
   },
@@ -102,8 +150,18 @@ export const stations: Station[] = [
     points: 6,
     status: 'operativa',
     hours: { es: 'Consultar en la app', en: 'Check in the app', pt: 'Consulte no aplicativo' },
-    pricing: null,
-    services: [],
+    /* Not fixed: the station publishes them in the app, so nothing is declared
+       here rather than inventing a schedule. */
+    openingHours: null,
+    /* Confirmed by Camilo on 2026-09-08. All three stations share the tariff;
+       the field stays PER STATION on purpose, because the note beside it says it
+       can vary, and the day one of them differs it changes here without touching
+       the component. */
+    pricing: { perKwh: 1780, currency: 'COP' },
+    services: [
+      { es: 'WiFi', en: 'Wi-Fi', pt: 'Wi-Fi' },
+      { es: 'Baños', en: 'Restrooms', pt: 'Banheiros' },
+    ],
     media: {
       photos: [
         {

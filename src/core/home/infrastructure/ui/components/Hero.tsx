@@ -174,7 +174,36 @@ export function Hero({ locale }: { locale: Locale }) {
         className="absolute inset-x-0 bottom-0 h-px brand-gradient opacity-70"
       />
 
-      <Container className="relative z-(--z-raised) pb-(--spacing-section-tight) pt-32">
+      {/* ── NO ROOM IS RESERVED HERE FOR THE MOBILE BAR, AND IT WAS TRIED ──
+          Beat 2 does reserve it with `pb-28`, and on 2026-09-08 the same was
+          tried here: it does not work. This beat's content FLOWS FROM THE TOP
+          — `pt-32` and then the block — so a `padding-bottom` lengthens the
+          section without moving the content one pixel. Measured: the CTA stayed
+          at exactly y=483 with and without the added 128px. In beat 2 it works
+          because there the content is anchored to the bottom.
+
+          What remains, said rather than hidden: with the bar always visible, on
+          short screens — 390x600, 320x568 — it lands on the hero's CTA. At
+          390x844, the ordinary phone, it only reaches the city links. It is
+          inherent to a bar that never hides, and what makes up for it is that it
+          can be closed.
+
+          ── WHAT DID WORK: LIFTING THE CONTENT, NOT RESERVING SPACE ────────
+          Measured on 2026-09-08 across real devices. With `pt-32` the hero CTA
+          — the site's primary conversion — was UNDER the bar on an iPhone SE
+          2/3 (375×667, −3px) and covered outright on a 360×640 Android (−28px).
+
+          Reserving space at the bottom does nothing here, as the note above
+          explains. Lifting the block does: below 700px of viewport height the
+          128px of top padding are simply too much — under a 65px header they
+          push the eyebrow to 193px before a single word. At `pt-20` the SE gains
+          45px of clearance and the 640 Android 20px, and no ordinary phone is
+          touched: 412×732 and 390×844 stay outside the query.
+
+          320×568 (the first iPhone SE) is NOT solved and cannot be: header 65 +
+          bar 126 leave 377px, and the hero does not fit in that at any padding.
+          There the answer is the one the bar already has — it closes. */}
+      <Container className="relative z-(--z-raised) pb-(--spacing-section-tight) pt-32 [@media(max-height:700px)]:pt-20">
         <Eyebrow tone="brand">{t(home.hero.eyebrow, locale)}</Eyebrow>
 
         <h1 className="mt-6 max-w-[15ch] font-display text-display-2xl font-semibold text-ink">
@@ -247,7 +276,13 @@ export function Hero({ locale }: { locale: Locale }) {
                 <li key={city.slug}>
                   <Link
                     href={href(locale, routes.city(city.slug))}
-                    className="inline-flex min-h-11 items-center font-display text-display-s text-ink-2 transition-colors hover:text-brand"
+                    /* `press`: these two were the ONLY interactive elements on the Home
+                       without a press acknowledgement — 16 of the other 18 have it,
+                       either through `.press` or through the `active:scale-[0.98]`
+                       that `Button` carries. They are text links, not buttons, but
+                       `Button variant="link"` presses too, so the exception had no
+                       rule behind it. */
+                    className="press inline-flex min-h-11 items-center font-display text-display-s text-ink-2 transition-colors hover:text-brand"
                   >
                     {city.name}
                   </Link>

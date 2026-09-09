@@ -16,6 +16,7 @@ import { Media } from '@ui/common/components/ui/Media'
 import { Button } from '@ui/common/components/ui/Button'
 import { PendingTag } from '@ui/common/components/ui/DataPrimitives'
 import { PostLog } from '~/core/news/infrastructure/ui/components/PostLog'
+import { PostLink } from '@ui/common/components/ui/PostLink'
 import { TrackView } from '@ui/common/components/analytics/TrackView'
 import { formatDate } from '@ui/common/lib/dates'
 
@@ -151,14 +152,31 @@ export default async function NovedadesPage({ params }: Props) {
               <Container>
                 {featured.cover && (
                   <figure>
-                    <Media
-                      asset={featured.cover}
+                    {/* The cover OPENS the entry. It is what anyone seeing a
+                        piece this size expects, and in the video's case it is
+                        also the only way to reach playback with sound: here it
+                        runs silent on purpose — the browser blocks autoplay with
+                        audio, and without controls it would break WCAG 1.4.2 —
+                        while inside the entry it has controls.
+
+                        `decorative` because the headline below already links to
+                        the same place: the mouse gains the large target, the
+                        keyboard and the screen reader do not gain a duplicate. */}
+                    <PostLink
+                      post={featured}
                       locale={locale}
-                      aspect="21/9"
-                      corner
-                      sizes="(min-width: 1280px) 76rem, 100vw"
-                      priority
-                    />
+                      decorative
+                      className="block"
+                    >
+                      <Media
+                        asset={featured.cover}
+                        locale={locale}
+                        aspect="21/9"
+                        corner
+                        sizes="(min-width: 1280px) 76rem, 100vw"
+                        priority
+                      />
+                    </PostLink>
                     {/* A label derived from the asset and a caption of the lead
                         entry's own: the index comments on the piece differently
                         than the detail page, because whoever reads here has not

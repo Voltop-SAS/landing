@@ -17,7 +17,6 @@ const render_ = () =>
     <LeadForm
       locale="es"
       segmentKey="flotas"
-      segmentLabel="Flotas"
     />,
   )
 
