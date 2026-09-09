@@ -4,14 +4,13 @@ import { useEffect, useId, useMemo, useRef, useState } from 'react'
 import Link from 'next/link'
 import { useForm, type UseFormRegisterReturn } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
+import type { z } from 'zod'
 import { t, type Locale } from '~/core/common/domain/i18n/config'
 import { href, routes } from '~/core/common/domain/i18n/routes'
 import { TextSlot } from '@ui/common/components/ui/TextSlot'
 import { leadForm } from '~/core/common/domain/consts/copy'
-import { leadRecipients } from '~/core/common/domain/consts/links'
+import { createLeadSchema, type LeadSubmission } from '~/core/business/domain/entities/Lead'
 import { Button } from '@ui/common/components/ui/Button'
-import { PendingTag } from '@ui/common/components/ui/DataPrimitives'
 import { track } from '~/core/common/infrastructure/analytics'
 import { cn } from '@ui/common/lib/cn'
 
@@ -36,85 +35,57 @@ import { cn } from '@ui/common/lib/cn'
  * active locale. The form keeps `noValidate`: validation is ours, and the
  * native `required` attribute stays for semantics only.
  *
- * The delivery layer is DECOUPLED: `submitLead` is the single function to
- * replace once the CRM is chosen (open decision O3).
+ * Delivery goes through `POST /api/leads`, which validates the payload again
+ * and hands it to Amazon SES. The component knows none of that: it posts, and
+ * it reports what came back.
  */
 
-type Status = 'idle' | 'success'
+type Status = 'idle' | 'success' | 'error'
 
 /**
- * WHERE THE FORM SENDS.
+ * Sends the lead. Resolves when the server accepted it, throws otherwise.
  *
- * - `'none'`  — nowhere to send. The form SAYS so instead of pretending.
- * - `'email'` — opens the mail client with everything drafted. This is what
- *   ships today (decided 2026-09-02) and needs no server.
- * - `'crm'`   — automatic delivery. Needs a backend or a form service.
+ * WHAT THIS REPLACED, so the trade is not quietly undone: until 2026-09-09
+ * this assigned a `mailto:` to `window.location.href`. That opened the
+ * visitor's mail client with the message drafted and required them to press
+ * send — a step a large share never took — and it could not report either
+ * outcome, so the form declared success unconditionally and `lead_form_exito`
+ * counted submissions that never existed. It also published the commercial
+ * team's three addresses in the HTML of every page view.
  *
- * WHY EMAIL AND NOT A SERVICE: the site is fully static, so there is no server
- * to receive a POST. A `mailto:` is the only thing that works TODAY without
- * signing up for anything. It has two costs worth keeping in mind: it loses
- * anyone without a configured mail client, and it exposes the three addresses
- * in the HTML. A form service fixes both and changes only this function.
+ * The endpoint fixes all three at once. Nothing here inspects the status code
+ * beyond ok/not-ok: the server deliberately does not say why it refused, and
+ * there is nothing a visitor could do with the reason anyway.
  */
-const DESTINATION: 'none' | 'email' | 'crm' = 'email'
+async function submitLead(payload: LeadSubmission): Promise<void> {
+  const response = await fetch('/api/leads', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  })
 
-type LeadPayload = {
-  name: string
-  email: string
-  company: string
-  phone?: string
-  message?: string
-  segment: string
-}
-
-async function submitLead(payload: LeadPayload): Promise<void> {
-  if (DESTINATION !== 'email') {
-    void payload
-    await new Promise((r) => setTimeout(r, 900))
-    return
-  }
-
-  /* Stable field names from the plan: name, email, company, phone, message,
-     segment. The subject carries the segment so it can be filtered without
-     opening the message. */
-  const subject = `Voltop · ${payload.segment || 'Contacto'} · ${payload.company || payload.name}`
-  const body = [
-    `Nombre: ${payload.name}`,
-    `Correo: ${payload.email}`,
-    `Empresa: ${payload.company}`,
-    payload.phone ? `Teléfono: ${payload.phone}` : null,
-    `Segmento: ${payload.segment}`,
-    '',
-    payload.message || '(sin mensaje)',
-    '',
-    '— Enviado desde el formulario de voltop.co',
-  ]
-    .filter(Boolean)
-    .join('\n')
-
-  window.location.href =
-    `mailto:${leadRecipients.join(',')}` +
-    `?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
+  if (!response.ok) throw new Error(`Lead submission failed with ${response.status}`)
 }
 
 export function LeadForm({ locale, segmentKey }: { locale: Locale; segmentKey: string }) {
   const [status, setStatus] = useState<Status>('idle')
   const [started, setStarted] = useState(false)
   const confirmationRef = useRef<HTMLDivElement>(null)
+  const failureRef = useRef<HTMLParagraphElement>(null)
   const uid = useId()
 
-  /* Messages are translations, so the schema is per-locale. `consent` is
-     `literal(true)` and not an optional boolean on purpose: an unchecked box
-     has to be a validation failure, not a falsy value that slips through. */
+  /* The RULES come from the domain, so the endpoint enforces exactly the same
+     ones; only the MESSAGES are per-locale, which is why the schema is still
+     built here and memoised on the locale. Writing the shape a second time in
+     this file is what would let the browser accept what the server refuses. */
   const schema = useMemo(
     () =>
-      z.object({
-        name: z.string().trim().min(2, t(leadForm.fields.name.error, locale)),
-        email: z.email(t(leadForm.fields.email.error, locale)),
-        company: z.string().trim().min(2, t(leadForm.fields.company.error, locale)),
-        phone: z.string().trim().optional(),
-        message: z.string().trim().optional(),
-        consent: z.literal(true, t(leadForm.fields.consent.error, locale)),
+      createLeadSchema({
+        name: t(leadForm.fields.name.error, locale),
+        email: t(leadForm.fields.email.error, locale),
+        company: t(leadForm.fields.company.error, locale),
+        consent: t(leadForm.fields.consent.error, locale),
+        tooLong: t(leadForm.tooLong, locale),
       }),
     [locale],
   )
@@ -128,9 +99,13 @@ export function LeadForm({ locale, segmentKey }: { locale: Locale; segmentKey: s
   } = useForm<FormValues>({ resolver: zodResolver(schema) })
 
   /* Replacing the form with the confirmation sent focus nowhere. It moves to
-     the panel so keyboard and screen reader both arrive. */
+     the panel so keyboard and screen reader both arrive. The failure notice
+     takes focus for the same reason: it appears above a form the person is
+     already at the bottom of, and an announcement they have to go looking for
+     is one they will miss. */
   useEffect(() => {
     if (status === 'success') confirmationRef.current?.focus()
+    if (status === 'error') failureRef.current?.focus()
   }, [status])
 
   const fieldId = (name: string) => `${uid}-${name}`
@@ -142,9 +117,34 @@ export function LeadForm({ locale, segmentKey }: { locale: Locale; segmentKey: s
     track('lead_form_inicio', { segmento: segmentKey })
   }
 
-  const onValid = async (values: FormValues) => {
+  /* The honeypot is read off the submitted form rather than held in a ref: a
+     ref would be read during render, which is both what the lint rule forbids
+     and a genuine hazard. The field is a plain named input, so the form element
+     the submit event carries already has it. */
+  const onValid = async (values: FormValues, event?: React.BaseSyntheticEvent) => {
+    const form = event?.target as HTMLFormElement | undefined
+    const honeypot = form?.elements.namedItem('website')
+    const website = honeypot instanceof HTMLInputElement ? honeypot.value : ''
+
     track('lead_form_envio', { segmento: segmentKey })
-    await submitLead({ ...values, segment: segmentKey })
+
+    /* `lead_form_exito` now fires only when the server confirms. It used to
+       fire unconditionally, which made the conversion metric report every
+       attempt as a win. */
+    try {
+      await submitLead({
+        ...values,
+        segment: segmentKey,
+        locale,
+        website,
+      })
+    } catch (error) {
+      console.error('[lead-form] submission failed', error)
+      setStatus('error')
+      track('lead_form_error', { segmento: segmentKey, motivo: 'envio' })
+      return
+    }
+
     setStatus('success')
     track('lead_form_exito', { segmento: segmentKey })
   }
@@ -153,12 +153,14 @@ export function LeadForm({ locale, segmentKey }: { locale: Locale; segmentKey: s
      (`shouldFocusError`), so this only has to report. The event keeps the
      property names of the measurement plan. */
   const onInvalid = (found: typeof errors) => {
-    track('lead_form_error', { segmento: segmentKey, campos: Object.keys(found).join(',') })
+    track('lead_form_error', {
+      segmento: segmentKey,
+      motivo: 'validacion',
+      campos: Object.keys(found).join(','),
+    })
   }
 
   if (status === 'success') {
-    const confirmation = DESTINATION === 'email' ? leadForm.successEmail : leadForm.successPending
-
     return (
       <div
         ref={confirmationRef}
@@ -166,33 +168,31 @@ export function LeadForm({ locale, segmentKey }: { locale: Locale; segmentKey: s
         role="status"
         className="border border-line bg-surface-1 p-8 md:p-10"
       >
-        {DESTINATION !== 'none' ? (
-          <div className="grid size-11 place-items-center rounded-(--radius-pill) brand-gradient text-on-brand">
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              aria-hidden="true"
-            >
-              <path
-                d="m5 13 4 4L19 7"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </div>
-        ) : (
-          /* With no real destination the check mark is not drawn: the gradient
-             and the tick say "done", and it is not done. */
-          <PendingTag>{t(leadForm.successPending.tag, locale)}</PendingTag>
-        )}
+        {/* The tick is drawn again. It was conditional while the form only
+            drafted a `mailto:` and could not know whether anything had been
+            sent; now the panel is reached only after the server confirmed, so
+            the check mark states something true. */}
+        <div className="grid size-11 place-items-center rounded-(--radius-pill) brand-gradient text-on-brand">
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path
+              d="m5 13 4 4L19 7"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </div>
         <h3 className="mt-6 font-display text-display-m font-semibold text-ink">
-          {t(confirmation.title, locale)}
+          {t(leadForm.success.title, locale)}
         </h3>
-        <p className="mt-3 measure text-body text-ink-2">{t(confirmation.body, locale)}</p>
+        <p className="mt-3 measure text-body text-ink-2">{t(leadForm.success.body, locale)}</p>
       </div>
     )
   }
@@ -215,11 +215,19 @@ export function LeadForm({ locale, segmentKey }: { locale: Locale; segmentKey: s
       </h3>
       <p className="mt-3 measure text-body-s text-ink-2">{t(leadForm.intro, locale)}</p>
 
-      {/* Demo notice BEFORE asking for the data. It used to sit in 12px mono
-          under the button, where nobody reads it before typing their email. */}
-      {DESTINATION === 'none' && (
-        <p className="mt-6 border-l-2 border-warn/70 bg-warn/8 px-4 py-3 text-body-s text-ink-2">
-          {t(leadForm.demoNotice, locale)}
+      {/* The send failed. The form stays mounted underneath with every field
+          still filled in, so retrying is one click and not the whole form
+          again — which is the entire reason this is a notice and not a panel
+          replacing the form the way success does. */}
+      {status === 'error' && (
+        <p
+          ref={failureRef}
+          tabIndex={-1}
+          role="alert"
+          className="mt-6 border-l-2 border-warn bg-warn/10 px-4 py-3 text-body-s text-ink"
+        >
+          <span className="font-semibold">{t(leadForm.failure.title, locale)}</span>{' '}
+          {t(leadForm.failure.body, locale)}
         </p>
       )}
 
@@ -233,6 +241,21 @@ export function LeadForm({ locale, segmentKey }: { locale: Locale; segmentKey: s
       )}
 
       <div className="mt-8 grid gap-6">
+        {/* THE HONEYPOT. Moved off screen rather than `display: none`, because
+            the cruder bots skip what is display-none and this is meant to be
+            filled. It is out of the tab order and hidden from assistive
+            technology, so nobody using the form ever meets it. `autoComplete`
+            is off so a browser does not fill it and get a real person
+            silently discarded. */}
+        <input
+          type="text"
+          name="website"
+          tabIndex={-1}
+          aria-hidden="true"
+          autoComplete="off"
+          defaultValue=""
+          className="absolute left-[-9999px] size-px opacity-0"
+        />
         <Field
           id={fieldId('name')}
           errorId={errorId('name')}
@@ -350,7 +373,11 @@ export function LeadForm({ locale, segmentKey }: { locale: Locale; segmentKey: s
           loading={isSubmitting}
           className="w-full sm:w-auto"
         >
-          {isSubmitting ? t(leadForm.submitting, locale) : t(leadForm.submit, locale)}
+          {isSubmitting
+            ? t(leadForm.submitting, locale)
+            : status === 'error'
+              ? t(leadForm.failure.retry, locale)
+              : t(leadForm.submit, locale)}
         </Button>
       </div>
     </form>

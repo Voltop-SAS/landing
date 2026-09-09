@@ -79,18 +79,65 @@ jobs:
           gcloud auth configure-docker ${{ env.GAR_LOCATION }}-docker.pkg.dev --quiet
 
       # ---- Build & Push ----
-      # La landing no lee ninguna variable de entorno en tiempo de ejecucion (no
-      # hay un solo `process.env` en `src/`), asi que aqui no se hornea ningun
-      # secreto. `ENV` se pasa porque el Dockerfile lo declara como ARG; el
-      # `--build-arg POSTGRES_DB_URL` anterior no correspondia a ningun ARG del
-      # Dockerfile y Docker lo descartaba con un warning.
+      # `ENV` is passed because the Dockerfile declares it as an ARG. The former
+      # `--build-arg POSTGRES_DB_URL` matched no ARG at all and Docker dropped it
+      # with a warning.
+      #
+      # THIS STEP BAKES SECRETS INTO THE IMAGE. Until the lead form was wired to
+      # Amazon SES the landing read no environment variable at runtime, and the
+      # comment here said exactly that. It no longer holds: the credentials are
+      # passed as build args and the runner stage turns them into ENV, so whoever
+      # can pull the image can read them back. Keeping them out of the image
+      # would mean a Kubernetes Secret in the manifests repo; this route was
+      # chosen deliberately. It is also why the SES pair being scoped to SES
+      # alone matters: what leaks with the image can send mail and nothing else.
+      #
+      # THE SECRETS COME FROM TWO PLACES, and it is worth knowing which is which.
+      #
+      # · The SES KEYS come from GITHUB secrets, where the environment lives in
+      #   the NAME because GitHub keeps one flat namespace with no config per
+      #   environment. `secrets` does not admit dynamic indexing, so they cannot
+      #   depend on the output of `meta` and are picked with an expression on the
+      #   ref — the same reason the Doppler token above is chosen that way.
+      #
+      #   ONLY THE `_PRD` PAIR EXISTS. There is no `..._SES_STG`, and this is
+      #   written as an explicit empty string rather than a reference to a secret
+      #   that is not there, so that the gap reads as a decision instead of an
+      #   oversight. The consequence, and it is intended: STAGING CANNOT SEND.
+      #   Its lead form reports the failure honestly instead of pretending, which
+      #   is the right trade — the alternative, reusing the production pair, mails
+      #   the three commercial addresses every time somebody tests the form.
+      #
+      # · THE REGION comes from `AWS_REGION_PRD`, and note it carries no `_SES`
+      #   in its name — it is the region of the account, not of the credential
+      #   pair. Like them it exists only for production, and like them staging
+      #   gets an explicit empty string. That is safe here: the code falls back
+      #   to the region recorded in `leadDelivery.ts`, so an unset variable
+      #   degrades to the right region rather than to a blank one.
+      #
+      # · GOOGLE_SERVICE_ACCOUNT_KEY still comes from DOPPLER, where the token
+      #   picks the config and the name is therefore identical in `stg` and
+      #   `prd`. So does `GCP_SA_KEY_LANDING` in the auth step above.
+      #
+      # They all travel through `env:` rather than being interpolated into the
+      # script, so that a secret containing shell metacharacters cannot alter the
+      # command.
       - name: Build & Push to Artifact Registry
+        env:
+          AWS_ACCESS_KEY_ID_SES: ${{ github.ref == 'refs/heads/production' && secrets.AWS_ACCESS_KEY_ID_SES_PRD || '' }}
+          AWS_SECRET_ACCESS_KEY_SES: ${{ github.ref == 'refs/heads/production' && secrets.AWS_SECRET_ACCESS_KEY_SES_PRD || '' }}
+          AWS_REGION: ${{ github.ref == 'refs/heads/production' && secrets.AWS_REGION_PRD || '' }}
+          GOOGLE_SERVICE_ACCOUNT_KEY: ${{ steps.doppler.outputs.GOOGLE_SERVICE_ACCOUNT_KEY }}
         run: |
           IMAGE="${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{ steps.meta.outputs.repository_name }}/${{ env.PROJECT_NAME }}"
           TAG="${{ steps.meta.outputs.tag }}"
           docker build \
             --target runner \
             --build-arg ENV="${{ steps.meta.outputs.environment }}" \
+            --build-arg AWS_ACCESS_KEY_ID_SES="$AWS_ACCESS_KEY_ID_SES" \
+            --build-arg AWS_SECRET_ACCESS_KEY_SES="$AWS_SECRET_ACCESS_KEY_SES" \
+            --build-arg AWS_REGION="$AWS_REGION" \
+            --build-arg GOOGLE_SERVICE_ACCOUNT_KEY="$GOOGLE_SERVICE_ACCOUNT_KEY" \
             -t "$IMAGE:$TAG" .
           docker push "$IMAGE:$TAG"
 
