@@ -94,26 +94,17 @@ jobs:
       #
       # THE SECRETS COME FROM TWO PLACES, and it is worth knowing which is which.
       #
-      # · The SES KEYS come from GITHUB secrets, where the environment lives in
-      #   the NAME because GitHub keeps one flat namespace with no config per
-      #   environment. `secrets` does not admit dynamic indexing, so they cannot
-      #   depend on the output of `meta` and are picked with an expression on the
-      #   ref — the same reason the Doppler token above is chosen that way.
+      # · The SES KEYS and the region come from GITHUB secrets. Their names end
+      #   in `_PRD` because GitHub keeps one flat namespace with no config per
+      #   environment, but BOTH ENVIRONMENTS USE THEM: there is one SES account
+      #   and one verified domain, and no `_STG` pair exists.
       #
-      #   ONLY THE `_PRD` PAIR EXISTS. There is no `..._SES_STG`, and this is
-      #   written as an explicit empty string rather than a reference to a secret
-      #   that is not there, so that the gap reads as a decision instead of an
-      #   oversight. The consequence, and it is intended: STAGING CANNOT SEND.
-      #   Its lead form reports the failure honestly instead of pretending, which
-      #   is the right trade — the alternative, reusing the production pair, mails
-      #   the three commercial addresses every time somebody tests the form.
-      #
-      # · THE REGION comes from `AWS_REGION_PRD`, and note it carries no `_SES`
-      #   in its name — it is the region of the account, not of the credential
-      #   pair. Like them it exists only for production, and like them staging
-      #   gets an explicit empty string. That is safe here: the code falls back
-      #   to the region recorded in `leadDelivery.ts`, so an unset variable
-      #   degrades to the right region rather than to a blank one.
+      #   So there is no expression on the ref here, and the consequence is worth
+      #   stating plainly because it is not obvious from the diff: STAGING SENDS
+      #   REAL MAIL, to the same three commercial addresses as production, every
+      #   time somebody tests the form. Making staging quiet would mean either a
+      #   second key pair or picking the recipients by environment, and neither
+      #   exists today.
       #
       # · GOOGLE_SERVICE_ACCOUNT_KEY still comes from DOPPLER, where the token
       #   picks the config and the name is therefore identical in `stg` and
@@ -124,9 +115,9 @@ jobs:
       # command.
       - name: Build & Push to Artifact Registry
         env:
-          AWS_ACCESS_KEY_ID_SES: ${{ github.ref == 'refs/heads/production' && secrets.AWS_ACCESS_KEY_ID_SES_PRD || '' }}
-          AWS_SECRET_ACCESS_KEY_SES: ${{ github.ref == 'refs/heads/production' && secrets.AWS_SECRET_ACCESS_KEY_SES_PRD || '' }}
-          AWS_REGION: ${{ github.ref == 'refs/heads/production' && secrets.AWS_REGION_PRD || '' }}
+          AWS_ACCESS_KEY_ID_SES: ${{ secrets.AWS_ACCESS_KEY_ID_SES_PRD }}
+          AWS_SECRET_ACCESS_KEY_SES: ${{ secrets.AWS_SECRET_ACCESS_KEY_SES_PRD }}
+          AWS_REGION: ${{ secrets.AWS_REGION_PRD }}
           GOOGLE_SERVICE_ACCOUNT_KEY: ${{ steps.doppler.outputs.GOOGLE_SERVICE_ACCOUNT_KEY }}
         run: |
           IMAGE="${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{ steps.meta.outputs.repository_name }}/${{ env.PROJECT_NAME }}"
