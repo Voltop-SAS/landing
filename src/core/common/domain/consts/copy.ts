@@ -363,9 +363,63 @@ export const leadForm = {
   } satisfies Localized,
 
   /**
-   * The REAL success state. Used only when a delivery destination exists.
-   * See `DESTINATION` in
-   * `~/core/business/infrastructure/ui/components/LeadForm`.
+   * Shared by every length cap in `createLeadSchema`.
+   *
+   * One message for all five fields, and deliberately so: hitting a 4.000
+   * character limit is not an ordinary mistake a person makes while filling in
+   * a form, it is a paste that went wrong. The caps exist so the endpoint
+   * cannot be fed a megabyte, and this sentence exists so that the rare human
+   * who trips one is not left with a field that silently refuses to submit.
+   */
+  tooLong: {
+    es: 'Ese texto es demasiado largo. Recórtalo un poco y lo intentamos de nuevo.',
+    en: "That text is too long. Trim it a little and we'll try again.",
+    pt: 'Esse texto é longo demais. Encurte um pouco e tentamos de novo.',
+  } satisfies Localized,
+
+  /**
+   * THE SEND FAILED.
+   *
+   * This state did not exist while the form opened a `mailto:`, because there
+   * was nothing that could report a failure — assigning `location.href` tells
+   * you neither that it worked nor that it did not, which is why the form
+   * declared success unconditionally. Now the request either reaches SES or it
+   * does not, and when it does not the person has to be told, at the exact
+   * moment they believe they are done.
+   *
+   * It offers the two channels that are verified and staffed, because a dead
+   * end here is a lost lead at the point of maximum intent. Their data is NOT
+   * lost from the form: the fields stay filled in behind this panel so that
+   * retrying costs one click and not the whole form again.
+   */
+  failure: {
+    title: {
+      es: 'No pudimos enviar tu solicitud',
+      en: "We couldn't send your request",
+      pt: 'Não conseguimos enviar sua solicitação',
+    } satisfies Localized,
+    body: {
+      es: 'Algo falló de nuestro lado y tu solicitud no llegó. Vuelve a intentarlo en un momento; si sigue sin funcionar, escríbenos por WhatsApp o a soporte@voltop.co.',
+      en: "Something failed on our side and your request didn't get through. Try again in a moment; if it keeps failing, message us on WhatsApp or write to soporte@voltop.co.",
+      pt: 'Algo falhou do nosso lado e sua solicitação não chegou. Tente de novo em um instante; se continuar falhando, fale com a gente no WhatsApp ou escreva para soporte@voltop.co.',
+    } satisfies Localized,
+    retry: {
+      es: 'Volver a intentar',
+      en: 'Try again',
+      pt: 'Tentar de novo',
+    } satisfies Localized,
+  },
+
+  /**
+   * The success state, and now the only one.
+   *
+   * It used to be reachable only in theory: the form drafted a `mailto:` and
+   * showed `successEmail` ("we opened your email"), or showed `successPending`
+   * ("this form isn't connected yet"). Both of those, and the `demoNotice` that
+   * warned before asking for the data, were removed on 2026-09-09 along with
+   * the states they described — the form posts to `/api/leads` and this panel
+   * appears only once Amazon SES has accepted the message. The promise of a
+   * reply in one or two business days is therefore a promise someone can keep.
    */
   success: {
     title: {
@@ -379,66 +433,6 @@ export const leadForm = {
       pt: 'Alguém do time vai ler o seu caso e escrever para o e-mail que você informou. Normalmente respondemos em um ou dois dias úteis.',
     } satisfies Localized,
   },
-
-  /**
-   * The success state WHILE THERE IS NO CRM (open decision O3).
-   *
-   * The `success` copy promised review and a reply within one or two business
-   * days for a submission that does not exist: `submitLead` discards the
-   * payload. A headline is a contract (§19), and this was the point where
-   * breaking it had a direct commercial consequence. While there is no
-   * destination, it says what actually happened. No alternative channel is
-   * offered because there is no confirmed email or phone in the dataset: we do
-   * not invent data (§33).
-   */
-  /**
-   * The confirmation shown when the form drafts an email.
-   *
-   * It says EXACTLY what happened. "Request sent" would be a lie: the message
-   * is drafted, not sent, and whoever does not send it never reaches us.
-   * Letting the person know they are one click short is the difference between
-   * a lead and a lost lead.
-   */
-  successEmail: {
-    tag: { es: 'Casi listo', en: 'Almost there', pt: 'Quase lá' } satisfies Localized,
-    title: {
-      es: 'Te abrimos el correo',
-      en: 'We opened your email',
-      pt: 'Abrimos o seu e-mail',
-    } satisfies Localized,
-    body: {
-      es: 'Tu mensaje ya está redactado con todo lo que nos contaste. Solo tienes que enviarlo y te respondemos en uno o dos días hábiles. Si no se abrió, escríbenos a soporte@voltop.co.',
-      en: "Your message is already written with everything you told us. Just send it and we'll reply within one or two business days. If it didn't open, write to soporte@voltop.co.",
-      pt: 'Sua mensagem já está escrita com tudo o que você nos contou. Basta enviá-la e respondemos em um ou dois dias úteis. Se não abriu, escreva para soporte@voltop.co.',
-    } satisfies Localized,
-  },
-
-  successPending: {
-    tag: { es: 'Sin enviar', en: 'Not sent', pt: 'Não enviado' } satisfies Localized,
-    title: {
-      es: 'Todavía no podemos recibirlo aquí',
-      en: "We can't receive it here yet",
-      pt: 'Ainda não conseguimos receber por aqui',
-    } satisfies Localized,
-    /* This used to be a dead end at the moment of MAXIMUM intent
-       B2B: te decía que no se había enviado y ahí terminaba. El comentario
-       original justificaba no ofrecer alternativa "porque no hay correo ni
-       teléfono confirmados" — eso dejó de ser cierto: `content/data/links.ts`
-       publica WhatsApp y soporte@voltop.co, ambos verificados. Y "CRM" sale de
-       la cara del cliente: es vocabulario nuestro. */
-    body: {
-      es: 'Este formulario aún no está conectado, así que tu solicitud no se envió ni se guardó. Escríbenos por WhatsApp o a soporte@voltop.co y seguimos por ahí.',
-      en: "This form isn't connected yet, so your request wasn't sent or stored. Message us on WhatsApp or write to soporte@voltop.co and we'll take it from there.",
-      pt: 'Este formulário ainda não está conectado, então sua solicitação não foi enviada nem armazenada. Fale com a gente no WhatsApp ou escreva para soporte@voltop.co que seguimos por lá.',
-    } satisfies Localized,
-  },
-
-  /** The notice BEFORE asking for the data, not in small print after the button. */
-  demoNotice: {
-    es: 'Formulario de demostración: todavía no envía solicitudes. La integración con el CRM está pendiente de definir.',
-    en: "Demo form: it doesn't send requests yet. The CRM integration is yet to be defined.",
-    pt: 'Formulário de demonstração: ainda não envia solicitações. A integração com o CRM está pendente de definição.',
-  } satisfies Localized,
 }
 
 /* ---------------------------------------------------------------- */

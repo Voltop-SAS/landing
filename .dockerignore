@@ -8,3 +8,8 @@ npm-debug.log*
 Dockerfile
 docker-compose.yml
 README.md
+
+# Never let a local .env reach the build context: the builder stage does a
+# bare `COPY . .`, so it would land in an intermediate layer.
+.env*
+!.env.example

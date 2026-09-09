@@ -61,6 +61,40 @@ WORKDIR /workspace
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 
+# ─── Credentials for the lead form, baked into the image ─────────────────────
+# Read at RUNTIME by the lead form's route handler, not at build time, which is
+# why they belong to this stage and not to `builder`. ARG scope is per-stage, so
+# they have to be declared here even though the build command passes them once.
+#
+# WHAT THIS COSTS, so nobody rediscovers it during an audit: an ARG turned into
+# ENV is stored in the image configuration. Anyone who can pull the image can
+# read the secret key back with `docker history` or `docker inspect`, and it
+# also lands in the registry's layer metadata. The alternative is a Kubernetes
+# Secret referenced from the overlay in the manifests repo, which keeps the
+# value out of the image entirely; that route was weighed and this one chosen
+# deliberately, so treat registry pull access as equivalent to holding the key.
+#
+# THE SENDER AND THE RECIPIENTS ARE NOT HERE, and should not become environment
+# variables: they change for
+# reasons that are not technical — a domain gets verified, someone joins the
+# commercial team — and each such change would otherwise mean editing a secret
+# store, rebuilding this image and redeploying to alter twelve characters. They
+# live in `core/business/infrastructure/email/leadDelivery.ts`, which is the file
+# `/admin` will later replace with an editable setting.
+#
+# THE `_SES` SUFFIX IS NOT DECORATION. The pair belongs to an IAM identity that
+# can send mail and nothing else, and the standard `AWS_ACCESS_KEY_ID` name would
+# put it in the SDK's ambient credential chain, where any other AWS client in the
+# process would pick it up. Named this way, only the mailer reads it.
+ARG AWS_ACCESS_KEY_ID_SES
+ARG AWS_SECRET_ACCESS_KEY_SES
+ARG AWS_REGION
+ARG GOOGLE_SERVICE_ACCOUNT_KEY
+ENV AWS_ACCESS_KEY_ID_SES=${AWS_ACCESS_KEY_ID_SES}
+ENV AWS_SECRET_ACCESS_KEY_SES=${AWS_SECRET_ACCESS_KEY_SES}
+ENV AWS_REGION=${AWS_REGION}
+ENV GOOGLE_SERVICE_ACCOUNT_KEY=${GOOGLE_SERVICE_ACCOUNT_KEY}
+
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
