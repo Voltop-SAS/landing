@@ -127,6 +127,51 @@ function buildHtml(lead: LeadSubmission): string {
 export async function sendLead(lead: LeadSubmission): Promise<void> {
   const { sender, recipients, configurationSet } = leadDelivery
 
+  try {
+    await send(lead, sender, recipients, configurationSet)
+  } catch (error) {
+    throw describeFailure(error)
+  }
+}
+
+/**
+ * Turns the SDK's account of a failure into one that names the knob.
+ *
+ * `CredentialsProviderError: Could not load credentials from any providers` is
+ * what the SDK says when it walked its whole chain — explicit keys, IAM role,
+ * shared profile — and found nothing. It is accurate and it is useless: the
+ * same sentence appears when a deployment is deliberately not meant to send and
+ * when a secret was configured wrong, and the reader cannot tell which.
+ *
+ * So the two are told apart here, by the one thing that distinguishes them: are
+ * the variables set at all. Both deployed environments are wired with the same
+ * `_PRD` GitHub secrets, so reaching this branch anywhere but a laptop is a
+ * misconfiguration, and the message says which names to go and look at.
+ */
+function describeFailure(error: unknown): Error {
+  const configured = Boolean(
+    process.env.AWS_ACCESS_KEY_ID_SES && process.env.AWS_SECRET_ACCESS_KEY_SES,
+  )
+
+  if (!configured && error instanceof Error && error.name === 'CredentialsProviderError') {
+    return new Error(
+      'No SES credentials in this deployment: AWS_ACCESS_KEY_ID_SES and ' +
+        'AWS_SECRET_ACCESS_KEY_SES are unset and the SDK found no IAM role either. ' +
+        'Both deployed environments read the same _PRD GitHub secrets, so this is ' +
+        'a misconfiguration anywhere other than a local machine.',
+      { cause: error },
+    )
+  }
+
+  return error instanceof Error ? error : new Error(String(error))
+}
+
+async function send(
+  lead: LeadSubmission,
+  sender: string,
+  recipients: readonly string[],
+  configurationSet: string | undefined,
+): Promise<void> {
   await getClient().send(
     new SendEmailCommand({
       FromEmailAddress: sender,
