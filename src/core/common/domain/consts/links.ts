@@ -54,16 +54,18 @@ export const externalLinks = {
 /** The address as text, to display alongside the link. */
 export const supportEmail = 'soporte@voltop.co'
 
-/**
- * Recipients for commercial leads (agreed 2026-09-02).
+/*
+ * THE COMMERCIAL LEAD RECIPIENTS USED TO LIVE HERE, and they are gone on
+ * purpose (2026-09-09).
  *
- * WARNING: publishing addresses in the HTML exposes them to spam harvesters.
- * That is the price of having no server. The real fix is a form service — or a
- * single alias such as `comercial@voltop.co` — and then this list disappears
- * from the client entirely.
+ * The form built a `mailto:` in the browser, so the three addresses had to be
+ * in the bundle, and being in the bundle meant being in the HTML of every page
+ * view for any harvester to collect. The comment that sat here called that
+ * "the price of having no server" and pointed at the fix. The fix arrived:
+ * `/api/leads` sends through Amazon SES, and the list now lives in
+ * `core/business/infrastructure/email/leadDelivery.ts`, which only the route
+ * handler imports. Same three addresses, off the client.
+ *
+ * Do not bring them back into `src/core/**` — anything imported by a client
+ * component ends up published.
  */
-export const leadRecipients = [
-  'bruno@voltop.co',
-  'juan.ocampo@voltop.co',
-  'camilo.guzman@voltop.co',
-] as const
