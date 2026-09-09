@@ -3132,3 +3132,57 @@ La variante barata —traducir solo el texto propio del 404 y dejar cabecera y p
 3. **Llevar `Footer` a cliente** y detectar el idioma en el navegador, con parpadeo. Tampoco lo recomiendo por la misma razón, a menor escala.
 
 Lo único que cambiaría la ecuación es que Next permitiese un límite `not-found` por segmento que sí renderice, o un `global-not-found` estable que no salte el layout. Hoy `global-not-found` es experimental y **se salta el layout a propósito**, así que perdería cabecera y pie.
+
+---
+
+## Bloque 72 · Metadata y tarjeta social de la Home — 2026-09-09
+
+Copy final entregado por Camilo. La tarjeta pasa de ser un rótulo tipográfico a una **adaptación del hero**.
+
+### Lo que había, y por qué la preview salía «vieja»
+
+Antes de tocar nada se pidió `voltop.co` **haciéndose pasar por el robot de WhatsApp**, y lo que devolvía ya era la versión correcta de entonces: título, descripción y una tarjeta de 1200×630 generada por `opengraph-image.tsx`, sin duplicados y en los tres idiomas.
+
+**La preview antigua que veía Camilo era la caché de WhatsApp**, no un fallo de configuración. Queda dicho porque es la explicación de por qué «no se veía el cambio» y volverá a pasar con este.
+
+### Lo que cambia
+
+**Textos.** Título y descripción nuevos, entregados finales. El español es literal; inglés y portugués llevan la misma promesa escrita en cada idioma, no traducida palabra por palabra.
+
+**`og:locale` estaba mal.** Salía `es-CO`, con guion, porque reutilizaba `htmlLang`. Open Graph especifica `language_TERRITORY` con **guion bajo**. Se añade `ogLocale` al catálogo de idiomas —`es_CO`, `en_US`, `pt_BR`— en vez de seguir compartiendo un valor que sirve para dos cosas distintas.
+
+**La tarjeta.** Ahora es la fotografía del hero recortada a 1200×630 con **el mismo encuadre que usa la Home en escritorio** (foco 62%/50%), sus dos velos, el titular en Poppins de verdad, la primera frase del subtítulo y el logotipo. Sin barra de navegación, sin selector de idioma, sin QR, sin flotante, sin «Desplázate» ni cobertura por ciudad.
+
+No es una captura: se compone. Y el subtítulo **se deriva** del `hero.lead` real —su primera frase— para que no pueda desincronizarse del que se lee en la página.
+
+### Tres cosas que hubo que resolver por el camino
+
+**1 · Satori no lee `woff2`, que es lo que sirve `next/font`.** La tarjeta anterior caía a una `sans-serif` genérica: no era Poppins. Se incorporan Poppins SemiBold y Manrope 400 en **TTF, reducidas a los 52 glifos** que la tarjeta usa en los tres idiomas: **4,8 KB y 5,8 KB** en vez de 139 y 163. Manrope es variable y se instanció al peso 400 antes de reducirla, porque Satori no interpola ejes. Ambas son SIL Open Font License y su `OFL.txt` viaja al lado.
+
+**2 · `ImageResponse` solo emite PNG, y una FOTOGRAFÍA en PNG pesaba 1,62 MB.** WhatsApp descarta por encima de ~600 KB: la tarjeta sencillamente no habría aparecido. Se reencoda a JPEG con `sharp` —que el proyecto ya tiene— **en tiempo de build**, porque la ruta se prerenderiza por idioma. **1,62 MB → 91 KB.**
+
+**3 · `inset: 0` NO FUNCIONA EN SATORI, Y FALLA EN SILENCIO.** Los dos velos estaban escritos así, salían con tamaño cero y **nunca se pintaron**. No avisó nada: la fotografía es oscura abajo por sí sola, así que la tarjeta parecía correcta. Se cazó poniendo un rojo al 60% sobre la capa y viendo que **el fichero no cambiaba ni un byte**. Siempre `top`/`left`/`width`/`height`.
+
+⚠️ Y una trampa del propio flujo de trabajo, anotada porque costó tres iteraciones: **`pkill -f "next-server"` no mata el servidor de producción.** `npm start` arranca `node .next/standalone/server.js`. Hay que matar por puerto: `lsof -ti:3000 | xargs kill -9`. Se estuvo midiendo un servidor viejo.
+
+### Los velos, recalibrados para este marco
+
+Los valores del hero de escritorio no sirven tal cual a 1200×630: la tarjeta es baja, así que el degradado vertical la cubre entera y aplasta la fotografía. Medido: con los valores del hero el subtítulo daba 7,87:1 pero el brillo del cargador caía a **0,046** — desaparecía.
+
+Calibrado contra dos métricas a la vez, subtítulo y cargador:
+
+|                         | subtítulo  | brillo del cargador |
+| ----------------------- | ---------- | ------------------- |
+| Velos del hero tal cual | 7,87:1     | 0,046 ← se pierde   |
+| Intermedio              | 7,13:1     | 0,114               |
+| **Elegido**             | **6,57:1** | **0,176** ← se lee  |
+
+Muy por encima del 4,5:1 que pide AA, y con la fotografía y el equipo visibles, que es el 70% de la dirección de arte.
+
+### Validación
+
+Las tres páginas: título y descripción propios · `og:` completo con `og:locale` en formato correcto · `twitter:card` `summary_large_image` reflejando OG · canonical propio · cuatro `hreflang` con `x-default` · **cero duplicados** · imagen **1200×630 JPEG, 91–93 KB, 200 sin redirecciones**. Las entradas de novedades conservan su propia imagen. Tipos 0 · lint 0 · **92 tests** · build limpio · i18n 459/459.
+
+### Después del despliegue
+
+**La caché de WhatsApp no se limpia sola al desplegar.** El enlace ya compartido seguirá mostrando la tarjeta vieja unos días. Se fuerza desde el depurador de Meta (`developers.facebook.com/tools/debug`) con _Scrape Again_, y se comprueba al instante compartiendo `voltop.co/es`, que es otra clave de caché.

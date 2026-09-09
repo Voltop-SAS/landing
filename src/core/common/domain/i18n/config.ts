@@ -131,14 +131,20 @@ export function t<T>(value: Localized<T>, locale: Locale): T {
  */
 export const localeMeta: Record<
   Locale,
-  { label: string; name: string; htmlLang: string; hreflang: string }
+  { label: string; name: string; htmlLang: string; hreflang: string; ogLocale: string }
 > = {
-  es: { label: 'ES', name: 'Español', htmlLang: 'es-CO', hreflang: 'es' },
-  en: { label: 'EN', name: 'English', htmlLang: 'en', hreflang: 'en' },
+  /**
+   * `ogLocale` is NOT `htmlLang` with a different name. Open Graph specifies
+   * `language_TERRITORY` with an UNDERSCORE — `es_CO` — while HTML and
+   * `hreflang` use a hyphen. They were sharing one value and `og:locale` was
+   * going out as `es-CO`, which is not what the spec asks for.
+   */
+  es: { label: 'ES', name: 'Español', htmlLang: 'es-CO', hreflang: 'es', ogLocale: 'es_CO' },
+  en: { label: 'EN', name: 'English', htmlLang: 'en', hreflang: 'en', ogLocale: 'en_US' },
   /* A short `/pt` URL, but `pt-BR` for search engines: there is no European
      version to compete with, and declaring the generic `pt` for text written
      in Brazilian Portuguese describes it poorly. */
-  pt: { label: 'PT', name: 'Português', htmlLang: 'pt-BR', hreflang: 'pt-BR' },
+  pt: { label: 'PT', name: 'Português', htmlLang: 'pt-BR', hreflang: 'pt-BR', ogLocale: 'pt_BR' },
 }
 
 /* ---------------------------------------------------------------- */
