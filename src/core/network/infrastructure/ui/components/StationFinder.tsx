@@ -86,6 +86,15 @@ function computeSteps(stations: Station[]): number[] {
   return maxPowers.length > 1 ? [0, ...maxPowers] : [0]
 }
 
+/**
+ * How long the address bar waits after the last change.
+ *
+ * 700 ms is long enough to swallow a burst of clicks and short enough that
+ * nobody manages to select and copy the URL before it settles — which is the
+ * one thing that would make a stale link travel.
+ */
+const URL_SETTLE_MS = 700
+
 type Coords = { lat: number; lng: number }
 type GeoState = 'idle' | 'locating' | 'granted' | 'denied'
 
@@ -98,13 +107,56 @@ export function StationFinder({ locale, stations, cities }: Props) {
    * With a reactive effect, the one syncing from the URL and the one writing
    * to it ran in the same commit and the second wiped the query string —with
    * the criteria still empty— before the first had settled.
+   *
+   * ── AND IT IS WRITTEN WHEN THE PERSON STOPS, NOT ON EVERY CLICK ──────────
+   * `replaceState` is what GA4's enhanced measurement watches to count a
+   * `page_view` on a single-page navigation. Measured in production on
+   * 2026-09-09, reading the POST bodies and not just the URL: **three filter
+   * clicks produced four extra `page_view` hits**, all of them on /red, which
+   * is the page whose traffic matters most.
+   *
+   * The setting that produces them is the same one that produces the CORRECT
+   * page_view when someone moves between pages, so it cannot be turned off in
+   * GA4 without losing both. It has to be handled here.
+   *
+   * The URL exists so a filtered result can be SHARED — and nobody shares
+   * halfway through filtering. Writing it once the criteria settle is what the
+   * feature actually needs, not a workaround: a burst of clicks collapses into
+   * one entry instead of one per click.
+   *
+   * ⚠️ It does NOT eliminate them. Someone who filters slowly, pausing between
+   * clicks, still generates one each time. Removing them entirely would mean
+   * giving up shareable URLs or handing `page_view` over to GTM, and both cost
+   * more than they fix.
+   *
+   * The state is set IMMEDIATELY: only the address bar waits. The list, the
+   * chips and the result count react on the same frame as always.
    */
+  const urlTimer = useRef<number | null>(null)
+
+  const writeUrl = (next: Criteria) => {
+    if (urlTimer.current !== null) window.clearTimeout(urlTimer.current)
+    urlTimer.current = window.setTimeout(() => {
+      urlTimer.current = null
+      /* `criteriaToQuery` is pure so the contract can be tested without a
+         browser. */
+      const qs = criteriaToQuery(next)
+      window.history.replaceState(null, '', qs || window.location.pathname)
+    }, URL_SETTLE_MS)
+  }
+
+  /* Cleared on unmount so a pending write cannot land on another page after
+     the visitor has navigated away. */
+  useEffect(
+    () => () => {
+      if (urlTimer.current !== null) window.clearTimeout(urlTimer.current)
+    },
+    [],
+  )
+
   const apply = (next: Criteria) => {
     setCriteria(next)
-    /* The address bar is written here and nowhere else: `criteriaToQuery` is
-       pure so the contract can be tested without a browser. */
-    const qs = criteriaToQuery(next)
-    window.history.replaceState(null, '', qs || window.location.pathname)
+    writeUrl(next)
   }
   const set = <K extends keyof Criteria>(key: K, value: Criteria[K]) =>
     apply({ ...criteria, [key]: value })

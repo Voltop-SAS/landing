@@ -3294,3 +3294,69 @@ Cero nombres en español sobreviviendo. Tipos 0 · lint 0 · **112 tests** · bu
 Los eventos que GTM debe leer del clic —`contact_click`, `get_directions_click`, `faq_open`—, el retardo de la URL en los filtros, y la redirección `www` en infraestructura.
 
 ⚠️ **Un riesgo que conviene tener presente:** `get_directions_click` sale de un enlace con `target="_blank"`. Los disparadores de clic de GTM pueden perderse cuando la página navega; emitirlo desde el código era más fiable. Se sigue el plan, pero conviene comprobarlo en el modo Vista previa antes de darlo por bueno.
+
+---
+
+## Bloque 75 · Tagging Plan v1.1: los page_view fantasma y el enganche que faltaba — 2026-09-09
+
+Cierra el plan. Quedaban dos cosas del bloque 73: los `page_view` que se
+inventaba el filtro de la red, y el hecho de que uno de los tres eventos que
+GTM lee del clic no tenía de dónde agarrarse.
+
+### 1 · La URL se escribe cuando la persona para, no en cada clic
+
+**El problema, medido y no supuesto.** La medición automática de GA4 cuenta un
+`page_view` cada vez que cambia el historial. `StationFinder` escribía la barra
+de direcciones en cada clic de filtro, así que **tres clics producían cuatro
+`page_view`** —todos en `/red`, que es justo la página cuyo tráfico importa—.
+Se comprobó leyendo el cuerpo de los POST a GA4, no solo la cadena de consulta:
+mirar únicamente la URL fue lo que hizo decir «cero» la primera vez.
+
+No se puede apagar desde GA4. El mismo ajuste que produce estos produce el
+`page_view` correcto al moverse entre páginas; hay que resolverlo aquí.
+
+**La solución no es un truco.** La URL existe para que un resultado filtrado se
+pueda **compartir**, y nadie comparte a mitad de filtrar. Escribirla cuando los
+criterios se asientan es lo que la función necesita. `URL_SETTLE_MS = 700`:
+suficiente para tragarse una ráfaga, corto para que nadie alcance a copiar la
+dirección antes de que cuaje. El estado se sigue fijando al instante —la lista,
+las fichas y el contador reaccionan en el mismo fotograma de siempre—; lo único
+que espera es la barra de direcciones. El temporizador se limpia al desmontar,
+para que una escritura pendiente no aterrice en otra página.
+
+**Medido después: 4 clics → 1 `page_view` extra** (antes 3 → 4), con un solo
+`gtm.historyChange-v2` en lugar de cuatro.
+
+⚠️ **No los elimina.** Quien filtre despacio, con pausas, sigue generando uno
+por clic. Quitarlos del todo exigiría renunciar a las URL compartibles o
+entregarle el `page_view` a GTM, y las dos cosas cuestan más de lo que arreglan.
+
+⚠️ **Trampa al medir esto:** con una ventana de 4 s el resultado salía `0`. GA4
+envía en lote y el hit llegaba después. Con 12 s aparece el 1 real. Un cero en
+analítica se confirma siempre con un control —aquí, el `page_view` legítimo de
+la carga— antes de creérselo.
+
+### 2 · `data-faq`: un enganche estable para el acordeón
+
+De los tres eventos que GTM lee del clic, dos ya tenían dónde agarrarse:
+`contact_click` por la URL `mailto:` y `get_directions_click` por la de Google
+Maps. **`faq_open` no tenía ninguno.** Sus únicos identificadores eran el `id`,
+que sale de `useId()` de React y cambia entre builds, y `aria-expanded`, que
+dice el estado pero no **qué** pregunta.
+
+El plan prohíbe disparadores basados en el texto visible o en clases CSS —los
+dos se rompen el día que alguien reescribe una pregunta o renombra una
+utilidad—. Así que el acordeón expone `data-faq` con el id de la propia
+pregunta: el mismo atributo es el disparador y la dimensión. Verificado en el
+DOM servido: `como-cargar · donde · precio · pago · ayuda`.
+
+`aria-expanded` sigue respondiendo si abre o cierra: GTM lee el DOM en el
+momento del clic, cuando todavía tiene el valor anterior.
+
+### Lo que queda fuera del código
+
+- **`www` → dominio raíz** es redirección de infraestructura (ingress), no de
+  la aplicación.
+- Los cuatro `filter_stations` llegan bien al `dataLayer`; que todavía no
+  produzcan un hit en GA4 es configuración pendiente **dentro de GTM**, no del
+  sitio.
