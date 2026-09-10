@@ -172,6 +172,7 @@ export function AppDownload({ locale }: { locale: Locale }) {
             </div>
 
             <StoreBadges
+              placement="home_download"
               locale={locale}
               className="mt-9"
             />

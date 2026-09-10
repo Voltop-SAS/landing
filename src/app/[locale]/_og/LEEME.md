@@ -4,11 +4,11 @@ Estos ficheros existen **solo para construir `opengraph-image.tsx`**. No se
 sirven al navegador: se leen del disco en tiempo de build y se incrustan en el
 PNG que se genera.
 
-| Fichero | Qué es |
-|---|---|
-| `hero-og.jpg` | La fotografía del hero recortada a 1200×630 con el MISMO encuadre que usa la Home en escritorio: `object-cover` con foco al 62% horizontal y 50% vertical. Derivada de `public/hero-vehiculo-cargando.jpg`; si esa cambia, hay que regenerar esta |
-| `poppins-semibold.ttf` | Poppins SemiBold, la tipografía de titular del sistema |
-| `manrope.ttf` | Manrope en peso 400, la de cuerpo |
+| Fichero                | Qué es                                                                                                                                                                                                                                            |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `hero-og.jpg`          | La fotografía del hero recortada a 1200×630 con el MISMO encuadre que usa la Home en escritorio: `object-cover` con foco al 62% horizontal y 50% vertical. Derivada de `public/hero-vehiculo-cargando.jpg`; si esa cambia, hay que regenerar esta |
+| `poppins-semibold.ttf` | Poppins SemiBold, la tipografía de titular del sistema                                                                                                                                                                                            |
+| `manrope.ttf`          | Manrope en peso 400, la de cuerpo                                                                                                                                                                                                                 |
 
 ## Por qué las tipografías viven aquí y no se cargan como en el resto del sitio
 

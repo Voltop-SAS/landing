@@ -114,7 +114,7 @@ export function LeadForm({ locale, segmentKey }: { locale: Locale; segmentKey: s
   const onFirstInteraction = () => {
     if (started) return
     setStarted(true)
-    track('lead_form_inicio', { segmento: segmentKey })
+    track('form_start', { form_id: 'lead_empresas', segment: segmentKey })
   }
 
   /* The honeypot is read off the submitted form rather than held in a ref: a
@@ -126,11 +126,11 @@ export function LeadForm({ locale, segmentKey }: { locale: Locale; segmentKey: s
     const honeypot = form?.elements.namedItem('website')
     const website = honeypot instanceof HTMLInputElement ? honeypot.value : ''
 
-    track('lead_form_envio', { segmento: segmentKey })
-
-    /* `lead_form_exito` now fires only when the server confirms. It used to
-       fire unconditionally, which made the conversion metric report every
-       attempt as a win. */
+    /* THERE IS NO «submit attempted» EVENT ANY MORE. `lead_form_envio` fired
+       here, before the request, and it counted attempts — including the ones
+       that failed. Everything a decision needs is already covered: `form_start`
+       says somebody began, `generate_lead` says one arrived, and `form_error`
+       with `reason: 'send'` says one was lost on the way. */
     try {
       await submitLead({
         ...values,
@@ -141,22 +141,29 @@ export function LeadForm({ locale, segmentKey }: { locale: Locale; segmentKey: s
     } catch (error) {
       console.error('[lead-form] submission failed', error)
       setStatus('error')
-      track('lead_form_error', { segmento: segmentKey, motivo: 'envio' })
+      track('form_error', { form_id: 'lead_empresas', segment: segmentKey, reason: 'send' })
       return
     }
 
     setStatus('success')
-    track('lead_form_exito', { segmento: segmentKey })
+    /* THE conversion, and it only exists here: after `POST /api/leads` has
+       answered ok. Until 2026-09-09 the form opened a `mailto:` and this was
+       impossible to know — a mail client opening says nothing about a message
+       being sent. */
+    track('generate_lead', { form_id: 'lead_empresas', segment: segmentKey })
   }
 
   /* React Hook Form moves focus to the first invalid field on its own
      (`shouldFocusError`), so this only has to report. The event keeps the
      property names of the measurement plan. */
   const onInvalid = (found: typeof errors) => {
-    track('lead_form_error', {
-      segmento: segmentKey,
-      motivo: 'validacion',
-      campos: Object.keys(found).join(','),
+    track('form_error', {
+      form_id: 'lead_empresas',
+      segment: segmentKey,
+      reason: 'validation',
+      /* FIELD NAMES, never their values: `name,email` and never what was typed
+         into them. */
+      fields: Object.keys(found).join(','),
     })
   }
 

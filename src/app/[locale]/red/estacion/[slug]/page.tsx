@@ -30,7 +30,6 @@ import {
 import { StatusBadge, SpecList } from '@ui/common/components/ui/DataPrimitives'
 import { Media } from '@ui/common/components/ui/Media'
 import { Button } from '@ui/common/components/ui/Button'
-import { DirectionsButton } from '~/core/network/infrastructure/ui/components/DirectionsButton'
 import { media } from '~/core/common/infrastructure/content/media'
 import { formatPowerKw } from '~/core/network/domain/entities/Station'
 
@@ -195,19 +194,21 @@ export default async function StationPage({ params }: Props) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
 
-      {/* `estacion_vista` was the ONLY view in the measurement plan (§31) with
-          nothing emitting it, and it is the end of the B2C funnel: without it
-          the most important step was blind. `threshold={0}` because what is
-          measured here is the PAGE, not a block crossing the viewport. */}
+      {/* The end of the B2C funnel. `threshold={0}` because what is measured
+          here is the PAGE, not a block crossing the viewport.
+
+          `status` carries a STORED value — `operativa`, `proxima`,
+          `mantenimiento` — and those stay in Spanish: they are data, and
+          renaming them is a migration (see AGENTS.md). */}
       <TrackView
-        event="estacion_vista"
+        event="view_station"
         threshold={0}
         props={{
-          estacion: s.slug,
-          ciudad: s.citySlug,
-          potencia_kw: s.powerKw.max,
-          conectores: s.connectors.join(','),
-          estado: s.status,
+          slug: s.slug,
+          city: s.citySlug,
+          power_kw: s.powerKw.max,
+          connectors: s.connectors.join(','),
+          status: s.status,
         }}
       />
 
@@ -375,14 +376,24 @@ export default async function StationPage({ params }: Props) {
               <SectionHeading size="s">{t(stationCopy.location, locale)}</SectionHeading>
               <p className="mt-5 text-body-s text-ink-2">{t(s.address, locale)}</p>
               <div className="mt-6 flex flex-col gap-3">
-                {/* `lang` is not decorative: it enables the "opens in a new tab"
-                    notice. And `estacion_como_llegar` is the final conversion of
-                    the B2C journey and was not being measured (§31). */}
-                <DirectionsButton
+                {/* `locale` + `external` are not decorative: together they add
+                    the "opens in a new tab" notice and the exit icon, so every
+                    link leaving the site behaves the same way (WCAG 3.2.5).
+
+                    This was a `DirectionsButton` client island whose ONLY job was
+                    emitting `estacion_como_llegar`. Tagging Plan v1.1 moved that
+                    to `get_directions_click`, read by GTM from the outbound URL,
+                    so the island shipped JavaScript for nothing and was deleted. */}
+                <Button
+                  variant="primary"
+                  arrow
+                  external
                   locale={locale}
                   href={directions}
-                  slug={s.slug}
-                />
+                  className="w-full"
+                >
+                  {t(actions.getDirections, locale)}
+                </Button>
               </div>
               {!s.geo && (
                 <p className="mt-4 text-caption text-ink-3">{t(stationCopy.pendingGeo, locale)}</p>

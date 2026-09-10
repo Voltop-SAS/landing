@@ -170,15 +170,13 @@ export function StationFinder({ locale, stations, cities }: Props) {
   const clearAll = () => {
     /* Keep the sort order: clearing filters is not re-sorting. */
     apply({ ...EMPTY_CRITERIA, sort: criteria.sort })
-    track('red_filtros_limpiados')
+    /* Clearing IS filtering. It used to be its own event, which meant two
+       metrics to add up to answer one question — how much people filter. */
+    track('filter_stations', { filter_type: 'all', filter_value: 'cleared' })
   }
 
-  /* `tipo` and `valor` keep their Spanish names because shorthand makes the
-     parameter name the analytics PROPERTY name, and those land in the
-     dashboard as a dimension someone reads. Renaming them here would silently
-     split that dimension in two (see AGENTS.md). */
-  const onFilter = (tipo: string, valor: string | number | boolean) =>
-    track('red_filtro_aplicado', { tipo, valor: String(valor) })
+  const onFilter = (filterType: string, value: string | number | boolean) =>
+    track('filter_stations', { filter_type: filterType, filter_value: String(value) })
 
   const locate = () => {
     if (!navigator.geolocation) return setGeoState('denied')
@@ -188,9 +186,16 @@ export function StationFinder({ locale, stations, cities }: Props) {
         setOrigin({ lat: pos.coords.latitude, lng: pos.coords.longitude })
         setGeoState('granted')
         set('sort', 'distance')
-        onFilter('cercania', true)
+        /* Its own event, not a filter: granting location is a decision of a
+           different kind from picking a city, and the plan asks to be able to
+           tell how many people take it. The COORDINATES ARE NOT SENT — only
+           that permission was given or refused. */
+        track('use_my_location', { outcome: 'granted' })
       },
-      () => setGeoState('denied'),
+      () => {
+        setGeoState('denied')
+        track('use_my_location', { outcome: 'denied' })
+      },
       { timeout: 8000 },
     )
   }
@@ -269,7 +274,7 @@ export function StationFinder({ locale, stations, cities }: Props) {
                 const term = e.target.value.trim()
                 if (term && term !== lastTracked.current) {
                   lastTracked.current = term
-                  track('red_buscar', { resultados: results.length })
+                  track('station_search', { results_count: results.length })
                 }
               }}
               placeholder={t(red.search.placeholder, locale)}
@@ -531,7 +536,7 @@ export function StationFinder({ locale, stations, cities }: Props) {
               <li key={s.slug}>
                 <Link
                   href={href(locale, routes.station(s.slug))}
-                  onClick={() => track('estacion_vista', { slug: s.slug, origen: 'buscador' })}
+                  onClick={() => track('select_station', { slug: s.slug, list_id: 'red_finder' })}
                   /* Four columns from `lg` up, not from `md`: at 768px it
                      crammed four cells into the tablet width and "En
                      operación" ended up touching the container edge (§22). */

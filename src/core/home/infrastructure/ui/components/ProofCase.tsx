@@ -8,7 +8,6 @@ import { Section, Container, Eyebrow } from '@ui/common/components/ui/LayoutPrim
 import { Media } from '@ui/common/components/ui/Media'
 import { QuoteAttribution } from '@ui/common/components/ui/QuoteAttribution'
 import { Button } from '@ui/common/components/ui/Button'
-import { TrackView } from '@ui/common/components/analytics/TrackView'
 
 /**
  * BEAT 5 · REAL CASE — Intensity: High · Register: Impact
@@ -71,14 +70,9 @@ export function ProofCase({ locale }: { locale: Locale }) {
             without competing with the Hero, which is the site's only
             `display-2xl`. And the measure widens from 20ch to 28ch: at a
             smaller size, forcing short lines only multiplies the breaks. */}
-        <TrackView
-          event="caso_visto"
-          props={{ caso: featured.slug }}
-        >
-          <blockquote className="mt-12 max-w-[28ch] font-display text-display-l font-medium text-balance text-ink">
-            {t(featured.quote, locale)}
-          </blockquote>
-        </TrackView>
+        <blockquote className="mt-12 max-w-[28ch] font-display text-display-l font-medium text-balance text-ink">
+          {t(featured.quote, locale)}
+        </blockquote>
 
         {/* The attribution goes AFTER the quote: this is proof, so the client
             speaks first and only then do we credit who said it. In beat 7 the

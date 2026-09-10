@@ -321,8 +321,12 @@ export function Header({ locale }: { locale: Locale }) {
 
 /** Measurement plan event for the global CTA (§31). */
 function trackCta(context: string) {
-  track(context === 'empresas' ? 'cta_b2b_click' : 'cta_descargar_app_click', {
-    ubicacion: 'header',
-    contexto: context,
+  /* One event for one button. It used to emit `cta_b2b_click` on /empresas and
+     `cta_descargar_app_click` everywhere else: two metrics to add up to answer
+     how much the header CTA is pressed. The page travels as a property. */
+  track('app_download_click', {
+    store: 'auto',
+    placement: 'header',
+    page_context: context,
   })
 }

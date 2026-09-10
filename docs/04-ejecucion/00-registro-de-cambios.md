@@ -3232,3 +3232,65 @@ Tipos 0 · lint 0 · 92 tests · build limpio · i18n 459/459.
 
 1. **`generate_lead`** no es implementable: el formulario abre un `mailto:` y **no existe ninguna Server Action en el proyecto**. Un `mailto:` no puede saber si el mensaje se envió.
 2. **El renombrado de los 14 eventos al inglés** choca con la regla de `AGENTS.md` que los declara contrato en español. Es aprobable, pero exige actualizar esa regla en el mismo commit.
+
+---
+
+## Bloque 74 · Tagging Plan v1.1: el catálogo pasa al inglés — 2026-09-09
+
+Punto 2 del plan, aprobado. Y una buena noticia que lo desbloqueó todo: **Jeison montó el envío real del formulario** —`POST /api/leads` con SES y hoja de cálculo— después de nuestro PR. La rama se puso al día antes de empezar.
+
+### `generate_lead` ya se puede medir
+
+Era la contradicción bloqueante: con un `mailto:` no hay forma de saber si el mensaje se envió. Ahora hay endpoint, y `lead_form_exito` ya se disparaba **después de que el servidor responde**. Solo hubo que renombrarlo.
+
+### El renombrado
+
+De 20 eventos declarados a **10 emitidos desde el código**, más 3 que GTM lee del clic.
+
+| Antes                                                           | Ahora                                                                         |
+| --------------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| `lead_form_exito`                                               | **`generate_lead`** · solo tras respuesta correcta                            |
+| `lead_form_inicio`                                              | `form_start`                                                                  |
+| `lead_form_error`                                               | `form_error` · `reason: validation \| send`                                   |
+| `estacion_vista` (página)                                       | `view_station`                                                                |
+| `estacion_vista` (clic en tarjeta)                              | **`select_station`** — eran el mismo nombre para dos cosas distintas          |
+| `red_buscar`                                                    | `station_search` · `results_count`                                            |
+| `red_filtro_aplicado` + `red_filtros_limpiados`                 | `filter_stations` — limpiar ES filtrar; eran dos métricas que había que sumar |
+| `app_store_click` + `cta_descargar_app_click` + `cta_b2b_click` | `app_download_click` · `placement`                                            |
+| `idioma_cambiado`                                               | `language_switch`                                                             |
+| —                                                               | **`use_my_location`** · `outcome: granted \| denied`, sin coordenadas         |
+
+**Retirados sin sustituto (10):** `lead_form_envio` —contaba intentos, incluidos los fallidos—, `ciudad_vista`, `novedades_vista`, `novedad_vista` —los tres duplicaban el `page_view` de su propia página—, `caso_visto`, `impacto_visto`, `cta_encontrar_cargador_click`, `empresas_selector_caso`, `media_reproducida` —declarado y nunca emitido— y `estacion_como_llegar`, que pasa a `get_directions_click` leído por GTM desde la URL saliente.
+
+### Efectos secundarios que valían la pena
+
+**`DirectionsButton` se elimina.** Existía solo como isla de cliente para emitir `estacion_como_llegar`. Sin ese evento quedaba enviando JavaScript para nada: `Button` funciona en servidor. La ficha de estación lo renderiza directo.
+
+**`StoreBadges` recibe `placement`.** El plan pide distinguir cada instancia, y un componente no puede adivinar en qué superficie está.
+
+### Lo que NO se tradujo, a propósito
+
+Los **valores** dentro de las props siguen en español cuando son datos: `status: 'operativa'`, `aceptado`/`rechazado`. Y `filter_type` toma `ciudad`, `conector`, `orden` — **los mismos nombres que los parámetros de URL**, que `AGENTS.md` declara contrato porque viajan en enlaces compartidos e indexados. Alinearlos es deliberado.
+
+### `AGENTS.md` reescrito en el mismo commit
+
+La regla decía que estos nombres eran contrato **en español**. Ahora dice que están en inglés desde hoy, por qué, dónde está el catálogo cerrado, y que **lo que no cambió es que sigan siendo contrato**: no se renombran por criterio de nadie, se cambian con fecha y de una vez. Sin esto, el siguiente que llegue seguiría la regla vieja.
+
+### Verificado en el navegador
+
+```
+station_search      { results_count: 1 }
+filter_stations     { filter_type: 'ciudad', filter_value: 'medellin' }
+select_station      { slug: 'wake', list_id: 'red_finder' }
+view_station        { slug, city, power_kw, connectors, status }
+app_download_click  { store: 'auto', placement: 'header', page_context: 'home' }
+language_switch     { from: 'es', to: 'en' }
+```
+
+Cero nombres en español sobreviviendo. Tipos 0 · lint 0 · **112 tests** · build limpio · i18n 456/456 en los tres idiomas.
+
+### Sigue pendiente del plan
+
+Los eventos que GTM debe leer del clic —`contact_click`, `get_directions_click`, `faq_open`—, el retardo de la URL en los filtros, y la redirección `www` en infraestructura.
+
+⚠️ **Un riesgo que conviene tener presente:** `get_directions_click` sale de un enlace con `target="_blank"`. Los disparadores de clic de GTM pueden perderse cuando la página navega; emitirlo desde el código era más fiable. Se sigue el plan, pero conviene comprobarlo en el modo Vista previa antes de darlo por bueno.

@@ -40,11 +40,27 @@ are not exceptions you may extend on your own judgement:
 - **Public URL segments** — `/red`, `/empresas`, `/nosotros`, `/novedades`,
   `/legal/privacidad`, `/legal/terminos`, `/red/estacion`. They stay in Spanish
   in every language. Changing one breaks indexed URLs.
-- **Analytics event names and their property names** — `ciudad_vista`,
-  `red_buscar`, `lead_form_envio`, and the props they carry (`termino`,
-  `origen`, `segmento`…). They are the measurement plan. Both the event and its
-  props land in the analytics dashboard as names someone reads, and renaming
-  one silently splits a metric or a dimension in two.
+- **Analytics event names and their property names** — `generate_lead`,
+  `view_station`, `station_search`, and the props they carry (`placement`,
+  `segment`, `results_count`…). They are the measurement plan. Both the event
+  and its props land in the analytics dashboard as names someone reads, and
+  renaming one silently splits a metric or a dimension in two.
+
+  **These are in ENGLISH since 2026-09-09** (Tagging Plan v1.1). They used to be
+  Spanish. The change was made in one commit, on a dated cut-over, and the
+  catalogue is closed in
+  `src/core/common/domain/entities/AnalyticsEvent.ts` — the compiler rejects
+  anything not on the list. The reason for English: `generate_lead`, `search`
+  and `select_item` are GA4's own recommended names, and GA4 turns on reports
+  for them that custom names never populate.
+
+  Being a contract is what did NOT change: a name here is not renamed on
+  somebody's judgement. Changing one is a decision with a date, all at once, and
+  this paragraph gets updated with it.
+
+  **The STORED values inside those props are a separate matter and stay in
+  Spanish**: `operativa`, `aceptado`, `rechazado`. Those are data, already
+  written in databases and in visitors' browsers. Renaming one is a migration.
 - **Query parameters of the station finder** — `ciudad`, `conector`, `orden`.
   They appear in shareable, indexable URLs.
 - **Domain status literals** — `operativa`, `proxima`, `mantenimiento`, and
