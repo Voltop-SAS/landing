@@ -1,7 +1,13 @@
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { track } from '~/core/common/infrastructure/analytics'
 import { LeadForm } from './LeadForm'
+
+/* The analytics layer is replaced whole: what is asserted below is WHICH event
+   the form emits and WHEN, not whether `dataLayer` receives it. */
+vi.mock('~/core/common/infrastructure/analytics', () => ({ track: vi.fn() }))
+const trackMock = vi.mocked(track)
 
 /**
  * These tests exist because the form was moved to React Hook Form + Zod, and
@@ -185,5 +191,108 @@ describe('LeadForm · delivery', () => {
     await user.click(screen.getByRole('button', { name: /enviar|solicitar|contact/i }))
 
     expect(fetchMock).not.toHaveBeenCalled()
+  })
+})
+
+/**
+ * MEASUREMENT. The events are the B2B funnel — began, failed, converted — and
+ * the one that matters most, `generate_lead`, must fire only when the server
+ * has confirmed. These tests pin the catalogue names (Tagging Plan v1.1) and
+ * the moment each one fires.
+ */
+describe('LeadForm · events', () => {
+  const fetchMock = vi.fn()
+
+  beforeEach(() => {
+    trackMock.mockReset()
+    fetchMock.mockReset()
+    vi.stubGlobal('fetch', fetchMock)
+    vi.spyOn(console, 'error').mockImplementation(() => {})
+  })
+
+  afterEach(() => {
+    vi.unstubAllGlobals()
+    vi.restoreAllMocks()
+  })
+
+  const eventsNamed = (name: string) => trackMock.mock.calls.filter(([event]) => event === name)
+
+  it('emits form_start once, on the first interaction', async () => {
+    const user = userEvent.setup()
+    render_()
+
+    const [name, email] = screen.getAllByRole('textbox')
+    await user.type(name, 'Ana')
+    await user.type(email, 'ana@empresa.co')
+
+    expect(eventsNamed('form_start')).toHaveLength(1)
+    expect(trackMock).toHaveBeenCalledWith('form_start', {
+      form_id: 'lead_empresas',
+      segment: 'flotas',
+    })
+  })
+
+  it('emits form_error with the invalid field NAMES on a blocked submit', async () => {
+    const user = userEvent.setup()
+    render_()
+
+    await user.click(screen.getByRole('button', { name: /enviar|solicitar|contact/i }))
+
+    const [call] = eventsNamed('form_error')
+    expect(call[1]).toMatchObject({
+      form_id: 'lead_empresas',
+      segment: 'flotas',
+      reason: 'validation',
+    })
+    /* Names, never values: nothing typed by a person may travel. */
+    expect(String(call[1]?.fields).split(',')).toEqual(
+      expect.arrayContaining(['name', 'email', 'company']),
+    )
+    expect(eventsNamed('generate_lead')).toHaveLength(0)
+  })
+
+  it('emits generate_lead only after the server confirms', async () => {
+    const user = userEvent.setup()
+    fetchMock.mockResolvedValue({ ok: true })
+    render_()
+
+    await fillAndSubmit(user)
+    await waitFor(() => expect(eventsNamed('generate_lead')).toHaveLength(1))
+
+    expect(trackMock).toHaveBeenCalledWith('generate_lead', {
+      form_id: 'lead_empresas',
+      segment: 'flotas',
+    })
+    expect(eventsNamed('form_error')).toHaveLength(0)
+  })
+
+  it('emits form_error with reason `send`, and no conversion, when the send fails', async () => {
+    const user = userEvent.setup()
+    fetchMock.mockResolvedValue({ ok: false, status: 502 })
+    render_()
+
+    await fillAndSubmit(user)
+    await waitFor(() => expect(eventsNamed('form_error')).toHaveLength(1))
+
+    expect(trackMock).toHaveBeenCalledWith('form_error', {
+      form_id: 'lead_empresas',
+      segment: 'flotas',
+      reason: 'send',
+    })
+    expect(eventsNamed('generate_lead')).toHaveLength(0)
+  })
+
+  it('never carries what the person typed', async () => {
+    const user = userEvent.setup()
+    fetchMock.mockResolvedValue({ ok: true })
+    render_()
+
+    await fillAndSubmit(user)
+    await waitFor(() => expect(eventsNamed('generate_lead')).toHaveLength(1))
+
+    const everything = JSON.stringify(trackMock.mock.calls)
+    expect(everything).not.toContain('Ana Torres')
+    expect(everything).not.toContain('ana@empresa.co')
+    expect(everything).not.toContain('Transportes del Norte')
   })
 })

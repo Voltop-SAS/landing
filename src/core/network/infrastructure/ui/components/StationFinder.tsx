@@ -22,6 +22,7 @@ import {
   EMPTY_CRITERIA,
   type Criteria,
 } from '~/core/network/infrastructure/helpers/criteria'
+import { useSettledUrl } from '~/core/network/infrastructure/ui/hooks/useSettledUrl'
 import { StatusBadge } from '@ui/common/components/ui/DataPrimitives'
 import { Button } from '@ui/common/components/ui/Button'
 import { track } from '~/core/common/infrastructure/analytics'
@@ -130,33 +131,16 @@ export function StationFinder({ locale, stations, cities }: Props) {
    * more than they fix.
    *
    * The state is set IMMEDIATELY: only the address bar waits. The list, the
-   * chips and the result count react on the same frame as always.
+   * chips and the result count react on the same frame as always. The waiting
+   * itself lives in `useSettledUrl`, where it is tested with fake timers.
    */
-  const urlTimer = useRef<number | null>(null)
-
-  const writeUrl = (next: Criteria) => {
-    if (urlTimer.current !== null) window.clearTimeout(urlTimer.current)
-    urlTimer.current = window.setTimeout(() => {
-      urlTimer.current = null
-      /* `criteriaToQuery` is pure so the contract can be tested without a
-         browser. */
-      const qs = criteriaToQuery(next)
-      window.history.replaceState(null, '', qs || window.location.pathname)
-    }, URL_SETTLE_MS)
-  }
-
-  /* Cleared on unmount so a pending write cannot land on another page after
-     the visitor has navigated away. */
-  useEffect(
-    () => () => {
-      if (urlTimer.current !== null) window.clearTimeout(urlTimer.current)
-    },
-    [],
-  )
+  const writeUrl = useSettledUrl(URL_SETTLE_MS)
 
   const apply = (next: Criteria) => {
     setCriteria(next)
-    writeUrl(next)
+    /* `criteriaToQuery` is pure so the contract can be tested without a
+       browser. */
+    writeUrl(criteriaToQuery(next) || window.location.pathname)
   }
   const set = <K extends keyof Criteria>(key: K, value: Criteria[K]) =>
     apply({ ...criteria, [key]: value })
@@ -315,7 +299,7 @@ export function StationFinder({ locale, stations, cities }: Props) {
                  once sent it cannot be taken back.
 
                  What survives is what a decision can be made from: that a
-                 search happened and whether it found anything. `resultados: 0`
+                 search happened and whether it found anything. `results_count: 0`
                  is the useful signal — it says the network is missing
                  something — without carrying what was typed.
 
