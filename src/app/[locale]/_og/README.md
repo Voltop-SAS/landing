@@ -5,11 +5,11 @@ served to the browser: they are read from disk at build time and inlined into
 the card, which is generated as PNG by Satori and re-encoded to JPEG before it
 is written.
 
-| File                   | What it is                                                                                                                                                                                                                                 |
-| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `hero-og.jpg`          | The hero photograph cropped to 1200×630 with the SAME framing the desktop home uses: `object-cover` focused at 62% horizontal and 50% vertical. Derived from `public/hero-vehiculo-cargando.jpg`; if that one changes, regenerate this one |
-| `poppins-semibold.ttf` | Poppins SemiBold, the system's headline typeface                                                                                                                                                                                           |
-| `manrope.ttf`          | Manrope at weight 400, the body typeface                                                                                                                                                                                                   |
+| File                   | What it is                                                                                                                                                                                                                                  |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `hero-og.jpg`          | The hero photograph cropped to 1200×630 with the SAME framing the desktop home uses: `object-cover` focused at 62% horizontal and 50% vertical. Derived from `public/hero-vehiculo-cargando.webp`; if that one changes, regenerate this one |
+| `poppins-semibold.ttf` | Poppins SemiBold, the system's headline typeface                                                                                                                                                                                            |
+| `manrope.ttf`          | Manrope at weight 400, the body typeface                                                                                                                                                                                                    |
 
 ## Why the typefaces live here instead of loading like the rest of the site
 

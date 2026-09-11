@@ -265,7 +265,7 @@ export function AppFloating({ locale }: { locale: Locale }) {
       )}
     >
       <Image
-        src="/logo-app.png"
+        src="/logo-app.webp"
         alt=""
         fill
         sizes="56px"
