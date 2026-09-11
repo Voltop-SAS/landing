@@ -23,7 +23,6 @@ import { Media } from '@ui/common/components/ui/Media'
 import { Button } from '@ui/common/components/ui/Button'
 import { PendingTag } from '@ui/common/components/ui/DataPrimitives'
 import { PostBody } from '~/core/news/infrastructure/ui/components/PostBody'
-import { TrackView } from '@ui/common/components/analytics/TrackView'
 import { formatDate } from '@ui/common/lib/dates'
 
 type Props = { params: Promise<{ locale: string; slug: string }> }
@@ -125,11 +124,7 @@ export default async function PostPage({ params }: Props) {
   }
 
   return (
-    <TrackView
-      event="novedad_vista"
-      props={{ slug: post.slug, tipo: post.type }}
-      threshold={0}
-    >
+    <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -140,10 +135,10 @@ export default async function PostPage({ params }: Props) {
       />
 
       {/* `<article>`: this page is one self-contained piece — headline, date,
-          body and author — which is exactly what the element is for, and the
-          `NewsArticle` above says as much to a search engine while the markup
-          did not. It wraps both sections so the opening and the body are one
-          document and not two loose blocks. */}
+        body and author — which is exactly what the element is for, and the
+        `NewsArticle` above says as much to a search engine while the markup
+        did not. It wraps both sections so the opening and the body are one
+        document and not two loose blocks. */}
       <article>
         <Section
           space="none"
@@ -165,7 +160,7 @@ export default async function PostPage({ params }: Props) {
                 </li>
                 <li aria-hidden="true">/</li>
                 {/* Plural: here the type names the CATEGORY, not this entry. See
-                  the `typesPlural` note in the copy. */}
+                the `typesPlural` note in the copy. */}
                 <li className="text-ink-2">{t(novedades.typesPlural[post.type], locale)}</li>
               </ol>
             </nav>
@@ -202,12 +197,12 @@ export default async function PostPage({ params }: Props) {
           <Container width="narrow">
             {post.cover && (
               /* `controls` when the cover is a VIDEO. Without it, `VideoMedia`
-               treats it as background material: muted, looping and with no
-               bar — so the Wake piece played with no audio and no way to turn
-               it on. A video that is the subject of the entry is something you
-               decide to watch, and for that you need to be able to play it,
-               seek and hear it.
-               Una fotografía de portada no cambia: la prop no le aplica. */
+             treats it as background material: muted, looping and with no
+             bar — so the Wake piece played with no audio and no way to turn
+             it on. A video that is the subject of the entry is something you
+             decide to watch, and for that you need to be able to play it,
+             seek and hear it.
+             A photographic cover is unaffected: the prop does not apply to it. */
               <Media
                 asset={post.cover}
                 locale={locale}
@@ -269,6 +264,6 @@ export default async function PostPage({ params }: Props) {
           </Container>
         </Section>
       </article>
-    </TrackView>
+    </>
   )
 }

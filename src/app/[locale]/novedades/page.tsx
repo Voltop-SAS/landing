@@ -17,7 +17,6 @@ import { Button } from '@ui/common/components/ui/Button'
 import { PendingTag } from '@ui/common/components/ui/DataPrimitives'
 import { PostLog } from '~/core/news/infrastructure/ui/components/PostLog'
 import { PostLink } from '@ui/common/components/ui/PostLink'
-import { TrackView } from '@ui/common/components/analytics/TrackView'
 import { formatDate } from '@ui/common/lib/dates'
 
 type Props = { params: Promise<{ locale: string }> }
@@ -75,10 +74,7 @@ export default async function NovedadesPage({ params }: Props) {
   const hasProvisional = posts.some((p) => p.dataStatus === 'placeholder')
 
   return (
-    <TrackView
-      event="novedades_vista"
-      threshold={0}
-    >
+    <>
       {/* 1 · APERTURA + PULSO */}
       <Section
         space="tight"
@@ -109,10 +105,10 @@ export default async function NovedadesPage({ params }: Props) {
             </dl>
 
             {/* Declared BEFORE reading, not in a footnote. The precedent used
-                to be the lead form's `demoNotice`, which warned before asking
-                for the data rather than in small print under the button; that
-                notice went away with the form's demo state, but the rule it
-                established is the one applied here. */}
+              to be the lead form's `demoNotice`, which warned before asking
+              for the data rather than in small print under the button; that
+              notice went away with the form's demo state, but the rule it
+              established is the one applied here. */}
             {hasProvisional && (
               <div className="mt-5 flex flex-wrap items-center gap-3">
                 <PendingTag>{t(novedades.provisionalTagAll, locale)}</PendingTag>
@@ -155,15 +151,15 @@ export default async function NovedadesPage({ params }: Props) {
                 {featured.cover && (
                   <figure>
                     {/* The cover OPENS the entry. It is what anyone seeing a
-                        piece this size expects, and in the video's case it is
-                        also the only way to reach playback with sound: here it
-                        runs silent on purpose — the browser blocks autoplay with
-                        audio, and without controls it would break WCAG 1.4.2 —
-                        while inside the entry it has controls.
+                      piece this size expects, and in the video's case it is
+                      also the only way to reach playback with sound: here it
+                      runs silent on purpose — the browser blocks autoplay with
+                      audio, and without controls it would break WCAG 1.4.2 —
+                      while inside the entry it has controls.
 
-                        `decorative` because the headline below already links to
-                        the same place: the mouse gains the large target, the
-                        keyboard and the screen reader do not gain a duplicate. */}
+                      `decorative` because the headline below already links to
+                      the same place: the mouse gains the large target, the
+                      keyboard and the screen reader do not gain a duplicate. */}
                     <PostLink
                       post={featured}
                       locale={locale}
@@ -180,9 +176,9 @@ export default async function NovedadesPage({ params }: Props) {
                       />
                     </PostLink>
                     {/* A label derived from the asset and a caption of the lead
-                        entry's own: the index comments on the piece differently
-                        than the detail page, because whoever reads here has not
-                        gone in yet. */}
+                      entry's own: the index comments on the piece differently
+                      than the detail page, because whoever reads here has not
+                      gone in yet. */}
                     <figcaption className="mt-3 text-body-s text-ink-3">
                       {featured.cover.kind === 'video' && featured.cover.duration && (
                         <span className="mr-3 font-mono text-mono uppercase tracking-wider text-ink-2">
@@ -224,10 +220,10 @@ export default async function NovedadesPage({ params }: Props) {
                       {t(featured.summary, locale)}
                     </p>
                     {/* If the entry is a station's opening, the CTA goes TO THE
-                        STATION: that is the destination that is good for
-                        something. Otherwise it goes to the entry. The title
-                        always links to the detail page, so neither route is
-                        lost. */}
+                      STATION: that is the destination that is good for
+                      something. Otherwise it goes to the entry. The title
+                      always links to the detail page, so neither route is
+                      lost. */}
                     {featured.stationSlug ? (
                       <div className="mt-6">
                         <Button
@@ -273,6 +269,6 @@ export default async function NovedadesPage({ params }: Props) {
           )}
         </>
       )}
-    </TrackView>
+    </>
   )
 }

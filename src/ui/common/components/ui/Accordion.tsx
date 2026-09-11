@@ -84,6 +84,25 @@ export function Accordion({
                 id={buttonId}
                 aria-expanded={isOpen}
                 aria-controls={panelId}
+                /**
+                 * A STABLE HOOK FOR GTM, and the dimension along with it.
+                 *
+                 * `faq_open` is one of the three events GTM reads from the
+                 * click instead of receiving from `track()`, and the Tagging
+                 * Plan forbids triggers built on visible text or CSS classes —
+                 * both break the day somebody rewrites a question or renames a
+                 * utility.
+                 *
+                 * The only other identifiers here were `id`, which comes from
+                 * React's `useId()` and changes between builds, and
+                 * `aria-expanded`, which says the state but not WHICH question.
+                 * This carries the question's own id, so the same attribute is
+                 * the trigger and the dimension.
+                 *
+                 * `aria-expanded` still answers open-or-close: GTM reads the
+                 * DOM at click time, when it still holds the previous value.
+                 */
+                data-faq={item.id}
                 onClick={() => toggle(item.id)}
                 className="press group flex w-full items-start justify-between gap-6 py-6 text-left transition-colors duration-(--duration-fast) hover:text-brand"
               >

@@ -16,18 +16,19 @@ import type { Localized } from '~/core/common/domain/i18n/config'
 
 export const home = {
   meta: {
+    /* Delivered final by Camilo on 2026-09-09. The Spanish is verbatim; English
+       and Portuguese carry the same promise in each language and are NOT literal
+       renderings — `disponibilidad` becomes `availability`, and the closing
+       clause keeps the app as the place where charging happens. */
     title: {
-      es: 'Voltop · La red de carga que mueve a Colombia',
-      en: 'Voltop · The charging network that moves Colombia',
-      pt: 'Voltop · A rede de carregamento que move a Colômbia',
+      es: 'Voltop | Red de carga para carros eléctricos en Colombia',
+      en: 'Voltop | EV charging network in Colombia',
+      pt: 'Voltop | Rede de carregamento para carros elétricos na Colômbia',
     } satisfies Localized,
     description: {
-      /* This is the search result. It used to open with "Infraestructura",
-         which nobody types, and it named neither the cities people do search
-         for nor the app. */
-      es: 'Carga rápida para carros eléctricos en Bogotá y Medellín. Encuentra estación, actívala con la app y sigue tu día. También soluciones para empresas y flotas.',
-      en: 'Fast charging for electric cars in Bogotá and Medellín. Find a station, start it from the app and get on with your day. Plus solutions for companies and fleets.',
-      pt: 'Carregamento rápido para carros elétricos em Bogotá e Medellín. Encontre uma estação, ative pelo app e siga o seu dia. E também soluções para empresas e frotas.',
+      es: 'Encuentra estaciones de carga para carros eléctricos en Colombia. Consulta disponibilidad, tarifas y carga tu vehículo fácilmente desde la app Voltop.',
+      en: 'Find charging stations for electric cars across Colombia. Check availability and rates, and charge your vehicle easily from the Voltop app.',
+      pt: 'Encontre estações de carregamento para carros elétricos na Colômbia. Consulte disponibilidade, tarifas e carregue seu veículo facilmente pelo app Voltop.',
     } satisfies Localized,
   },
 

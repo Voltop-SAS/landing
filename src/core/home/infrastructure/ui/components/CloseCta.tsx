@@ -5,7 +5,6 @@ import { actions } from '~/core/common/domain/consts/copy'
 import { Section, Container, SectionHeading } from '@ui/common/components/ui/LayoutPrimitives'
 import { Button } from '@ui/common/components/ui/Button'
 import { Reveal } from '@ui/common/components/ui/Reveal'
-import { TrackClick } from '@ui/common/components/analytics/TrackClick'
 
 /**
  * BEAT 9 · CLOSE — Intensity: High · Register: Impact
@@ -56,19 +55,14 @@ export function CloseCta({ locale }: { locale: Locale }) {
                 {t(home.close.b2c.body, locale)}
               </p>
               <div className="mt-7">
-                <TrackClick
-                  event="cta_encontrar_cargador_click"
-                  props={{ ubicacion: 'cierre' }}
+                <Button
+                  variant="primary"
+                  size="l"
+                  arrow
+                  href={href(locale, routes.network)}
                 >
-                  <Button
-                    variant="primary"
-                    size="l"
-                    arrow
-                    href={href(locale, routes.network)}
-                  >
-                    {t(actions.findCharger, locale)}
-                  </Button>
-                </TrackClick>
+                  {t(actions.findCharger, locale)}
+                </Button>
               </div>
             </div>
 

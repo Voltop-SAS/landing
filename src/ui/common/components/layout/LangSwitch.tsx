@@ -168,7 +168,7 @@ export function LangSwitch({
                      whether Portuguese gets used. Without it, the decision to
                      keep it would be made blind. */
                   onClick={() => {
-                    if (!active) track('idioma_cambiado', { de: locale, a: code })
+                    if (!active) track('language_switch', { from: locale, to: code })
                   }}
                   className={cn(
                     'flex min-h-11 items-center justify-between gap-4 px-4 text-body-s transition-colors',

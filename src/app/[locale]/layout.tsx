@@ -87,7 +87,7 @@ export async function generateMetadata({
     openGraph: {
       type: 'website',
       siteName: brand.name,
-      locale: localeMeta[locale].htmlLang,
+      locale: localeMeta[locale].ogLocale,
       url: absoluteUrl(locale, ''),
     },
     /* A DRAFT language is browsable — it has to be reviewable — but it does

@@ -9,39 +9,61 @@
  * the plan means adding a variant here, and the compiler makes sure nobody
  * emits one that is not on the list.
  *
- * The event names themselves stay in Spanish: they are the plan, and renaming
- * one silently splits a metric in two. See the contract list in AGENTS.md.
+ * ── THE NAMES CHANGED TO ENGLISH ON 2026-09-09 (Tagging Plan v1.1) ────────
+ * They used to be Spanish, and `AGENTS.md` declared them a contract for a good
+ * reason: renaming one silently splits a metric in two. This rename is not
+ * silent — it is the whole catalogue at once, on a dated cut-over, and the rule
+ * in `AGENTS.md` was rewritten in the same commit.
+ *
+ * Why English: anyone opening the property reads the names without a
+ * translator, and they sit next to GA4's own vocabulary instead of clashing
+ * with it. Only `generate_lead` is a GA4 recommended event, with reports of
+ * its own that a custom name never populates. The rest — `station_search`,
+ * `select_station` and the others below — are custom names chosen for
+ * clarity, not for automatic reports: GA4's `search` and `select_item` were
+ * considered and not adopted because their built-in reports expect
+ * parameters (`search_term`, an `items` array) that this site deliberately
+ * does not send.
+ *
+ * Why now: the site had been in production for days, so the history being
+ * cut is the smallest it will ever be — every week of waiting made this more
+ * expensive.
+ *
+ * ── WHAT IS NOT HERE, ON PURPOSE ─────────────────────────────────────────
+ * `contact_click`, `get_directions_click` and `faq_open` are read by GTM from
+ * the click itself, not emitted from here, so they are not in this catalogue:
+ * nothing in the code emits them and the compiler should say so.
+ *
+ * Ten events from the previous plan were retired rather than renamed. See the
+ * changelog: most of them duplicated `page_view`.
  */
 
 export type EventName =
-  // B2C
-  | 'cta_encontrar_cargador_click'
-  /* The header's global CTA became the app download. The older
-     `cta_encontrar_cargador_click` is kept because the in-page CTAs that lead
-     to /red still use it; the header one now emits this instead. */
-  | 'cta_descargar_app_click'
-  | 'red_buscar'
-  | 'red_filtro_aplicado'
-  | 'red_filtros_limpiados'
-  | 'ciudad_vista'
-  | 'estacion_vista'
-  | 'estacion_como_llegar'
-  | 'app_store_click'
-  // B2B
-  | 'cta_b2b_click'
-  | 'empresas_selector_caso'
-  | 'lead_form_inicio'
-  | 'lead_form_error'
-  | 'lead_form_envio'
-  | 'lead_form_exito'
-  // Novedades
-  | 'novedades_vista'
-  | 'novedad_vista'
-  // Idioma
-  | 'idioma_cambiado'
-  // Marca
-  | 'caso_visto'
-  | 'impacto_visto'
-  | 'media_reproducida'
+  // ── Red · finding somewhere to charge
+  /** A search ran. Carries the RESULT COUNT, never the term. See `StationFinder`. */
+  | 'station_search'
+  | 'filter_stations'
+  | 'use_my_location'
+  /** A station page was opened. */
+  | 'view_station'
+  /** A station was chosen from a list, before the page opens. */
+  | 'select_station'
+  // ── B2B · the lead
+  | 'form_start'
+  | 'form_error'
+  /** ONLY on a real successful send — after `POST /api/leads` answers ok. */
+  | 'generate_lead'
+  // ── App
+  /** Carries `placement` so each instance is told apart. */
+  | 'app_download_click'
+  // ── Idioma
+  | 'language_switch'
 
+/**
+ * Event properties. Only slugs, enums, counts and booleans travel here.
+ *
+ * NEVER free text written by a person: no names, e-mail addresses, phone
+ * numbers, message bodies or search terms. Once a value reaches the analytics
+ * platform it cannot be taken back.
+ */
 export type EventProps = Record<string, string | number | boolean | null | undefined>

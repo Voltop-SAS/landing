@@ -6,6 +6,7 @@ import Script from 'next/script'
 import { t, type Locale } from '~/core/common/domain/i18n/config'
 import { cookies as copy } from '~/core/common/domain/consts/copy'
 import { href, routes } from '~/core/common/domain/i18n/routes'
+import { CONSENT_KEY } from '~/core/common/infrastructure/analytics/consent'
 import { TextSlot } from '@ui/common/components/ui/TextSlot'
 
 /**
@@ -59,7 +60,10 @@ import { TextSlot } from '@ui/common/components/ui/TextSlot'
  * say no.
  */
 
-const STORAGE_KEY = 'voltop:cookies'
+/* The key and the two stored values live in `consent.ts`: `analytics.ts` has to
+   read the same decision before emitting anything, and a second copy of the
+   string here would be a second place to get it wrong. */
+const STORAGE_KEY = CONSENT_KEY
 
 /**
  * Google Tag Manager container.

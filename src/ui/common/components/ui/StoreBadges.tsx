@@ -39,7 +39,21 @@ const label = 'flex flex-col leading-none'
 const labelTop = 'font-mono text-[0.5625rem] uppercase tracking-[0.12em] text-ink-3'
 const labelBottom = 'mt-1 font-display text-[1.0625rem] font-semibold tracking-tight text-ink'
 
-export function StoreBadges({ locale, className }: { locale: Locale; className?: string }) {
+export function StoreBadges({
+  locale,
+  className,
+  /**
+   * Which surface these badges live on. It travels with every
+   * `app_download_click` so two instances of this component are never added up
+   * as one: the plan asks to know WHERE the download was pressed, and the
+   * component cannot guess that about itself.
+   */
+  placement = 'section',
+}: {
+  locale: Locale
+  className?: string
+  placement?: string
+}) {
   const newTab = t(a11y.opensInNewTab, locale)
 
   return (
@@ -52,8 +66,8 @@ export function StoreBadges({ locale, className }: { locale: Locale; className?:
       <ul className="flex flex-wrap gap-3">
         <li>
           <TrackClick
-            event="app_store_click"
-            props={{ tienda: 'app_store', ubicacion: 'seccion' }}
+            event="app_download_click"
+            props={{ store: 'app_store', placement }}
           >
             <a
               href={externalLinks.appStore}
@@ -80,8 +94,8 @@ export function StoreBadges({ locale, className }: { locale: Locale; className?:
 
         <li>
           <TrackClick
-            event="app_store_click"
-            props={{ tienda: 'google_play', ubicacion: 'seccion' }}
+            event="app_download_click"
+            props={{ store: 'google_play', placement }}
           >
             <a
               href={externalLinks.googlePlay}

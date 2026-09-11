@@ -9,7 +9,6 @@ import { getCitiesWithStations } from '~/core/common/infrastructure/data-access'
 import { Section, Container, Eyebrow } from '@ui/common/components/ui/LayoutPrimitives'
 import { Media } from '@ui/common/components/ui/Media'
 import { Button } from '@ui/common/components/ui/Button'
-import { TrackClick } from '@ui/common/components/analytics/TrackClick'
 
 /**
  * BEAT 1 · HERO — Intensity: High · Register: Impact
@@ -213,22 +212,14 @@ export function Hero({ locale }: { locale: Locale }) {
         <p className="mt-7 measure text-body-l text-ink-2">{t(home.hero.lead, locale)}</p>
 
         <div className="mt-10">
-          {/* The event was declared in §31 and nobody emitted it: the header
-              moved on to measuring the app download, and no page CTA was
-              measuring entry into the network. */}
-          <TrackClick
-            event="cta_encontrar_cargador_click"
-            props={{ ubicacion: 'hero' }}
+          <Button
+            variant="primary"
+            size="l"
+            arrow
+            href={href(locale, routes.network)}
           >
-            <Button
-              variant="primary"
-              size="l"
-              arrow
-              href={href(locale, routes.network)}
-            >
-              {t(actions.findCharger, locale)}
-            </Button>
-          </TrackClick>
+            {t(actions.findCharger, locale)}
+          </Button>
         </div>
 
         {/* Scroll cue. `home.hero.scrollHint` was written and unused, and the

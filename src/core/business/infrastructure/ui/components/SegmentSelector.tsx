@@ -4,7 +4,6 @@ import { useRef, useState } from 'react'
 import { t, type Locale } from '~/core/common/domain/i18n/config'
 import { empresas } from '~/core/business/domain/consts/copy'
 import type { BusinessSegment } from '~/core/business/domain/entities/BusinessSegment'
-import { track } from '~/core/common/infrastructure/analytics'
 import { SectionHeading } from '@ui/common/components/ui/LayoutPrimitives'
 import { cn } from '@ui/common/lib/cn'
 
@@ -46,7 +45,6 @@ export function SegmentSelector({
     onChange(seg.key)
     setFocusIndex(index)
     tabsRef.current[index]?.focus()
-    track('empresas_selector_caso', { segmento: seg.key })
   }
 
   const onKeyDown = (e: React.KeyboardEvent) => {
