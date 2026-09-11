@@ -188,7 +188,7 @@ export function AppDownload({ locale }: { locale: Locale }) {
                 nothing and removes the second axis. */}
             <div className="flex flex-col gap-5">
               <Image
-                src="/descarga-app.png"
+                src="/descarga-app.webp"
                 alt={t(c.qrAlt, locale)}
                 width={1163}
                 height={1331}
