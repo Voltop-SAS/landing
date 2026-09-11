@@ -15,12 +15,19 @@
  * silent — it is the whole catalogue at once, on a dated cut-over, and the rule
  * in `AGENTS.md` was rewritten in the same commit.
  *
- * Why now: `generate_lead`, `search` and `select_item` are GA4's own
- * recommended names. GA4 recognises them and turns on reports that custom
- * Spanish names never populate, and anyone opening the property reads them
- * without a translator. And the site had been in production for days, so the
- * history being cut is the smallest it will ever be — every week of waiting
- * made this more expensive.
+ * Why English: anyone opening the property reads the names without a
+ * translator, and they sit next to GA4's own vocabulary instead of clashing
+ * with it. Only `generate_lead` is a GA4 recommended event, with reports of
+ * its own that a custom name never populates. The rest — `station_search`,
+ * `select_station` and the others below — are custom names chosen for
+ * clarity, not for automatic reports: GA4's `search` and `select_item` were
+ * considered and not adopted because their built-in reports expect
+ * parameters (`search_term`, an `items` array) that this site deliberately
+ * does not send.
+ *
+ * Why now: the site had been in production for days, so the history being
+ * cut is the smallest it will ever be — every week of waiting made this more
+ * expensive.
  *
  * ── WHAT IS NOT HERE, ON PURPOSE ─────────────────────────────────────────
  * `contact_click`, `get_directions_click` and `faq_open` are read by GTM from
