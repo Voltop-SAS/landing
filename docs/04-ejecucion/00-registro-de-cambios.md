@@ -3132,3 +3132,231 @@ La variante barata —traducir solo el texto propio del 404 y dejar cabecera y p
 3. **Llevar `Footer` a cliente** y detectar el idioma en el navegador, con parpadeo. Tampoco lo recomiendo por la misma razón, a menor escala.
 
 Lo único que cambiaría la ecuación es que Next permitiese un límite `not-found` por segmento que sí renderice, o un `global-not-found` estable que no salte el layout. Hoy `global-not-found` es experimental y **se salta el layout a propósito**, así que perdería cabecera y pie.
+
+---
+
+## Bloque 72 · Metadata y tarjeta social de la Home — 2026-09-09
+
+Copy final entregado por Camilo. La tarjeta pasa de ser un rótulo tipográfico a una **adaptación del hero**.
+
+### Lo que había, y por qué la preview salía «vieja»
+
+Antes de tocar nada se pidió `voltop.co` **haciéndose pasar por el robot de WhatsApp**, y lo que devolvía ya era la versión correcta de entonces: título, descripción y una tarjeta de 1200×630 generada por `opengraph-image.tsx`, sin duplicados y en los tres idiomas.
+
+**La preview antigua que veía Camilo era la caché de WhatsApp**, no un fallo de configuración. Queda dicho porque es la explicación de por qué «no se veía el cambio» y volverá a pasar con este.
+
+### Lo que cambia
+
+**Textos.** Título y descripción nuevos, entregados finales. El español es literal; inglés y portugués llevan la misma promesa escrita en cada idioma, no traducida palabra por palabra.
+
+**`og:locale` estaba mal.** Salía `es-CO`, con guion, porque reutilizaba `htmlLang`. Open Graph especifica `language_TERRITORY` con **guion bajo**. Se añade `ogLocale` al catálogo de idiomas —`es_CO`, `en_US`, `pt_BR`— en vez de seguir compartiendo un valor que sirve para dos cosas distintas.
+
+**La tarjeta.** Ahora es la fotografía del hero recortada a 1200×630 con **el mismo encuadre que usa la Home en escritorio** (foco 62%/50%), sus dos velos, el titular en Poppins de verdad, la primera frase del subtítulo y el logotipo. Sin barra de navegación, sin selector de idioma, sin QR, sin flotante, sin «Desplázate» ni cobertura por ciudad.
+
+No es una captura: se compone. Y el subtítulo **se deriva** del `hero.lead` real —su primera frase— para que no pueda desincronizarse del que se lee en la página.
+
+### Tres cosas que hubo que resolver por el camino
+
+**1 · Satori no lee `woff2`, que es lo que sirve `next/font`.** La tarjeta anterior caía a una `sans-serif` genérica: no era Poppins. Se incorporan Poppins SemiBold y Manrope 400 en **TTF, reducidas a los 52 glifos** que la tarjeta usa en los tres idiomas: **4,8 KB y 5,8 KB** en vez de 139 y 163. Manrope es variable y se instanció al peso 400 antes de reducirla, porque Satori no interpola ejes. Ambas son SIL Open Font License y su `OFL.txt` viaja al lado.
+
+**2 · `ImageResponse` solo emite PNG, y una FOTOGRAFÍA en PNG pesaba 1,62 MB.** WhatsApp descarta por encima de ~600 KB: la tarjeta sencillamente no habría aparecido. Se reencoda a JPEG con `sharp` —que el proyecto ya tiene— **en tiempo de build**, porque la ruta se prerenderiza por idioma. **1,62 MB → 91 KB.**
+
+**3 · `inset: 0` NO FUNCIONA EN SATORI, Y FALLA EN SILENCIO.** Los dos velos estaban escritos así, salían con tamaño cero y **nunca se pintaron**. No avisó nada: la fotografía es oscura abajo por sí sola, así que la tarjeta parecía correcta. Se cazó poniendo un rojo al 60% sobre la capa y viendo que **el fichero no cambiaba ni un byte**. Siempre `top`/`left`/`width`/`height`.
+
+⚠️ Y una trampa del propio flujo de trabajo, anotada porque costó tres iteraciones: **`pkill -f "next-server"` no mata el servidor de producción.** `npm start` arranca `node .next/standalone/server.js`. Hay que matar por puerto: `lsof -ti:3000 | xargs kill -9`. Se estuvo midiendo un servidor viejo.
+
+### Los velos, recalibrados para este marco
+
+Los valores del hero de escritorio no sirven tal cual a 1200×630: la tarjeta es baja, así que el degradado vertical la cubre entera y aplasta la fotografía. Medido: con los valores del hero el subtítulo daba 7,87:1 pero el brillo del cargador caía a **0,046** — desaparecía.
+
+Calibrado contra dos métricas a la vez, subtítulo y cargador:
+
+|                         | subtítulo  | brillo del cargador |
+| ----------------------- | ---------- | ------------------- |
+| Velos del hero tal cual | 7,87:1     | 0,046 ← se pierde   |
+| Intermedio              | 7,13:1     | 0,114               |
+| **Elegido**             | **6,57:1** | **0,176** ← se lee  |
+
+Muy por encima del 4,5:1 que pide AA, y con la fotografía y el equipo visibles, que es el 70% de la dirección de arte.
+
+### Validación
+
+Las tres páginas: título y descripción propios · `og:` completo con `og:locale` en formato correcto · `twitter:card` `summary_large_image` reflejando OG · canonical propio · cuatro `hreflang` con `x-default` · **cero duplicados** · imagen **1200×630 JPEG, 91–93 KB, 200 sin redirecciones**. Las entradas de novedades conservan su propia imagen. Tipos 0 · lint 0 · **92 tests** · build limpio · i18n 459/459.
+
+### Después del despliegue
+
+**La caché de WhatsApp no se limpia sola al desplegar.** El enlace ya compartido seguirá mostrando la tarjeta vieja unos días. Se fuerza desde el depurador de Meta (`developers.facebook.com/tools/debug`) con _Scrape Again_, y se comprueba al instante compartiendo `voltop.co/es`, que es otra clave de caché.
+
+---
+
+## Bloque 73 · Tagging Plan v1.1, primer bloque: consentimiento y PII — 2026-09-09
+
+De los ocho pasos del plan, estos dos son los únicos que **no dependen de las dos decisiones abiertas** (ver abajo) y los dos cierran fugas reales. Se hacen primero por eso.
+
+### La medición ya no recoge nada sin consentimiento
+
+`dispatch` empujaba a `window.dataLayer` sin preguntar. Ninguna petición salía del navegador —GTM no carga hasta que se acepta— pero **los eventos se apilaban en el array, y GTM lo lee DESDE EL PRINCIPIO al cargar**.
+
+Medido el 2026-09-08: quien recorría cuatro páginas sin decidir y luego aceptaba enviaba tres eventos que describían lo que hizo **antes** de decir que sí.
+
+Ahora `track()` pregunta antes de cada emisión. **Sin búfer, a propósito**: un evento sin consentimiento se descarta, no se guarda — conservarlo para enviarlo después es la misma recogida con retraso. La decisión se lee en cada llamada y no se cachea, porque alguien puede aceptar a mitad de sesión y desde ese momento sí cuenta.
+
+**Consecuencia asumida:** las secciones que alguien ya pasó antes de aceptar no se contabilizan. Es inherente a no tener búfer, no un fallo.
+
+### La clave del consentimiento deja de estar en dos sitios
+
+`'voltop:cookies'` vivía dentro de `CookieConsent`. Con `analytics.ts` teniendo que leer la misma decisión, la alternativa era repetir la cadena en un segundo fichero: dos sitios que cambiar y uno de ellos mal la primera vez que alguien toque el otro.
+
+Nuevo `consent.ts` junto a `analytics.ts`, con la clave y el lector. Los valores `aceptado`/`rechazado` **se quedan en español**: son datos ya escritos en el navegador de todo el que ha visitado el sitio, así que renombrarlos es una migración.
+
+### El buscador deja de enviar lo que la gente escribe
+
+`red_buscar` viajaba con `termino: "hyatt"`. Una caja de búsqueda es texto libre: la gente teclea nombres de sitios, placas, su propia dirección. Nada de eso pinta en un panel de analítica, y una vez enviado no se puede retirar.
+
+Ahora envía `resultados`, que es de donde se puede tomar una decisión: **`resultados: 0` dice que a la red le falta algo**, sin llevarse lo que se tecleó. El término se sigue usando para deduplicar **dentro del componente** — enfocar y desenfocar tres veces sobre el mismo texto sigue contando como una búsqueda.
+
+⚠️ **Medido en producción, con el cuerpo de los POST leído:** hoy GA4 **no** está capturando el término por su cuenta —la búsqueda en sitio parece apagada en la propiedad—. El riesgo estructural sigue ahí porque el parámetro se llama `q`, que está en la lista por defecto de GA4. Por eso se cierra en el código y no solo en la configuración: una casilla se puede volver a encender sin saber lo que arrastra.
+
+### Verificado
+
+|                                          |                                                        |
+| ---------------------------------------- | ------------------------------------------------------ |
+| Sin consentimiento, navegando y buscando | `dataLayer` **null** — no se recoge nada               |
+| Tras aceptar                             | los eventos fluyen; `red_buscar` lleva `resultados: 1` |
+| ¿Aparece el término en algún evento?     | **no**                                                 |
+| Aceptando a mitad de sesión              | **no arrastra** lo anterior                            |
+
+Tipos 0 · lint 0 · 92 tests · build limpio · i18n 459/459.
+
+### Sigue bloqueado, a la espera de decisión
+
+1. **`generate_lead`** no es implementable: el formulario abre un `mailto:` y **no existe ninguna Server Action en el proyecto**. Un `mailto:` no puede saber si el mensaje se envió.
+2. **El renombrado de los 14 eventos al inglés** choca con la regla de `AGENTS.md` que los declara contrato en español. Es aprobable, pero exige actualizar esa regla en el mismo commit.
+
+---
+
+## Bloque 74 · Tagging Plan v1.1: el catálogo pasa al inglés — 2026-09-09
+
+Punto 2 del plan, aprobado. Y una buena noticia que lo desbloqueó todo: **Jeison montó el envío real del formulario** —`POST /api/leads` con SES y hoja de cálculo— después de nuestro PR. La rama se puso al día antes de empezar.
+
+### `generate_lead` ya se puede medir
+
+Era la contradicción bloqueante: con un `mailto:` no hay forma de saber si el mensaje se envió. Ahora hay endpoint, y `lead_form_exito` ya se disparaba **después de que el servidor responde**. Solo hubo que renombrarlo.
+
+### El renombrado
+
+De 20 eventos declarados a **10 emitidos desde el código**, más 3 que GTM lee del clic.
+
+| Antes                                                           | Ahora                                                                         |
+| --------------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| `lead_form_exito`                                               | **`generate_lead`** · solo tras respuesta correcta                            |
+| `lead_form_inicio`                                              | `form_start`                                                                  |
+| `lead_form_error`                                               | `form_error` · `reason: validation \| send`                                   |
+| `estacion_vista` (página)                                       | `view_station`                                                                |
+| `estacion_vista` (clic en tarjeta)                              | **`select_station`** — eran el mismo nombre para dos cosas distintas          |
+| `red_buscar`                                                    | `station_search` · `results_count`                                            |
+| `red_filtro_aplicado` + `red_filtros_limpiados`                 | `filter_stations` — limpiar ES filtrar; eran dos métricas que había que sumar |
+| `app_store_click` + `cta_descargar_app_click` + `cta_b2b_click` | `app_download_click` · `placement`                                            |
+| `idioma_cambiado`                                               | `language_switch`                                                             |
+| —                                                               | **`use_my_location`** · `outcome: granted \| denied`, sin coordenadas         |
+
+**Retirados sin sustituto (10):** `lead_form_envio` —contaba intentos, incluidos los fallidos—, `ciudad_vista`, `novedades_vista`, `novedad_vista` —los tres duplicaban el `page_view` de su propia página—, `caso_visto`, `impacto_visto`, `cta_encontrar_cargador_click`, `empresas_selector_caso`, `media_reproducida` —declarado y nunca emitido— y `estacion_como_llegar`, que pasa a `get_directions_click` leído por GTM desde la URL saliente.
+
+### Efectos secundarios que valían la pena
+
+**`DirectionsButton` se elimina.** Existía solo como isla de cliente para emitir `estacion_como_llegar`. Sin ese evento quedaba enviando JavaScript para nada: `Button` funciona en servidor. La ficha de estación lo renderiza directo.
+
+**`StoreBadges` recibe `placement`.** El plan pide distinguir cada instancia, y un componente no puede adivinar en qué superficie está.
+
+### Lo que NO se tradujo, a propósito
+
+Los **valores** dentro de las props siguen en español cuando son datos: `status: 'operativa'`, `aceptado`/`rechazado`. Y `filter_type` toma `ciudad`, `conector`, `orden` — **los mismos nombres que los parámetros de URL**, que `AGENTS.md` declara contrato porque viajan en enlaces compartidos e indexados. Alinearlos es deliberado.
+
+### `AGENTS.md` reescrito en el mismo commit
+
+La regla decía que estos nombres eran contrato **en español**. Ahora dice que están en inglés desde hoy, por qué, dónde está el catálogo cerrado, y que **lo que no cambió es que sigan siendo contrato**: no se renombran por criterio de nadie, se cambian con fecha y de una vez. Sin esto, el siguiente que llegue seguiría la regla vieja.
+
+### Verificado en el navegador
+
+```
+station_search      { results_count: 1 }
+filter_stations     { filter_type: 'ciudad', filter_value: 'medellin' }
+select_station      { slug: 'wake', list_id: 'red_finder' }
+view_station        { slug, city, power_kw, connectors, status }
+app_download_click  { store: 'auto', placement: 'header', page_context: 'home' }
+language_switch     { from: 'es', to: 'en' }
+```
+
+Cero nombres en español sobreviviendo. Tipos 0 · lint 0 · **112 tests** · build limpio · i18n 456/456 en los tres idiomas.
+
+### Sigue pendiente del plan
+
+Los eventos que GTM debe leer del clic —`contact_click`, `get_directions_click`, `faq_open`—, el retardo de la URL en los filtros, y la redirección `www` en infraestructura.
+
+⚠️ **Un riesgo que conviene tener presente:** `get_directions_click` sale de un enlace con `target="_blank"`. Los disparadores de clic de GTM pueden perderse cuando la página navega; emitirlo desde el código era más fiable. Se sigue el plan, pero conviene comprobarlo en el modo Vista previa antes de darlo por bueno.
+
+---
+
+## Bloque 75 · Tagging Plan v1.1: los page_view fantasma y el enganche que faltaba — 2026-09-09
+
+Cierra el plan. Quedaban dos cosas del bloque 73: los `page_view` que se
+inventaba el filtro de la red, y el hecho de que uno de los tres eventos que
+GTM lee del clic no tenía de dónde agarrarse.
+
+### 1 · La URL se escribe cuando la persona para, no en cada clic
+
+**El problema, medido y no supuesto.** La medición automática de GA4 cuenta un
+`page_view` cada vez que cambia el historial. `StationFinder` escribía la barra
+de direcciones en cada clic de filtro, así que **tres clics producían cuatro
+`page_view`** —todos en `/red`, que es justo la página cuyo tráfico importa—.
+Se comprobó leyendo el cuerpo de los POST a GA4, no solo la cadena de consulta:
+mirar únicamente la URL fue lo que hizo decir «cero» la primera vez.
+
+No se puede apagar desde GA4. El mismo ajuste que produce estos produce el
+`page_view` correcto al moverse entre páginas; hay que resolverlo aquí.
+
+**La solución no es un truco.** La URL existe para que un resultado filtrado se
+pueda **compartir**, y nadie comparte a mitad de filtrar. Escribirla cuando los
+criterios se asientan es lo que la función necesita. `URL_SETTLE_MS = 700`:
+suficiente para tragarse una ráfaga, corto para que nadie alcance a copiar la
+dirección antes de que cuaje. El estado se sigue fijando al instante —la lista,
+las fichas y el contador reaccionan en el mismo fotograma de siempre—; lo único
+que espera es la barra de direcciones. El temporizador se limpia al desmontar,
+para que una escritura pendiente no aterrice en otra página.
+
+**Medido después: 4 clics → 1 `page_view` extra** (antes 3 → 4), con un solo
+`gtm.historyChange-v2` en lugar de cuatro.
+
+⚠️ **No los elimina.** Quien filtre despacio, con pausas, sigue generando uno
+por clic. Quitarlos del todo exigiría renunciar a las URL compartibles o
+entregarle el `page_view` a GTM, y las dos cosas cuestan más de lo que arreglan.
+
+⚠️ **Trampa al medir esto:** con una ventana de 4 s el resultado salía `0`. GA4
+envía en lote y el hit llegaba después. Con 12 s aparece el 1 real. Un cero en
+analítica se confirma siempre con un control —aquí, el `page_view` legítimo de
+la carga— antes de creérselo.
+
+### 2 · `data-faq`: un enganche estable para el acordeón
+
+De los tres eventos que GTM lee del clic, dos ya tenían dónde agarrarse:
+`contact_click` por la URL `mailto:` y `get_directions_click` por la de Google
+Maps. **`faq_open` no tenía ninguno.** Sus únicos identificadores eran el `id`,
+que sale de `useId()` de React y cambia entre builds, y `aria-expanded`, que
+dice el estado pero no **qué** pregunta.
+
+El plan prohíbe disparadores basados en el texto visible o en clases CSS —los
+dos se rompen el día que alguien reescribe una pregunta o renombra una
+utilidad—. Así que el acordeón expone `data-faq` con el id de la propia
+pregunta: el mismo atributo es el disparador y la dimensión. Verificado en el
+DOM servido: `como-cargar · donde · precio · pago · ayuda`.
+
+`aria-expanded` sigue respondiendo si abre o cierra: GTM lee el DOM en el
+momento del clic, cuando todavía tiene el valor anterior.
+
+### Lo que queda fuera del código
+
+- **`www` → dominio raíz** es redirección de infraestructura (ingress), no de
+  la aplicación.
+- Los cuatro `filter_stations` llegan bien al `dataLayer`; que todavía no
+  produzcan un hit en GA4 es configuración pendiente **dentro de GTM**, no del
+  sitio.

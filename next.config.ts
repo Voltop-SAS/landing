@@ -29,16 +29,44 @@ const nextConfig: NextConfig = {
   },
 
   images: {
-    formats: ['image/avif', 'image/webp'],
+    /**
+     * WEBP ONLY, NO AVIF (2026-09-11).
+     *
+     * AVIF was first in this list and Chrome always took it. Measured on the
+     * deployed site: `/_next/image` answers of 15 to 123 KB took 2.1 to 3.9 s
+     * on a connection that pulled an 11 MB video at 500 KB/s, so the time was
+     * not the network — it was the server encoding AVIF on demand from 2560 px
+     * masters. AVIF is the slowest encoder by an order of magnitude, and the
+     * container has no persistent optimiser cache, so every rollout, restart or
+     * replica paid it again.
+     *
+     * WebP costs 20 to 30 % more bytes per image and encodes in tens of
+     * milliseconds. Until there is a CDN holding the variants, that trade wins.
+     */
+    formats: ['image/webp'],
     /**
      * Next only serves the qualities declared here; any other one errors. 70
      * was added for the hero photograph: it is the LCP element, and at the
      * default quality it weighed 332 KB on Retina screens — over the 250 KB
      * budget §29 sets — with the LCP at 2.44s against a 2.5s limit. Lowering
      * the master did not help (330 KB to 318 KB): what decides here is the
-     * AVIF encoder, not the source.
+     * encoder, not the source.
      */
     qualities: [70, 75],
+    /**
+     * HOW LONG AN OPTIMISED VARIANT IS KEPT BEFORE IT IS ENCODED AGAIN.
+     *
+     * For images that live in `public/`, Next cannot read a `Cache-Control`
+     * from an upstream, so this value IS the cache lifetime. The default is 60
+     * seconds: every variant was re-encoded a minute after the last visit.
+     *
+     * Thirty-one days matches the reasoning of the `public/` header below:
+     * these masters change rarely, never carry a hash in their name, and a
+     * replaced one should still reach visitors within weeks, not never. The
+     * optimiser cache lives inside the container, so it is also wiped on every
+     * rollout — this only stops the churn between them.
+     */
+    minimumCacheTTL: 2678400,
   },
 
   /**

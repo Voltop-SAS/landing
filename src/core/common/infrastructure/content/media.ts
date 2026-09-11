@@ -48,7 +48,7 @@ export const media = {
     src: '/estacion-medellin-loop.mp4',
     /* 960×540 · 0.66 MB against the master's 2.92 MB. */
     srcMobile: '/estacion-medellin-loop-movil.mp4',
-    poster: '/estacion-medellin-poster.jpg',
+    poster: '/estacion-medellin-poster.webp',
     alt: {
       es: 'Nueva estación de carga Voltop en Medellín, vista general de la infraestructura',
       en: 'New Voltop charging station in Medellín, wide view of the infrastructure',
@@ -129,7 +129,7 @@ export const media = {
     kind: 'video',
     src: '/vision-ceo.mp4',
     srcMobile: '/vision-ceo-movil.mp4',
-    poster: '/vision-ceo-poster.jpg',
+    poster: '/vision-ceo-poster.webp',
     alt: {
       es: 'Bruno Ocampo, fundador y CEO de Voltop, hablando desde una estación de carga',
       en: 'Bruno Ocampo, founder and CEO of Voltop, speaking from a charging station',
@@ -165,7 +165,7 @@ export const media = {
   allianceWake: {
     id: 'alianza-wake',
     kind: 'photo',
-    src: '/alianza-wake.jpg',
+    src: '/alianza-wake.webp',
     poster: null,
     alt: {
       es: 'Dos personas se dan la mano frente al muro de Wake, en Medellín, donde Voltop opera una estación de carga',
@@ -198,7 +198,7 @@ export const media = {
      * less image than the box and stretch it, the same defect that showed up in
      * Helbert's portrait and in the city cards.
      */
-    src: '/espacio-comercial.jpg',
+    src: '/espacio-comercial.webp',
     poster: null,
     alt: {
       es: 'Puntos de carga Voltop integrados en el parqueadero de un espacio comercial',
@@ -260,7 +260,7 @@ export const media = {
   heroVehicleCharging: {
     id: 'hero-vehiculo-cargando',
     kind: 'photo',
-    src: '/hero-vehiculo-cargando.jpg',
+    src: '/hero-vehiculo-cargando.webp',
     poster: null,
     alt: {
       es: 'Vehículo eléctrico conectado a un cargador Voltop en un parqueadero cubierto',
@@ -288,7 +288,7 @@ export const media = {
   stationInfrastructure: {
     id: 'estacion-infraestructura',
     kind: 'photo',
-    src: '/estacion-infraestructura.jpg',
+    src: '/estacion-infraestructura.webp',
     poster: null,
     alt: {
       es: 'Estaciones de carga Voltop en operación en un parqueadero cubierto, con vehículos conectados',
@@ -324,7 +324,7 @@ export const media = {
   cityBogota: {
     id: 'ciudad-bogota',
     kind: 'photo',
-    src: '/ciudad-bogota.jpg',
+    src: '/ciudad-bogota.webp',
     poster: null,
     alt: {
       es: 'Vista de Bogotá, ciudad donde Voltop tiene estaciones de carga en operación',
@@ -343,7 +343,7 @@ export const media = {
   cityMedellin: {
     id: 'ciudad-medellin',
     kind: 'photo',
-    src: '/ciudad-medellin.jpg',
+    src: '/ciudad-medellin.webp',
     poster: null,
     alt: {
       es: 'Vista de Medellín, ciudad donde Voltop tiene estaciones de carga en operación',
@@ -401,7 +401,7 @@ export const media = {
   eanTestimonialPortrait: {
     id: 'retrato-testimonio-ean',
     kind: 'photo',
-    src: '/retrato-helbert-perico.jpg',
+    src: '/retrato-helbert-perico.webp',
     poster: null,
     alt: {
       es: 'Retrato de Helbert Perico, de la Universidad EAN',
@@ -420,7 +420,7 @@ export const media = {
   founderPortrait: {
     id: 'retrato-fundador',
     kind: 'photo',
-    src: '/retrato-bruno-ocampo.jpg',
+    src: '/retrato-bruno-ocampo.webp',
     poster: null,
     alt: {
       es: 'Retrato de Bruno Ocampo, fundador y CEO de Voltop',
@@ -458,7 +458,7 @@ export const media = {
   chargerRender: {
     id: 'render-cargador',
     kind: 'photo',
-    src: '/render-cargador.png',
+    src: '/render-cargador.webp',
     poster: null,
     alt: {
       es: 'Estación de carga rápida Voltop con dos conectores, GB/T y CCS2, y pantalla de operación',

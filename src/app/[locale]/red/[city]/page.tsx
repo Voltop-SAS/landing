@@ -21,7 +21,6 @@ import {
 } from '@ui/common/components/ui/LayoutPrimitives'
 import { StatusBadge } from '@ui/common/components/ui/DataPrimitives'
 import { Reveal } from '@ui/common/components/ui/Reveal'
-import { TrackView } from '@ui/common/components/analytics/TrackView'
 import { formatPowerKw } from '~/core/network/domain/entities/Station'
 import { cityLead } from '~/core/network/infrastructure/helpers/cityLead'
 
@@ -120,14 +119,6 @@ export default async function CityPage({ params }: Props) {
             </ol>
           </nav>
 
-          {/* `ciudad_vista` was in the measurement plan without being emitted
-              (§31). Threshold 0 because the event is "saw the page", not "read
-              the block". */}
-          <TrackView
-            event="ciudad_vista"
-            props={{ citySlug: city.slug }}
-            threshold={0}
-          />
           <Eyebrow className="mt-8">{t(cityCopy.eyebrow, locale)}</Eyebrow>
           <h1 className="mt-4 font-display text-display-xl font-semibold text-ink">
             {t(cityCopy.titlePrefix, locale)} {city.name}

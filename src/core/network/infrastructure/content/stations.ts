@@ -62,7 +62,7 @@ export const stations: Station[] = [
     media: {
       photos: [
         {
-          src: '/estacion-universidad-ean.jpg',
+          src: '/estacion-universidad-ean.webp',
           alt: {
             es: 'Estación de carga Voltop en la Universidad EAN, con varios puntos de carga en operación',
             en: 'Voltop charging station at EAN University, with several charge points in service',
@@ -123,7 +123,7 @@ export const stations: Station[] = [
        */
       photos: [
         {
-          src: '/estacion-grand-hyatt.jpg',
+          src: '/estacion-grand-hyatt.webp',
           alt: {
             es: 'Tres cargadores Voltop en el parqueadero cubierto del Grand Hyatt, con un vehículo eléctrico conectado y una persona iniciando la carga',
             en: 'Three Voltop chargers in the Grand Hyatt covered parking area, with an electric vehicle plugged in and a person starting the charge',
@@ -165,7 +165,7 @@ export const stations: Station[] = [
     media: {
       photos: [
         {
-          src: '/estacion-wake.jpg',
+          src: '/estacion-wake.webp',
           alt: {
             es: 'Estación de carga rápida Voltop en Wake, Medellín, con seis puntos de carga de 80 kW',
             en: 'Voltop fast-charging station at Wake, Medellín, with six 80 kW charge points',

@@ -15,7 +15,6 @@ import {
 import { MetricRow, PendingTag } from '@ui/common/components/ui/DataPrimitives'
 import { Media } from '@ui/common/components/ui/Media'
 import { Reveal } from '@ui/common/components/ui/Reveal'
-import { TrackView } from '@ui/common/components/analytics/TrackView'
 
 /**
  * The "Cifras en validación" block is not published for now (Camilo's request,
@@ -177,17 +176,12 @@ export default async function NosotrosPage({ params }: Props) {
         ariaLabelledby="impacto-title"
       >
         <Container>
-          <TrackView
-            event="impacto_visto"
-            props={{ validadas: hasValidated }}
+          <SectionHeading
+            id="impacto-title"
+            kicker={t(nosotros.impact.eyebrow, locale)}
           >
-            <SectionHeading
-              id="impacto-title"
-              kicker={t(nosotros.impact.eyebrow, locale)}
-            >
-              {t(nosotros.impact.title, locale)}
-            </SectionHeading>
-          </TrackView>
+            {t(nosotros.impact.title, locale)}
+          </SectionHeading>
 
           <p className="mt-5 measure text-body-l text-ink-2">{t(nosotros.impact.lead, locale)}</p>
 

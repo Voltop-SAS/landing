@@ -22,6 +22,7 @@ import {
   EMPTY_CRITERIA,
   type Criteria,
 } from '~/core/network/infrastructure/helpers/criteria'
+import { useSettledUrl } from '~/core/network/infrastructure/ui/hooks/useSettledUrl'
 import { StatusBadge } from '@ui/common/components/ui/DataPrimitives'
 import { Button } from '@ui/common/components/ui/Button'
 import { track } from '~/core/common/infrastructure/analytics'
@@ -86,6 +87,15 @@ function computeSteps(stations: Station[]): number[] {
   return maxPowers.length > 1 ? [0, ...maxPowers] : [0]
 }
 
+/**
+ * How long the address bar waits after the last change.
+ *
+ * 700 ms is long enough to swallow a burst of clicks and short enough that
+ * nobody manages to select and copy the URL before it settles — which is the
+ * one thing that would make a stale link travel.
+ */
+const URL_SETTLE_MS = 700
+
 type Coords = { lat: number; lng: number }
 type GeoState = 'idle' | 'locating' | 'granted' | 'denied'
 
@@ -98,13 +108,39 @@ export function StationFinder({ locale, stations, cities }: Props) {
    * With a reactive effect, the one syncing from the URL and the one writing
    * to it ran in the same commit and the second wiped the query string —with
    * the criteria still empty— before the first had settled.
+   *
+   * ── AND IT IS WRITTEN WHEN THE PERSON STOPS, NOT ON EVERY CLICK ──────────
+   * `replaceState` is what GA4's enhanced measurement watches to count a
+   * `page_view` on a single-page navigation. Measured in production on
+   * 2026-09-09, reading the POST bodies and not just the URL: **three filter
+   * clicks produced four extra `page_view` hits**, all of them on /red, which
+   * is the page whose traffic matters most.
+   *
+   * The setting that produces them is the same one that produces the CORRECT
+   * page_view when someone moves between pages, so it cannot be turned off in
+   * GA4 without losing both. It has to be handled here.
+   *
+   * The URL exists so a filtered result can be SHARED — and nobody shares
+   * halfway through filtering. Writing it once the criteria settle is what the
+   * feature actually needs, not a workaround: a burst of clicks collapses into
+   * one entry instead of one per click.
+   *
+   * ⚠️ It does NOT eliminate them. Someone who filters slowly, pausing between
+   * clicks, still generates one each time. Removing them entirely would mean
+   * giving up shareable URLs or handing `page_view` over to GTM, and both cost
+   * more than they fix.
+   *
+   * The state is set IMMEDIATELY: only the address bar waits. The list, the
+   * chips and the result count react on the same frame as always. The waiting
+   * itself lives in `useSettledUrl`, where it is tested with fake timers.
    */
+  const writeUrl = useSettledUrl(URL_SETTLE_MS)
+
   const apply = (next: Criteria) => {
     setCriteria(next)
-    /* The address bar is written here and nowhere else: `criteriaToQuery` is
-       pure so the contract can be tested without a browser. */
-    const qs = criteriaToQuery(next)
-    window.history.replaceState(null, '', qs || window.location.pathname)
+    /* `criteriaToQuery` is pure so the contract can be tested without a
+       browser. */
+    writeUrl(criteriaToQuery(next) || window.location.pathname)
   }
   const set = <K extends keyof Criteria>(key: K, value: Criteria[K]) =>
     apply({ ...criteria, [key]: value })
@@ -170,15 +206,13 @@ export function StationFinder({ locale, stations, cities }: Props) {
   const clearAll = () => {
     /* Keep the sort order: clearing filters is not re-sorting. */
     apply({ ...EMPTY_CRITERIA, sort: criteria.sort })
-    track('red_filtros_limpiados')
+    /* Clearing IS filtering. It used to be its own event, which meant two
+       metrics to add up to answer one question — how much people filter. */
+    track('filter_stations', { filter_type: 'all', filter_value: 'cleared' })
   }
 
-  /* `tipo` and `valor` keep their Spanish names because shorthand makes the
-     parameter name the analytics PROPERTY name, and those land in the
-     dashboard as a dimension someone reads. Renaming them here would silently
-     split that dimension in two (see AGENTS.md). */
-  const onFilter = (tipo: string, valor: string | number | boolean) =>
-    track('red_filtro_aplicado', { tipo, valor: String(valor) })
+  const onFilter = (filterType: string, value: string | number | boolean) =>
+    track('filter_stations', { filter_type: filterType, filter_value: String(value) })
 
   const locate = () => {
     if (!navigator.geolocation) return setGeoState('denied')
@@ -188,9 +222,16 @@ export function StationFinder({ locale, stations, cities }: Props) {
         setOrigin({ lat: pos.coords.latitude, lng: pos.coords.longitude })
         setGeoState('granted')
         set('sort', 'distance')
-        onFilter('cercania', true)
+        /* Its own event, not a filter: granting location is a decision of a
+           different kind from picking a city, and the plan asks to be able to
+           tell how many people take it. The COORDINATES ARE NOT SENT — only
+           that permission was given or refused. */
+        track('use_my_location', { outcome: 'granted' })
       },
-      () => setGeoState('denied'),
+      () => {
+        setGeoState('denied')
+        track('use_my_location', { outcome: 'denied' })
+      },
       { timeout: 8000 },
     )
   }
@@ -251,14 +292,25 @@ export function StationFinder({ locale, stations, cities }: Props) {
               type="search"
               value={query}
               onChange={(e) => set('query', e.target.value)}
-              /* This used to fire on EVERY blur that had a value: focusing
-                 and blurring three times counted as three searches. It now
-                 only fires if the term changed since the last one recorded. */
+              /* ── THE TERM IS NOT SENT. ONLY THAT SOMEBODY SEARCHED ─────────
+                 It used to travel as `termino: "hyatt"`. A search box is free
+                 text: people type place names, plate numbers, their own
+                 address. None of that belongs in an analytics dashboard, and
+                 once sent it cannot be taken back.
+
+                 What survives is what a decision can be made from: that a
+                 search happened and whether it found anything. `results_count: 0`
+                 is the useful signal — it says the network is missing
+                 something — without carrying what was typed.
+
+                 The term is still used to DEDUPLICATE locally: it never leaves
+                 this component. Focusing and blurring three times over the same
+                 text still counts as one search. */
               onBlur={(e) => {
                 const term = e.target.value.trim()
                 if (term && term !== lastTracked.current) {
                   lastTracked.current = term
-                  track('red_buscar', { termino: term })
+                  track('station_search', { results_count: results.length })
                 }
               }}
               placeholder={t(red.search.placeholder, locale)}
@@ -520,7 +572,7 @@ export function StationFinder({ locale, stations, cities }: Props) {
               <li key={s.slug}>
                 <Link
                   href={href(locale, routes.station(s.slug))}
-                  onClick={() => track('estacion_vista', { slug: s.slug, origen: 'buscador' })}
+                  onClick={() => track('select_station', { slug: s.slug, list_id: 'red_finder' })}
                   /* Four columns from `lg` up, not from `md`: at 768px it
                      crammed four cells into the tablet width and "En
                      operación" ended up touching the container edge (§22). */

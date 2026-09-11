@@ -265,7 +265,7 @@ export function AppFloating({ locale }: { locale: Locale }) {
       )}
     >
       <Image
-        src="/logo-app.png"
+        src="/logo-app.webp"
         alt=""
         fill
         sizes="56px"
@@ -317,7 +317,7 @@ export function AppFloating({ locale }: { locale: Locale }) {
           target="_blank"
           rel="noopener noreferrer"
           onClick={() =>
-            track('app_store_click', { tienda: 'dinamico', ubicacion: 'flotante_escritorio' })
+            track('app_download_click', { store: 'auto', placement: 'floating_desktop' })
           }
           /* The code stays ON WHITE even though the frame is glass: a scanner
              expects dark modules on a light background, and tinting it so it
@@ -399,7 +399,7 @@ export function AppFloating({ locale }: { locale: Locale }) {
             target="_blank"
             rel="noopener noreferrer"
             onClick={() =>
-              track('app_store_click', { tienda: 'dinamico', ubicacion: 'flotante_movil' })
+              track('app_download_click', { store: 'auto', placement: 'floating_mobile' })
             }
             className="brand-gradient press order-3 inline-flex h-11 w-full shrink-0 items-center justify-center rounded-(--radius-pill) px-4 text-body-s font-semibold text-on-brand transition-[filter] duration-(--duration-fast) hover:brightness-105 xs:order-2 xs:w-auto"
           >

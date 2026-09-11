@@ -40,11 +40,53 @@ are not exceptions you may extend on your own judgement:
 - **Public URL segments** — `/red`, `/empresas`, `/nosotros`, `/novedades`,
   `/legal/privacidad`, `/legal/terminos`, `/red/estacion`. They stay in Spanish
   in every language. Changing one breaks indexed URLs.
-- **Analytics event names and their property names** — `ciudad_vista`,
-  `red_buscar`, `lead_form_envio`, and the props they carry (`termino`,
-  `origen`, `segmento`…). They are the measurement plan. Both the event and its
-  props land in the analytics dashboard as names someone reads, and renaming
-  one silently splits a metric or a dimension in two.
+- **Analytics event names and their property names.** They are the measurement
+  plan (Tagging Plan v1.1). Both the event and its props land in the analytics
+  dashboard as names someone reads, and renaming one silently splits a metric
+  or a dimension in two.
+
+  The catalogue is closed in
+  `src/core/common/domain/entities/AnalyticsEvent.ts` — the compiler rejects
+  anything not on the list. What the code emits today, with its props:
+
+  | Event                | Props                                              |
+  | -------------------- | -------------------------------------------------- |
+  | `station_search`     | `results_count`                                    |
+  | `filter_stations`    | `filter_type`, `filter_value`                      |
+  | `use_my_location`    | `outcome`                                          |
+  | `view_station`       | `slug`, `city`, `power_kw`, `connectors`, `status` |
+  | `select_station`     | `slug`, `list_id`                                  |
+  | `form_start`         | `form_id`, `segment`                               |
+  | `form_error`         | `form_id`, `segment`, `reason`, `fields`           |
+  | `generate_lead`      | `form_id`, `segment`                               |
+  | `app_download_click` | `store`, `placement`, `page_context`               |
+  | `language_switch`    | `from`, `to`                                       |
+
+  Three more — `contact_click`, `get_directions_click` and `faq_open` — are
+  not in the catalogue on purpose: GTM reads them from the click itself (the
+  `mailto:` and Google Maps URLs, and the `data-faq` attribute on each FAQ
+  button), so nothing in the code emits them and the compiler should say so.
+
+  **These are in ENGLISH since 2026-09-09.** They used to be Spanish. The
+  change was made all at once, in one commit, on a dated cut-over. English
+  because the dashboard is read without a translator and because it matches
+  GA4's own naming. Note that only `generate_lead` is a GA4 recommended event
+  with reports of its own; the rest are custom names, chosen for clarity, not
+  for automatic reports.
+
+  Being a contract is what did NOT change: a name here is not renamed on
+  somebody's judgement. Changing one is a decision with a date, all at once,
+  and this table gets updated in the same commit.
+
+  **Only slugs, enums, counts and booleans travel as props.** Never free text
+  typed by a person: no names, e-mail addresses, phone numbers, message bodies
+  or search terms. `station_search` carries how many results came back, never
+  what was typed.
+
+  **The STORED values inside those props are a separate matter and stay in
+  Spanish**: `operativa`, `aceptado`, `rechazado`. Those are data, already
+  written in databases and in visitors' browsers. Renaming one is a migration.
+
 - **Query parameters of the station finder** — `ciudad`, `conector`, `orden`.
   They appear in shareable, indexable URLs.
 - **Domain status literals** — `operativa`, `proxima`, `mantenimiento`, and
