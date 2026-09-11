@@ -119,9 +119,6 @@ export default async function CityPage({ params }: Props) {
             </ol>
           </nav>
 
-          {/* `ciudad_vista` was in the measurement plan without being emitted
-              (§31). Threshold 0 because the event is "saw the page", not "read
-              the block". */}
           <Eyebrow className="mt-8">{t(cityCopy.eyebrow, locale)}</Eyebrow>
           <h1 className="mt-4 font-display text-display-xl font-semibold text-ink">
             {t(cityCopy.titlePrefix, locale)} {city.name}

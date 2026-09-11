@@ -1,12 +1,12 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { CONSENT_KEY } from '~/core/common/infrastructure/analytics/consent'
 import Link from 'next/link'
 import Script from 'next/script'
 import { t, type Locale } from '~/core/common/domain/i18n/config'
 import { cookies as copy } from '~/core/common/domain/consts/copy'
 import { href, routes } from '~/core/common/domain/i18n/routes'
+import { CONSENT_KEY } from '~/core/common/infrastructure/analytics/consent'
 import { TextSlot } from '@ui/common/components/ui/TextSlot'
 
 /**

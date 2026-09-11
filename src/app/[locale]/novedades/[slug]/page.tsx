@@ -202,7 +202,7 @@ export default async function PostPage({ params }: Props) {
              it on. A video that is the subject of the entry is something you
              decide to watch, and for that you need to be able to play it,
              seek and hear it.
-             Una fotografía de portada no cambia: la prop no le aplica. */
+             A photographic cover is unaffected: the prop does not apply to it. */
               <Media
                 asset={post.cover}
                 locale={locale}

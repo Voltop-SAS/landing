@@ -154,8 +154,7 @@ export function LeadForm({ locale, segmentKey }: { locale: Locale; segmentKey: s
   }
 
   /* React Hook Form moves focus to the first invalid field on its own
-     (`shouldFocusError`), so this only has to report. The event keeps the
-     property names of the measurement plan. */
+     (`shouldFocusError`), so this only has to report. */
   const onInvalid = (found: typeof errors) => {
     track('form_error', {
       form_id: 'lead_empresas',

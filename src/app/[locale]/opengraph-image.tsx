@@ -26,7 +26,7 @@ export function generateStaticParams() {
  * headline, part of the lead and the logo.
  *
  * ── THE FILES IN `_og/` ──────────────────────────────────────────────────
- * They are build-time assets, never served. See `_og/LEEME.md`.
+ * They are build-time assets, never served. See `_og/README.md`.
  *
  * · `hero-og.jpg` is the hero photograph cropped to 1200×630 with the SAME
  *   framing the desktop home uses: `object-cover` focused at 62% / 50%.

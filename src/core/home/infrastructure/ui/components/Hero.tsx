@@ -212,9 +212,6 @@ export function Hero({ locale }: { locale: Locale }) {
         <p className="mt-7 measure text-body-l text-ink-2">{t(home.hero.lead, locale)}</p>
 
         <div className="mt-10">
-          {/* The event was declared in §31 and nobody emitted it: the header
-              moved on to measuring the app download, and no page CTA was
-              measuring entry into the network. */}
           <Button
             variant="primary"
             size="l"
